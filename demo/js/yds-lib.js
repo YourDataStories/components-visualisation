@@ -226,8 +226,7 @@ app.factory('Data', ['$http', '$q', function ($http, $q) {
             return colors[index];
         }, getBrowseData: function () {
             var deferred = $q.defer();
-            var serverURL = "http://ydsdev.iit.demokritos.gr/YDSComponents/data/browse_pilot1_new.json";
-            //serverURL = "../data/browse_pilot1_new.json";
+            var serverURL = "data/browse_pilot1_new.json";
 
             $http({
                 method: 'GET',
