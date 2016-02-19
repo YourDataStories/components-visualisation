@@ -1,0 +1,39 @@
+<div class="yds-info-wrapper">
+    <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length>0">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        {{ydsAlert}}
+    </div>
+    <div class="row" ng-repeat="(key, value) in info">
+        <div class="col col-md-4"><span class="label label-primary">{{key}}:</span></div>
+        <div class="col col-md-8">{{value}}</div>
+    </div>
+</div>
+
+
+<!--<span  ng-repeat="(key, value) in info"  >
+    <b>{{key}}</b>: {{value}}<br/>
+</span>-->
+<!--
+<div class="yds-info-wrapper">
+    <div class="row">
+        <div class="col col-md-4"><span class="label label-primary">Project Name:</span></div>
+        <div class="col col-md-8">"ΒΕΛΤΙΩΣΗ ΟΔΙΚΗΣ ΑΣΦΑΛΕΙΑΣ ΣΤΟ ΕΠΑΡΧΙΑΚΟ ΟΔΙΚΟ ΔΙΚΤΥΟ ΤΗΣ ΠΕΡΙΦΕΡΕΙΑΣ ΚΡΗΤΗΣ Κωδικός 372069"</div>
+    </div>
+    <div class="row">
+        <div class="col col-md-4"><span class="label label-primary">Completion Percentage:</span></div>
+        <div class="col col-md-8">94.0%</div>
+    </div>
+    <div class="row">
+        <div class="col col-md-4"><span class="label label-primary">Decisions (Diavgeia):</span></div>
+        <div class="col col-md-8">83</div>
+    </div>
+    <div class="row">
+        <div class="col col-md-4"><span class="label label-primary">Total Amount (Diavgeia):</span></div>
+        <div class="col col-md-8">16838760.27 €</div>
+    </div>
+    <div class="row">
+        <div class="col col-md-4"><span class="label label-primary">NSRF Budget:</span></div>
+        <div class="col col-md-8">20043868.00 €</div>
+    </div>
+</div>-->

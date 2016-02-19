@@ -1,0 +1,68 @@
+<div class="geo-edit-wrapper">
+    <div class="row">
+        <h4>Type</h4>
+        <label class="radio-inline">
+            <input ng-model="annotationType" type="radio" name="annotationType" id="annotationTypePolyline" value="line"> PolyLine
+        </label>
+        <label class="radio-inline">
+            <input ng-model="annotationType" type="radio" name="annotationType" id="annotationTypePolygon" value="polygon"> Polygon
+        </label>
+        <br>
+        <label>Check me if you want auto route help: <input type="checkbox" ng-model="routeService"></label>
+    </div>
+    <h4>Points</h4>
+    <div class="row">
+        <div class="col-md-4">
+            <i ng-show="isEmpty(geoObj.startPoint) && isEmpty(geoObj.endPoint) && geoObj.viaPoints.length==0">
+                You have not added any route points yet..
+            </i>
+            <div class="list-group">
+                <div class="list-group-item geo-edit-add-marker"
+                     ng-hide="isEmpty(geoObj.startPoint)">
+                    <img  src="lib/images/marker-icon-start.png"/>
+                    <div class="list-group-item-text pull-left">
+                        Lat: {{geoObj.startPoint.lat | number:2}} - Lng: {{geoObj.startPoint.lng | number:2}}
+                    </div><br/>
+                    <div class="pull-right text-danger" ng-click="removePoint(geoObj.startPoint, 0)">
+                        Delete <span class="glyphicon glyphicon-remove"></span>
+                    </div>
+                    <div style="clear:both"></div>
+                </div>
+
+                <div class="list-group-item geo-edit-via-marker"
+                     ng-hide="geoObj.viaPoints.legth==0"
+                     ng-repeat="p in geoObj.viaPoints track by $index">
+                    <img src="lib/images/marker-icon-via.png"/>
+                    <div class="list-group-item-text pull-left">
+                        Lat: {{p.lat | number:2}} - Lng: {{p.lng | number:2}}
+                    </div><br/>
+                    <div class="pull-right text-danger" ng-click="removePoint(p, 1)">
+                        Delete <span class="glyphicon glyphicon-remove"></span>
+                    </div>
+                    <div style="clear:both"></div>
+                </div>
+
+                <div class="list-group-item geo-edit-end-marker"
+                     ng-hide="isEmpty(geoObj.endPoint)">
+                    <img src="lib/images/marker-icon-end.png"/>
+                    <div class="list-group-item-text pull-left">
+                        Lat: {{geoObj.endPoint.lat | number:2}} - Lng: {{geoObj.endPoint.lng | number:2}}
+                    </div><br/>
+                    <div class="pull-right text-danger" ng-click="removePoint(geoObj.endPoint, 2)">
+                        Delete <span class="glyphicon glyphicon-remove"></span>
+                    </div>
+                    <div style="clear:both"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <!--<div id="geo-edit-map-{{projectId}}"></div>-->
+            <div id="geo-edit-map"></div>
+
+        </div>
+    </div>
+    <div class="row geo-edit-btns pull-right">
+        <button type="button" class="btn btn-success" ng-click="saveAnotation()">Save</button>
+    </div>
+    <textarea class="form-control">{{annotationResult}}</textarea>
+</div>

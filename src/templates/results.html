@@ -1,0 +1,30 @@
+<div>
+    <div ng-if="results.data.length>0" class="row list-group"  style="margin-top: 10px; padding: 10px;">
+        <div ng-repeat="item in results.data"  class="list-group-item"><!--ng-click="visitResult($index)"-->
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>{{item.attributes.title}}</h4>
+                    <b>Project ID:</b> {{item.attributes["project-id"]}}<br/>
+                    <b>Completion Rate</b>: {{item.attributes.completion}}<br/>
+                    <b>Number of related projects</b>: {{item.attributes['number-of-related-projects']}}<br/>
+                    <b>Description</b>: {{item.attributes.description}}<br/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-12 pull-right">
+                    <div class="btn-group col-md-12" role="group" aria-label="">
+                        <button class="btn btn-default btn-md"
+                                ng-click="visitResult(item)">View</button>
+                        <button class="btn btn-default btn-md"
+                                ng-click="resultsPreview(item, 'bar')">Preview</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="results.data.length==0" class="row list-group"  style="border: 0.5px solid grey; margin-top: 10px; padding: 10px;">
+        <a class="list-group-item">
+            <h4>We are sorry we could not find datasets relative to your query..</h4>
+        </a>
+    </div>
+</div>

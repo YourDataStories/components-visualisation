@@ -1,0 +1,382 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Oct 2, 2015, 1:10:56 PM
+    Author     : Giotis Panagiotis <giotis.p@gmail.com>
+*/
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+
+}
+body { height: 100%; }
+body #main .container:first-child {
+    padding-top: 60px;
+    padding-bottom: 100px;
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #f5f5f5;
+    text-align: center;
+    padding-top: 20px;
+}
+
+.footer .container .row div:nth-child(2){
+    border-left: 1px solid #333;
+    border-right:1px solid #333;
+}
+.yds-grey { color: #ddd; }
+.yds-blue { color: #1998D5; }
+
+.component-wrapper{ position: relative; }
+.heatmap-wrapper { position: relative; }
+.heatmap-back {
+    position:absolute;
+    z-index: 999;
+    top: 12px;
+    left: 10px;
+    font-size: 15px;
+    display: none;
+    cursor: pointer;
+}
+
+.yds-info-wrapper .row { line-height:30px; }
+.yds-info-wrapper span{ font-size: 95%; }
+
+.statistics-wrapper {
+    max-width: 300px;
+    min-width: 300px;;
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #d1d1d1;
+    border-radius: 2px;
+    text-transform: uppercase;
+}
+.statistics-wrapper .col-lg-4:not(:last-child) { border-right: 1px solid #d1d1d1; }
+.statistics-wrapper .stat-value { font-size: 26px; }
+.statistics-wrapper .stat-title {
+    font-weight: bold;
+    font-size: 11px;
+}
+
+/*.ag-paging-panel { text-align: center; }
+#pageRowSummaryPanel { display: none; }*/
+
+#xdm-container {
+    margin-top: 50px;
+    height: 305px;
+    width: 600px;
+    border: 1px solid #333;
+}
+#xdm-container iframe {
+    width: 100%;
+    height: 100%;
+}
+
+.embed-popover .well {
+    word-break:break-all;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+.embed-popover .label {
+    padding: 5px 5px 4px;
+}
+.embed-popover button {
+    float: right;
+}
+
+/*.geo-editing-ctxmenu { padding: 0; }
+.geo-editing-ctxmenu .leaflet-popup-content{ margin:0; }
+.geo-editing-ctxmenu .leaflet-popup-close-button{ display: none; }*/
+
+/***************************************/
+/******* GEO EDITING COMPONENT *********/
+/***************************************/
+
+.geo-edit-wrapper .list-group{
+    width:100%;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-bottom: 1px;
+}
+.geo-edit-wrapper .list-group img{
+    float: left;
+    max-width: 15px;
+    margin-right: 7px;
+}
+.geo-edit-btns {
+    margin-top: 20px;
+    margin-right: 10px;
+}
+#geo-edit-map {
+    width: 100%;
+    height: 300px;
+}
+.geo-edit-wrapper .list-group-item { background: transparent; }
+.geo-edit-wrapper .list-group-item .pull-right {
+    font-weight: bold;
+    font-size: 10px;
+    cursor: pointer;
+}
+.geo-edit-add-marker:after {
+    content:"";
+    position: absolute;
+    z-index: -1;
+    top: 20px;
+    bottom: 0;
+    left: 22px;
+    border-left: 2px solid #414141;
+}
+.geo-edit-via-marker:after {
+    content:"";
+    position: absolute;
+    z-index: -1;
+    top: 0px;
+    bottom: 0;
+    left: 22px;
+    border-left: 2px solid #414141;
+}
+.geo-edit-end-marker:after {
+    content:"";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 40px;
+    left: 22px;
+    border-left: 2px solid #414141;
+}
+
+/***************************************/
+/********** BROWSE COMPONENT ***********/
+/***************************************/
+
+.yds-browse-wrapper .yds-browse-content .btn {
+    font-size: 13px;
+    background: #f9f9f9;
+    border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border: 1px solid #ddd;
+    padding: 6px 10px 6px 8px;
+    margin: 10px auto;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: left;
+}
+.yds-browse-wrapper .yds-browse-content .btn span:nth-child(2) {
+    width: 72%;
+    display: inline-block;
+    line-height: 32px;
+    margin-right: 5px;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    overflow: hidden;
+    float: left;
+}
+@media (max-width: 1200px) {
+    .yds-browse-wrapper .yds-browse-content .btn span:nth-child(2) {
+        width: 66%;
+    }
+}
+@media (max-width: 992px) {
+    .yds-browse-wrapper .yds-browse-content .btn span:nth-child(2) {
+        width: 53%;
+    }
+}
+.yds-browse-wrapper .yds-browse-content .btn span:nth-child(3) {
+    float: right;
+    display: inline-block;
+    line-height: 32px;
+}
+
+.yds-browse-wrapper .yds-browse-content .selected .btn{
+    border-color:#1998D5;
+}
+.yds-browse-wrapper .yds-browse-content .btn .glyphicon {
+    font-size: 23px;
+    line-height: 30px;
+    margin-right: 5px;
+}
+
+
+.yds-browse-wrapper .yds-browse-breadcrumbs {
+    display: flex;
+}
+.yds-browse-wrapper .yds-browse-breadcrumbs>div:not(:last-child) {
+    min-height: 100%;
+    border-right: 1px solid #ddd;
+    padding-right: 10px;
+    margin-left: 10px;
+}
+.yds-browse-wrapper .yds-browse-breadcrumbs ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+}
+.yds-browse-wrapper .yds-browse-breadcrumbs ul li:first-child{
+    font-style: normal;
+}
+
+
+/**********************************/
+/****** CUSTOM YDS BUTTON  ********/
+/**********************************/
+.btn-yds {
+    background-color: #1998D5;
+    border-color: #1998D5;
+    color: #fff!important;
+}
+.btn-yds.active.focus, .btn-yds.active:focus,
+.btn-yds.active:hover, .btn-yds:active.focus,
+.btn-yds:active:focus, .btn-yds:active:hover,
+.open>.dropdown-toggle.btn-yds.focus,
+.open>.dropdown-toggle.btn-yds:focus,
+.open>.dropdown-toggle.btn-yds:hover{
+    color: #fff!important;
+    background-color: #008599;
+    border-color: #008599;
+
+}
+
+/**********************************/
+/**** SEARCH RESULTS PREVIEW ******/
+/**********************************/
+.yds-search-prev-wrapper {
+    background: #383E4B;
+    position: fixed;
+    z-index: 10000;
+    top: 51px;
+    right: -300px;
+    bottom: 0;
+    width: 310px;
+    box-shadow: -2px 0 9px -3px #444;
+    webkit-box-shadow: -2px 0 9px -3px #444;
+    padding-right: 0;
+    padding-left: 12px;
+}
+.yds-search-prev-wrapper .yds-search-prev-content{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 20px;
+    padding-right: 10px;
+    overflow-y: auto;
+}
+.yds-search-prev-title {
+    color: #fff;
+    padding-top: 21px;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.yds-search-prev-wrapper .yds-divider {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    background: #383E4B;
+    margin-left: -16px;
+    width: 32px;
+    height: 32px;
+    line-height: 50px;
+    color: #fff;
+
+    -ms-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+
+    transition: top 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
+    overflow: hidden;
+}
+.yds-search-prev-wrapper .yds-divider span {
+    -ms-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    font-size: 20px;
+}
+.yds-search-prev-wrapper.slide-in {
+    animation: slide-in 1.5s forwards;
+    -webkit-animation: slide-in 1.5s forwards;
+}
+.yds-search-prev-wrapper.slide-out {
+    animation: slide-out 1.5s forwards;
+    -webkit-animation: slide-out 1.5s forwards;
+}
+@keyframes slide-in {
+    0% {
+        right: -300px;
+        top: 51px;
+    }
+    100% {
+        right: 0;
+        top: 51px;
+    }
+}
+@keyframes slide-out {
+    0% {
+        right: 0;
+        top: 51px;
+    }
+    100% {
+        right: -300px;
+        top: 51px;
+    }
+}
+
+.yds-search-prev-inner .component-wrapper {
+    padding-top: 10px;
+}
+/********************************/
+/**** RZSLIDER CUSTOMIZATION ****/
+/********************************/
+rzslider .rz-pointer {
+    height: 16px;
+    width: 16px;
+    top: -5px;
+}
+rzslider .rz-pointer:after {
+    top: 4px;
+    left: 4px;
+}
+
+/**********************************/
+/**** NEW FACETS CUSTOMIZATION ****/
+/*********************************/
+.yds-checkbox-wrapper .yds-checkbox {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    font-size: 13px;
+    line-height: 22px;
+}
+.yds-checkbox-wrapper .yds-checkbox > div {
+    float: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 85%;
+}
+.yds-checkbox-wrapper ul {
+    list-style: none;
+    -webkit-padding-start: 0;
+    padding-left: 0;
+}
+.yds-checkbox-wrapper ul li {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.yds-checkbox-wrapper > div:first-child {
+    margin-top: 20px;
+}.yds-checkbox-wrapper > div {
+    margin-bottom: 10px;
+}

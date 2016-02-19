@@ -1,0 +1,93 @@
+{
+  "result": [
+    {
+      "id": "1",
+      "title": "Global Food Prices Database (WFP)",
+      "description": "The Global Food Prices Database has data on food prices (e.g., beans, rice, fish, and sugar) for 76 countries and some 1,500 markets. The dataset includes around 500,000 records and is updated monthly. The data goes back as far as 1992 for a few countries, although most of the price trends start in 2000-2002.",
+      "source": "World Food Programme - VAM",
+      "location": "world",
+      "contributor": "WFP - World Food Programme",
+      "tags": [
+        "EBOLA",
+        "FOOD PRICES"
+      ],
+      "licenses": [
+        "Creative Commons Attribution for Intergovernmental Organisations"
+      ],
+      "formats": [
+        "csv"
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Sierra Leone - Ebola: WFP VAM Food Security Reduced Coping Strategies Index and Price Data",
+      "description": "Reduced Coping Strategies Index and Food Prices data. Data collected using text message (SMS).",
+      "source": "WFP",
+      "location": "Sierra Leone",
+      "contributor": "WFP - World Food Programme",
+      "tags": [
+        "CRISIS",
+        "FOOD CRISIS",
+        "FOOD"
+      ],
+      "licenses": [
+        "Creative Commons Attribution for Intergovernmental Organisations"
+      ],
+      "formats": [
+        "xls"
+      ]
+    },
+    {
+      "id": "3",
+      "title": "Mali Road Network",
+      "description": "This shapefile contains the road network for Mali as well as the distance in kilometres between key settlements",
+      "source": "WFP",
+      "location": "Mali",
+      "contributor": "OCHA Mali",
+      "tags": [
+        "ROADS",
+        "MALI",
+        "LOGISTICS"
+      ],
+      "licenses": [
+        "Creative Commons Attribution for Intergovernmental Organisations"
+      ],
+      "formats": [
+        "zip"
+      ]
+    }
+  ],
+  "facets": {
+    "sources": {
+      "WFP": "2",
+      "World Food Programme - VAM":"1"
+    },
+    "locations": {
+      "Sierra Leone": "1",
+      "Mali": "1",
+      "world": "2"
+    },
+    "contributors": {
+      "WFP - World Food Programme": "2",
+      "OCHA Mali":"1"
+    },
+    "tags": {
+      "EBOLA": "1",
+      "FOOD PRICES": "1",
+      "CRISIS": "1",
+      "FOOD CRISIS": "1",
+      "FOOD": "1",
+      "ROADS":"1",
+      "MALI":"1",
+      "LOGISTICS":"1"
+    },
+    "licenses": {
+      "Creative Commons Attribution for Intergovernmental Organisations": "3"
+    },
+    "formats": {
+      "xls": "1",
+      "zip": "1",
+      "csv": "1"
+    }
+  }
+}

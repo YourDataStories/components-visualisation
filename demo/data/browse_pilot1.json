@@ -1,0 +1,578 @@
+[
+  {
+    "id": "9",
+    "@type": "http:\/\/linkedeconomy.org\/ontology#AdministrativeDecision",
+    "label": {
+      "el": "Διοικητική απόφαση",
+      "en": "Administrative Decision"
+    },
+    "values": [
+      {
+        "id": "6",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#FinancialDecision",
+        "label": {
+          "el": "Οικονομικού Τύπου",
+          "en": "Financial Decision"
+        },
+        "values": [
+          {
+            "id": "1",
+            "@type": "http:\/\/linkedeconomy.org\/ontology#BudgetItem",
+            "label": {
+              "el": "Αντικείμενο Προϋπολογισμού",
+              "en": "Budget Item"
+            },
+            "values": [
+
+            ]
+          },
+          {
+            "id": "2",
+            "@type": "http:\/\/linkedeconomy.org\/ontology#CommittedItem",
+            "label": {
+              "el": "Δεσμευθέν Αντικείμενο",
+              "en": "Commited Item"
+            },
+            "values": [
+
+            ]
+          },
+          {
+            "id": "3",
+            "@type": "http:\/\/linkedeconomy.org\/ontology#ExpenseApprovalItem",
+            "label": {
+              "el": "Έγκριση Δαπάνης",
+              "en": "Expense Approval Item"
+            },
+            "values": [
+
+            ]
+          },
+          {
+            "id": "4",
+            "@type": "http:\/\/linkedeconomy.org\/ontology#SpendingItem",
+            "label": {
+              "el": "Αντικείμενο Δαπάνης",
+              "en": "Spending Item"
+            },
+            "values": [
+
+            ]
+          },
+          {
+            "id": "5",
+            "@type": "http:\/\/purl.org\/procurement\/public-contracts#Contract",
+            "label": {
+              "el": "Δημόσια Σύμβαση",
+              "en": "Public Contract"
+            },
+            "values": [
+
+            ]
+          }
+        ]
+      },
+      {
+        "id": "8",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#NonFinancialDecision",
+        "label": {
+          "el": "Μη Οικονομικού Τύπου",
+          "en": "Non Financial Decision"
+        },
+        "values": [{
+          "id": "7",
+          "@type": "http:\/\/linkedeconomy.org\/ontology#Decision",
+          "label": {
+            "el": "Πράξη",
+            "en": "Decision"
+          },
+          "values": [
+
+          ]
+        }]
+      }
+    ]
+  },
+  {
+    "id": "10",
+    "@type": "http:\/\/linkedeconomy.org\/ontology#Attachment",
+    "label": {
+      "el": "Συνημμένα Έγγραφα",
+      "en": "Attachments"
+    },
+    "values": [
+
+    ]
+  },
+  {
+    "id": "11",
+    "@type": "http:\/\/linkedeconomy.org\/ontology#CPV",
+    "label": {
+      "el": "Κοινό Λεξιλόγιο Προμηθειών",
+      "en": "Common Procurement Vocabulary"
+    },
+    "values": [
+
+    ]
+  },
+  {
+    "id": "12",
+    "@type": "http:\/\/linkedeconomy.org\/ontology#ExpenditureLine",
+    "label": {
+      "el": "Τμήμα Δαπάνης",
+      "en": "Expenditure Line"
+    },
+    "values": [
+
+    ]
+  },
+  {
+    "id": "13",
+    "@type": "http:\/\/linkedeconomy.org\/ontology#Fek",
+    "label": {
+      "el": "Φύλλο Εφημερίδος Κυβερνήσεως",
+      "en": "Greek Government Gazzette"
+    },
+    "values": [
+
+    ]
+  },
+  {
+    "id": "14",
+    "@type": "http:\/\/linkedeconomy.org\/ontology#KAE",
+    "label": {
+      "el": "Κωδικός Αριθμού Εσόδων\/Εξόδων",
+      "en": "Code Number of Revenues\/Expenses"
+    },
+    "values": [
+
+    ]
+  },
+  {
+    "id": "16",
+    "@type": "http:\/\/linkedeconomy.org\/ontology#PublicProject",
+    "label": {
+      "el": "Δημόσιο Έργο",
+      "en": "Public Project"
+    },
+    "values": [{
+      "id": "15",
+      "@type": "http:\/\/linkedeconomy.org\/ontology#Subsidy",
+      "values": [
+
+      ]
+    }]
+  },
+  {
+    "id": "17",
+    "@type": "http:\/\/linkedeconomy.org\/ontology#Subproject",
+    "label": {
+      "el": "Υποέργο",
+      "en": "Subproject"
+    },
+    "values": [
+
+    ]
+  },
+  {
+    "id": "18",
+    "@type": "http:\/\/purl.org\/goodrelations\/v1#UnitPriceSpecification",
+    "label": {
+      "el": "Προδιαγραφή τιμής ανά μονάδα",
+      "en": "Unit Price Specification"
+    },
+    "values": [
+
+    ]
+  },
+  {
+    "id": "46",
+    "@type": "http:\/\/www.w3.org\/2004\/02\/skos\/core#Concept",
+    "values": [
+      {
+        "id": "19",
+        "@type": "http:\/\/linkedeconomy.org\/geoOntology#Municipality",
+        "label": {
+          "el": "Δήμος",
+          "en": "Municipality"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "20",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#AccountType",
+        "label": {
+          "el": "Τύπος Λογαριασμού",
+          "en": "Account Type"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "21",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#BudgetCategory",
+        "label": {
+          "el": "Κατηγορία Προϋπολογισμού",
+          "en": "Budget Category"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "22",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#BudgetKind",
+        "label": {
+          "el": "Είδος Προϋπολογισμού",
+          "en": "Budget Kind"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "23",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#CollectiveBodyKind",
+        "label": {
+          "el": "Είδος Συλλογικού",
+          "en": "Collective Body Kind"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "24",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#CollectiveBodyType",
+        "label": {
+          "el": "Τύπος Συλλογικού",
+          "en": "Collective Body Type"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "25",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#Currency",
+        "label": {
+          "el": "Νόμισμα",
+          "en": "Currency"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "26",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#DecisionStatus",
+        "label": {
+          "el": "Κατάσταση Πράξης",
+          "en": "Decision Status"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "27",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#FekType",
+        "label": {
+          "el": "Τύπος Τεύχους Φύλλου Εφημερίδος Κυβερνήσεως",
+          "en": "Greek Government Gazzette Issue Type "
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "28",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#Law",
+        "label": {
+          "el": "Νόμος",
+          "en": "Law"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "29",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#OfficialAdministrativeChange",
+        "values": [
+
+        ]
+      },
+      {
+        "id": "30",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#OpinionOrgType",
+        "label": {
+          "el": "Φορέας Γνωμοδότησης",
+          "en": "Opinion Organization Type"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "31",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#OrganizationCategory",
+        "label": {
+          "el": "Κατηγορίες Φορέων",
+          "en": "Organization Category"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "32",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#OrganizationDomain",
+        "label": {
+          "el": "Πεδίο Αρμοδιότητας Φορέων",
+          "en": "Organization Domain"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "33",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#OrganizationStatus",
+        "label": {
+          "el": "Κατάσταση Οργανισμού",
+          "en": "Organization Status"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "34",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#OrganizationalUnitCategory",
+        "label": {
+          "el": "Τύποι Οργανωτικών Μονάδων",
+          "en": "Organizational Unit Category"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "35",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#Position",
+        "label": {
+          "el": "Θέση",
+          "en": "Position"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "36",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#PositionType",
+        "label": {
+          "el": "Τύπος Θέσης",
+          "en": "Position Type"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "37",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#RegulatoryAct",
+        "label": {
+          "el": "Κανονιστική Πράξη",
+          "en": "Regulatory Act"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "38",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#SelectionCriterion",
+        "label": {
+          "el": "Κριτήριο Επιλογής",
+          "en": "Selection Criterion"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "39",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#SpatialType",
+        "label": {"en": "Spatial Type"},
+        "values": [
+
+        ]
+      },
+      {
+        "id": "40",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#ThematicCategory",
+        "label": {
+          "el": "Τύπος Θεματικής Κατηγορίας",
+          "en": "Thematic Category"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "41",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#TimePeriod",
+        "label": {
+          "el": "Χρονική Περίοδος",
+          "en": "Time Period"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "42",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#VacancyType",
+        "label": {
+          "el": "Είδος Πλήρωσης Θέσης",
+          "en": "Vacancy Type"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "43",
+        "@type": "http:\/\/linkedeconomy.org\/ontology#VatType",
+        "label": {
+          "el": "Τύπος ΑΦΜ",
+          "en": "Vat Type"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "44",
+        "@type": "http:\/\/publicspending.net\/geoOntology#Country",
+        "label": {
+          "el": "Χώρα",
+          "en": "Country"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "45",
+        "@type": "http:\/\/www.w3.org\/ns\/org#Role",
+        "label": {
+          "el": "Ρόλος",
+          "en": "Role"
+        },
+        "values": [
+
+        ]
+      }
+    ]
+  },
+  {
+    "id": "47",
+    "@type": "http:\/\/www.w3.org\/2004\/02\/skos\/core#ConceptScheme",
+    "values": [
+
+    ]
+  },
+  {
+    "id": "48",
+    "@type": "http:\/\/www.w3.org\/2006\/vcard\/ns#Address",
+    "label": {
+      "el": "Διεύθυνση",
+      "en": "Address"
+    },
+    "values": [
+
+    ]
+  },
+  {
+    "id": "55",
+    "@type": "http:\/\/xmlns.com\/foaf\/0.1\/Agent",
+    "label": {
+      "el": "Πράκτορας",
+      "en": "Agent"
+    },
+    "values": [
+      {
+        "id": "49",
+        "@type": "http:\/\/purl.org\/goodrelations\/v1#BusinessEntity",
+        "label": {
+          "el": "Επιχειρηματική Οντότητα",
+          "en": "Business Entity"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "50",
+        "@type": "http:\/\/www.w3.org\/ns\/org#Organization",
+        "label": {
+          "el": "Οργανισμός",
+          "en": "Organization"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "51",
+        "@type": "http:\/\/www.w3.org\/ns\/org#OrganizationalUnit",
+        "label": {
+          "el": "Μονάδα Οργανισμού",
+          "en": "Organizational Unit"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "52",
+        "@type": "http:\/\/www.w3.org\/ns\/regorg#RegisteredOrganization",
+        "label": {
+          "el": "Καταχωρημένος Οργανισμός",
+          "en": "Registered Organization"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "53",
+        "@type": "http:\/\/xmlns.com\/foaf\/0.1\/Organization",
+        "label": {
+          "el": "Οργανισμός",
+          "en": "Organization"
+        },
+        "values": [
+
+        ]
+      },
+      {
+        "id": "54",
+        "@type": "http:\/\/xmlns.com\/foaf\/0.1\/Person",
+        "label": {
+          "el": "Πρόσωπο",
+          "en": "Person"
+        },
+        "values": [
+
+        ]
+      }
+    ]
+  }
+]
