@@ -1,6 +1,6 @@
-# YDS Visualization Components
+# YDS Visualisation Components
 
-A collection of visualization components based on AngularJS and other third-party JS libraries.
+A collection of visualisation components based on AngularJS and other third-party JS libraries.
 
 * Statistics
 * Project Info
