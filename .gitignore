@@ -1,0 +1,35 @@
+#ant specific
+dist/
+build/
+ 
+#netbeans specific
+core
+nbproject/*
+!nbproject/project.properties
+!nbproject/project.xml
+ 
+#java specific
+*.class
+
+#idea specific
+idea
+.idea/
+.idea/*
+*.iml
+*.ipr
+*.iws
+
+# maven
+target/
+ 
+#general swap/backup/script files
+*.so
+*.log
+*.out
+*~
+*.swp
+*.DS_Store
+*.lock
+*.sh
+*.txt.*
+.directory
