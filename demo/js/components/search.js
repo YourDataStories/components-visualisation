@@ -7,6 +7,7 @@ angular.module('yds').directive('ydsSearch', ['$window', '$rootScope', '$locatio
 		},
 		templateUrl: 'templates/search.html',
 		link: function (scope, element) {
+			debugger;
 			scope.searchKeyword = "";
 			scope.placeholder = "Search for...";
 			var standalone = scope.standalone;
@@ -18,7 +19,7 @@ angular.module('yds').directive('ydsSearch', ['$window', '$rootScope', '$locatio
 			if (standalone !== "true") {
 				scope.$watch(function () {
 					return Search.getKeyword();
-				}, function (newValue, oldValue) {
+				}, function (newValue, oldValue) { debugger;
 					if(!angular.isUndefined(newValue) && newValue!=scope.searchKeyword)
 						scope.searchKeyword = angular.copy(newValue);
 				});
@@ -30,7 +31,8 @@ angular.module('yds').directive('ydsSearch', ['$window', '$rootScope', '$locatio
 					return false;
 
 				var redirectURL = YDS_CONSTANTS.SEARCH_RESULTS_URL;
-				$window.location.href = redirectURL + "#q=" +  scope.searchKeyword;
+				var encodedKeyword = encodeURIComponent(scope.searchKeyword);
+				$window.location.href = redirectURL + "#q=" + encodedKeyword;
 			}
 
 		}

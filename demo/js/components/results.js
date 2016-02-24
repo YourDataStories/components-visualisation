@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$rootScope', '$location', 'Search', 'Data',
-    function(YDS_CONSTANTS, $window, $rootScope, $location, Search, Data){
+angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$rootScope', '$location', 'Search',
+    function(YDS_CONSTANTS, $window, $rootScope, $location, Search){
     return {
         restrict: 'E',
         scope: {},
@@ -8,27 +8,31 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$roo
             scope.results = [];
 
             scope.$watch(function () { return location.hash }, function (value) {
-                var query = "";
+                var searchTerm = "";
                 var urlComponents = [];
 
                 if(!angular.isUndefined(value)) {
                     urlComponents = value.split('q=');
+
                     if (!angular.isUndefined(urlComponents[1]))
-                        query = decodeURIComponent(urlComponents[1]);
-                    else
-                        query = "";
-                } else
-                    query = "";
+                        searchTerm = decodeURIComponent(urlComponents[1]);
+                }
 
+                if (searchTerm == "")
+                    return false;
 
-                Search.setKeyword(query);
-                Search.performSearch(query)
+                Search.setKeyword(searchTerm);
+                Search.performSearch(searchTerm)
                 .then(function (response) {
                     scope.results = angular.copy(response);
                 }, function (error) {
                     console.log('error', error);
                 });
 
+            });
+
+            scope.$on("$destroy", function() {
+                Search.clearKeyword();
             });
         },
         controller: function($scope) {
