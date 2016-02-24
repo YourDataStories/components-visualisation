@@ -35,13 +35,6 @@ app.directive('clipboard', [ '$document', function(){
     }
 }]);
 
-app.run(function($rootScope, $location){
-    //Bind the `$locationChangeSuccess` event on the rootScope, so that we dont need to bind in induvidual controllers.
-    $rootScope.$on('$locationChangeStart', function() {
-        $rootScope.actualLocation = $location.path();
-    });
-});
-
 
 app.factory('Data', ['$http', '$q', function ($http, $q) {
     var backButtonUsed = false;
@@ -280,7 +273,7 @@ app.factory('Search', ['$http', '$q', function ($http, $q) {
         performSearch: function (newKeyword) {
             var deferred = $q.defer();
             var proxyUrl = "localhost:9292/";
-             proxyUrl = "";
+            proxyUrl = "";
             var baseUrl = "ydsdev.iit.demokritos.gr/api/mudcat/public-projects";
 
             $http({

@@ -7,32 +7,28 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$roo
         link: function(scope) {
             scope.results = [];
 
-            //if back button was pressed for navigation, restore old content
-            if($rootScope.actualLocation === $location.path())
-                Data.backButtonUsed();
-            else {
-                Data.backButtonNotUsed();
-                Search.clearResults();
-            }
+            scope.$watch(function () { return location.hash }, function (value) {
+                var query = "";
+                var urlComponents = [];
 
-            scope.$watch(function(){
-                return Search.getKeyword();
-            }, function(newVal, oldVal){
-                if (angular.isUndefined(newVal) || newVal==null || newVal=="")
-                    return false;
+                if(!angular.isUndefined(value)) {
+                    urlComponents = value.split('q=');
+                    if (!angular.isUndefined(urlComponents[1]))
+                        query = decodeURIComponent(urlComponents[1]);
+                    else
+                        query = "";
+                } else
+                    query = "";
 
-                var prevSearchResults = Search.getResults();
 
-                if (Data.isBackButtonUsed() && !angular.isUndefined(prevSearchResults) && prevSearchResults.length>0) {
-                    scope.results = prevSearchResults;
-                } else {
-                    Search.performSearch(newVal)
-                    .then(function (response) {
-                        scope.results = angular.copy(response);
-                    }, function (error) {
-                        console.log('error', error);
-                    });
-                }
+                Search.setKeyword(query);
+                Search.performSearch(query)
+                .then(function (response) {
+                    scope.results = angular.copy(response);
+                }, function (error) {
+                    console.log('error', error);
+                });
+
             });
         },
         controller: function($scope) {
