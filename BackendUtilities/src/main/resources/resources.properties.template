@@ -1,0 +1,6 @@
+database_host=localhost
+database_port=port
+database_name=yds_dbname
+database_username=yds_dbusername
+database_password=yds_dbpass
+couch_url=http://localhost:port/
