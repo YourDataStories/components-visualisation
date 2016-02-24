@@ -33,3 +33,5 @@ target/
 *.sh
 *.txt.*
 .directory
+
+BackendUtilities/src/main/resources/resources.properties

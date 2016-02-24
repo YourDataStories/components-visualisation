@@ -1,0 +1,40 @@
+{
+  "result": [
+    {
+      "id": "1",
+      "title": "Global Food Prices Database (WFP)",
+      "description": "The Global Food Prices Database has data on food prices (e.g., beans, rice, fish, and sugar) for 76 countries and some 1,500 markets. The dataset includes around 500,000 records and is updated monthly. The data goes back as far as 1992 for a few countries, although most of the price trends start in 2000-2002.",
+      "source": "World Food Programme - VAM",
+      "location": "world",
+      "contributor": "WFP - World Food Programme",
+      "tags": [
+        "EBOLA",
+        "FOOD PRICES"
+      ],
+      "licenses": [
+        "Creative Commons Attribution for Intergovernmental Organisations"
+      ],
+      "formats": [
+        "csv"
+      ]
+    }
+  ],
+  "facets": {
+    "sources": {
+      "World Food Programme - VAM":"1"
+    },
+    "locations": {
+      "world": "1"
+    },
+    "contributors": {
+      "WFP - World Food Programme": "1"
+    },
+    "tags": {
+      "EBOLA": "1",
+      "FOOD PRICES": "1"
+    },
+    "formats": {
+      "csv": "1"
+    }
+  }
+}
