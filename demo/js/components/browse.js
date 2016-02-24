@@ -201,21 +201,32 @@ angular.module('yds').directive('ydsBrowse', ['Data', '$q', '$http', function(Da
 
                     //define the name of each column based on the object property names
                     var objectKeys = _.keys(gridData[0]);
-                    for (var i=0; i<objectKeys.length; i++)
-                        columnDefs.push({headerName: objectKeys[i], field: objectKeys[i]})
+                    var objectValues = _.values(gridData[0]);
+                    for (var i=0; i<objectKeys.length; i++){
+                        var columnInfo = {
+                            headerName: objectKeys[i],
+                            field: objectKeys[i]
+                        };
+
+                        if (!_.isNaN(parseFloat(objectValues[i]))) //is number or date
+                            columnInfo.filter = 'number';
+
+                        columnDefs.push(columnInfo)
+                    }
 
                     scope.gridOptions = {
                         columnDefs: columnDefs,
                         rowSelection: 'multiple',
                         enableColResize: true,
-                        enableSorting: true
+                        enableSorting: true,
+                        enableFilter: true
                     };
 
                     var localDataSource = {
                         rowCount: parseInt(gridData.length),    // not setting the row count, infinite paging will be used
                         pageSize: 10,           // changing to number, as scope keeps it as a string
                         getRows: function (params) {
-                            console.log('asking for ' + params.startRow + ' to ' + params.endRow);
+                            //console.log('asking for ' + params.startRow + ' to ' + params.endRow);
                             var rowsThisPage = gridData.slice(params.startRow, params.endRow);
 
                             var lastRow = -1;
@@ -227,7 +238,8 @@ angular.module('yds').directive('ydsBrowse', ['Data', '$q', '$http', function(Da
                     };
 
                     scope.gridOptions.datasource = localDataSource;
-                    agGridGlobalFunc('#'+elementId, scope.gridOptions);
+                    new agGrid.Grid(gridContainer[0], scope.gridOptions);
+
                 }, function(error) {
                     console.log ("error in get browse data", error);
                 });

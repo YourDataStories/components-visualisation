@@ -4,5 +4,9 @@
         <span class="sr-only">Error:</span>
         {{ydsAlert}}
     </div>
+    <div style="margin-bottom: 10px;" ng-if="quickFiltering=='true'">
+        <i class="glyphicon glyphicon-filter"></i>Quick Filter:
+        <input type="text" ng-model="quickFilterValue" ng-change="applyFilter(quickFilterValue)"/>
+    </div>
     <div style="height: 100%;" class="ag-fresh grid-container"></div>
 </div>

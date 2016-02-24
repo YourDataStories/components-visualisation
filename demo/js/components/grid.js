@@ -5,6 +5,8 @@ angular.module('yds').directive('ydsGrid', ['Data', function(Data){
             projectId: '@',     //id of the project that the data belong
             tableType: '@',     //name of the array that contains the visualised data
             sorting: '@',       //enable or disable array sorting, values: true, false
+            filtering: '@',     //enable or disable array filtering, values: true, false
+            quickFiltering: '@',     //enable or disable array quick filtering, values: true, false
             colResize: '@',     //enable or disable column resize, values: true, false
             paging: '@',        //enable or disable the paging feature, values: true, false
             pageSize: '@',      //set the number of rows of each page
@@ -15,10 +17,15 @@ angular.module('yds').directive('ydsGrid', ['Data', function(Data){
             var projectId = scope.projectId;
             var tableType = scope.tableType;
             var sorting = scope.sorting;
+            var filtering = scope.filtering;
+            var quickFiltering = scope.quickFiltering;
             var colResize = scope.colResize;
             var paging = scope.paging;
             var pageSize = scope.pageSize;
             var elementH = scope.elementH;
+
+
+            scope.quickFilterValue = "";
 
             var gridWrapper = angular.element(element[0].querySelector('.component-wrapper'));
             var gridContainer = angular.element(element[0].querySelector('.grid-container'));
@@ -39,6 +46,14 @@ angular.module('yds').directive('ydsGrid', ['Data', function(Data){
             if(angular.isUndefined(sorting) || (sorting!="true" && sorting!="false"))
                 sorting = "true";
 
+            //check if the filtering attr is defined, else assign the default value
+            if(angular.isUndefined(filtering) || (filtering!="true" && filtering!="false"))
+                sorting = "false";
+
+            //check if the quick filtering attr is defined, else assign the default value
+            if(angular.isUndefined(quickFiltering) || (quickFiltering!="true" && quickFiltering!="false"))
+                quickFiltering = "false";
+
             //check if the colResize attr is defined, else assign default value
             if(angular.isUndefined(colResize) || (colResize!="true" && colResize!="false"))
                 colResize = "false";
@@ -56,25 +71,41 @@ angular.module('yds').directive('ydsGrid', ['Data', function(Data){
                 elementH = 200 ;
 
             //set the height of the grid
-            gridWrapper[0].style.height = elementH + 'px';
+            if (quickFiltering === "true") {
+                gridWrapper[0].style.height = (elementH) + 'px';
+                gridContainer[0].style.height = (elementH - 35) + 'px';
+            } else
+                gridWrapper[0].style.height = elementH + 'px';
 
             Data.getVisualizationData(projectId, tableType)
             .then(function (response) {
                 var localDataSource = {};
                 var columnDefs = [];
-    //            var rowData = angular.copy(response);
 
-                //get the object's keys as the the
+                if (response.length==0)
+                    return false;
+
+                //get the first object's keys and values
                 var objectKeys = _.keys(response[0]);
+                var objectValues = _.values(response[0]);
                 for (var i=0; i<objectKeys.length; i++){
-                    columnDefs.push({headerName: objectKeys[i], field: objectKeys[i]})
+                    var columnInfo = {
+                        headerName: objectKeys[i],
+                        field: objectKeys[i]
+                    };
+
+                    if (!_.isNaN(parseFloat(objectValues[i]))) //is number or date
+                        columnInfo.filter = 'number';
+
+                    columnDefs.push(columnInfo)
                 }
 
                 scope.gridOptions = {
                     columnDefs: columnDefs,
                     rowSelection: 'multiple',
                     enableColResize: (colResize === "true"),
-                    enableSorting: (sorting === "true")
+                    enableSorting: (sorting === "true"),
+                    enableFilter: (filtering === "true")
                 };
 
                 //if paging enabled set the required options to the grid configuration
@@ -83,7 +114,7 @@ angular.module('yds').directive('ydsGrid', ['Data', function(Data){
                         rowCount: parseInt(response.length),    // not setting the row count, infinite paging will be used
                         pageSize: parseInt(pageSize),           // changing to number, as scope keeps it as a string
                         getRows: function (params) {
-                            console.log('asking for ' + params.startRow + ' to ' + params.endRow);
+                            //console.log('asking for ' + params.startRow + ' to ' + params.endRow);
                             var rowsThisPage = response.slice(params.startRow, params.endRow);
                             // see if we have come to the last page. if we have, set lastRow to
                             // the very last row of the last page. if you are getting data from
@@ -101,7 +132,11 @@ angular.module('yds').directive('ydsGrid', ['Data', function(Data){
                 } else
                     scope.gridOptions.rowData = response;
 
-                agGridGlobalFunc('#'+elementId, scope.gridOptions);
+                new agGrid.Grid(gridContainer[0], scope.gridOptions);
+
+                scope.applyFilter = function(input) {
+                    scope.gridOptions.api.setQuickFilter(input);
+                };
             }, function (error) {
                 scope.ydsAlert = error.message;
                 console.error('error', error);
