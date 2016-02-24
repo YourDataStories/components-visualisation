@@ -19,7 +19,7 @@ angular.module('yds').directive('ydsSearch', ['$window', '$rootScope', '$locatio
 				scope.$watch(function () {
 					return Search.getKeyword();
 				}, function (newValue, oldValue) {
-					if(angular.isUndefined(newValue) && newValue!=scope.searchKeyword)
+					if(!angular.isUndefined(newValue) && newValue!=scope.searchKeyword)
 						scope.searchKeyword = angular.copy(newValue);
 				});
 			}
