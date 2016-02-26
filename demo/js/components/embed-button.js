@@ -3,10 +3,18 @@ angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', function($compi
 		restrict: 'A',
 		link: function (scope, element, attrs) {
 			var projectId = scope.projectId;
+			var tableType = scope.tableType;
+
 			var elementClass = attrs.class;
 			var embedCode ="";
 			var visualisationType = "";
 			var defaultVisTypes = ["pie", "line", "bar", "map"];
+
+			//if projectId or tableType attr is undefined, stop the execution of the directive
+			if (angular.isUndefined(projectId)|| angular.isUndefined(tableType)) {
+				scope.embeddable = false;
+				return false;
+			}
 
 			//check if the element has id, accepted: "pie-container, line-container, bar-container, map-container"
 			if (!angular.isUndefined(elementClass) && elementClass!="") {
@@ -32,6 +40,7 @@ angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', function($compi
 
 			//check if the user has enabled the embedding of the selected element
 			var embeddable = scope.embeddable;
+
 			if (!angular.isUndefined(embeddable) && embeddable=="true"){
 				if (!angular.isUndefined(projectId) /*&& !isNaN(projectId)*/){
 					var popoverPos = scope.popoverPos;		//indicates the position the popover
@@ -73,7 +82,7 @@ angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', function($compi
 					compiledTemplate.css('position', 'absolute');
 					compiledTemplate.css('top', embedBtnY + 'px');
 					compiledTemplate.css('left', embedBtnX + 'px');
-					compiledTemplate.css('z-index', 9999999);
+					compiledTemplate.css('z-index', 999);
 					compiledTemplate.css('font-size', 11 + 'px');
 					compiledTemplate.css('cursor', 'pointer');
 
