@@ -81,7 +81,9 @@ body #main .container:first-child {
     width: 100%;
     height: 100%;
 }
-
+.popover {
+    z-index: 1005!important;
+}
 .embed-popover .well {
     word-break:break-all;
     padding: 10px;
@@ -379,4 +381,12 @@ rzslider .rz-pointer:after {
     margin-top: 20px;
 }.yds-checkbox-wrapper > div {
     margin-bottom: 10px;
+}
+
+/**********************************/
+/***** BASKET  CUSTOMIZATION *****/
+/*********************************/
+
+.basket-modal-body .btn-group .btn{
+    width: 105px;
 }

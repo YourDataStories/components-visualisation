@@ -1,0 +1,51 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{modalOptions.title}}</h4>
+</div>
+<div class="modal-body basket-modal-body">
+    <div class="alert alert-danger" role="alert" ng-if="modalInput.alert.length>0">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        {{modalInput.alert}}
+    </div>
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Title(*):</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control"
+                       ng-model="modalInput.title"
+                       ng-change="clearModalWarnings(modalInput)"
+                       placeholder="Enter a title..">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Type: </label>
+            <div class="col-sm-9">
+                <div class="btn-group">
+                    <label class="btn btn-primary" ng-model="modalInput.type" uib-btn-radio="'Dataset'">Dataset</label>
+                    <label class="btn btn-primary" ng-model="modalInput.type" uib-btn-radio="'Visualisation'">Visualisation</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Access Level: </label>
+            <div class="col-sm-9">
+                <div class="btn-group">
+                    <label class="btn btn-primary" ng-model="modalInput.public" uib-btn-radio="false">Private</label>
+                    <label class="btn btn-primary" ng-model="modalInput.public" uib-btn-radio="true">Public</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Tags: </label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control"
+                       ng-model="modalInput.tags"
+                       placeholder="Enter a list of tags (comma-separated)..">
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-success" type="button" ng-click="addToBasket(modalInput,basketItem)">Add</button>
+    <button class="btn btn-active" type="button" ng-click="dismissBasketModal()">Cancel</button>
+</div>
