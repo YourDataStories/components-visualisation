@@ -5,11 +5,14 @@
  */
 package gr.demokritos.iit.ydsapi.storage;
 
+import gr.demokritos.iit.ydsapi.model.BasketItem;
 import gr.demokritos.iit.ydsapi.model.Embedding;
 import gr.demokritos.iit.ydsapi.model.VizType;
 import gr.demokritos.iit.ydsapi.model.YDSFacet;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Logger;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -18,11 +21,19 @@ import java.util.logging.Logger;
 public interface YDSAPI {
 
     final Logger LOGGER = Logger.getLogger(YDSAPI.class.getName());
-    
+
     static String COL_EMBEDDINGS = "embeddings";
+    static String COL_BASKETS = "baskets";
+    static String FLD_HASHCODE = "hashcode";
 
     Embedding getEmbedding(Object embedding_id) throws Exception;
 
     Object saveEmbedding(Object project_id, VizType type, Collection<YDSFacet> facets);
+
+    void saveBasketItem(BasketItem item);
+
+    BasketItem getBasketItem(ObjectId id);
+
+    List<BasketItem> getBasketItems(String user_id);
 
 }

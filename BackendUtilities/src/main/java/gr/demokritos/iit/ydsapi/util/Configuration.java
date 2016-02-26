@@ -8,7 +8,7 @@ import java.util.Properties;
 /**
  * Contains all program specific parameters.
  *
- * @author George K. <gkiom@scify.org>
+ * @author George K. <gkiom@iit.demokritos.gr>
  */
 public class Configuration {
 

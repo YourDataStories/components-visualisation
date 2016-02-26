@@ -16,6 +16,7 @@ import com.mongodb.QueryBuilder;
 import com.mongodb.ServerAddress;
 import com.mongodb.WriteResult;
 import com.mongodb.util.JSON;
+import gr.demokritos.iit.ydsapi.model.BasketItem;
 import gr.demokritos.iit.ydsapi.model.Embedding;
 import gr.demokritos.iit.ydsapi.model.VizType;
 import gr.demokritos.iit.ydsapi.model.YDSFacet;
@@ -24,6 +25,7 @@ import gr.demokritos.iit.ydsapi.util.ResourceUtil;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bson.types.ObjectId;
@@ -76,9 +78,9 @@ public class MongoAPIImpl implements YDSAPI {
         String json_emb = emb.toJSON();
         int emb_hashcode = json_emb.hashCode();
         DBObject storable = (DBObject) JSON.parse(json_emb);
-        storable.put("hashcode", emb_hashcode);
+        storable.put(FLD_HASHCODE, emb_hashcode);
         WriteResult wr = col.update(
-                QueryBuilder.start("hashcode").is(emb_hashcode).get(),
+                QueryBuilder.start(FLD_HASHCODE).is(emb_hashcode).get(),
                 storable,
                 true,
                 false
@@ -123,4 +125,74 @@ public class MongoAPIImpl implements YDSAPI {
         }
         return emb;
     }
+
+    @Override
+    public void saveBasketItem(BasketItem item) {
+        // TODO: test
+        DBCollection col = db.getCollection(COL_BASKETS);
+        String jsonbi = item.toJSON();
+        int emb_hashcode = item.hashCode();
+        DBObject storable = (DBObject) JSON.parse(jsonbi);
+        storable.put(FLD_HASHCODE, emb_hashcode);
+        col.update(
+                QueryBuilder.start(FLD_HASHCODE).is(emb_hashcode).get(),
+                storable,
+                true,
+                false
+        );
+    }
+
+    @Override
+    public List<BasketItem> getBasketItems(String user_id) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public BasketItem getBasketItem(ObjectId id) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
+
+//filters : [{filter1, filter2…, n}]
+//
+//[
+//{ 
+//    applied_to: ‘quick_bar’
+//    attrs : {
+//        ‘ΔΕΗ’ : true
+//              }
+//},
+//{ 
+//    applied_to: budget
+//    attrs: {
+//        ‘gte’ : 50
+//             }
+//}, 
+//{ 
+//    applied_to: subProjectTitle
+//    attrs: {
+//        ‘OKΩ DEH’ : true,
+//        ‘other’ : true
+//             }
+//}
+//]
+//
+//
+//
+//Line
+//
+//attribute_name : {
+//    min: 123213131,
+//    max: 131312313
+//}
+//
+//[
+//{ 
+//    applied_to: ‘attribute_name’
+//    attrs : {
+//        ‘axis : ‘y’ or ‘x’,
+//        ‘min’ : 313213123,
+//        ‘max’ : 313311233
+//}
+//}
+//]
