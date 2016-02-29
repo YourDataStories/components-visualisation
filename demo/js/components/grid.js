@@ -1,21 +1,34 @@
-angular.module('yds').directive('ydsGrid', ['Data', function(Data){
+angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Filters){
     return {
         restrict: 'E',
         scope: {
-            projectId: '@',     //id of the project that the data belong
-            tableType: '@',     //name of the array that contains the visualised data
-            sorting: '@',       //enable or disable array sorting, values: true, false
-            filtering: '@',     //enable or disable array filtering, values: true, false
-            quickFiltering: '@',     //enable or disable array quick filtering, values: true, false
-            colResize: '@',     //enable or disable column resize, values: true, false
-            paging: '@',        //enable or disable the paging feature, values: true, false
-            pageSize: '@',      //set the number of rows of each page
-            elementH: '@'
+            projectId: '@',         //id of the project that the data belong
+            tableType: '@',         //name of the array that contains the visualised data
+            lang: '@',              //name of the array that contains the visualised data
+            sorting: '@',           //enable or disable array sorting, values: true, false
+            filtering: '@',         //enable or disable array filtering, values: true, false
+            quickFiltering: '@',    //enable or disable array quick filtering, values: true, false
+            colResize: '@',         //enable or disable column resize, values: true, false
+            paging: '@',            //enable or disable the paging feature, values: true, false
+            pageSize: '@',          //set the number of rows of each page
+            elementH: '@',
+
+            addToBasket: '@',       //enable or disable "add to basket" functionality, values: true, false
+            basketBtnX: '@',        //x-axis position of the basket button
+            basketBtnY: '@'         //y-axis position of the basket button
         },
         templateUrl:'templates/grid.html',
         link: function(scope, element, attrs) {
+            var gridWrapper = angular.element(element[0].querySelector('.component-wrapper'));
+            var gridContainer = angular.element(element[0].querySelector('.grid-container'));
+
+            //create a random id for the element that will render the chart
+            var elementId = "grid" + Data.createRandomId();
+            gridContainer[0].id = elementId;
+
             var projectId = scope.projectId;
             var tableType = scope.tableType;
+            var lang = scope.lang;
             var sorting = scope.sorting;
             var filtering = scope.filtering;
             var quickFiltering = scope.quickFiltering;
@@ -24,15 +37,7 @@ angular.module('yds').directive('ydsGrid', ['Data', function(Data){
             var pageSize = scope.pageSize;
             var elementH = scope.elementH;
 
-
             scope.quickFilterValue = "";
-
-            var gridWrapper = angular.element(element[0].querySelector('.component-wrapper'));
-            var gridContainer = angular.element(element[0].querySelector('.grid-container'));
-
-            //create a random id for the element that will render the chart
-            var elementId = "grid" + Data.createRandomId();
-            gridContainer[0].id = elementId;
 
             //check if project id or grid type are defined
             if(angular.isUndefined(projectId) || projectId.trim()=="" || angular.isUndefined(tableType) || tableType.trim()=="") {
@@ -41,6 +46,10 @@ angular.module('yds').directive('ydsGrid', ['Data', function(Data){
                     "Please check the corresponding documentation sertion";
                 return false;
             }
+
+            //check if the language attr is defined, else assign default value
+            if(angular.isUndefined(lang))
+                lang = "en";
 
             //check if the sorting attr is defined, else assign the default value
             if(angular.isUndefined(sorting) || (sorting!="true" && sorting!="false"))
@@ -77,18 +86,45 @@ angular.module('yds').directive('ydsGrid', ['Data', function(Data){
             } else
                 gridWrapper[0].style.height = elementH + 'px';
 
+
+            //Function that is being registered to the FilterModified event
+            //When a filter is updated, it updates the filter obj of the component by using the Filters Service
+            var filterModifiedListener = function() {
+                var gridFilters = {};
+
+                //get all filters applied to the columns
+                if (filtering === "true")
+                    gridFilters = scope.gridOptions.api.getFilterModel();
+
+                //if quick filtering is enabled and has length>0, get its value and create an extra filter
+                if (quickFiltering === "true" && scope.quickFilterValue.length>0)
+                    gridFilters['_ydsQuickFilter_'] = scope.quickFilterValue;
+
+                Filters.addGridFilter(elementId, gridFilters);
+            };
+
+            //If quick filtering is enabled, create function to handle quick filtering
+            scope.applyQuickFilter = function(input) {
+                scope.gridOptions.api.setQuickFilter(input);
+            };
+
+
+            /***********************************************************/
+            /******* GET DATA FROM THE SERVER AND RENDER THEM **********/
+            /***********************************************************/
             Data.getVisualizationData(projectId, tableType)
             .then(function (response) {
-                var localDataSource = {};
                 var columnDefs = [];
 
                 if (response.length==0)
                     return false;
 
-                //get the first object's keys and values
+                //Get the first object's keys and values
                 var objectKeys = _.keys(response[0]);
                 var objectValues = _.values(response[0]);
-                for (var i=0; i<objectKeys.length; i++){
+
+                //Define the name of the grid's columns and the filters which can be applied on them
+                for (var i=0; i<objectKeys.length; i++) {
                     var columnInfo = {
                         headerName: objectKeys[i],
                         field: objectKeys[i]
@@ -100,6 +136,7 @@ angular.module('yds').directive('ydsGrid', ['Data', function(Data){
                     columnDefs.push(columnInfo)
                 }
 
+                //Define the options of the grid component
                 scope.gridOptions = {
                     columnDefs: columnDefs,
                     rowSelection: 'multiple',
@@ -108,18 +145,16 @@ angular.module('yds').directive('ydsGrid', ['Data', function(Data){
                     enableFilter: (filtering === "true")
                 };
 
-                //if paging enabled set the required options to the grid configuration
+                //If paging enabled set the required options to the grid configuration
                 if (paging==="true") {
                     var localDataSource = {
                         rowCount: parseInt(response.length),    // not setting the row count, infinite paging will be used
                         pageSize: parseInt(pageSize),           // changing to number, as scope keeps it as a string
                         getRows: function (params) {
-                            //console.log('asking for ' + params.startRow + ' to ' + params.endRow);
                             var rowsThisPage = response.slice(params.startRow, params.endRow);
                             // see if we have come to the last page. if we have, set lastRow to
                             // the very last row of the last page. if you are getting data from
-                            // a server, lastRow could be returned separately if the lastRow
-                            // is not in the current page.
+                            // a server, lastRow could be returned separately if the lastRow is not in the current page.
                             var lastRow = -1;
                             if (response.length <= params.endRow) {
                                 lastRow = response.length;
@@ -132,14 +167,27 @@ angular.module('yds').directive('ydsGrid', ['Data', function(Data){
                 } else
                     scope.gridOptions.rowData = response;
 
+                //Create a new Grid Component
                 new agGrid.Grid(gridContainer[0], scope.gridOptions);
 
-                scope.applyFilter = function(input) {
-                    scope.gridOptions.api.setQuickFilter(input);
-                };
+                //If filtering is enabled, register function to watch for filter updates
+                if (filtering === "true" || quickFiltering === "true") {
+                    scope.gridOptions.api.addEventListener('afterFilterChanged', filterModifiedListener);
+                }
             }, function (error) {
                 scope.ydsAlert = error.message;
                 console.error('error', error);
+            });
+
+
+            /***********************************************************/
+            /************ CLEAR COMPONENT DATA ON DESTROY **************/
+            /***********************************************************/
+            scope.$on("$destroy", function() {
+                if (filtering === "true") {
+                    scope.gridOptions.api.removeEventListener('afterFilterChanged', filterModifiedListener);
+                    Filters.remove(elementId);
+                }
             });
         }
     };
