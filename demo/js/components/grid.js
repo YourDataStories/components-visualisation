@@ -4,14 +4,14 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
         scope: {
             projectId: '@',         //id of the project that the data belong
             tableType: '@',         //name of the array that contains the visualised data
-            lang: '@',              //name of the array that contains the visualised data
+            lang: '@',              //lang of the visualised data
             sorting: '@',           //enable or disable array sorting, values: true, false
             filtering: '@',         //enable or disable array filtering, values: true, false
             quickFiltering: '@',    //enable or disable array quick filtering, values: true, false
             colResize: '@',         //enable or disable column resize, values: true, false
             paging: '@',            //enable or disable the paging feature, values: true, false
             pageSize: '@',          //set the number of rows of each page
-            elementH: '@',
+            elementH: '@',          //set the height of the component
 
             addToBasket: '@',       //enable or disable "add to basket" functionality, values: true, false
             basketBtnX: '@',        //x-axis position of the basket button
