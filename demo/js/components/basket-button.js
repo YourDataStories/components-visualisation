@@ -1,4 +1,5 @@
-angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', '$uibModal', function($compile, Data, $uibModal) {
+angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', '$uibModal', 'Basket', 'Filters',
+	function($compile, Data, $uibModal, Basket, Filters) {
 	return {
 		restrict: 'A',
 		link: function (scope, element, attrs) {
@@ -9,18 +10,7 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', '$uibModal'
 			var elementClass = attrs.class;
 			var visualisationType = "";
 			var defaultVisTypes = ["pie", "line", "bar", "map", "grid"];
-			scope.basketItem = {
-				userId: "",
-				title: "",
-				tags: [],
-				type: "",
-				lang: "",
-				public: false,
-				componentType: "",
-				contentType: "",
-				componentParentId: "",
-				filters: {}
-			};
+			scope.basketItem = Basket.createItem();
 
 			//if projectId or tableType attr is undefined, stop the execution of the directive
 			if (angular.isUndefined(projectId)|| angular.isUndefined(tableType)) {
@@ -59,8 +49,6 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', '$uibModal'
 			scope.basketItem.componentType = visualisationType;
 			scope.basketItem.contentType = tableType;
 			scope.basketItem.componentParentId = projectId;
-
-
 
 			//check if the user has enabled the embedding of the selected element
 			var enableBasket = scope.addToBasket;
@@ -114,24 +102,12 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', '$uibModal'
 			//function used to open the basket modal
 			scope.openBasketModal = function () {
 				//initialize object
-				scope.basketItem.title = "";
-				scope.basketItem.type = "";
-				scope.basketItem.public = false;
-				scope.basketItem.tags = [];
-				scope.basketItem.filters = {
+				scope.basketItem = Basket.initializeItem(scope.basketItem);
+				scope.basketItem.filters = Filters.get(element[0].id);
 
-				};
+				scope.modalInput = Basket.initializeModalItem();
 
 				scope.modalOptions = { title: "Add to Basket" };
-
-				scope.modalInput = {
-					alert: "",
-					title: "",
-					tags: "",
-					type: "Dataset",
-					public: false
-				};
-
 				basketModal = $uibModal.open({
 					animation: false,
 					templateUrl: 'templates/basket-modal.html',
@@ -141,9 +117,7 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', '$uibModal'
 			};
 
 			//function to be called when the modal's cancel button is pressed
-			scope.dismissBasketModal = function () {
-				basketModal.dismiss('');
-			};
+			scope.dismissBasketModal = function () { basketModal.dismiss(''); };
 
 			//function to clear basket's modal warnings
 			scope.clearModalWarnings = function (inputObj) {

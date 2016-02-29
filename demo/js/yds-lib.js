@@ -316,3 +316,152 @@ app.factory('Search', ['$http', '$q', function ($http, $q) {
         }
     }
 }]);
+
+app.factory('Basket', [ function () {
+    return {
+        createItem: function() {
+            return {
+                userId: "",
+                title: "",
+                tags: [],
+                type: "",
+                lang: "",
+                public: false,
+                componentType: "",
+                contentType: "",
+                componentParentId: "",
+                filters: {}
+            };
+        },
+        initializeItem: function (bskItem) {
+            bskItem.title = "";
+            bskItem.type = "";
+            bskItem.public = false;
+            bskItem.tags = [];
+            bskItem.filters = {};
+
+            return bskItem;
+        },
+        initializeModalItem: function () {
+            return {
+                alert: "",
+                title: "",
+                tags: "",
+                type: "Dataset",
+                public: false
+            };
+        }
+    }
+}]);
+
+
+app.factory('Filters', [ function () {
+    var filters = [];
+
+    var updateFilters = function (newFilter, newCompId, allFilters) {
+        //search if the specific component has already an active filter
+        var componentFilter = _.findWhere(allFilters, {componentId: newCompId});
+
+        //if the component exists in the filters array-update it, else push a new array item
+        if (!angular.isUndefined(componentFilter))
+            componentFilter.filters = angular.copy(newFilter)
+        else {
+            filters.push({
+                componentId: newCompId,
+                filters: newFilter
+            });
+        }
+
+        console.log(filters);
+    };
+
+    return {
+        addLineFilter: function(compId, lineChart) {
+            chartFilters = [];
+            var lineExtremes = lineChart.xAxis[0].getExtremes();
+
+            //define which axis has range ? is needed ?
+            chartFilters.push ({
+                applied_to: "x",
+                attrs: {
+                    min: lineExtremes.min,
+                    max: lineExtremes.max
+                }
+            });
+
+            chartFilters.push ({
+                applied_to: "y",
+                attrs: {
+                    attrName: ""
+                }
+            });
+
+            updateFilters(chartFilters, compId, filters);
+        },
+        addGridFilter: function(compId, gridFilters) {
+            var chartFilters = [];
+
+            for (property in gridFilters) {
+                var filterVal = gridFilters[property];
+
+                if (gridFilters.hasOwnProperty(property)) {
+                    if (property == "_ydsQuickFilter_") {		//quick filter applied on grid
+                        var tmpAttrs = {};
+                        tmpAttrs[filterVal] = true;
+
+                        chartFilters.push ({
+                            applied_to: '_quick_bar_' ,
+                            attrs: tmpAttrs
+                        });
+                    } else if ( _.isArray(filterVal) && filterVal.length>0 ) {	//string filter applied on grid
+                        var tmpAttrs = {};
+                        var tmpName = "";
+
+                        for (var j=0; j<filterVal.length; j++) {
+                            tmpName = filterVal[j];
+                            tmpAttrs[tmpName] = true;
+                        }
+
+                        chartFilters.push ({
+                            applied_to: property ,
+                            attrs: tmpAttrs
+                        });
+                    } else if (filterVal.hasOwnProperty('filter') && filterVal.hasOwnProperty('type')) { //numeric filter applied on grid
+                        var tmpAttrs = {};
+
+                        switch (filterVal['type']) {
+                            case 1:
+                                tmpAttrs["eq"] = filterVal['filter'];
+                                break;
+                            case 2:
+                                tmpAttrs["lte"] = filterVal['filter'];
+                                break;
+                            case 3:
+                                tmpAttrs["gte"] = filterVal['filter'];
+                                break;
+                        }
+
+                        chartFilters.push ({
+                            applied_to: property ,
+                            attrs: tmpAttrs
+                        });
+                    }
+                }
+            }
+
+            updateFilters(chartFilters, compId, filters);
+        },
+        get: function (compId) {
+            var filterFound = _.findWhere(filters, { componentId: compId })
+
+            if(!angular.isUndefined(filterFound))
+                return filterFound.filters;
+            else
+                return [];
+        },
+        remove: function (compId) {
+            filters = _.reject(filters, function(d){ return d.componentId === compId; });
+        }
+    }
+}]);
+
