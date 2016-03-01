@@ -2,31 +2,39 @@ angular.module('yds').directive('ydsBar', ['Data', function(Data){
     return {
         restrict: 'E',
         scope: {
-            projectId: '@',
-            embeddable: '@',
-            embedBtnX: '@',
-            embedBtnY: '@',
-            popoverPos: '@',
-            titleX: '@',
-            titleY: '@',
-            showLabelsX: '@',
-            showLabelsY: '@',
-            showLegend: '@',
-            exporting: '@',
-            elementH: '@',
-            titleSize: '@'
+            projectId: '@',     //id of the project that the data belong
+            tableType: '@',     //name of the array that contains the visualised data
+            lang: '@',          //lang of the visualised data
+
+            titleX: '@',        //the text of the X-axis title
+            titleY: '@',        //the text of the Y-axis title
+            showLabelsX: '@',   //show or hide the X-axis label
+            showLabelsY: '@',   //show or hide the Y-axis label
+            showLegend: '@',    //enable or disable the chart's legend
+            exporting: '@',     //enable or disable the export of the chart
+            elementH: '@',      //set the height of the component
+            titleSize: '@',     //the size of the chart's main title
+
+            addToBasket: '@',   //enable or disable "add to basket" functionality, values: true, false
+            basketBtnX: '@',    //x-axis position of the basket button
+            basketBtnY: '@',    //y-axis position of the basket button
+
+            embeddable: '@',    //enable or disabled the embedding of the component
+            embedBtnX: '@',     //x-axis position of the embed button
+            embedBtnY: '@',     //y-axis position of the embed button
+            popoverPos: '@'     //the side of the embed button from which the embed information window will appear
         },
         templateUrl: 'templates/bar.html',
         link: function (scope, element, attrs) {
-            scope.enableEmbed = false;  //flag that indicates if the embed functionality is enabled
-
             var barContainer = angular.element(element[0].querySelector('.bar-container'));
 
             //create a random id for the element that will render the chart
             var elementId = "bar" + Data.createRandomId();
             barContainer[0].id = elementId;
 
-            var embeddable = scope.embeddable;
+            var projectId = scope.projectId;
+            var tableType = scope.tableType;
+            var lang = scope.lang;
             var titleX = scope.titleX;
             var titleY = scope.titleY;
             var showLabelsX = scope.showLabelsX;
@@ -36,9 +44,16 @@ angular.module('yds').directive('ydsBar', ['Data', function(Data){
             var elementH = scope.elementH;
             var titleSize = scope.titleSize;
 
-            //check if the user has enabled the embed functionality
-            if (!angular.isUndefined(embeddable) && embeddable=="true")
-                scope.enableEmbed = true;
+            //check if the projectId and the tableType attr is defined, else stop the process
+            if (angular.isUndefined(projectId)|| angular.isUndefined(tableType)) {
+                scope.ydsAlert = "The YDS component is not properly configured." +
+                    "Please check the corresponding documentation section";
+                return false;
+            }
+
+            //check if the language attr is defined, else assign default value
+            if(angular.isUndefined(lang))
+                lang = "en";
 
             //check if the x-axis title attr is defined, else assign the default value
             if(angular.isUndefined(titleX) || titleX.length==0)
