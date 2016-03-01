@@ -12,7 +12,8 @@ var embedUrl = host+"/YDSAPI/yds/embed/";
 app.constant("YDS_CONSTANTS", {
     /*"SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",*/
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
-    "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details"
+    "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
+    "BASKET_URL": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/basket/"
 });
 
 app.directive('clipboard', [ '$document', function(){
@@ -317,28 +318,28 @@ app.factory('Search', ['$http', '$q', function ($http, $q) {
     }
 }]);
 
-app.factory('Basket', [ function () {
+app.factory('Basket', [ 'YDS_CONSTANTS', '$q', '$http', function (YDS_CONSTANTS, $q, $http) {
     return {
         createItem: function() {
             return {
-                userId: "",
+                user_id: "ydsUser",
+                component_parent_uuid: "",
                 title: "",
                 tags: [],
+                filters: [],
+                component_type: "",
+                content_type: "",
                 type: "",
-                lang: "",
-                public: false,
-                componentType: "",
-                contentType: "",
-                componentParentId: "",
-                filters: {}
+                is_private: true,
+                lang: ""
             };
         },
         initializeItem: function (bskItem) {
             bskItem.title = "";
             bskItem.type = "";
-            bskItem.public = false;
+            bskItem.is_private = true;
             bskItem.tags = [];
-            bskItem.filters = {};
+            bskItem.filters = [];
 
             return bskItem;
         },
@@ -348,8 +349,25 @@ app.factory('Basket', [ function () {
                 title: "",
                 tags: "",
                 type: "Dataset",
-                public: false
+                is_private: true
             };
+        },
+        saveBasketItem: function(bskItem) {
+            var deferred = $q.defer();
+
+            $http({
+                method: 'POST',
+                url: YDS_CONSTANTS.BASKET_URL + "save",
+                headers: {'Content-Type': 'application/json'},
+                data: JSON.stringify(bskItem)
+            })
+            .success(function (data) {
+                deferred.resolve(data);
+            }).error(function (error) {
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
         }
     }
 }]);
