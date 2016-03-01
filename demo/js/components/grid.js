@@ -97,7 +97,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                     gridFilters = scope.gridOptions.api.getFilterModel();
 
                 //if quick filtering is enabled and has length>0, get its value and create an extra filter
-                if (quickFiltering === "true" && scope.quickFilterValue.length>0)
+                if (quickFiltering === "true")
                     gridFilters['_ydsQuickFilter_'] = scope.quickFilterValue;
 
                 Filters.addGridFilter(elementId, gridFilters);
@@ -184,7 +184,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
             /************ CLEAR COMPONENT DATA ON DESTROY **************/
             /***********************************************************/
             scope.$on("$destroy", function() {
-                if (filtering === "true") {
+                if (filtering === "true" || quickFiltering === "true") {
                     scope.gridOptions.api.removeEventListener('afterFilterChanged', filterModifiedListener);
                     Filters.remove(elementId);
                 }
