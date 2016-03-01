@@ -5,6 +5,7 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
             projectId: '@',     //id of the project that the data belong
             tableType: '@',     //name of the array that contains the visualised data
             lang: '@',          //lang of the visualised data
+
             showNavigator: '@', //enable or disable line chart's navigation
             exporting: '@',     //enable or disable the export of the chart
             elementH: '@',      //set the height of the component
@@ -14,7 +15,7 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
             basketBtnX: '@',    //x-axis position of the basket button
             basketBtnY: '@',    //y-axis position of the basket butto
 
-            embeddable: '@',    //enable or disabled the embedding of the component
+            embeddable: '@',    //enable or disable the embedding of the component
             embedBtnX: '@',     //x-axis position of the embed button
             embedBtnY: '@',     //y-axis position of the embed button
             popoverPos: '@'     //the side of the embed button from which the embed information window will appear
@@ -34,7 +35,6 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
             var exporting = scope.exporting;
             var elementH = scope.elementH;
             var titleSize = scope.titleSize;
-
 
             //check if the projectId and the tableType attr is defined, else stop the process
             if (angular.isUndefined(projectId)|| angular.isUndefined(tableType)) {

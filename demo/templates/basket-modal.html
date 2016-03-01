@@ -30,8 +30,8 @@
             <label class="col-sm-3 control-label">Access Level: </label>
             <div class="col-sm-9">
                 <div class="btn-group">
-                    <label class="btn btn-primary" ng-model="modalInput.public" uib-btn-radio="false">Private</label>
-                    <label class="btn btn-primary" ng-model="modalInput.public" uib-btn-radio="true">Public</label>
+                    <label class="btn btn-primary" ng-model="modalInput.is_private" uib-btn-radio="true">Private</label>
+                    <label class="btn btn-primary" ng-model="modalInput.is_private" uib-btn-radio="false">Public</label>
                 </div>
             </div>
         </div>
@@ -46,6 +46,6 @@
     </form>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-success" type="button" ng-click="addToBasket(modalInput,basketItem)">Add</button>
+    <button class="btn btn-success" type="button" ng-click="insertToBasket(modalInput,basketItem)">Add</button>
     <button class="btn btn-active" type="button" ng-click="dismissBasketModal()">Cancel</button>
 </div>

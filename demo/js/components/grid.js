@@ -5,6 +5,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
             projectId: '@',         //id of the project that the data belong
             tableType: '@',         //name of the array that contains the visualised data
             lang: '@',              //lang of the visualised data
+
             sorting: '@',           //enable or disable array sorting, values: true, false
             filtering: '@',         //enable or disable array filtering, values: true, false
             quickFiltering: '@',    //enable or disable array quick filtering, values: true, false

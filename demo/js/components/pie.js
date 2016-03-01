@@ -5,6 +5,7 @@ angular.module('yds').directive('ydsPie', ['Data', function(Data){
             projectId: '@',     //id of the project that the data belong
             tableType: '@',     //name of the array that contains the visualised data
             lang: '@',          //lang of the visualised data
+
             showLegend: '@',    //enable or disable the chart's legend
             exporting: '@',     //enable or disable the export of the chart
             elementH: '@',      //set the height of the component
@@ -14,7 +15,7 @@ angular.module('yds').directive('ydsPie', ['Data', function(Data){
             basketBtnX: '@',    //x-axis position of the basket button
             basketBtnY: '@',    //y-axis position of the basket button
 
-            embeddable: '@',    //enable or disabled the embedding of the component
+            embeddable: '@',    //enable or disable the embedding of the component
             embedBtnX: '@',     //x-axis position of the embed button
             embedBtnY: '@',     //y-axis position of the embed button
             popoverPos: '@'     //the side of the embed button from which the embed information window will appear

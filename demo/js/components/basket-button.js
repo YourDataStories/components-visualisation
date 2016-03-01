@@ -46,9 +46,9 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', '$uibModal'
 
 			//formulate the basket item based on the element's attributes
 			scope.basketItem.lang = lang;
-			scope.basketItem.componentType = visualisationType;
-			scope.basketItem.contentType = tableType;
-			scope.basketItem.componentParentId = projectId;
+			scope.basketItem.component_type = visualisationType;
+			scope.basketItem.content_type = tableType;
+			scope.basketItem.component_parent_uuid = projectId;
 
 			//check if the user has enabled the embedding of the selected element
 			var enableBasket = scope.addToBasket;
@@ -106,8 +106,8 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', '$uibModal'
 				scope.basketItem.filters = Filters.get(element[0].id);
 
 				scope.modalInput = Basket.initializeModalItem();
-
 				scope.modalOptions = { title: "Add to Basket" };
+
 				basketModal = $uibModal.open({
 					animation: false,
 					templateUrl: 'templates/basket-modal.html',
@@ -126,7 +126,7 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', '$uibModal'
 			};
 
 			//function to be called when save to basket button of the modal is pressed
-			scope.addToBasket = function (inputObj, basketItemObj) {
+			scope.insertToBasket = function (inputObj, basketItemObj) {
 				if (inputObj.title.length==0) {
 					inputObj.alert = "Please provide a title for your item";
 					return false;
@@ -152,12 +152,17 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', '$uibModal'
 				//save the title, type and public attributes to the basket item obj
 				basketItemObj.title = inputObj.title;
 				basketItemObj.type = inputObj.type;
-				basketItemObj.public = inputObj.public;
+				basketItemObj.is_private = inputObj.is_private;
+
 				//TODO: Call Service and save the basket item obj
+				Basket.saveBasketItem(basketItemObj)
+				.then(function(response){
+					inputObj.alert = "";
+					basketModal.close();
 
-				console.log(JSON.stringify(basketItemObj));
-				basketModal.close();
-
+				}, function(error){
+					inputObj.alert = "An error occurred, please try again";
+				});
 			};
 		}
 	}
