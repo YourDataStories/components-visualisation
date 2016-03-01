@@ -368,6 +368,20 @@ app.factory('Basket', [ 'YDS_CONSTANTS', '$q', '$http', function (YDS_CONSTANTS,
             });
 
             return deferred.promise;
+        },
+        getBasketItems: function(userId) {
+            var deferred = $q.defer();
+            $http({
+                method: 'GET',
+                url: YDS_CONSTANTS.BASKET_URL + "get/"+userId,
+                headers: {'Content-Type': 'application/json'}
+            }).success(function (data) {
+                deferred.resolve(data);
+            }).error(function (error) {
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
         }
     }
 }]);

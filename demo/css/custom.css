@@ -307,11 +307,11 @@ body #main .container:first-child {
     transform: rotate(-45deg);
     font-size: 20px;
 }
-.yds-search-prev-wrapper.slide-in {
+.yds-search-prev-wrapper.slide-in ,.yds-basket-prev-wrapper.slide-in {
     animation: slide-in 1.5s forwards;
     -webkit-animation: slide-in 1.5s forwards;
 }
-.yds-search-prev-wrapper.slide-out {
+.yds-search-prev-wrapper.slide-out,.yds-basket-prev-wrapper.slide-out {
     animation: slide-out 1.5s forwards;
     -webkit-animation: slide-out 1.5s forwards;
 }
@@ -338,6 +338,68 @@ body #main .container:first-child {
 
 .yds-search-prev-inner .component-wrapper {
     padding-top: 10px;
+}/**********************************/
+/**** Basket RESULTS PREVIEW ******/
+/**********************************/
+.yds-basket-prev-wrapper {
+    background: #383E4B;
+    position: fixed;
+    z-index: 10000;
+    top: 51px;
+    right: -300px;
+    bottom: 0;
+    width: 310px;
+    box-shadow: -2px 0 9px -3px #444;
+    webkit-box-shadow: -2px 0 9px -3px #444;
+    padding-right: 0;
+    padding-left: 12px;
+}
+.yds-basket-prev-wrapper .yds-basket-prev-content{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 20px;
+    padding-right: 10px;
+    overflow-y: auto;
+}
+.yds-basket-prev-title {
+    color: #fff;
+    padding-top: 21px;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.yds-basket-prev-wrapper .yds-divider {
+    position: absolute;
+    top: 66px;
+    left: 0;
+    background: #383E4B;
+    border-radius: 25px;
+    margin-left: -20px;
+    width: 32px;
+    height: 32px;
+    line-height: 50px;
+    color: #fff;
+
+    -ms-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    transform: rotate(90deg);
+
+    transition: top 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
+    overflow: hidden;
+}
+.yds-basket-prev-wrapper .yds-divider span {
+    font-size: 20px;
+    top:-4px;
+    left:6px;
+}
+.yds-basket-prev-inner .yds-basket-prev-desc {
+    word-wrap: break-word;
+}
+
+.yds-basket-prev-inner div .row div:last-child span{
+    cursor: pointer;
 }
 /********************************/
 /**** RZSLIDER CUSTOMIZATION ****/

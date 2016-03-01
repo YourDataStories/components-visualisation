@@ -1,0 +1,47 @@
+<div class="yds-basket-prev-wrapper container">
+    <div class="yds-divider" ng-click="toggleVisibility()">
+        <span class="glyphicon glyphicon-paperclip"></span>
+    </div>
+    <div class="yds-basket-prev-content">
+        <div class="yds-basket-prev-title text-center" title="Basket Preview">
+            Basket Preview
+        </div>
+        <div class="yds-basket-prev-title text-center">
+            <div class="btn-group">
+                <label class="btn btn-primary" ng-model="modalInput.basketType" uib-btn-radio="false">Dataset</label>
+                <label class="btn btn-primary" ng-model="modalInput.basketType"
+                       uib-btn-radio="true">Visualisation</label>
+            </div>
+        </div>
+        <div class="yds-basket-prev-inner">
+            <div ng-if="results.length>0" class="row list-group" style="margin-top: 10px; padding: 10px; margin-left: 0px;margin-right: 0px;">
+                <div ng-repeat="item in results" class="list-group-item"><!--ng-click="visitResult($index)"-->
+                    <div class="row">
+                        <div class="col-md-1">
+                            <span class="glyphicon glyphicon-list-alt" aria-hidden="true" ng-if="item.component_type=='grid'"></span>
+                            <span class="glyphicon glyphicon-signal" aria-hidden="true" ng-if="item.component_type=='line'"></span>
+                            <span class="glyphicon glyphicon-record" aria-hidden="true" ng-if="item.component_type=='pie'"></span>
+                            <span class="glyphicon glyphicon-stats" aria-hidden="true" ng-if="item.component_type=='bar'"></span>
+                            <span class="glyphicon glyphicon-globe" aria-hidden="true" ng-if="item.component_type=='map'"></span>
+                        </div>
+                        <div class="col-md-9 yds-basket-prev-desc">
+                            <b>{{item.title}}</b><br/>
+                            <label for="">Tags: </label><span ng-repeat="tag in item.tags">{{tag}}{{$last ? '' : ', '}}</span>
+                        </div>
+                        <div class="col-md-1">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"
+                                  ng-click="deleteBasketItem(1)"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="results.data.length==0" class="row list-group"
+                 style="border: 0.5px solid grey; margin-top: 10px; padding: 10px;">
+                <a class="list-group-item">
+                    <h4>We are sorry we could not find any item in your basket..</h4>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
