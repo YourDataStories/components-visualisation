@@ -1,3 +1,8 @@
 <div class="component-wrapper">
-    <div class="map-container" style="width:100%;" yds-embed></div>
+    <div class="map-container" style="width:100%;" yds-embed yds-basket-btn></div>
+    <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length>0">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        {{ydsAlert}}
+    </div>
 </div>
