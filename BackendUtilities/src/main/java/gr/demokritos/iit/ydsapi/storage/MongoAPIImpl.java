@@ -23,8 +23,10 @@ import gr.demokritos.iit.ydsapi.model.YDSFacet;
 import gr.demokritos.iit.ydsapi.util.Configuration;
 import gr.demokritos.iit.ydsapi.util.ResourceUtil;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -88,7 +90,7 @@ public class MongoAPIImpl implements YDSAPI {
         Object upserted_id = wr.getUpsertedId();
         String id;
         if (upserted_id == null) {
-            id = (String) ((ObjectId) col.findOne(new BasicDBObject("hashcode", emb_hashcode)).get("_id")).toHexString();
+            id = (String) ((ObjectId) col.findOne(new BasicDBObject(FLD_HASHCODE, emb_hashcode)).get("_id")).toHexString();
         } else {
             id = upserted_id.toString();
         }
@@ -127,72 +129,61 @@ public class MongoAPIImpl implements YDSAPI {
     }
 
     @Override
-    public void saveBasketItem(BasketItem item) {
+    public String saveBasketItem(BasketItem item) {
         // TODO: test
         DBCollection col = db.getCollection(COL_BASKETS);
         String jsonbi = item.toJSON();
         int emb_hashcode = item.hashCode();
         DBObject storable = (DBObject) JSON.parse(jsonbi);
         storable.put(FLD_HASHCODE, emb_hashcode);
-        col.update(
+        WriteResult wr = col.update(
                 QueryBuilder.start(FLD_HASHCODE).is(emb_hashcode).get(),
                 storable,
                 true,
                 false
         );
+        System.out.println(wr.toString());
+        Object upserted_id = wr.getUpsertedId();
+        String id;
+        if (upserted_id == null) {
+            id = (String) ((ObjectId) col.findOne(
+                    new BasicDBObject(FLD_HASHCODE, emb_hashcode)).get("_id"))
+                    .toHexString();
+        } else {
+            id = upserted_id.toString();
+        }
+        return id;
     }
 
     @Override
     public List<BasketItem> getBasketItems(String user_id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (user_id == null || user_id.trim().isEmpty()) {
+            return Collections.EMPTY_LIST;
+        }
+        List<BasketItem> res = new ArrayList();
+        DBCollection col = db.getCollection(COL_BASKETS);
+        DBCursor curs = col.find(QueryBuilder.start("user_id").is(user_id).get());
+        while (curs.hasNext()) {
+            DBObject dbo = curs.next();
+            res.add(extractBasketItem(dbo));
+        }
+        return res;
     }
 
     @Override
     public BasketItem getBasketItem(ObjectId id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        BasketItem res = null;
+        DBCollection col = db.getCollection(COL_BASKETS);
+        DBCursor curs = col.find(QueryBuilder.start("_id").is(id).get());
+        if (curs.hasNext()) {
+            DBObject dbo = curs.next();
+            res = extractBasketItem(dbo);
+        }
+        return res;
+    }
+
+    private BasketItem extractBasketItem(DBObject dbo) {
+        String json = dbo.toString();
+        return new BasketItem(json);
     }
 }
-
-//filters : [{filter1, filter2…, n}]
-//
-//[
-//{ 
-//    applied_to: ‘quick_bar’
-//    attrs : {
-//        ‘ΔΕΗ’ : true
-//              }
-//},
-//{ 
-//    applied_to: budget
-//    attrs: {
-//        ‘gte’ : 50
-//             }
-//}, 
-//{ 
-//    applied_to: subProjectTitle
-//    attrs: {
-//        ‘OKΩ DEH’ : true,
-//        ‘other’ : true
-//             }
-//}
-//]
-//
-//
-//
-//Line
-//
-//attribute_name : {
-//    min: 123213131,
-//    max: 131312313
-//}
-//
-//[
-//{ 
-//    applied_to: ‘attribute_name’
-//    attrs : {
-//        ‘axis : ‘y’ or ‘x’,
-//        ‘min’ : 313213123,
-//        ‘max’ : 313311233
-//}
-//}
-//]

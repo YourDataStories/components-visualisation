@@ -30,7 +30,12 @@ public interface YDSAPI {
 
     Object saveEmbedding(Object project_id, VizType type, Collection<YDSFacet> facets);
 
-    void saveBasketItem(BasketItem item);
+    /**
+     * 
+     * @param item
+     * @return the basket_item_id
+     */
+    String saveBasketItem(BasketItem item);
 
     BasketItem getBasketItem(ObjectId id);
 

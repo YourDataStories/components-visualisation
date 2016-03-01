@@ -60,6 +60,7 @@ public class BasketItem {
                 .registerTypeAdapter(BasketItem.class, new BasketItemDeserializer())
                 .create()
                 .fromJson(jsonBasketItem, getClass());
+        System.out.println(bi.toJSON());
         this.userID = bi.userID;
         this.componentParentUUID = bi.componentParentUUID;
         this.title = bi.title;
@@ -142,15 +143,25 @@ public class BasketItem {
         return gson.toJson(this);
     }
 
+    public JsonElement toJSONElement() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder
+                .registerTypeAdapter(BasketItem.class, new BasketItemSerializer())
+                .disableHtmlEscaping()
+                .setPrettyPrinting();
+        Gson gson = gsonBuilder.create();
+        return gson.toJsonTree(this);
+    }
+
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 59 * hash + Objects.hashCode(this.componentParentUUID);
-        hash = 59 * hash + Objects.hashCode(this.filters);
-        hash = 59 * hash + Objects.hashCode(this.compType);
-        hash = 59 * hash + Objects.hashCode(this.contentType);
-        hash = 59 * hash + Objects.hashCode(this.type);
-        hash = 59 * hash + Objects.hashCode(this.lang);
+        int hash = 3;
+        hash = 17 * hash + Objects.hashCode(this.componentParentUUID);
+        hash = 17 * hash + Objects.hashCode(this.title);
+        hash = 17 * hash + Objects.hashCode(this.compType);
+        hash = 17 * hash + Objects.hashCode(this.contentType);
+        hash = 17 * hash + Objects.hashCode(this.type);
+        hash = 17 * hash + Objects.hashCode(this.lang);
         return hash;
     }
 
@@ -166,7 +177,7 @@ public class BasketItem {
         if (!Objects.equals(this.componentParentUUID, other.componentParentUUID)) {
             return false;
         }
-        if (!Objects.equals(this.filters, other.filters)) {
+        if (!Objects.equals(this.title, other.title)) {
             return false;
         }
         if (!Objects.equals(this.compType, other.compType)) {
@@ -363,7 +374,9 @@ public class BasketItem {
         public JsonElement serialize(BasketItem t, Type type, JsonSerializationContext jsc) {
             final JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty(BasketItem.FLD_USERID, t.getUserID());
-            jsonObject.addProperty(BasketItem.FLD_BASKET_ITEM_ID, t.getBasketItemID().toString());
+            if (t.getBasketItemID() != null) {
+                jsonObject.addProperty(BasketItem.FLD_BASKET_ITEM_ID, t.getBasketItemID().toString());
+            }
             jsonObject.addProperty(BasketItem.FLD_COMPONENT_PARENT_UUID, t.getComponentParentUUID());
             jsonObject.addProperty(BasketItem.FLD_TITLE, t.getTitle());
             jsonObject.addProperty(BasketItem.FLD_COMPONENT_TYPE, t.getComponentType());
@@ -398,15 +411,15 @@ public class BasketItem {
             // init builder object
             Builder b = new Builder(user_id, component_parent_uuid, title);
             // other
-            final String basket_item_id = jsonObject.get(BasketItem.FLD_BASKET_ITEM_ID).getAsString();
-            if (basket_item_id != null) {
-                final ObjectId id = new ObjectId(basket_item_id);
+            JsonElement jsonbitemID = jsonObject.get(BasketItem.FLD_BASKET_ITEM_ID);
+            if (jsonbitemID != null) {
+                final ObjectId id = new ObjectId(jsonbitemID.getAsString());
                 b = b.withID(id);
             }
             // tags
             final JsonArray jsonTags = jsonObject.get(BasketItem.FLD_TAGS).getAsJsonArray();
             final Set<String> sTags = new LinkedHashSet(jsonTags.size());
-            for (int i = 0; i < sTags.size(); i++) {
+            for (int i = 0; i < jsonTags.size(); i++) {
                 final JsonElement jsonTag = jsonTags.get(i);
                 sTags.add(jsonTag.getAsString());
             }
@@ -415,7 +428,7 @@ public class BasketItem {
             // filters
             final JsonArray jsonFilters = jsonObject.get(BasketItem.FLD_FILTERS).getAsJsonArray();
             final Set<BFilter> sFilters = new LinkedHashSet(jsonFilters.size());
-            for (int i = 0; i < sFilters.size(); i++) {
+            for (int i = 0; i < jsonFilters.size(); i++) {
                 final JsonElement jsonFilt = jsonFilters.get(i);
                 BFilter bf = new Gson().fromJson(jsonFilt, BFilter.class);
                 sFilters.add(bf);
