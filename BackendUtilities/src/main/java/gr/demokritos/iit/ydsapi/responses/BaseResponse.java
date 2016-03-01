@@ -6,6 +6,7 @@
 package gr.demokritos.iit.ydsapi.responses;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 
 /**
  *
@@ -74,4 +75,8 @@ public class BaseResponse implements IResponse {
         return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(this, BaseResponse.class);
     }
 
+    @Override
+    public JsonElement toJSONElement() {
+        return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJsonTree(this, BaseResponse.class);
+    }
 }

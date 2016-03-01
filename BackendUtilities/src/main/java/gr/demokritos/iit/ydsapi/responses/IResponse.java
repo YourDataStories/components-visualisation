@@ -5,6 +5,8 @@
  */
 package gr.demokritos.iit.ydsapi.responses;
 
+import com.google.gson.JsonElement;
+
 /**
  * a response to send through the API
  *
@@ -13,5 +15,7 @@ package gr.demokritos.iit.ydsapi.responses;
 public interface IResponse {
 
     String toJSON();
+    
+    JsonElement toJSONElement();
 
 }

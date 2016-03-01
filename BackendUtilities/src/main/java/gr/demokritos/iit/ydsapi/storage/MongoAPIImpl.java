@@ -16,6 +16,7 @@ import com.mongodb.QueryBuilder;
 import com.mongodb.ServerAddress;
 import com.mongodb.WriteResult;
 import com.mongodb.util.JSON;
+import gr.demokritos.iit.ydsapi.model.BFilter;
 import gr.demokritos.iit.ydsapi.model.BasketItem;
 import gr.demokritos.iit.ydsapi.model.Embedding;
 import gr.demokritos.iit.ydsapi.model.VizType;
@@ -27,7 +28,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bson.types.ObjectId;
@@ -130,7 +133,6 @@ public class MongoAPIImpl implements YDSAPI {
 
     @Override
     public String saveBasketItem(BasketItem item) {
-        // TODO: test
         DBCollection col = db.getCollection(COL_BASKETS);
         String jsonbi = item.toJSON();
         int emb_hashcode = item.hashCode();
@@ -142,7 +144,7 @@ public class MongoAPIImpl implements YDSAPI {
                 true,
                 false
         );
-        System.out.println(wr.toString());
+//        System.out.println(wr.toString());
         Object upserted_id = wr.getUpsertedId();
         String id;
         if (upserted_id == null) {
@@ -160,9 +162,15 @@ public class MongoAPIImpl implements YDSAPI {
         if (user_id == null || user_id.trim().isEmpty()) {
             return Collections.EMPTY_LIST;
         }
-        List<BasketItem> res = new ArrayList();
+        user_id = user_id.trim();
         DBCollection col = db.getCollection(COL_BASKETS);
-        DBCursor curs = col.find(QueryBuilder.start("user_id").is(user_id).get());
+        DBCursor curs;
+        List<BasketItem> res = new ArrayList();
+        if (USER_ID_PUBLIC.equalsIgnoreCase(user_id)) {
+            curs = col.find(QueryBuilder.start(BasketItem.FLD_IS_PRIVATE).is(Boolean.FALSE).get());
+        } else {
+            curs = col.find(QueryBuilder.start(BasketItem.FLD_USERID).is(user_id).get());
+        }
         while (curs.hasNext()) {
             DBObject dbo = curs.next();
             res.add(extractBasketItem(dbo));
@@ -174,6 +182,7 @@ public class MongoAPIImpl implements YDSAPI {
     public BasketItem getBasketItem(ObjectId id) {
         BasketItem res = null;
         DBCollection col = db.getCollection(COL_BASKETS);
+
         DBCursor curs = col.find(QueryBuilder.start("_id").is(id).get());
         if (curs.hasNext()) {
             DBObject dbo = curs.next();
@@ -182,8 +191,97 @@ public class MongoAPIImpl implements YDSAPI {
         return res;
     }
 
+    @Override
+    public BasketItem getBasketItem(String id) {
+        BasketItem res = null;
+        ObjectId _id;
+        try {
+            _id = new ObjectId(id);
+            res = getBasketItem(_id);
+        } catch (Exception ex) {
+            LOGGER.warning(String.format("%s", ex.getMessage()));
+        }
+        return res;
+    }
+
+    @Override
+    public boolean removeBasketItem(String user_id, String basket_item_id) {
+        boolean res = false;
+        if (basket_item_id == null || basket_item_id.trim().isEmpty()) {
+            return res;
+        }
+        basket_item_id = basket_item_id.trim();
+        DBCollection col = db.getCollection(COL_BASKETS);
+        ObjectId _id;
+        try {
+            _id = new ObjectId(basket_item_id);
+            WriteResult wr = col.remove(QueryBuilder.start(BasketItem.FLD_USERID).is(user_id).and(BasketItem.FLD_OBJ_ID).is(_id).get());
+            res = wr.getN() > 0;
+        } catch (Exception ex) {
+            LOGGER.warning(String.format("%s", ex.getMessage()));
+        }
+        return res;
+    }
+
+    @Override
+    public int removeBasketItems(String user_id) {
+        int removed = 0;
+        if (user_id == null || user_id.trim().isEmpty()) {
+            return removed;
+        }
+        user_id = user_id.trim();
+        DBCollection col = db.getCollection(COL_BASKETS);
+        try {
+            WriteResult wr = col.remove(QueryBuilder.start(BasketItem.FLD_USERID).is(user_id).get());
+            removed = wr.getN();
+        } catch (Exception ex) {
+            LOGGER.warning(String.format("%s", ex.getMessage()));
+        }
+        return removed;
+    }
+
     private BasketItem extractBasketItem(DBObject dbo) {
-        String json = dbo.toString();
-        return new BasketItem(json);
+        ObjectId _id;
+        try {
+            _id = (ObjectId) dbo.get(BasketItem.FLD_OBJ_ID);
+        } catch (ClassCastException ex) {
+            String id = (String) dbo.get(BasketItem.FLD_OBJ_ID);
+            _id = new ObjectId(id);
+        }
+        String user_id = (String) dbo.get(BasketItem.FLD_USERID);
+        String component_parent_uuid = (String) dbo.get(BasketItem.FLD_COMPONENT_PARENT_UUID);
+        String title = (String) dbo.get(BasketItem.FLD_TITLE);
+
+        String component_type = (String) dbo.get(BasketItem.FLD_COMPONENT_TYPE);
+        String type = (String) dbo.get(BasketItem.FLD_TYPE);
+        String content_type = (String) dbo.get(BasketItem.FLD_CONTENT_TYPE);
+        boolean is_private = (Boolean) dbo.get(BasketItem.FLD_IS_PRIVATE);
+        String lang = (String) dbo.get(BasketItem.FLD_LANG);
+        List<String> tags = (List<String>) dbo.get(BasketItem.FLD_TAGS);
+        List<BFilter> filters = extractFilters((List<DBObject>) dbo.get(BasketItem.FLD_FILTERS));
+        return new BasketItem.Builder(user_id, component_parent_uuid, title)
+                .withID(_id)
+                .withTags(new HashSet(tags))
+                .withFilters(new HashSet(filters))
+                .withComponentType(component_type)
+                .withContentType(content_type)
+                .withType(type)
+                .withIsPrivate(is_private)
+                .withLang(lang)
+                .build();
+    }
+
+    private List<BFilter> extractFilters(List<DBObject> dbos) {
+        List<BFilter> filters = new ArrayList();
+        for (DBObject dbo : dbos) {
+            filters.add(extractFilter(dbo));
+        }
+        return filters;
+    }
+
+    private BFilter extractFilter(DBObject dbo) {
+        String applied_to = (String) dbo.get(BFilter.FLD_APPLIED_TO);
+        Map<String, Object> attrs = (Map<String, Object>) dbo.get(BFilter.FLD_ATTRIBUTES);
+        return new BFilter(applied_to, attrs);
     }
 }

@@ -66,4 +66,7 @@ public class BFilter {
     public JsonElement toJSONElement() {
         return new Gson().toJsonTree(this, BFilter.class);
     }
+    
+    public static final String FLD_APPLIED_TO = "applied_to";
+    public static final String FLD_ATTRIBUTES = "attrs";
 }

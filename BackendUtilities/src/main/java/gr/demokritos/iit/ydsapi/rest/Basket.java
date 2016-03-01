@@ -8,7 +8,8 @@ package gr.demokritos.iit.ydsapi.rest;
 import gr.demokritos.iit.ydsapi.model.BasketItem;
 import gr.demokritos.iit.ydsapi.responses.BaseResponse;
 import gr.demokritos.iit.ydsapi.responses.BaseResponse.Status;
-import gr.demokritos.iit.ydsapi.responses.BasketLoadResponse;
+import gr.demokritos.iit.ydsapi.responses.BasketItemLoadResponse;
+import gr.demokritos.iit.ydsapi.responses.BasketListLoadResponse;
 import gr.demokritos.iit.ydsapi.responses.BasketSaveResponse;
 import gr.demokritos.iit.ydsapi.storage.MongoAPIImpl;
 import gr.demokritos.iit.ydsapi.storage.YDSAPI;
@@ -68,12 +69,12 @@ public class Basket {
     ) {
         YDSAPI api = MongoAPIImpl.getInstance();
         List<BasketItem> baskets;
-        BasketLoadResponse blr;
+        BasketListLoadResponse blr;
         try {
             baskets = api.getBasketItems(user_id);
-            blr = new BasketLoadResponse(baskets);
+            blr = new BasketListLoadResponse(baskets);
         } catch (Exception ex) {
-            blr = new BasketLoadResponse(
+            blr = new BasketListLoadResponse(
                     null,
                     Status.ERROR,
                     ex.getMessage() != null ? ex.getMessage() : ex.toString()
@@ -87,4 +88,83 @@ public class Basket {
                                 : Response.Status.INTERNAL_SERVER_ERROR
         ).entity(blr.toJSON()).build();
     }
+
+    @Path("get_item/{basket_item_id}")
+    @GET
+    public Response getItem(
+            @PathParam("basket_item_id") String basket_item_id
+    ) {
+        YDSAPI api = MongoAPIImpl.getInstance();
+        final BasketItem bskt;
+        BasketItemLoadResponse blr;
+        try {
+            bskt = api.getBasketItem(basket_item_id);
+            blr = new BasketItemLoadResponse(bskt);
+        } catch (Exception ex) {
+            blr = new BasketItemLoadResponse(
+                    null,
+                    Status.ERROR,
+                    ex.getMessage() != null ? ex.getMessage() : ex.toString()
+            );
+        }
+        return Response.status(
+                blr.getStatus() == Status.OK
+                        ? Response.Status.OK
+                        : blr.getStatus() == Status.NOT_EXISTS
+                                ? Response.Status.NOT_FOUND
+                                : Response.Status.INTERNAL_SERVER_ERROR
+        ).entity(blr.toJSON()).build();
+    }
+
+    @Path("remove/{user_id}/{basket_item_id}")
+    @GET
+    public Response remove(
+            @PathParam("user_id") String user_id,
+            @PathParam("basket_item_id") String basket_item_id
+    ) {
+        YDSAPI api = MongoAPIImpl.getInstance();
+        BaseResponse br;
+        try {
+            boolean res = api.removeBasketItem(user_id, basket_item_id);
+            br = new BaseResponse(Status.OK, res ? "removed succesfully" : "not found");
+        } catch (Exception ex) {
+            br = new BaseResponse(
+                    Status.ERROR,
+                    ex.getMessage() != null ? ex.getMessage() : ex.toString()
+            );
+        }
+        return Response.status(
+                br.getStatus() == Status.OK
+                        ? Response.Status.OK
+                        : br.getStatus() == Status.NOT_EXISTS
+                                ? Response.Status.NOT_FOUND
+                                : Response.Status.INTERNAL_SERVER_ERROR
+        ).entity(br.toJSON()).build();
+    }
+
+    @Path("remove/{user_id}")
+    @GET
+    public Response removeAllByUser(
+            @PathParam("user_id") String user_id
+    ) {
+        YDSAPI api = MongoAPIImpl.getInstance();
+        BaseResponse br;
+        try {
+            int res = api.removeBasketItems(user_id);
+            br = new BaseResponse(Status.OK, res > 0 ? String.format("removed succesfully %d items", res) : String.format("no basket items found for user '%s'", user_id));
+        } catch (Exception ex) {
+            br = new BaseResponse(
+                    Status.ERROR,
+                    ex.getMessage() != null ? ex.getMessage() : ex.toString()
+            );
+        }
+        return Response.status(
+                br.getStatus() == Status.OK
+                        ? Response.Status.OK
+                        : br.getStatus() == Status.NOT_EXISTS
+                                ? Response.Status.NOT_FOUND
+                                : Response.Status.INTERNAL_SERVER_ERROR
+        ).entity(br.toJSON()).build();
+    }
+
 }

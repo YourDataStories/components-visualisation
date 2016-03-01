@@ -15,8 +15,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.mongodb.BasicDBObject;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -60,7 +62,7 @@ public class BasketItem {
                 .registerTypeAdapter(BasketItem.class, new BasketItemDeserializer())
                 .create()
                 .fromJson(jsonBasketItem, getClass());
-        System.out.println(bi.toJSON());
+//        System.out.println(bi.toJSON());
         this.userID = bi.userID;
         this.componentParentUUID = bi.componentParentUUID;
         this.title = bi.title;
@@ -259,7 +261,12 @@ public class BasketItem {
          * @return
          */
         public Builder withComponentType(String compTarg) {
-            this.component_type = compTarg;
+            String compTargLower = compTarg.toLowerCase();
+            if (!ComponentType.accepted.contains(compTargLower)) {
+                throw new IllegalArgumentException(String.format("'%s' not accepted as a valid component type", compTarg));
+            } else {
+                this.component_type = compTargLower;
+            }
             return this;
         }
 
@@ -353,13 +360,37 @@ public class BasketItem {
         }
     }
 
+    public enum ComponentType {
+
+        LINE("line"), PIE("pie"), BAR("bar"), MAP("map"), GRID("grid");
+        private final String type;
+
+        private ComponentType(String type) {
+            this.type = type;
+        }
+
+        public String getDecl() {
+            return type;
+        }
+        public static final Set<String> accepted = new HashSet();
+
+        static {
+            accepted.add(LINE.getDecl());
+            accepted.add(PIE.getDecl());
+            accepted.add(BAR.getDecl());
+            accepted.add(MAP.getDecl());
+            accepted.add(GRID.getDecl());
+        }
+    }
+
     public static final String FLD_USERID = "user_id";
     public static final String FLD_BASKET_ITEM_ID = "basket_item_id";
+    public static final String FLD_OBJ_ID = "_id";
     public static final String FLD_COMPONENT_PARENT_UUID = "component_parent_uuid";
     public static final String FLD_TITLE = "title";
     public static final String FLD_TAGS = "tags";
     public static final String FLD_FILTERS = "filters";
-    public static final String FLD_COMPONENT_TYPE = "component_type";
+    public static final String FLD_COMPONENT_TYPE = "component_type"; // accepted types: line, pie, bar, map, grid
     public static final String FLD_CONTENT_TYPE = "content_type";
     public static final String FLD_TYPE = "type";
     public static final String FLD_IS_PRIVATE = "is_private";
@@ -411,9 +442,9 @@ public class BasketItem {
             // init builder object
             Builder b = new Builder(user_id, component_parent_uuid, title);
             // other
-            JsonElement jsonbitemID = jsonObject.get(BasketItem.FLD_BASKET_ITEM_ID);
+            JsonElement jsonbitemID = jsonObject.get(BasketItem.FLD_OBJ_ID);
             if (jsonbitemID != null) {
-                final ObjectId id = new ObjectId(jsonbitemID.getAsString());
+                ObjectId id = new ObjectId(jsonbitemID.getAsString());
                 b = b.withID(id);
             }
             // tags

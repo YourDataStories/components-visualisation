@@ -25,13 +25,14 @@ public interface YDSAPI {
     static String COL_EMBEDDINGS = "embeddings";
     static String COL_BASKETS = "baskets";
     static String FLD_HASHCODE = "hashcode";
+    static String USER_ID_PUBLIC = "public";
 
     Embedding getEmbedding(Object embedding_id) throws Exception;
 
     Object saveEmbedding(Object project_id, VizType type, Collection<YDSFacet> facets);
 
     /**
-     * 
+     *
      * @param item
      * @return the basket_item_id
      */
@@ -39,6 +40,28 @@ public interface YDSAPI {
 
     BasketItem getBasketItem(ObjectId id);
 
+    /**
+     *
+     * @param id
+     * @return
+     */
+    BasketItem getBasketItem(String id);
+
     List<BasketItem> getBasketItems(String user_id);
+
+    /**
+     *
+     * @param user_id
+     * @param basket_item_id
+     * @return true if item was removed successfully
+     */
+    boolean removeBasketItem(String user_id, String basket_item_id);
+
+    /**
+     *
+     * @param user_id
+     * @return number of items removed
+     */
+    int removeBasketItems(String user_id);
 
 }

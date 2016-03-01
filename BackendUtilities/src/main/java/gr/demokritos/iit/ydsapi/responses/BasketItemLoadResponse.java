@@ -7,66 +7,74 @@ package gr.demokritos.iit.ydsapi.responses;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import gr.demokritos.iit.ydsapi.model.BasketItem;
 import java.lang.reflect.Type;
-import java.util.List;
 
 /**
  *
  * @author George K. <gkiom@iit.demokritos.gr>
  */
-public class BasketLoadResponse extends BaseResponse implements IResponse {
+public class BasketItemLoadResponse extends BaseResponse implements IResponse {
 
-    private final List<BasketItem> items;
+    private final BasketItem item;
 
-    public BasketLoadResponse(List<BasketItem> items, Status status, String message) {
+    public BasketItemLoadResponse(BasketItem itemArg, Status status, String message) {
         super(status, message);
-        this.items = items;
+        this.item = itemArg;
     }
 
-    public BasketLoadResponse(List<BasketItem> items) {
+    public BasketItemLoadResponse(BasketItem itemArg) {
         super();
-        if (items == null || items.isEmpty()) {
+        if (itemArg == null) {
             setStatus(Status.NOT_EXISTS);
-            setMessage("no basket items found");
+            setMessage("no basket item found");
         } else {
             setStatus(Status.OK);
         }
-        this.items = items;
+        this.item = itemArg;
+    }
+
+    public BasketItem getItem() {
+        return item;
     }
 
     @Override
     public String toJSON() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder
-                .registerTypeAdapter(BasketLoadResponse.class, new BasketLoadResponseSerializer())
+                .registerTypeAdapter(BasketItemLoadResponse.class, new BasketItemResponseSerializer())
                 .disableHtmlEscaping()
                 .setPrettyPrinting();
         Gson gson = gsonBuilder.create();
         return gson.toJson(this);
     }
 
-    public class BasketLoadResponseSerializer implements JsonSerializer<BasketLoadResponse> {
+    @Override
+    public JsonElement toJSONElement() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder
+                .registerTypeAdapter(BasketItemLoadResponse.class, new BasketItemResponseSerializer())
+                .disableHtmlEscaping()
+                .setPrettyPrinting();
+        Gson gson = gsonBuilder.create();
+        return gson.toJsonTree(this);
+    }
+
+    public class BasketItemResponseSerializer implements JsonSerializer<BasketItemLoadResponse> {
 
         @Override
-        public JsonElement serialize(BasketLoadResponse t, Type typeOfSrc, JsonSerializationContext context) {
+        public JsonElement serialize(BasketItemLoadResponse t, Type typeOfSrc, JsonSerializationContext context) {
             final JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("status", t.getStatus().toString());
             jsonObject.addProperty("msg", t.getMessage());
-            final JsonArray jsonItems = new JsonArray();
-            if (t.items != null && !t.items.isEmpty()) {
+            if (t.getItem() != null) {
                 // add items
-                for (final BasketItem it : t.items) {
-                    final JsonElement jsonI = it.toJSONElement();
-                    jsonItems.add(jsonI);
-                }
+                jsonObject.add("item", t.getItem().toJSONElement());
             }
-            jsonObject.add("items", jsonItems);
             return jsonObject;
         }
     }

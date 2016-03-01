@@ -122,7 +122,7 @@ public class CouchWrapper {
             res = p.execGet(path);
             entity = res.getEntity();
             String entity_response = EntityUtils.toString(entity, Charset.forName(Configuration.ENCODING_UTF_8));
-            System.out.println(entity_response);
+//            System.out.println(entity_response);
             return entity_response;
         } catch (IOException ex) {
             Logger.getLogger(CouchWrapper.class.getName()).log(Level.SEVERE, null, ex);

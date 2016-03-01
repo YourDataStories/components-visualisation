@@ -62,8 +62,8 @@ public class ESPAFieldParser {
 
             strDate = sdfDestination.format(date);
 
-            System.out.println(String.format("Date is converted from %s format to %s", date_format_input, date_format_output));
-            System.out.println("Converted date is : " + strDate);
+//            System.out.println(String.format("Date is converted from %s format to %s", date_format_input, date_format_output));
+//            System.out.println("Converted date is : " + strDate);
         } catch (ParseException pe) {
             System.out.println("Parse Exception : " + pe);
         }
