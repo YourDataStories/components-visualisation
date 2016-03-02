@@ -6,6 +6,7 @@
 package gr.demokritos.iit.ydsapi.storage;
 
 import gr.demokritos.iit.ydsapi.model.BasketItem;
+import gr.demokritos.iit.ydsapi.model.BasketItem.BasketType;
 import gr.demokritos.iit.ydsapi.model.Embedding;
 import gr.demokritos.iit.ydsapi.model.VizType;
 import gr.demokritos.iit.ydsapi.model.YDSFacet;
@@ -47,7 +48,14 @@ public interface YDSAPI {
      */
     BasketItem getBasketItem(String id);
 
-    List<BasketItem> getBasketItems(String user_id);
+    /**
+     * get basket items, by basket type
+     *
+     * @param user_id
+     * @param type
+     * @return
+     */
+    List<BasketItem> getBasketItems(String user_id, BasketType type);
 
     /**
      *

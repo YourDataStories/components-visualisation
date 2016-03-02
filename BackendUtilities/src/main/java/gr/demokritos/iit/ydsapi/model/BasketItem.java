@@ -15,7 +15,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.mongodb.BasicDBObject;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -346,9 +345,12 @@ public class BasketItem {
         }
     }
 
+    /**
+     * basket types: dataset/visualization, 'ALL' is used to override call
+     */
     public enum BasketType {
 
-        DATASET("dataset"), VISUALIZATION("visualization");
+        DATASET("dataset"), VISUALIZATION("visualization"), ALL("all");
         private final String type;
 
         private BasketType(String type) {
@@ -360,6 +362,9 @@ public class BasketItem {
         }
     }
 
+    /**
+     * accepted component types.
+     */
     public enum ComponentType {
 
         LINE("line"), PIE("pie"), BAR("bar"), MAP("map"), GRID("grid");

@@ -23,6 +23,7 @@ public class Configuration {
     public static String DATABASE_NAME_DECLARATION = "database_name";
     public static String DATABASE_USERNAME_DECLARATION = "database_username";
     public static String DATABASE_PASSWORD_DECLARATION = "database_password";
+    public static String BASKET_MAX_CACHE_SIZE = "basket_max_cache_size";
 
     public Configuration() {
         this.properties = new Properties();

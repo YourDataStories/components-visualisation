@@ -6,6 +6,7 @@
 package gr.demokritos.iit.ydsapi.rest;
 
 import gr.demokritos.iit.ydsapi.model.BasketItem;
+import gr.demokritos.iit.ydsapi.model.BasketItem.BasketType;
 import gr.demokritos.iit.ydsapi.responses.BaseResponse;
 import gr.demokritos.iit.ydsapi.responses.BaseResponse.Status;
 import gr.demokritos.iit.ydsapi.responses.BasketItemLoadResponse;
@@ -20,6 +21,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -66,13 +68,17 @@ public class Basket {
     @Path("get/{user_id}")
     @GET
     public Response load(
-            @PathParam("user_id") String user_id
+            @PathParam("user_id") String user_id,
+            @QueryParam("basket_type") String basket_type
     ) {
         YDSAPI api = MongoAPIImpl.getInstance();
         List<BasketItem> baskets;
         BasketListLoadResponse blr;
         try {
-            baskets = api.getBasketItems(user_id);
+            baskets = api.getBasketItems(user_id,
+                    basket_type == null
+                            ? BasketType.ALL
+                            : BasketType.valueOf(basket_type.toUpperCase()));
             blr = new BasketListLoadResponse(baskets);
         } catch (Exception ex) {
             blr = new BasketListLoadResponse(
@@ -117,17 +123,22 @@ public class Basket {
         ).entity(blr.toJSON()).build();
     }
 
-    @Path("remove/{user_id}/{basket_item_id}")
+    @Path("remove/{user_id}")
     @DELETE
     public Response remove(
             @PathParam("user_id") String user_id,
-            @PathParam("basket_item_id") String basket_item_id
+            @QueryParam("basket_item_id") String basket_item_id
     ) {
         YDSAPI api = MongoAPIImpl.getInstance();
         BaseResponse br;
         try {
-            boolean res = api.removeBasketItem(user_id, basket_item_id);
-            br = new BaseResponse(Status.OK, res ? "removed succesfully" : "not found");
+            if (basket_item_id == null) {
+                int res = api.removeBasketItems(user_id);
+                br = new BaseResponse(Status.OK, getMessage(res, user_id));
+            } else {
+                boolean res = api.removeBasketItem(user_id, basket_item_id);
+                br = new BaseResponse(Status.OK, getMessage(res, basket_item_id));
+            }
         } catch (Exception ex) {
             br = new BaseResponse(
                     Status.ERROR,
@@ -143,29 +154,14 @@ public class Basket {
         ).entity(br.toJSON()).build();
     }
 
-    @Path("remove/{user_id}")
-    @DELETE
-    public Response removeAllByUser(
-            @PathParam("user_id") String user_id
-    ) {
-        YDSAPI api = MongoAPIImpl.getInstance();
-        BaseResponse br;
-        try {
-            int res = api.removeBasketItems(user_id);
-            br = new BaseResponse(Status.OK, res > 0 ? String.format("removed succesfully %d items", res) : String.format("no basket items found for user '%s'", user_id));
-        } catch (Exception ex) {
-            br = new BaseResponse(
-                    Status.ERROR,
-                    ex.getMessage() != null ? ex.getMessage() : ex.toString()
-            );
-        }
-        return Response.status(
-                br.getStatus() == Status.OK
-                        ? Response.Status.OK
-                        : br.getStatus() == Status.NOT_EXISTS
-                                ? Response.Status.NOT_FOUND
-                                : Response.Status.INTERNAL_SERVER_ERROR
-        ).entity(br.toJSON()).build();
+    private static String getMessage(boolean res, String basket_item_id) {
+        return res ? String.format("id: '%s' removed succesfully", basket_item_id) : String.format("id: '%s' not found", basket_item_id);
+    }
+
+    private static String getMessage(int res, String user_id) {
+        return res > 0
+                ? res > 1 ? String.format("removed succesfully %d items", res) : String.format("removed succesfully %d item", res)
+                : String.format("no basket items found for user '%s'", user_id);
     }
 
 }

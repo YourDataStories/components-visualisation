@@ -13,7 +13,7 @@ import com.google.gson.GsonBuilder;
  */
 public class BasketSaveResponse extends BaseResponse implements IResponse {
 
-    private String id;
+    private String basket_item_id;
 
     public BasketSaveResponse(Status status, String message) {
         super(status, message);
@@ -24,11 +24,11 @@ public class BasketSaveResponse extends BaseResponse implements IResponse {
     }
 
     public String getID() {
-        return id;
+        return basket_item_id;
     }
 
     public void setID(String id) {
-        this.id = id;
+        this.basket_item_id = id;
     }
 
     @Override

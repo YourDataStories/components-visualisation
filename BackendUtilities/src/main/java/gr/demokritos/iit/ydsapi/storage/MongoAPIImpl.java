@@ -5,6 +5,7 @@
  */
 package gr.demokritos.iit.ydsapi.storage;
 
+import com.google.common.base.Objects;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -18,6 +19,7 @@ import com.mongodb.WriteResult;
 import com.mongodb.util.JSON;
 import gr.demokritos.iit.ydsapi.model.BFilter;
 import gr.demokritos.iit.ydsapi.model.BasketItem;
+import gr.demokritos.iit.ydsapi.model.BasketItem.BasketType;
 import gr.demokritos.iit.ydsapi.model.Embedding;
 import gr.demokritos.iit.ydsapi.model.VizType;
 import gr.demokritos.iit.ydsapi.model.YDSFacet;
@@ -34,6 +36,9 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bson.types.ObjectId;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -43,6 +48,12 @@ public class MongoAPIImpl implements YDSAPI {
 
     private volatile static MongoAPIImpl instance;
     private DB db;
+    private final Cache<Integer, List<BasketItem>> basket_cache;
+
+    /**
+     * cache basket items per user for an hour.
+     */
+    private static final long MAX_CACHE_DURATION_MINUTES = 60l;
 
     public synchronized static YDSAPI getInstance() {
         if (instance == null) {
@@ -74,6 +85,14 @@ public class MongoAPIImpl implements YDSAPI {
         } catch (UnknownHostException ex) {
             Logger.getLogger(MongoAPIImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        // init cache
+        long max_cache_size = Long.valueOf(senti_res.getProperty(Configuration.BASKET_MAX_CACHE_SIZE, "10000"));
+        this.basket_cache
+                = CacheBuilder.newBuilder()
+                .initialCapacity(10)
+                .maximumSize(max_cache_size)
+                .expireAfterWrite(MAX_CACHE_DURATION_MINUTES, TimeUnit.MINUTES)
+                .build();
     }
 
     @Override
@@ -154,26 +173,47 @@ public class MongoAPIImpl implements YDSAPI {
         } else {
             id = upserted_id.toString();
         }
+        // remove cache for user, if there.
+        clearUserCache(item);
         return id;
     }
 
     @Override
-    public List<BasketItem> getBasketItems(String user_id) {
+    public List<BasketItem> getBasketItems(String user_id, BasketType bType) {
         if (user_id == null || user_id.trim().isEmpty()) {
             return Collections.EMPTY_LIST;
         }
         user_id = user_id.trim();
+        // get from cache if there
+        int hashcode = Objects.hashCode(user_id, bType);
+        synchronized (basket_cache) {
+            List<BasketItem> items = basket_cache.getIfPresent(hashcode);
+            if (items != null) {
+                return items;
+            }
+        }
         DBCollection col = db.getCollection(COL_BASKETS);
         DBCursor curs;
         List<BasketItem> res = new ArrayList();
-        if (USER_ID_PUBLIC.equalsIgnoreCase(user_id)) {
-            curs = col.find(QueryBuilder.start(BasketItem.FLD_IS_PRIVATE).is(Boolean.FALSE).get());
+        if (bType == BasketType.ALL) {
+            if (USER_ID_PUBLIC.equalsIgnoreCase(user_id)) {
+                curs = col.find(QueryBuilder.start(BasketItem.FLD_IS_PRIVATE).is(Boolean.FALSE).get());
+            } else {
+                curs = col.find(QueryBuilder.start(BasketItem.FLD_USERID).is(user_id).get());
+            }
         } else {
-            curs = col.find(QueryBuilder.start(BasketItem.FLD_USERID).is(user_id).get());
+            if (USER_ID_PUBLIC.equalsIgnoreCase(user_id)) {
+                curs = col.find(QueryBuilder.start(BasketItem.FLD_IS_PRIVATE).is(Boolean.FALSE).and(BasketItem.FLD_TYPE).is(bType.getDecl()).get());
+            } else {
+                curs = col.find(QueryBuilder.start(BasketItem.FLD_USERID).is(user_id).and(BasketItem.FLD_TYPE).is(bType.getDecl()).get());
+            }
         }
         while (curs.hasNext()) {
             DBObject dbo = curs.next();
             res.add(extractBasketItem(dbo));
+        }
+        synchronized (basket_cache) {
+            basket_cache.put(hashcode, res);
         }
         return res;
     }
@@ -220,6 +260,8 @@ public class MongoAPIImpl implements YDSAPI {
         } catch (Exception ex) {
             LOGGER.warning(String.format("%s", ex.getMessage()));
         }
+        // remove cache for user, if there.
+        clearUserCache(user_id);
         return res;
     }
 
@@ -283,5 +325,35 @@ public class MongoAPIImpl implements YDSAPI {
         String applied_to = (String) dbo.get(BFilter.FLD_APPLIED_TO);
         Map<String, Object> attrs = (Map<String, Object>) dbo.get(BFilter.FLD_ATTRIBUTES);
         return new BFilter(applied_to, attrs);
+    }
+
+    private void clearUserCache(String user_id) {
+        Iterable<Integer> invalidatable = getHashCodes(user_id);
+        synchronized (basket_cache) {
+            basket_cache.invalidateAll(invalidatable);
+        }
+    }
+
+    private void clearUserCache(BasketItem item) {
+        Iterable<Integer> invalidatable = getHashCodes(item);
+        synchronized (basket_cache) {
+            basket_cache.invalidateAll(invalidatable);
+        }
+    }
+
+    private Iterable<Integer> getHashCodes(BasketItem item) {
+        // remove from cache
+        String user_id = item.getUserID();
+        BasketType type = item.getType();
+        int hashCodeAll = Objects.hashCode(user_id, BasketType.ALL);
+        int hashCodeTyped = Objects.hashCode(user_id, type);
+        return Arrays.asList(new Integer[]{hashCodeAll, hashCodeTyped});
+    }
+
+    private Iterable<Integer> getHashCodes(String user_id) {
+        int hashCodeAll = Objects.hashCode(user_id, BasketType.ALL);
+        int hashCodeD = Objects.hashCode(user_id, BasketType.DATASET);
+        int hashCodeV = Objects.hashCode(user_id, BasketType.VISUALIZATION);
+        return Arrays.asList(new Integer[]{hashCodeAll, hashCodeD, hashCodeV});
     }
 }
