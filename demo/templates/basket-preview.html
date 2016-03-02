@@ -7,15 +7,15 @@
             Basket Preview
         </div>
         <div class="yds-basket-prev-title text-center">
-            <div class="btn-group">
-                <label class="btn btn-primary" ng-model="modalInput.basketType" uib-btn-radio="false">Dataset</label>
-                <label class="btn btn-primary" ng-model="modalInput.basketType"
-                       uib-btn-radio="true">Visualisation</label>
+            <div class="btn-group btn-group-justified">
+                <label class="btn btn-primary" ng-model="basketType" uib-btn-radio="'Dataset'" ng-click="changeBasketView('Dataset')">Dataset</label>
+                <label class="btn btn-primary" ng-model="basketType" uib-btn-radio="'Visualisation'" ng-click="changeBasketView('Visualisation')">Visualisation</label>
             </div>
         </div>
         <div class="yds-basket-prev-inner">
-            <div ng-if="results.length>0" class="row list-group" style="margin-top: 10px; padding: 10px; margin-left: 0px;margin-right: 0px;">
-                <div ng-repeat="item in results" class="list-group-item"><!--ng-click="visitResult($index)"-->
+            <input type="text" ng-model="searchText" placeholder="Search basket.."/>
+            <div ng-if="results.length>0" class="row list-group">
+                <div ng-repeat="item in results | filter:customFilter(searchText)" class="list-group-item"><!--ng-click="visitResult($index)"-->
                     <div class="row">
                         <div class="col-md-1">
                             <span class="glyphicon glyphicon-list-alt" aria-hidden="true" ng-if="item.component_type=='grid'"></span>
@@ -25,12 +25,16 @@
                             <span class="glyphicon glyphicon-globe" aria-hidden="true" ng-if="item.component_type=='map'"></span>
                         </div>
                         <div class="col-md-9 yds-basket-prev-desc">
-                            <b>{{item.title}}</b><br/>
+                            <b>{{item.title}}</b>
+                            <i class="glyphicon"
+                               title="{{ item.is_private ? 'The resource is private.' : 'The resource is public.'}}"
+                               ng-class="(item.is_private) ? 'glyphicon-eye-close' : 'glyphicon-eye-open'"></i>
+                            <br/>
                             <label for="">Tags: </label><span ng-repeat="tag in item.tags">{{tag}}{{$last ? '' : ', '}}</span>
                         </div>
                         <div class="col-md-1">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"
-                                  ng-click="deleteBasketItem(1)"></span>
+                                  ng-click="deleteBasketItem(item.basket_item_id)"></span>
                         </div>
                     </div>
                 </div>

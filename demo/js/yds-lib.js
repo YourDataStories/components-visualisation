@@ -369,11 +369,18 @@ app.factory('Basket', [ 'YDS_CONSTANTS', '$q', '$http', function (YDS_CONSTANTS,
 
             return deferred.promise;
         },
-        getBasketItems: function(userId) {
+        getBasketItems: function(userId, type) {
             var deferred = $q.defer();
+
+            var contType = "";
+            if ( type.toLowerCase() == "dataset" )
+                contType = "?basket_type=dataset";
+            else if ( type.toLowerCase() == "visualisation" )
+                contType = "?basket_type=visualization";
+
             $http({
                 method: 'GET',
-                url: YDS_CONSTANTS.BASKET_URL + "get/"+userId,
+                url: YDS_CONSTANTS.BASKET_URL + "get/" + userId + contType,
                 headers: {'Content-Type': 'application/json'}
             }).success(function (data) {
                 deferred.resolve(data);

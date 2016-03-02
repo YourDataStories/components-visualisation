@@ -307,11 +307,11 @@ body #main .container:first-child {
     transform: rotate(-45deg);
     font-size: 20px;
 }
-.yds-search-prev-wrapper.slide-in ,.yds-basket-prev-wrapper.slide-in {
+.yds-search-prev-wrapper.slide-in , .yds-basket-prev-wrapper.slide-in {
     animation: slide-in 1.5s forwards;
     -webkit-animation: slide-in 1.5s forwards;
 }
-.yds-search-prev-wrapper.slide-out,.yds-basket-prev-wrapper.slide-out {
+.yds-search-prev-wrapper.slide-out, .yds-basket-prev-wrapper.slide-out {
     animation: slide-out 1.5s forwards;
     -webkit-animation: slide-out 1.5s forwards;
 }
@@ -364,7 +364,7 @@ body #main .container:first-child {
 }
 .yds-basket-prev-title {
     color: #fff;
-    padding-top: 21px;
+    padding-top: 7px;
     text-overflow: ellipsis;
     word-wrap: break-word;
     overflow: hidden;
@@ -397,7 +397,16 @@ body #main .container:first-child {
 .yds-basket-prev-inner .yds-basket-prev-desc {
     word-wrap: break-word;
 }
-
+.yds-basket-prev-inner input:first-child {
+    padding: 5px 10px;
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 3px;
+    border: none;
+}
+.yds-basket-prev-inner .row.list-group {
+     margin: 5px 0 0 0;
+}
 .yds-basket-prev-inner div .row div:last-child span{
     cursor: pointer;
 }

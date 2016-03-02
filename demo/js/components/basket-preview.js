@@ -8,10 +8,16 @@ angular.module('yds').directive('ydsBasketPreview', ['Data' , '$compile', '$time
 		replace: true,
 		templateUrl:'templates/basket-preview.html',
 		link: function(scope, element) {
-
+			scope.basketType = "Dataset";
 			scope.results = [];
+			scope.searchText = "";
 
 			var prevElement = angular.element(element[0]);
+
+			scope.changeBasketView = function(bskType) {
+				scope.basketType = bskType;
+				scope.getBasketItem(bskType);
+			};
 
 			var showSidebar = function(){
 				$timeout(function(){
@@ -29,22 +35,22 @@ angular.module('yds').directive('ydsBasketPreview', ['Data' , '$compile', '$time
 					prevElement.addClass('slide-out');
 					prevElement.toggleClass('slide-in');
 				} else if (prevElement.hasClass('slide-out')) {
-					getBasketItem();
 					prevElement.addClass('slide-in');
 					prevElement.toggleClass('slide-out');
 				} else
-					getBasketItem();
 					prevElement.addClass('slide-in');
 			};
 
 
-			var getBasketItem = function(){
-				Basket.getBasketItems(scope.userId).then(function (response) {
+			//function to retrieve the basket items of the user
+			scope.getBasketItem = function(type){
+				Basket.getBasketItems(scope.userId, type)
+				.then(function (response) {
 					scope.results = angular.copy(response.items);
 				}, function (error) {
 					console.log('error', error);
 				});
-			}
+			};
 
 			scope.deleteBasketItem = function(bskId){
 				debugger;
@@ -53,7 +59,18 @@ angular.module('yds').directive('ydsBasketPreview', ['Data' , '$compile', '$time
 				//}, function (error) {
 				//	console.log('error', error);
 				//});
-			}
+			};
+
+			//custom filter for searching in basket tags or title
+			scope.customFilter = function(term){
+				return function(item) {
+					if (item.title.toLowerCase().indexOf(term.toLowerCase())>-1 || item.tags.join().toLowerCase().indexOf(term.toLowerCase())>-1 ) {
+						return item;
+					}
+				};
+			};
+
+			scope.getBasketItem(scope.basketType);
 		}
 	};
 }]);
