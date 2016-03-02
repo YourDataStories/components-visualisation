@@ -38,7 +38,9 @@ import java.util.logging.Logger;
 import org.bson.types.ObjectId;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import javax.persistence.OrderBy;
 
 /**
  *
@@ -93,6 +95,8 @@ public class MongoAPIImpl implements YDSAPI {
                 .maximumSize(max_cache_size)
                 .expireAfterWrite(MAX_CACHE_DURATION_MINUTES, TimeUnit.MINUTES)
                 .build();
+        // ensure indexes are there
+        ensureIndexes();
     }
 
     @Override
@@ -208,6 +212,9 @@ public class MongoAPIImpl implements YDSAPI {
                 curs = col.find(QueryBuilder.start(BasketItem.FLD_USERID).is(user_id).and(BasketItem.FLD_TYPE).is(bType.getDecl()).get());
             }
         }
+        // order by reverse insertion order
+        curs = curs.sort(new BasicDBObject("$natural", -1));
+        // get items
         while (curs.hasNext()) {
             DBObject dbo = curs.next();
             res.add(extractBasketItem(dbo));
@@ -355,5 +362,46 @@ public class MongoAPIImpl implements YDSAPI {
         int hashCodeD = Objects.hashCode(user_id, BasketType.DATASET);
         int hashCodeV = Objects.hashCode(user_id, BasketType.VISUALIZATION);
         return Arrays.asList(new Integer[]{hashCodeAll, hashCodeD, hashCodeV});
+    }
+
+    /**
+     * tries to generate required indexes for performance. Useful for new
+     * installments
+     *
+     */
+    private void ensureIndexes() {
+        DBCollection col = db.getCollection(COL_BASKETS);
+        List<DBObject> indexInfo = col.getIndexInfo();
+        Set<String> indexNames = extractIndexNames(indexInfo);
+        LOGGER.info(String.format("collection '%s' contains existing indexes: %s", col.getName(), indexNames.toString()));
+        boolean created = false;
+        if (!indexNames.contains(BasketItem.FLD_USERID)) {
+            col.createIndex(BasketItem.FLD_USERID);
+            created = true;
+        }
+        // room for more indexes here
+        ///////
+        // room for more indexes here
+        if (created) {
+            LOGGER.info(String.format("collection '%s' contains existing indexes: %s", col.getName(), extractIndexNames(col.getIndexInfo()).toString()));
+        }
+    }
+
+    private Set<String> extractIndexNames(List<DBObject> indexInfo) {
+        Set<String> res = new HashSet();
+        for (DBObject indexInfo1 : indexInfo) {
+            System.out.println(indexInfo1.toMap().toString());
+            Map<String, Object> indexes = indexInfo1.toMap();
+            String tmp = (String) indexes.get("name");
+            if (tmp.endsWith("_-1")) {
+                tmp = tmp.substring(0, tmp.indexOf("_-1")).trim();
+            } else if (tmp.endsWith("_1")) {
+                tmp = tmp.substring(0, tmp.indexOf("_1")).trim();
+            }
+            if (!tmp.isEmpty()) {
+                res.add(tmp);
+            }
+        }
+        return res;
     }
 }
