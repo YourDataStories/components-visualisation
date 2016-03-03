@@ -317,7 +317,13 @@ public class BasketItem {
             } else if (typeArg.equalsIgnoreCase(BasketType.VISUALISATION.getDecl())) {
                 this.type = BasketType.VISUALISATION;
             } else {
-                throw new IllegalArgumentException("type must be one of " + Arrays.asList(BasketType.values()).toString());
+                throw new IllegalArgumentException("type must be one of "
+                        + Arrays.asList(
+                                new String[]{
+                                    BasketType.DATASET.getDecl(),
+                                    BasketType.VISUALISATION.getDecl()
+                                }
+                        ).toString());
             }
             return this;
         }
