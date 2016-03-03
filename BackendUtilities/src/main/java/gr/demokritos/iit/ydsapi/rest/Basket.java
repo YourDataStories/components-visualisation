@@ -127,7 +127,7 @@ public class Basket {
     @POST
     public Response remove(
             @PathParam("user_id") String user_id,
-            @QueryParam("basket_item_id") String basket_item_id
+            @FormParam("basket_item_id") String basket_item_id
     ) {
         YDSAPI api = MongoAPIImpl.getInstance();
         BaseResponse br;
