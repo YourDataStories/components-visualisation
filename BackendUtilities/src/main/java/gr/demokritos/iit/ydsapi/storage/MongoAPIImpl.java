@@ -35,7 +35,6 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import javax.persistence.OrderBy;
 
 /**
  *
@@ -332,6 +331,7 @@ public class MongoAPIImpl implements YDSAPI {
 
     private void clearUserCache(String user_id) {
         Iterable<Integer> invalidatable = getHashCodes(user_id);
+
         synchronized (basket_cache) {
             basket_cache.invalidateAll(invalidatable);
         }
@@ -350,6 +350,7 @@ public class MongoAPIImpl implements YDSAPI {
         BasketType type = item.getType();
         int hashCodeAll = Objects.hashCode(user_id, BasketType.ALL);
         int hashCodeTyped = Objects.hashCode(user_id, type);
+        LOGGER.info(String.format("clear 2 items cache for user: %s: [%s, %s]", user_id, BasketType.ALL.getDecl(), type.getDecl()));
         return Arrays.asList(new Integer[]{hashCodeAll, hashCodeTyped});
     }
 
@@ -357,6 +358,7 @@ public class MongoAPIImpl implements YDSAPI {
         int hashCodeAll = Objects.hashCode(user_id, BasketType.ALL);
         int hashCodeD = Objects.hashCode(user_id, BasketType.DATASET);
         int hashCodeV = Objects.hashCode(user_id, BasketType.VISUALIZATION);
+        LOGGER.info(String.format("clear all items cache for user: %s", user_id));
         return Arrays.asList(new Integer[]{hashCodeAll, hashCodeD, hashCodeV});
     }
 
