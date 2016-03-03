@@ -1,11 +1,11 @@
 var app = angular.module('yds', ['ui.bootstrap', 'rzModule', 'ui.checkbox', 'oc.lazyLoad']);
 
-var host="http://ydsdev.iit.demokritos.gr:8085";
-var searchUrl = host+"/YDSAPI/yds/api/search";
-var visualizationUrl = host+"/YDSAPI/yds/api/couch/visualization/";
-var espaProjectURL = host+"/YDSAPI/yds/api/couch/espa/";
-var geoRouteUrl = host+"/YDSAPI/yds/geo/route";
-var embedUrl = host+"/YDSAPI/yds/embed/";
+var host = "http://ydsdev.iit.demokritos.gr:8085";
+var searchUrl = host + "/YDSAPI/yds/api/search";
+var visualizationUrl = host + "/YDSAPI/yds/api/couch/visualization/";
+var espaProjectURL = host + "/YDSAPI/yds/api/couch/espa/";
+var geoRouteUrl = host + "/YDSAPI/yds/geo/route";
+var embedUrl = host + "/YDSAPI/yds/embed/";
 
 
 // Defining global variables for the YDS lib
@@ -16,11 +16,11 @@ app.constant("YDS_CONSTANTS", {
     "BASKET_URL": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/basket/"
 });
 
-app.directive('clipboard', [ '$document', function(){
+app.directive('clipboard', ['$document', function () {
     return {
         restrict: 'A',
         link: function (scope, element, attrs) {
-            element.on('click', function(e){
+            element.on('click', function (e) {
                 var iframeURL = angular.element(element.parent()[0].getElementsByClassName("well"));
 
                 var range = document.createRange();         // create a Range object
@@ -47,10 +47,16 @@ app.factory('Data', ['$http', '$q', function ($http, $q) {
     };
 
     return {
-        isBackButtonUsed: function() { return backButtonUsed; },
-        backButtonUsed : function () { backButtonUsed = true; },
-        backButtonNotUsed : function () { backButtonUsed = false; },
-        projectVisualization: function (projectId,visualizationType) {
+        isBackButtonUsed: function () {
+            return backButtonUsed;
+        },
+        backButtonUsed: function () {
+            backButtonUsed = true;
+        },
+        backButtonNotUsed: function () {
+            backButtonUsed = false;
+        },
+        projectVisualization: function (projectId, visualizationType) {
             //param search_obj = {}
             var deferred = $q.defer();
 
@@ -70,15 +76,15 @@ app.factory('Data', ['$http', '$q', function ($http, $q) {
                     viz_type: visualizationType
                 }
             })
-            .success(function (data) {
-                deferred.resolve(data);
-            }).error(function (error) {
+                .success(function (data) {
+                    deferred.resolve(data);
+                }).error(function (error) {
                 deferred.reject(error);
             });
 
             return deferred.promise;
         },
-        getRoutePoints: function(start, end, via) {
+        getRoutePoints: function (start, end, via) {
             var deferred = $q.defer();
 
             var inputData = {
@@ -96,7 +102,7 @@ app.factory('Data', ['$http', '$q', function ($http, $q) {
                         str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
                     return str.join("&");
                 },
-                data: { geoData: angular.toJson(inputData) }
+                data: {geoData: angular.toJson(inputData)}
             }).success(function (data) {
                 deferred.resolve(data);
             }).error(function (error) {
@@ -105,12 +111,12 @@ app.factory('Data', ['$http', '$q', function ($http, $q) {
 
             return deferred.promise;
         },
-        saveGeoObj: function(projectId,geoObj) {
+        saveGeoObj: function (projectId, geoObj) {
             var deferred = $q.defer();
 
             $http({
                 method: 'POST',
-                url: geoRouteUrl+"/save/"+projectId,
+                url: geoRouteUrl + "/save/" + projectId,
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 transformRequest: function (obj) {
                     var str = [];
@@ -129,12 +135,12 @@ app.factory('Data', ['$http', '$q', function ($http, $q) {
 
             return deferred.promise;
         },
-        getGeoObj: function(projectId) {
+        getGeoObj: function (projectId) {
             var deferred = $q.defer();
 
             $http({
                 method: 'GET',
-                url: geoRouteUrl+"/"+ projectId,
+                url: geoRouteUrl + "/" + projectId,
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }).success(function (data) {
                 deferred.resolve(data);
@@ -144,7 +150,7 @@ app.factory('Data', ['$http', '$q', function ($http, $q) {
 
             return deferred.promise;
         },
-        requestEmbedCode: function(projectId, facets, visType) {
+        requestEmbedCode: function (projectId, facets, visType) {
             var deferred = $q.defer();
 
             $http({
@@ -163,15 +169,15 @@ app.factory('Data', ['$http', '$q', function ($http, $q) {
                     "viz_type": visType
                 }
             })
-            .success(function (data) {
-                deferred.resolve(data);
-            }).error(function (error) {
+                .success(function (data) {
+                    deferred.resolve(data);
+                }).error(function (error) {
                 deferred.reject(error);
             });
 
             return deferred.promise;
         },
-        recoverEmbedCode: function(embedCode) {
+        recoverEmbedCode: function (embedCode) {
             var deferred = $q.defer();
 
             $http({
@@ -185,7 +191,7 @@ app.factory('Data', ['$http', '$q', function ($http, $q) {
 
             return deferred.promise;
         },
-        getVisualizationData: function(projectId, tableType) {
+        getVisualizationData: function (projectId, tableType) {
             var deferred = $q.defer();
 
             $http({
@@ -233,7 +239,7 @@ app.factory('Data', ['$http', '$q', function ($http, $q) {
             });
 
             return deferred.promise;
-        }, createRandomId : function () {
+        }, createRandomId: function () {
             return '_' + Math.random().toString(36).substr(2, 9);
         }
     }
@@ -268,9 +274,15 @@ app.factory('Search', ['$http', '$q', function ($http, $q) {
                 relations: []
             };
         },
-        setKeyword: function(newKeyword) { keyword = angular.copy(newKeyword); },
-        getKeyword: function() { return keyword; },
-        clearKeyword: function() { keyword = ""; },
+        setKeyword: function (newKeyword) {
+            keyword = angular.copy(newKeyword);
+        },
+        getKeyword: function () {
+            return keyword;
+        },
+        clearKeyword: function () {
+            keyword = "";
+        },
         performSearch: function (newKeyword) {
             var deferred = $q.defer();
             var proxyUrl = "localhost:9292/";
@@ -290,8 +302,12 @@ app.factory('Search', ['$http', '$q', function ($http, $q) {
 
             return deferred.promise;
         },
-        getResults: function () { return searchResults; },
-        clearResults: function () { searchResults = []; },
+        getResults: function () {
+            return searchResults;
+        },
+        clearResults: function () {
+            searchResults = [];
+        },
         updateFacet: function (ftype, fvalue) {
             var tmpTerm = searchObj.terms[0];
 
@@ -318,9 +334,9 @@ app.factory('Search', ['$http', '$q', function ($http, $q) {
     }
 }]);
 
-app.factory('Basket', [ 'YDS_CONSTANTS', '$q', '$http', function (YDS_CONSTANTS, $q, $http) {
+app.factory('Basket', ['YDS_CONSTANTS', '$q', '$http', function (YDS_CONSTANTS, $q, $http) {
     return {
-        createItem: function() {
+        createItem: function () {
             return {
                 user_id: "ydsUser",
                 component_parent_uuid: "",
@@ -352,7 +368,7 @@ app.factory('Basket', [ 'YDS_CONSTANTS', '$q', '$http', function (YDS_CONSTANTS,
                 is_private: true
             };
         },
-        saveBasketItem: function(bskItem) {
+        saveBasketItem: function (bskItem) {
             var deferred = $q.defer();
 
             $http({
@@ -361,21 +377,21 @@ app.factory('Basket', [ 'YDS_CONSTANTS', '$q', '$http', function (YDS_CONSTANTS,
                 headers: {'Content-Type': 'application/json'},
                 data: JSON.stringify(bskItem)
             })
-            .success(function (data) {
-                deferred.resolve(data);
-            }).error(function (error) {
+                .success(function (data) {
+                    deferred.resolve(data);
+                }).error(function (error) {
                 deferred.reject(error);
             });
 
             return deferred.promise;
         },
-        getBasketItems: function(userId, type) {
+        getBasketItems: function (userId, type) {
             var deferred = $q.defer();
 
             var contType = "";
-            if ( type.toLowerCase() == "dataset" )
+            if (type.toLowerCase() == "dataset")
                 contType = "?basket_type=dataset";
-            else if ( type.toLowerCase() == "visualisation" )
+            else if (type.toLowerCase() == "visualisation")
                 contType = "?basket_type=visualization";
 
             $http({
@@ -389,12 +405,41 @@ app.factory('Basket', [ 'YDS_CONSTANTS', '$q', '$http', function (YDS_CONSTANTS,
             });
 
             return deferred.promise;
+        },
+        deleteBasketItems: function (userId, bskID) {
+            var deferred = $q.defer();
+
+            var contType = "";
+            if (bskID != null) {
+                contType = "?basket_item_id=" + bskID;
+            }
+
+
+
+                debugger;
+
+            $http({
+                method: 'POST',
+                url: YDS_CONSTANTS.BASKET_URL + "remove/" + userId,
+                headers: {'Content-Type': 'application/json'},
+                data: {
+                    basket_item_id: bskID
+                }
+            }).success(function (data) {
+                debugger;
+                deferred.resolve(data);
+            }).error(function (error) {
+                debugger;
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
         }
     }
 }]);
 
 
-app.factory('Filters', [ function () {
+app.factory('Filters', [function () {
     var filters = [];
 
     var updateFilters = function (newFilter, newCompId, allFilters) {
@@ -415,12 +460,12 @@ app.factory('Filters', [ function () {
     };
 
     return {
-        addLineFilter: function(compId, lineChart) {
+        addLineFilter: function (compId, lineChart) {
             chartFilters = [];
             var lineExtremes = lineChart.xAxis[0].getExtremes();
 
             //define which axis has range ? is needed ?
-            chartFilters.push ({
+            chartFilters.push({
                 applied_to: "x",
                 attrs: {
                     min: lineExtremes.min,
@@ -428,7 +473,7 @@ app.factory('Filters', [ function () {
                 }
             });
 
-            chartFilters.push ({
+            chartFilters.push({
                 applied_to: "y",
                 attrs: {
                     attrName: ""
@@ -437,7 +482,7 @@ app.factory('Filters', [ function () {
 
             updateFilters(chartFilters, compId, filters);
         },
-        addGridFilter: function(compId, gridFilters) {
+        addGridFilter: function (compId, gridFilters) {
             var chartFilters = [];
 
             for (property in gridFilters) {
@@ -448,21 +493,21 @@ app.factory('Filters', [ function () {
                         var tmpAttrs = {};
                         tmpAttrs[filterVal] = true;
 
-                        chartFilters.push ({
-                            applied_to: '_quick_bar_' ,
+                        chartFilters.push({
+                            applied_to: '_quick_bar_',
                             attrs: tmpAttrs
                         });
-                    } else if ( _.isArray(filterVal) && filterVal.length>0 ) {	//string filter applied on grid
+                    } else if (_.isArray(filterVal) && filterVal.length > 0) {	//string filter applied on grid
                         var tmpAttrs = {};
                         var tmpName = "";
 
-                        for (var j=0; j<filterVal.length; j++) {
+                        for (var j = 0; j < filterVal.length; j++) {
                             tmpName = filterVal[j];
                             tmpAttrs[tmpName] = true;
                         }
 
-                        chartFilters.push ({
-                            applied_to: property ,
+                        chartFilters.push({
+                            applied_to: property,
                             attrs: tmpAttrs
                         });
                     } else if (filterVal.hasOwnProperty('filter') && filterVal.hasOwnProperty('type')) { //numeric filter applied on grid
@@ -480,8 +525,8 @@ app.factory('Filters', [ function () {
                                 break;
                         }
 
-                        chartFilters.push ({
-                            applied_to: property ,
+                        chartFilters.push({
+                            applied_to: property,
                             attrs: tmpAttrs
                         });
                     }
@@ -491,15 +536,17 @@ app.factory('Filters', [ function () {
             updateFilters(chartFilters, compId, filters);
         },
         get: function (compId) {
-            var filterFound = _.findWhere(filters, { componentId: compId })
+            var filterFound = _.findWhere(filters, {componentId: compId})
 
-            if(!angular.isUndefined(filterFound))
+            if (!angular.isUndefined(filterFound))
                 return filterFound.filters;
             else
                 return [];
         },
         remove: function (compId) {
-            filters = _.reject(filters, function(d){ return d.componentId === compId; });
+            filters = _.reject(filters, function (d) {
+                return d.componentId === compId;
+            });
         }
     }
 }]);
