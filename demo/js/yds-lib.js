@@ -319,7 +319,18 @@ app.factory('Search', ['$http', '$q', function ($http, $q) {
 }]);
 
 app.factory('Basket', [ 'YDS_CONSTANTS', '$q', '$http', function (YDS_CONSTANTS, $q, $http) {
+    var basketCallbacks = [];
+    var lastSavedItem = {};
+
+    var notifyObservers = function (observerStack) { //function to trigger the callbacks of observers
+        angular.forEach(observerStack, function (callback) {
+            callback();
+        });
+    };
+
     return {
+        registerCallback: function(callback) { basketCallbacks.push(callback); },
+        getLastSavedItem: function() { return lastSavedItem; },
         createItem: function() {
             return {
                 user_id: "ydsUser",
@@ -354,6 +365,7 @@ app.factory('Basket', [ 'YDS_CONSTANTS', '$q', '$http', function (YDS_CONSTANTS,
         },
         saveBasketItem: function(bskItem) {
             var deferred = $q.defer();
+            lastSavedItem = angular.copy(bskItem);
 
             $http({
                 method: 'POST',
@@ -362,6 +374,7 @@ app.factory('Basket', [ 'YDS_CONSTANTS', '$q', '$http', function (YDS_CONSTANTS,
                 data: JSON.stringify(bskItem)
             })
             .success(function (data) {
+                notifyObservers(basketCallbacks);
                 deferred.resolve(data);
             }).error(function (error) {
                 deferred.reject(error);

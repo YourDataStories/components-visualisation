@@ -70,7 +70,17 @@ angular.module('yds').directive('ydsBasketPreview', ['Data' , '$compile', '$time
 				};
 			};
 
+			//function to update basket items after a new one has been inserted
+			var updateBasketItems = function () {
+				var lastBskItem = Basket.getLastSavedItem();
+
+				if (scope.basketType.toLowerCase() == lastBskItem.type.toLowerCase()) {
+					scope.getBasketItem(scope.basketType);
+				}
+			};
+
 			scope.getBasketItem(scope.basketType);
+			Basket.registerCallback(updateBasketItems);
 		}
 	};
 }]);
