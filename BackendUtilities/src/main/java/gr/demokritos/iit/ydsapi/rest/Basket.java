@@ -11,7 +11,6 @@ import gr.demokritos.iit.ydsapi.storage.MongoAPIImpl;
 import gr.demokritos.iit.ydsapi.storage.YDSAPI;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -124,7 +123,7 @@ public class Basket {
     }
 
     @Path("remove/{user_id}")
-    @DELETE
+    @POST
     public Response remove(
             @PathParam("user_id") String user_id,
             @QueryParam("basket_item_id") String basket_item_id
