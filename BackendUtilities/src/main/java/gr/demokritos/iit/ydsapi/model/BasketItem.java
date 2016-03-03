@@ -314,8 +314,8 @@ public class BasketItem {
         public Builder withType(String typeArg) throws IllegalArgumentException {
             if (typeArg.equalsIgnoreCase(BasketType.DATASET.getDecl())) {
                 this.type = BasketType.DATASET;
-            } else if (typeArg.equalsIgnoreCase(BasketType.VISUALIZATION.getDecl())) {
-                this.type = BasketType.VISUALIZATION;
+            } else if (typeArg.equalsIgnoreCase(BasketType.VISUALISATION.getDecl())) {
+                this.type = BasketType.VISUALISATION;
             } else {
                 throw new IllegalArgumentException("type must be one of " + Arrays.asList(BasketType.values()).toString());
             }
@@ -359,7 +359,7 @@ public class BasketItem {
      */
     public enum BasketType {
 
-        DATASET("dataset"), VISUALIZATION("visualization"), ALL("all");
+        DATASET("dataset"), VISUALISATION("visualisation"), ALL("all");
         private final String type;
 
         private BasketType(String type) {
