@@ -123,7 +123,7 @@ public class Basket {
     }
 
     @Path("remove/{user_id}")
-    @POST
+    @GET
     public Response remove(
             @PathParam("user_id") String user_id,
             @QueryParam("basket_item_id") String basket_item_id
