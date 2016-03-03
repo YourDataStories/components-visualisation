@@ -52,13 +52,13 @@ angular.module('yds').directive('ydsBasketPreview', ['Data' , '$compile', '$time
 				});
 			};
 
+			//function to delete the basket items from user's basket
 			scope.deleteBasketItem = function(bskId){
-				debugger;
-				//Basket.getBasketItems(scope.userId).then(function (response) {
-				//	scope.results = angular.copy(response.items);
-				//}, function (error) {
-				//	console.log('error', error);
-				//});
+				Basket.deleteBasketItems(scope.userId, bskId).then(function (response) {
+					scope.getBasketItem(scope.basketType);
+				}, function (error) {
+					console.log('error', error);
+				});
 			};
 
 			//custom filter for searching in basket tags or title
