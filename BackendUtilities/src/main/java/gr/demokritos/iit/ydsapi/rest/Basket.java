@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gr.demokritos.iit.ydsapi.rest;
 
 import gr.demokritos.iit.ydsapi.model.BasketItem;
@@ -16,6 +11,7 @@ import gr.demokritos.iit.ydsapi.storage.MongoAPIImpl;
 import gr.demokritos.iit.ydsapi.storage.YDSAPI;
 import java.util.List;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -47,7 +43,7 @@ public class Basket {
                 res.setStatus(BaseResponse.Status.OK);
                 res.setID(id);
             } else {
-                res.setStatus(Status.ERROR);
+                res.setStatus(Status.OK);
                 res.setMessage("Could not save basket item");
                 res.setID("");
             }
@@ -75,10 +71,12 @@ public class Basket {
         List<BasketItem> baskets;
         BasketListLoadResponse blr;
         try {
-            baskets = api.getBasketItems(user_id,
+            baskets = api.getBasketItems(
+                    user_id,
                     basket_type == null
                             ? BasketType.ALL
-                            : BasketType.valueOf(basket_type.toUpperCase()));
+                            : BasketType.valueOf(basket_type.toUpperCase())
+            );
             blr = new BasketListLoadResponse(baskets);
         } catch (Exception ex) {
             blr = new BasketListLoadResponse(
@@ -88,11 +86,9 @@ public class Basket {
             );
         }
         return Response.status(
-                blr.getStatus() == Status.OK
+                blr.getStatus() == Status.OK || blr.getStatus() == Status.NOT_EXISTS
                         ? Response.Status.OK
-                        : blr.getStatus() == Status.NOT_EXISTS
-                                ? Response.Status.NOT_FOUND
-                                : Response.Status.INTERNAL_SERVER_ERROR
+                        : Response.Status.INTERNAL_SERVER_ERROR
         ).entity(blr.toJSON()).build();
     }
 
@@ -115,16 +111,14 @@ public class Basket {
             );
         }
         return Response.status(
-                blr.getStatus() == Status.OK
+                blr.getStatus() == Status.OK || blr.getStatus() == Status.NOT_EXISTS
                         ? Response.Status.OK
-                        : blr.getStatus() == Status.NOT_EXISTS
-                                ? Response.Status.NOT_FOUND
-                                : Response.Status.INTERNAL_SERVER_ERROR
+                        : Response.Status.INTERNAL_SERVER_ERROR
         ).entity(blr.toJSON()).build();
     }
 
     @Path("remove/{user_id}")
-    @DELETE
+    @POST
     public Response remove(
             @PathParam("user_id") String user_id,
             @QueryParam("basket_item_id") String basket_item_id
@@ -146,11 +140,9 @@ public class Basket {
             );
         }
         return Response.status(
-                br.getStatus() == Status.OK
+                br.getStatus() == Status.OK || br.getStatus() == Status.NOT_EXISTS
                         ? Response.Status.OK
-                        : br.getStatus() == Status.NOT_EXISTS
-                                ? Response.Status.NOT_FOUND
-                                : Response.Status.INTERNAL_SERVER_ERROR
+                        : Response.Status.INTERNAL_SERVER_ERROR
         ).entity(br.toJSON()).build();
     }
 
@@ -163,5 +155,4 @@ public class Basket {
                 ? res > 1 ? String.format("removed succesfully %d items", res) : String.format("removed succesfully %d item", res)
                 : String.format("no basket items found for user '%s'", user_id);
     }
-
 }

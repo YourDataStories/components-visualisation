@@ -1,14 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gr.demokritos.iit.ydsapi.storage;
 
 import gr.demokritos.iit.ydsapi.model.BasketItem;
 import gr.demokritos.iit.ydsapi.model.BasketItem.BasketType;
 import gr.demokritos.iit.ydsapi.model.Embedding;
-import gr.demokritos.iit.ydsapi.model.VizType;
+import gr.demokritos.iit.ydsapi.model.ComponentType;
 import gr.demokritos.iit.ydsapi.model.YDSFacet;
 import java.util.Collection;
 import java.util.List;
@@ -30,7 +25,7 @@ public interface YDSAPI {
 
     Embedding getEmbedding(Object embedding_id) throws Exception;
 
-    Object saveEmbedding(Object project_id, VizType type, Collection<YDSFacet> facets);
+    Object saveEmbedding(Object project_id, ComponentType type, Collection<YDSFacet> facets);
 
     /**
      *

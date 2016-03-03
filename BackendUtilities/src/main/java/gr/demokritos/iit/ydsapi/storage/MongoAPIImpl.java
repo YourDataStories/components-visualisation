@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gr.demokritos.iit.ydsapi.storage;
 
 import com.google.common.base.Objects;
@@ -21,7 +16,7 @@ import gr.demokritos.iit.ydsapi.model.BFilter;
 import gr.demokritos.iit.ydsapi.model.BasketItem;
 import gr.demokritos.iit.ydsapi.model.BasketItem.BasketType;
 import gr.demokritos.iit.ydsapi.model.Embedding;
-import gr.demokritos.iit.ydsapi.model.VizType;
+import gr.demokritos.iit.ydsapi.model.ComponentType;
 import gr.demokritos.iit.ydsapi.model.YDSFacet;
 import gr.demokritos.iit.ydsapi.util.Configuration;
 import gr.demokritos.iit.ydsapi.util.ResourceUtil;
@@ -63,6 +58,7 @@ public class MongoAPIImpl implements YDSAPI {
         }
         return instance;
     }
+    private static final DBObject REVERSED_INSERTION_ORDER = new BasicDBObject("$natural", -1);
 
     private MongoAPIImpl() {
         ResourceUtil senti_res = new ResourceUtil("resources");
@@ -100,7 +96,7 @@ public class MongoAPIImpl implements YDSAPI {
     }
 
     @Override
-    public Object saveEmbedding(Object project_id, VizType type, Collection<YDSFacet> facets) {
+    public Object saveEmbedding(Object project_id, ComponentType type, Collection<YDSFacet> facets) {
         DBCollection col = db.getCollection(COL_EMBEDDINGS);
         Embedding emb = new Embedding(project_id, type, facets);
         String json_emb = emb.toJSON();
@@ -213,7 +209,7 @@ public class MongoAPIImpl implements YDSAPI {
             }
         }
         // order by reverse insertion order
-        curs = curs.sort(new BasicDBObject("$natural", -1));
+        curs = curs.sort(REVERSED_INSERTION_ORDER);
         // get items
         while (curs.hasNext()) {
             DBObject dbo = curs.next();
@@ -310,8 +306,8 @@ public class MongoAPIImpl implements YDSAPI {
         List<BFilter> filters = extractFilters((List<DBObject>) dbo.get(BasketItem.FLD_FILTERS));
         return new BasketItem.Builder(user_id, component_parent_uuid, title)
                 .withID(_id)
-                .withTags(new HashSet(tags))
-                .withFilters(new HashSet(filters))
+                .withTags(tags)
+                .withFilters(filters)
                 .withComponentType(component_type)
                 .withContentType(content_type)
                 .withType(type)

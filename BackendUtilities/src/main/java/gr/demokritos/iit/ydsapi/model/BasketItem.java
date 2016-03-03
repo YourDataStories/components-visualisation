@@ -16,9 +16,11 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import org.bson.types.ObjectId;
@@ -231,7 +233,7 @@ public class BasketItem {
          * @param tagsArg
          * @return
          */
-        public Builder withTags(Set<String> tagsArg) {
+        public Builder withTags(Collection<String> tagsArg) {
             if (tagsArg == null) {
                 this.tags = new LinkedHashSet(0);
             } else {
@@ -245,7 +247,7 @@ public class BasketItem {
          * @param filtersArg
          * @return
          */
-        public Builder withFilters(Set<BFilter> filtersArg) {
+        public Builder withFilters(Collection<BFilter> filtersArg) {
             if (filtersArg == null) {
                 this.filters = new LinkedHashSet(0);
             } else {
@@ -362,32 +364,6 @@ public class BasketItem {
         }
     }
 
-    /**
-     * accepted component types.
-     */
-    public enum ComponentType {
-
-        LINE("line"), PIE("pie"), BAR("bar"), MAP("map"), GRID("grid");
-        private final String type;
-
-        private ComponentType(String type) {
-            this.type = type;
-        }
-
-        public String getDecl() {
-            return type;
-        }
-        public static final Set<String> accepted = new HashSet();
-
-        static {
-            accepted.add(LINE.getDecl());
-            accepted.add(PIE.getDecl());
-            accepted.add(BAR.getDecl());
-            accepted.add(MAP.getDecl());
-            accepted.add(GRID.getDecl());
-        }
-    }
-
     public static final String FLD_USERID = "user_id";
     public static final String FLD_BASKET_ITEM_ID = "basket_item_id";
     public static final String FLD_OBJ_ID = "_id";
@@ -454,23 +430,23 @@ public class BasketItem {
             }
             // tags
             final JsonArray jsonTags = jsonObject.get(BasketItem.FLD_TAGS).getAsJsonArray();
-            final Set<String> sTags = new LinkedHashSet(jsonTags.size());
+            final List<String> lTags = new ArrayList(jsonTags.size());
             for (int i = 0; i < jsonTags.size(); i++) {
                 final JsonElement jsonTag = jsonTags.get(i);
-                sTags.add(jsonTag.getAsString());
+                lTags.add(jsonTag.getAsString());
             }
             // add tags
-            b = b.withTags(sTags);
+            b = b.withTags(lTags);
             // filters
             final JsonArray jsonFilters = jsonObject.get(BasketItem.FLD_FILTERS).getAsJsonArray();
-            final Set<BFilter> sFilters = new LinkedHashSet(jsonFilters.size());
+            final List<BFilter> lFilters = new ArrayList(jsonFilters.size());
             for (int i = 0; i < jsonFilters.size(); i++) {
                 final JsonElement jsonFilt = jsonFilters.get(i);
                 BFilter bf = new Gson().fromJson(jsonFilt, BFilter.class);
-                sFilters.add(bf);
+                lFilters.add(bf);
             }
             // add filters 
-            b = b.withFilters(sFilters);
+            b = b.withFilters(lFilters);
             // add rest items
             final String component_type = jsonObject.get(BasketItem.FLD_COMPONENT_TYPE).getAsString();
             final String content_type = jsonObject.get(BasketItem.FLD_CONTENT_TYPE).getAsString();

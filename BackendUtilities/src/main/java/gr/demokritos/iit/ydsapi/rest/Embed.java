@@ -1,13 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gr.demokritos.iit.ydsapi.rest;
 
 import com.google.gson.Gson;
 import gr.demokritos.iit.ydsapi.model.Embedding;
-import gr.demokritos.iit.ydsapi.model.VizType;
+import gr.demokritos.iit.ydsapi.model.ComponentType;
 import gr.demokritos.iit.ydsapi.model.YDSFacet;
 import gr.demokritos.iit.ydsapi.responses.BaseResponse;
 import gr.demokritos.iit.ydsapi.responses.BaseResponse.Status;
@@ -44,7 +39,7 @@ public class Embed {
         EmbedSaveResponse res = new EmbedSaveResponse();
         YDSAPI api = MongoAPIImpl.getInstance();
         try {
-            VizType t = VizType.valueOf(viz_type.toUpperCase());
+            ComponentType t = ComponentType.valueOf(viz_type.toUpperCase());
             Collection<YDSFacet> ydsfacets = new Gson().fromJson(facets, List.class); // todo use reflection
             if (ydsfacets != null) {
                 Object generated_hash = api.saveEmbedding(project_id, t, ydsfacets);
