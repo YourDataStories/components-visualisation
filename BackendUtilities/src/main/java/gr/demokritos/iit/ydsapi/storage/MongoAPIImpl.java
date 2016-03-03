@@ -281,6 +281,8 @@ public class MongoAPIImpl implements YDSAPI {
         } catch (Exception ex) {
             LOGGER.warning(String.format("%s", ex.getMessage()));
         }
+        // remove cache for user, if there.
+        clearUserCache(user_id);
         return removed;
     }
 
