@@ -1,6 +1,70 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6">
+            <h2>Pie</h2>
+            <yds-pie
+                    project-id="1"
+                    table-type = "organizations"
+                    show-legend="true"
+                    element-h="300"
+                    add-to-basket="true"
+                    basket-btn-x="465"
+                    basket-btn-y="12"
+                    embeddable="true"
+                    embed-btn-x="495"
+                    embed-btn-y="12"
+                    popover-pos="left">
+            </yds-pie>
+        </div>
+        <div class="col-md-6">
+            <h2>Bar</h2>
+            <yds-map
+                    project-id="200122"
+                    table-type="projectmap"
+                    add-to-basket="true"
+                    basket-btn-x="465"
+                    basket-btn-y="12"
+                    embeddable="true"
+                    embed-btn-x="520"
+                    embed-btn-y="12"
+                    element-h="300"
+                    popover-pos="left"></yds-map>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <h2>Line</h2>
+            <yds-line
+                    project-id="1"
+                    table-type = "organizations"
+                    element-H="350"
+                    add-to-basket="true"
+                    basket-btn-x="465"
+                    basket-btn-y="12"
+                    embeddable="true"
+                    embed-btn-x="495"
+                    embed-btn-y="12"
+                    popover-pos="left"></yds-line>
+        </div>
+        <div class="col-lg-6">
+            <h2>Line</h2>
+            <yds-grid
+                    project-id="200122"
+                    table-type="SubProjectsDataGrid"
+                    sorting="true"
+                    filtering="true"
+                    quick-filtering="true"
+                    element-H="300"
+                    col-resize="true"
+                    paging="false"
+                    page-size="5"
+                    add-to-basket="true"
+                    basket-btn-x="525"
+                    basket-btn-y="0"></yds-grid>
+        </div>
+    </div>
+ <!--   <div class="row">
+        <div class="col-md-6">
             <h2>Project Info</h2>
             <yds-info
                 project-id="200122"
@@ -24,7 +88,7 @@
                  embed-btn-x="520"
                  embed-btn-y="12"
                  element-h="500"
-                 embeddable="false"></yds-map>
+                 embeddable="true"></yds-map>
         </div>
     </div>
     <div class="row">
@@ -62,19 +126,8 @@
                     embed-btn-y="12"
                     embeddable = "true"></yds-bar>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <h2>Pie</h2>
-            <yds-pie
-                 project-id="1"
-                 popover-pos="left"
-                 embed-btn-x="495"
-                 embed-btn-y="12"
-                 show-legend="true"
-                 element-H="300"
-                 embeddable="true">
-            </yds-pie>
-        </div>
-    </div>
+    </div>-->
+    <yds-basket-preview
+            user-id="ydsUser">
+    </yds-basket-preview>
 </div>

@@ -402,6 +402,32 @@ app.factory('Basket', [ 'YDS_CONSTANTS', '$q', '$http', function (YDS_CONSTANTS,
             });
 
             return deferred.promise;
+        },
+        deleteBasketItems: function (userId, bskID) {
+            var deferred = $q.defer();
+
+            var contType = "";
+            if (bskID != null) {
+                contType = "?basket_item_id=" + bskID;
+            }
+
+            debugger;
+            $http({
+                method: 'POST',
+                url: YDS_CONSTANTS.BASKET_URL + "remove/" + userId,
+                headers: {'Content-Type': 'application/json'},
+                data: {
+                    basket_item_id: bskID
+                }
+            }).success(function (data) {
+                debugger;
+                deferred.resolve(data);
+            }).error(function (error) {
+                debugger;
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
         }
     }
 }]);
