@@ -366,7 +366,7 @@ app.factory('Basket', [ 'YDS_CONSTANTS', '$q', '$http', function (YDS_CONSTANTS,
         saveBasketItem: function(bskItem) {
             var deferred = $q.defer();
             lastSavedItem = angular.copy(bskItem);
-
+console.log(JSON.stringify(bskItem));
             $http({
                 method: 'POST',
                 url: YDS_CONSTANTS.BASKET_URL + "save",
@@ -389,7 +389,7 @@ app.factory('Basket', [ 'YDS_CONSTANTS', '$q', '$http', function (YDS_CONSTANTS,
             if ( type.toLowerCase() == "dataset" )
                 contType = "?basket_type=dataset";
             else if ( type.toLowerCase() == "visualisation" )
-                contType = "?basket_type=visualization";
+                contType = "?basket_type=visualisation";
 
             $http({
                 method: 'GET',
@@ -483,24 +483,27 @@ app.factory('Filters', [ function () {
                 if (gridFilters.hasOwnProperty(property)) {
                     if (property == "_ydsQuickFilter_") {		//quick filter applied on grid
                         var tmpAttrs = {};
-                        tmpAttrs[filterVal] = true;
 
-                        chartFilters.push ({
-                            applied_to: '_quick_bar_' ,
-                            attrs: tmpAttrs
-                        });
+                        if (filterVal.length>0) {
+                            tmpAttrs[filterVal] = true;
+
+                            chartFilters.push ({
+                                applied_to: '_quick_bar_' ,
+                                attrs: tmpAttrs
+                            });
+                        }
                     } else if ( _.isArray(filterVal) && filterVal.length>0 ) {	//string filter applied on grid
-                        var tmpAttrs = {};
-                        var tmpName = "";
+                        var attrsArray = [];
 
                         for (var j=0; j<filterVal.length; j++) {
-                            tmpName = filterVal[j];
-                            tmpAttrs[tmpName] = true;
+                            attrsArray.push(filterVal[j]);
                         }
+
+                        var tmpAttr = { 'rows': attrsArray };
 
                         chartFilters.push ({
                             applied_to: property ,
-                            attrs: tmpAttrs
+                            attrs: tmpAttr
                         });
                     } else if (filterVal.hasOwnProperty('filter') && filterVal.hasOwnProperty('type')) { //numeric filter applied on grid
                         var tmpAttrs = {};
