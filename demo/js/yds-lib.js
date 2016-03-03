@@ -406,24 +406,22 @@ app.factory('Basket', [ 'YDS_CONSTANTS', '$q', '$http', function (YDS_CONSTANTS,
         deleteBasketItems: function (userId, bskID) {
             var deferred = $q.defer();
 
-            var contType = "";
-            if (bskID != null) {
-                contType = "?basket_item_id=" + bskID;
-            }
-
-            debugger;
             $http({
                 method: 'POST',
                 url: YDS_CONSTANTS.BASKET_URL + "remove/" + userId,
-                headers: {'Content-Type': 'application/json'},
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                transformRequest: function (obj) {
+                    var str = [];
+                    for (var p in obj)
+                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                    return str.join("&");
+                },
                 data: {
-                    basket_item_id: bskID
+                    "basket_item_id": bskID
                 }
             }).success(function (data) {
-                debugger;
                 deferred.resolve(data);
             }).error(function (error) {
-                debugger;
                 deferred.reject(error);
             });
 
