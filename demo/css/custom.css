@@ -293,7 +293,7 @@ body #main .container:first-child {
     height: 32px;
     line-height: 50px;
     color: #fff;
-
+    cursor: pointer;
     -ms-transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
@@ -381,7 +381,7 @@ body #main .container:first-child {
     height: 32px;
     line-height: 50px;
     color: #fff;
-
+    cursor: pointer;
     -ms-transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
     transform: rotate(90deg);
