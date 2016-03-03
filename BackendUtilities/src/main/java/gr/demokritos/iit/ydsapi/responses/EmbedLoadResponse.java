@@ -1,13 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gr.demokritos.iit.ydsapi.responses;
 
 import com.google.gson.GsonBuilder;
 import gr.demokritos.iit.ydsapi.model.Embedding;
-import gr.demokritos.iit.ydsapi.model.VizType;
+import gr.demokritos.iit.ydsapi.model.ComponentType;
 import gr.demokritos.iit.ydsapi.model.YDSFacet;
 import java.util.Collection;
 
@@ -19,7 +14,7 @@ public class EmbedLoadResponse extends BaseResponse implements IResponse {
 
     private Embedding embedding;
 
-    public EmbedLoadResponse(Collection<YDSFacet> facets, Object project_id, VizType type, Status status, String message) {
+    public EmbedLoadResponse(Collection<YDSFacet> facets, Object project_id, ComponentType type, Status status, String message) {
         super(status, message);
         this.embedding = new Embedding(project_id, type, facets);
     }

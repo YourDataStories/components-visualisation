@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gr.demokritos.iit.ydsapi.model;
 
 import com.google.gson.GsonBuilder;
@@ -18,10 +13,10 @@ import java.util.List;
 public class Embedding {
 
     private Object project_id;
-    private VizType type;
+    private ComponentType type;
     private Collection<YDSFacet> facets;
 
-    public Embedding(Object project_id, VizType type, Collection<YDSFacet> facets) {
+    public Embedding(Object project_id, ComponentType type, Collection<YDSFacet> facets) {
         this.project_id = project_id;
         this.type = type;
         this.facets = facets;
@@ -39,10 +34,10 @@ public class Embedding {
      */
     public Embedding unpack(DBObject dbo) throws Exception {
         Object pid;
-        VizType t;
+        ComponentType t;
         Collection<YDSFacet> fets;
         pid = dbo.get("project_id");
-        t = VizType.valueOf((String) dbo.get("type"));
+        t = ComponentType.valueOf(((String) dbo.get("type")).toUpperCase());
         fets = extractFacets((List<DBObject>) dbo.get("facets"));
         return new Embedding(pid, t, fets);
     }

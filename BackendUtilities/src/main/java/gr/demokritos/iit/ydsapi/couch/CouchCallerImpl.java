@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gr.demokritos.iit.ydsapi.couch;
 
 import static gr.demokritos.iit.ydsapi.storage.YDSAPI.LOGGER;
@@ -57,7 +52,7 @@ public class CouchCallerImpl implements CouchCaller {
         String parameters_request = (db_name == null ? "espa_projects" : db_name).concat("/")
                 .concat(project_key_value == null ? "project" : project_key_value).concat("=")
                 .concat(id);
-        System.out.println(url);
+//        System.out.println(url);
         LOGGER.info(String.format("calling: %s", url.concat(parameters_request)));
         ClientRequestFactory crf = new ClientRequestFactory(UriBuilder.fromUri(couch_base_url).build());
         ClientRequest req = crf.createRelativeRequest(parameters_request);

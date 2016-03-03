@@ -1,9 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gr.demokritos.iit.ydsapi.responses;
+
+import com.google.gson.JsonElement;
 
 /**
  * a response to send through the API
@@ -13,5 +10,7 @@ package gr.demokritos.iit.ydsapi.responses;
 public interface IResponse {
 
     String toJSON();
+    
+    JsonElement toJSONElement();
 
 }

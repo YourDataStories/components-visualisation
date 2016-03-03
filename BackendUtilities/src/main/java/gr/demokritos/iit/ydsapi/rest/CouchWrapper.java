@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gr.demokritos.iit.ydsapi.rest;
 
 import com.google.gson.GsonBuilder;
@@ -122,7 +117,7 @@ public class CouchWrapper {
             res = p.execGet(path);
             entity = res.getEntity();
             String entity_response = EntityUtils.toString(entity, Charset.forName(Configuration.ENCODING_UTF_8));
-            System.out.println(entity_response);
+//            System.out.println(entity_response);
             return entity_response;
         } catch (IOException ex) {
             Logger.getLogger(CouchWrapper.class.getName()).log(Level.SEVERE, null, ex);

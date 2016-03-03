@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gr.demokritos.iit.ydsapi.responses;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 
 /**
  *
@@ -74,4 +70,8 @@ public class BaseResponse implements IResponse {
         return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(this, BaseResponse.class);
     }
 
+    @Override
+    public JsonElement toJSONElement() {
+        return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJsonTree(this, BaseResponse.class);
+    }
 }
