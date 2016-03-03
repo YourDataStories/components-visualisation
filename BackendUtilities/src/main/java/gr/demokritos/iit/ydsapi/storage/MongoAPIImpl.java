@@ -44,6 +44,10 @@ public class MongoAPIImpl implements YDSAPI {
 
     private volatile static MongoAPIImpl instance;
     private DB db;
+
+    /**
+     * cache basket items per user_id
+     */
     private final Cache<Integer, List<BasketItem>> basket_cache;
 
     /**

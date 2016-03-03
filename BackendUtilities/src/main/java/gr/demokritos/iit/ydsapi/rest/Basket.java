@@ -12,7 +12,6 @@ import gr.demokritos.iit.ydsapi.storage.YDSAPI;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -29,6 +28,7 @@ import javax.ws.rs.core.Response;
 @Path("yds/basket/")
 @Produces(MediaType.APPLICATION_JSON)
 public class Basket {
+
     private static final Logger LOG = Logger.getLogger(Basket.class.getName());
 
     @Path("save")
@@ -72,8 +72,8 @@ public class Basket {
         YDSAPI api = MongoAPIImpl.getInstance();
         List<BasketItem> baskets;
         BasketListLoadResponse blr;
-        LOG.info(String.format("user_id: %s",user_id));
-        LOG.info(String.format("basket_type: %s",basket_type));
+        LOG.info(String.format("user_id: %s", user_id));
+        LOG.info(String.format("basket_type: %s", basket_type));
         try {
             baskets = api.getBasketItems(
                     user_id,
@@ -81,7 +81,7 @@ public class Basket {
                             ? BasketType.ALL
                             : BasketType.valueOf(basket_type.toUpperCase())
             );
-            LOG.info(String.format("baskets size: %d",baskets.size()));
+            LOG.info(String.format("baskets size: %d", baskets.size()));
             blr = new BasketListLoadResponse(baskets);
         } catch (Exception ex) {
             blr = new BasketListLoadResponse(
@@ -105,7 +105,7 @@ public class Basket {
         YDSAPI api = MongoAPIImpl.getInstance();
         final BasketItem bskt;
         BasketItemLoadResponse blr;
-        LOG.info(String.format("basket_item_id: %s",basket_item_id));
+        LOG.info(String.format("basket_item_id: %s", basket_item_id));
         try {
             bskt = api.getBasketItem(basket_item_id);
             blr = new BasketItemLoadResponse(bskt);
@@ -124,24 +124,24 @@ public class Basket {
     }
 
     @Path("remove/{user_id}")
-    @POST
+    @DELETE
     public Response remove(
             @PathParam("user_id") String user_id,
-            @FormParam("basket_item_id") String basket_item_id
+            @QueryParam("basket_item_id") String basket_item_id
     ) {
         YDSAPI api = MongoAPIImpl.getInstance();
         BaseResponse br;
-        LOG.info(String.format("user_id: %s",user_id));
-        LOG.info(String.format("basket_item_id: %s",basket_item_id));
+        LOG.info(String.format("user_id: %s", user_id));
+        LOG.info(String.format("basket_item_id: %s", basket_item_id));
         try {
             if (basket_item_id == null) {
                 int res = api.removeBasketItems(user_id);
                 br = new BaseResponse(Status.OK, getMessage(res, user_id));
-                LOG.info(String.format("delete items: %d",res));
+                LOG.info(String.format("delete items: %d", res));
             } else {
                 boolean res = api.removeBasketItem(user_id, basket_item_id);
                 br = new BaseResponse(Status.OK, getMessage(res, basket_item_id));
-                LOG.info(String.format("delete item: %s",Boolean.toString(res)));
+                LOG.info(String.format("delete item: %s", Boolean.toString(res)));
             }
         } catch (Exception ex) {
             br = new BaseResponse(
