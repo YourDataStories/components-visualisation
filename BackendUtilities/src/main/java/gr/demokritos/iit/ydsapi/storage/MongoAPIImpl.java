@@ -362,7 +362,7 @@ public class MongoAPIImpl implements YDSAPI {
     private Iterable<Integer> getHashCodes(String user_id) {
         int hashCodeAll = Objects.hashCode(user_id, BasketType.ALL);
         int hashCodeD = Objects.hashCode(user_id, BasketType.DATASET);
-        int hashCodeV = Objects.hashCode(user_id, BasketType.VISUALIZATION);
+        int hashCodeV = Objects.hashCode(user_id, BasketType.VISUALISATION);
         // debug
         // LOGGER.info(String.format("clear all items cache for user: %s", user_id));
         return Arrays.asList(new Integer[]{hashCodeAll, hashCodeD, hashCodeV});
