@@ -52,13 +52,17 @@ public class BasketItem {
         this.lang = builder.lang;
     }
 
+    /**
+     * obtain json request, utilizes {@link Builder} for safety
+     *
+     * @param jsonBasketItem
+     */
     public BasketItem(String jsonBasketItem) {
         BasketItem bi
                 = new GsonBuilder()
                 .registerTypeAdapter(BasketItem.class, new BasketItemDeserializer())
                 .create()
                 .fromJson(jsonBasketItem, getClass());
-//        System.out.println(bi.toJSON());
         this.userID = bi.userID;
         this.componentParentUUID = bi.componentParentUUID;
         this.title = bi.title;
@@ -151,6 +155,12 @@ public class BasketItem {
         return gson.toJsonTree(this);
     }
 
+    /**
+     * we want only these specific fields to uniquely identify a
+     * {@link BasketItem}
+     *
+     * @return
+     */
     @Override
     public int hashCode() {
         int hash = 3;
@@ -187,12 +197,12 @@ public class BasketItem {
         if (this.type != other.type) {
             return false;
         }
-        if (!Objects.equals(this.lang, other.lang)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.lang, other.lang);
     }
 
+    /**
+     * custom builder class for {@link BasketItem}
+     */
     public static class Builder {
 
         private final String user_id;
@@ -326,9 +336,11 @@ public class BasketItem {
             if (this.lang == null || this.lang.trim().isEmpty()) {
                 this.lang = "en";
             }
+            // default is 'private'
             if (this.isPrivate == null) {
                 this.isPrivate = Boolean.TRUE;
             }
+            // mandatory fields
             if (this.type == null) {
                 throw new IllegalArgumentException("declare basket type");
             }
@@ -366,7 +378,7 @@ public class BasketItem {
     public static final String FLD_TITLE = "title";
     public static final String FLD_TAGS = "tags";
     public static final String FLD_FILTERS = "filters";
-    public static final String FLD_COMPONENT_TYPE = "component_type"; // accepted types: line, pie, bar, map, grid
+    public static final String FLD_COMPONENT_TYPE = "component_type";
     public static final String FLD_CONTENT_TYPE = "content_type";
     public static final String FLD_TYPE = "type";
     public static final String FLD_IS_PRIVATE = "is_private";

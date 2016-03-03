@@ -40,7 +40,7 @@ public class Embed {
         YDSAPI api = MongoAPIImpl.getInstance();
         try {
             ComponentType t = ComponentType.valueOf(viz_type.toUpperCase());
-            Collection<YDSFacet> ydsfacets = new Gson().fromJson(facets, List.class); // todo use reflection
+            Collection<YDSFacet> ydsfacets = new Gson().fromJson(facets, List.class);
             if (ydsfacets != null) {
                 Object generated_hash = api.saveEmbedding(project_id, t, ydsfacets);
                 res.setGenerated_hash(generated_hash);

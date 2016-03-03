@@ -29,7 +29,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bson.types.ObjectId;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -82,9 +81,9 @@ public class MongoAPIImpl implements YDSAPI {
             MongoCredential credential = MongoCredential.createCredential(conf.getDatabaseUserName(), conf.getDatabaseName(), conf.getDatabasePassword().toCharArray());
             MongoClient mongoClient = new MongoClient(sa, Arrays.asList(credential));
             db = mongoClient.getDB(conf.getDatabaseName());
-            Logger.getAnonymousLogger().info(String.format("connection pool with database: '%s' initialized", conf.getDatabaseName()));
+            LOGGER.info(String.format("connection pool with database: '%s' initialized", conf.getDatabaseName()));
         } catch (UnknownHostException ex) {
-            Logger.getLogger(MongoAPIImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         // init cache
         long max_cache_size = Long.valueOf(senti_res.getProperty(Configuration.BASKET_MAX_CACHE_SIZE, "10000"));
@@ -166,7 +165,6 @@ public class MongoAPIImpl implements YDSAPI {
                 true,
                 false
         );
-//        System.out.println(wr.toString());
         Object upserted_id = wr.getUpsertedId();
         String id;
         if (upserted_id == null) {
@@ -211,7 +209,7 @@ public class MongoAPIImpl implements YDSAPI {
                 curs = col.find(QueryBuilder.start(BasketItem.FLD_USERID).is(user_id).and(BasketItem.FLD_TYPE).is(bType.getDecl()).get());
             }
         }
-        // order by reverse insertion order
+        // order by reverse insertion order - should we transfer the sorting upwards to the API?
         curs = curs.sort(REVERSED_INSERTION_ORDER);
         // get items
         while (curs.hasNext()) {
@@ -356,7 +354,8 @@ public class MongoAPIImpl implements YDSAPI {
         BasketType type = item.getType();
         int hashCodeAll = Objects.hashCode(user_id, BasketType.ALL);
         int hashCodeTyped = Objects.hashCode(user_id, type);
-        LOGGER.info(String.format("clear 2 items cache for user: %s: [%s, %s]", user_id, BasketType.ALL.getDecl(), type.getDecl()));
+        // debug
+        // LOGGER.info(String.format("clear 2 items cache for user: %s: [%s, %s]", user_id, BasketType.ALL.getDecl(), type.getDecl()));
         return Arrays.asList(new Integer[]{hashCodeAll, hashCodeTyped});
     }
 
@@ -364,7 +363,8 @@ public class MongoAPIImpl implements YDSAPI {
         int hashCodeAll = Objects.hashCode(user_id, BasketType.ALL);
         int hashCodeD = Objects.hashCode(user_id, BasketType.DATASET);
         int hashCodeV = Objects.hashCode(user_id, BasketType.VISUALIZATION);
-        LOGGER.info(String.format("clear all items cache for user: %s", user_id));
+        // debug
+        // LOGGER.info(String.format("clear all items cache for user: %s", user_id));
         return Arrays.asList(new Integer[]{hashCodeAll, hashCodeD, hashCodeV});
     }
 
@@ -387,10 +387,18 @@ public class MongoAPIImpl implements YDSAPI {
         ///////
         // room for more indexes here
         if (created) {
-            LOGGER.info(String.format("collection '%s' contains existing indexes: %s", col.getName(), extractIndexNames(col.getIndexInfo()).toString()));
+            LOGGER.info(String.format("collection '%s' contains existing indexes: %s",
+                    col.getName(),
+                    extractIndexNames(col.getIndexInfo()).toString())
+            );
         }
     }
 
+    /**
+     * get single field indexes
+     * @param indexInfo
+     * @return 
+     */
     private Set<String> extractIndexNames(List<DBObject> indexInfo) {
         Set<String> res = new HashSet();
         for (DBObject indexInfo1 : indexInfo) {
