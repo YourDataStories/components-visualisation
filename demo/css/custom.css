@@ -458,10 +458,14 @@ rzslider .rz-pointer:after {
 /***** BASKET  CUSTOMIZATION *****/
 /*********************************/
 
-.basket-modal-body .btn-group .btn{
-    width: 105px;
+.basket-modal-body .btn-group .btn{ width: 105px; }
+
+.yds-basket-prev-inner .list-group-item {
+     overflow: hidden;
+     border-left: 0;
+     border-right: 0;
 }
-.yds-basket-prev-inner .list-group-item { overflow: hidden; }
+.yds-basket-prev-inner .list-group-item:first-child { border-top: 0; }
 .basket-public-icon {
     position: absolute;
     top: -17px;
@@ -473,6 +477,10 @@ rzslider .rz-pointer:after {
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
     height: 50px;
+
+    -webkit-box-shadow: 0px 3px 8px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 3px 8px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 3px 8px 0px rgba(0,0,0,0.75);
 }
 .basket-public-icon i{
     margin-top: 18px;
