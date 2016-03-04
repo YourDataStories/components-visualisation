@@ -461,3 +461,27 @@ rzslider .rz-pointer:after {
 .basket-modal-body .btn-group .btn{
     width: 105px;
 }
+.yds-basket-prev-inner .list-group-item { overflow: hidden; }
+.basket-public-icon {
+    position: absolute;
+    top: -17px;
+    left: -5px;
+    background: #337AB7;
+    color: #fff;
+    width: 22px;
+    -ms-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    height: 50px;
+}
+.basket-public-icon i{
+    margin-top: 18px;
+    margin-left: 8px;
+    -ms-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    font-size: 12px;
+}
+.yds-basket-prev-delete-btn {
+    line-height: 40px;
+}
