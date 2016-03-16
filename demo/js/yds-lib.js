@@ -366,7 +366,7 @@ app.factory('Basket', [ 'YDS_CONSTANTS', '$q', '$http', function (YDS_CONSTANTS,
         saveBasketItem: function(bskItem) {
             var deferred = $q.defer();
             lastSavedItem = angular.copy(bskItem);
-console.log(JSON.stringify(bskItem));
+
             $http({
                 method: 'POST',
                 url: YDS_CONSTANTS.BASKET_URL + "save",

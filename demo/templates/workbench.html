@@ -1,0 +1,92 @@
+<div class="component-wrapper ">
+    <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length>0">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        {{ydsAlert}}
+    </div>
+    <div class="row">
+        <div class="col-xs-3">
+
+            <div class="yds-basket-prev-content" id="workbench-basket">
+                <div class="yds-basket-prev-title text-center" title="Basket Preview">
+                    Basket Preview
+                </div>
+                <div class="yds-basket-prev-title text-center">
+                    <div class="btn-group btn-group-justified">
+                        <label class="btn btn-primary" ng-model="basketType" uib-btn-radio="'Dataset'" ng-click="changeBasketView('Dataset')">Dataset</label>
+                        <label class="btn btn-primary" ng-model="basketType" uib-btn-radio="'Visualisation'" ng-click="changeBasketView('Visualisation')">Visualisation</label>
+                    </div>
+                </div>
+                <div class="yds-basket-prev-inner">
+                    <input type="text" ng-model="searchText" placeholder="Search basket.."/>
+                    <div ng-if="basketList.length>0" class="row list-group">
+                        <div ng-repeat="item in basketList " class="list-group-item"><!--ng-click="visitResult($index)"-->
+                            <div class="row">
+                                <div class="basket-public-icon">
+                                    <i class="glyphicon"
+                                       title="{{ item.is_private ? 'The resource is private.' : 'The resource is public.'}}"
+                                       ng-class="(item.is_private) ? 'glyphicon-eye-close' : 'glyphicon-eye-open'"></i>
+                                </div>
+                                <div class="col-md-9 col-md-offset-1 yds-basket-prev-desc">
+                                    <b>{{item.title}}</b>
+                                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true" ng-if="item.component_type=='grid'"></span>
+                                    <span class="glyphicon glyphicon-signal" aria-hidden="true" ng-if="item.component_type=='line'"></span>
+                                    <span class="glyphicon glyphicon-record" aria-hidden="true" ng-if="item.component_type=='pie'"></span>
+                                    <span class="glyphicon glyphicon-stats" aria-hidden="true" ng-if="item.component_type=='bar'"></span>
+                                    <span class="glyphicon glyphicon-globe" aria-hidden="true" ng-if="item.component_type=='map'"></span>
+                                    <br/>
+                                    <label for="">Tags: </label><span ng-repeat="tag in item.tags">{{tag}}{{$last ? '' : ', '}}</span>
+                                </div>
+                                <!--<div class="col-md-1 yds-basket-prev-delete-btn">
+                                    <span class="glyphicon glyphicon-trash text-danger" title="Delete" aria-hidden="true" ng-click="deleteBasketItem(item.basket_item_id)"></span>
+                                </div>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="basketList.data.length==0" class="row list-group"
+                         style="border: 0.5px solid grey; margin-top: 10px; padding: 10px;">
+                        <a class="list-group-item">
+                            <h4>We are sorry we could not find any item in your basket..</h4>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-xs-4">
+            <uib-carousel active="active"  no-wrap="noWrapSlides">
+                <uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id" ng-click="selectVisualisation(slide.images[0].type)">
+                    <div class="col-xs-4 slider-img-wrapper">
+                        <img ng-src="{{slide.images[0].src}}" >
+                        <div class="carousel-caption">
+                            <p>{{slide.images[0].name}}</p>
+                        </div>
+                    </div>
+                    <div class="col-xs-4 slider-img-wrapper" ng-if="slide.images[1].src!=undefined">
+                        <img ng-src="{{slide.images[1].src}}" ng-click="selectVisualisation(slide.images[1].type)">
+                        <div class="carousel-caption">
+                            <p>{{slide.images[1].name}}</p>
+                        </div>
+                    </div>
+                    <div class="col-xs-4 slider-img-wrapper" ng-if="slide.images[2].src!=undefined">
+                        <img ng-src="{{slide.images[2].src}}" ng-click="selectVisualisation(slide.images[2].type)">
+                        <div class="carousel-caption">
+                            <p>{{slide.images[2].name}}</p>
+                        </div>
+                    </div>
+                </uib-slide>
+            </uib-carousel>
+            <div class="row">
+                <h5>Options:</h5>
+                <div>
+                    <select></select>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-5">
+            <div class="vis-area">das</div>
+        </div>
+    </div>
+</div>

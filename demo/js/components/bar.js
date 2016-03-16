@@ -19,7 +19,7 @@ angular.module('yds').directive('ydsBar', ['Data', function(Data){
             basketBtnX: '@',    //x-axis position of the basket button
             basketBtnY: '@',    //y-axis position of the basket button
 
-            embeddable: '@',    //enable or disable the embedding of the component
+            embeddable: '@',    //enable or disabled the embedding of the component
             embedBtnX: '@',     //x-axis position of the embed button
             embedBtnY: '@',     //y-axis position of the embed button
             popoverPos: '@'     //the side of the embed button from which the embed information window will appear

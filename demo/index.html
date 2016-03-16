@@ -48,15 +48,24 @@
         <script src="js/components/pie.js"></script>
         <script src="js/components/geo-editing.js"></script>
         <script src="js/components/browse.js"></script>
+        <script src="js/components/workbench.js"></script>
 
         <script src="js/components/embed-button.js"></script>
         <script src="js/components/basket-button.js"></script>
         <script src="js/components/hybrid.js"></script>
+
+
+
+
+
+
+
     </head>
     <body  ng-app="ydsDemo">
         <nav ng-include="'templates-demo/navigation.html'"
              ng-if="location.path().indexOf('embed')!==1"
-             class="navbar navbar-default navbar-fixed-top"></nav>
+             class="navbar navbar-default navbar-fixed-top"
+        ></nav>
         <div id="main">
             <div ui-view></div>
         </div>

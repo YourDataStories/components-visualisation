@@ -38,6 +38,10 @@ ydsDemo.config(function($stateProvider, $urlRouterProvider) {
 	.state('browse', {
 		url: '/browse',
 		templateUrl: 'templates-demo/browse.html'
+	})
+	.state('workbench', {
+		url: '/workbench',
+		templateUrl: 'templates-demo/workbench.html'
 	});
 });
 
