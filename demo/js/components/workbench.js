@@ -163,6 +163,56 @@ angular.module('yds').directive('ydsWorkbench', ['Data', 'Basket', '$timeout', '
 						break;
 					case "bar":
 						if (!barInit) {
+							var options = {
+								chart: {
+									type: 'column',
+									renderTo: barChartContainer[0].id
+								},
+								title: {
+									text: "My Bar Chart"/*,
+									style: {
+										fontSize: titleSize + "px"
+									}*/
+								},
+								xAxis: {
+									categories: [],
+									//categories: response.categories,
+									crosshair: true,
+									title : { text: "xAxis" },
+									labels: { enabled: true }
+								},
+								yAxis: {
+									title : { text: "yAxis" },
+									labels: { enabled: true }
+								},
+								legend: {
+									enabled: true
+								},
+								exporting: {
+									enabled: true
+								},
+								/*tooltip: {
+									headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+									pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+									'<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+									footerFormat: '</table>',
+									shared: true,
+									useHTML: true
+								},*/
+								plotOptions: {
+									column: {
+										pointPadding: 0.2,
+										borderWidth: 0
+									}
+								},
+								series: []
+							};
+
+
+							$timeout(function(){
+								triggerResizeEvt();
+								new Highcharts.Chart(options);
+							});
 
 							barInit = true;
 						}
@@ -192,10 +242,13 @@ angular.module('yds').directive('ydsWorkbench', ['Data', 'Basket', '$timeout', '
 									zoomControl: true
 								});
 
-								L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-									maxZoom: 18,
-									attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
-								}).addTo(map);
+								$timeout(function(){
+									triggerResizeEvt();
+									L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+										maxZoom: 18,
+										attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+									}).addTo(map);
+								});
 
 								mapInit = true;
 							}
