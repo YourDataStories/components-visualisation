@@ -56,37 +56,90 @@
         </div>
         <div class="col-xs-4">
             <uib-carousel active="active"  no-wrap="noWrapSlides">
-                <uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id" ng-click="selectVisualisation(slide.images[0].type)">
-                    <div class="col-xs-4 slider-img-wrapper">
-                        <img ng-src="{{slide.images[0].src}}" >
-                        <div class="carousel-caption">
+                <uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id">
+                    <div class="col-xs-4 slider-img-wrapper"
+
+                         ng-if="slide.images[0].src!=undefined" ng-click="selectVisualisation(slide.images[0].type)">
+                        <img ng-src="{{slide.images[0].src}}" ng-class="selectedVisualisation==slide.images[0].type?'active':''">
+                        <div class="carousel-caption" >
                             <p>{{slide.images[0].name}}</p>
                         </div>
                     </div>
-                    <div class="col-xs-4 slider-img-wrapper" ng-if="slide.images[1].src!=undefined">
-                        <img ng-src="{{slide.images[1].src}}" ng-click="selectVisualisation(slide.images[1].type)">
+                    <div class="col-xs-4 slider-img-wrapper" ng-if="slide.images[1].src!=undefined" ng-click="selectVisualisation(slide.images[1].type)">
+                        <img ng-src="{{slide.images[1].src}}" ng-class="selectedVisualisation==slide.images[1].type?'active':''">
                         <div class="carousel-caption">
                             <p>{{slide.images[1].name}}</p>
                         </div>
                     </div>
-                    <div class="col-xs-4 slider-img-wrapper" ng-if="slide.images[2].src!=undefined">
-                        <img ng-src="{{slide.images[2].src}}" ng-click="selectVisualisation(slide.images[2].type)">
+                    <div class="col-xs-4 slider-img-wrapper" ng-if="slide.images[2].src!=undefined" ng-click="selectVisualisation(slide.images[2].type)">
+                        <img ng-src="{{slide.images[2].src}}" ng-class="selectedVisualisation==slide.images[2].type?'active':''">
                         <div class="carousel-caption">
                             <p>{{slide.images[2].name}}</p>
                         </div>
                     </div>
                 </uib-slide>
             </uib-carousel>
+            <hr>
             <div class="row">
-                <h5>Options:</h5>
-                <div>
-                    <select></select>
+                <div class="col-md-12" class="animate-switch-container" ng-switch on="selectedVisualisation">
+                    <h4>Options:</h4>
+                    <div class="animate-switch" ng-switch-when="line">
+                        <div class="form-group">
+                            <label for="lineAxisX">X Axis</label>
+                            <select class="form-control" id="lineAxisX" ng-model="selLineAxisX" ng-options="name for name in sampleSelectData">
+                                <option value="">Choose..</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="lineAxisY">Y Axis</label>
+                            <select class="form-control" id="lineAxisY" ng-model="selLineAxisY" ng-options="name for name in sampleSelectData">
+                                <option value="">Choose..</option>
+                            </select>
+                        </div>
 
+                        <button type="submit" class="btn btn-default btn-success pull-right">Visualise Data</button>
+                    </div>
+                    <div class="animate-switch" ng-switch-when="bar">
+                        <div class="form-group">
+                            <label for="barAxisX">X Axis</label>
+                            <select class="form-control" id="barAxisX" ng-model="selBarAxisX" ng-options="name for name in sampleSelectData">
+                                <option value="">Choose..</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-default btn-success pull-right">Visualise Data</button>
+                    </div>
+                    <div class="animate-switch" ng-switch-when="pie">
+                        <div class="form-group">
+                            <label for="pieColumn">Pie Column</label>
+                            <select class="form-control" id="pieColumn" ng-model="selPieCol" ng-options="name for name in sampleSelectData">
+                                <option value="">Choose..</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-default btn-success pull-right">Visualise Data</button>
+                    </div>
+                    <div  class="animate-switch" ng-switch-when="map">
+                        <div class="form-group">
+                            <label for="mapColumn">Map Points</label>
+                            <select class="form-control" id="mapColumn" ng-model="selMapCol" ng-options="name for name in sampleSelectData">
+                                <option value="">Choose..</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-default btn-success pull-right">Visualise Data</button>
+                    </div>
+                    <div ng-switch-default>
+                        You have to select a visualisation type first
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-xs-5">
-            <div class="vis-area">das</div>
+        <div class="col-xs-5 vis-area-wrapper">
+            <div class="vis-area vis-area-line" ng-show="selectedVisualisation=='line'"></div>
+            <div class="vis-area vis-area-bar" ng-show="selectedVisualisation=='bar'"></div>
+            <div class="vis-area vis-area-pie" ng-show="selectedVisualisation=='pie'"></div>
+            <div class="vis-area vis-area-map" ng-show="selectedVisualisation=='map'"></div>
         </div>
     </div>
 </div>
