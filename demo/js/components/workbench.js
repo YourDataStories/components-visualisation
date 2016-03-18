@@ -57,22 +57,22 @@ angular.module('yds').directive('ydsWorkbench', ['Data', 'Basket', '$timeout', '
 				{
 					id:0,
 					images : [ {
-						src: "img/chart_bar.png",
+						src: "img/thumbnails/line_chart.png",
 						name: "Line Chart",
 						type: "line"
 					}, {
-						src: "img/chart_bar.png",
+						src: "img/thumbnails/bar_chart.png",
 						name: "Bar Chart",
 						type: "bar"
 					}, {
-						src: "img/chart_pie.png",
+						src: "img/thumbnails/pie_chart.png",
 						name: "Pie Chart",
 						type: "pie"
 					}]
 				}, {
 					id:1,
 					images : [{
-						src: "img/chart_bar.png",
+						src: "img/thumbnails/map.png",
 						name: "Map",
 						type: "map"
 					}]
