@@ -151,13 +151,11 @@ angular.module('yds').directive('ydsWorkbench', ['Data', 'Basket', '$timeout', '
 								}]
 							};
 
-
 							$timeout(function(){
 								triggerResizeEvt();
 								new Highcharts.StockChart(options);
+								lineInit = true;
 							});
-
-							lineInit = true;
 						}
 
 						break;
@@ -168,12 +166,7 @@ angular.module('yds').directive('ydsWorkbench', ['Data', 'Basket', '$timeout', '
 									type: 'column',
 									renderTo: barChartContainer[0].id
 								},
-								title: {
-									text: "My Bar Chart"/*,
-									style: {
-										fontSize: titleSize + "px"
-									}*/
-								},
+								title: { text: "My Bar Chart" },
 								xAxis: {
 									categories: [],
 									//categories: response.categories,
@@ -185,12 +178,8 @@ angular.module('yds').directive('ydsWorkbench', ['Data', 'Basket', '$timeout', '
 									title : { text: "yAxis" },
 									labels: { enabled: true }
 								},
-								legend: {
-									enabled: true
-								},
-								exporting: {
-									enabled: true
-								},
+								legend: { enabled: true },
+								exporting: { enabled: true },
 								/*tooltip: {
 									headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
 									pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
@@ -208,13 +197,11 @@ angular.module('yds').directive('ydsWorkbench', ['Data', 'Basket', '$timeout', '
 								series: []
 							};
 
-
 							$timeout(function(){
 								triggerResizeEvt();
 								new Highcharts.Chart(options);
+								barInit = true;
 							});
-
-							barInit = true;
 						}
 
 						break;
@@ -225,8 +212,42 @@ angular.module('yds').directive('ydsWorkbench', ['Data', 'Basket', '$timeout', '
 						}
 
 						if (!pieInit) {
+							var options = {
+								chart: {
+									plotBackgroundColor: null,
+									plotBorderWidth: null,
+									plotShadow: false,
+									type: 'pie',
+									renderTo: pieChartContainer[0].id
+								},
+								title: { text: "My Pie Chart" },
+								tooltip: {
+									pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+								},
+								legend: { enabled: true },
+								exporting: { enabled: true },
+								plotOptions: {
+									pie: {
+										allowPointSelect: true,
+										cursor: 'pointer',
+										dataLabels: {
+											enabled: false
+										},
+										showInLegend: true
+									}
+								},
+								series: [{
+									name: [],
+									colorByPoint: true,
+									data: []
+								}]
+							};
 
-							pieInit = true;
+							$timeout(function(){
+								triggerResizeEvt();
+								new Highcharts.Chart(options);
+								pieInit = true;
+							});
 						}
 
 						break;
@@ -248,9 +269,9 @@ angular.module('yds').directive('ydsWorkbench', ['Data', 'Basket', '$timeout', '
 										maxZoom: 18,
 										attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
 									}).addTo(map);
-								});
 
-								mapInit = true;
+									mapInit = true;
+								});
 							}
 						}
 
