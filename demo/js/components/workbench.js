@@ -1,4 +1,5 @@
-angular.module('yds').directive('ydsWorkbench', ['Data', 'Basket', '$timeout', function(Data, Basket, $timeout){
+angular.module('yds').directive('ydsWorkbench', ['Data', 'Basket', '$timeout', '$window',
+	function(Data, Basket, $timeout, $window){
 	return {
 		restrict: 'E',
 		scope: {
@@ -103,16 +104,23 @@ angular.module('yds').directive('ydsWorkbench', ['Data', 'Basket', '$timeout', f
 				}
 			};
 
+			var triggerResizeEvt = function() {
+				var evt = $window.document.createEvent('UIEvents');
+				evt.initUIEvent('resize', true, false, $window, 0);
+				$window.dispatchEvent(evt);
+			};
 
 
-			var mapInitialised = false;
+			var lineInit = barInit = pieInit = mapInit = false;
 			scope.selectVisualisation = function(type) {
 				switch(type) {
 					case "line":
 						if (scope.selectedVisualisation != "line") {
 							//get data from server for line visualization
 							//and init an empty line visualisation
+						}
 
+						if (!lineInit) {
 							var options = {
 								chart: {
 									renderTo: lineChartContainer[0].id
@@ -143,14 +151,20 @@ angular.module('yds').directive('ydsWorkbench', ['Data', 'Basket', '$timeout', f
 								}]
 							};
 
-							new Highcharts.StockChart(options);
+
+							$timeout(function(){
+								triggerResizeEvt();
+								new Highcharts.StockChart(options);
+							});
+
+							lineInit = true;
 						}
 
 						break;
 					case "bar":
-						if (scope.selectedVisualisation != "bar") {
-							//get data from server for bar visualization
-							//and init an empty line visualisation
+						if (!barInit) {
+
+							barInit = true;
 						}
 
 						break;
@@ -160,13 +174,18 @@ angular.module('yds').directive('ydsWorkbench', ['Data', 'Basket', '$timeout', f
 							//and init an empty line visualisation
 						}
 
+						if (!pieInit) {
+
+							pieInit = true;
+						}
+
 						break;
 					case "map":
 						if (scope.selectedVisualisation != "map") {
 							//get data from server for map visualization
 							//and init an empty line visualisation
 
-							if (!mapInitialised) {
+							if (!mapInit) {
 								var map = L.map(mapChartContainer[0].id, {
 									center: [37.9833333,23.7333333],
 									zoom: 5,
@@ -177,7 +196,8 @@ angular.module('yds').directive('ydsWorkbench', ['Data', 'Basket', '$timeout', f
 									maxZoom: 18,
 									attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
 								}).addTo(map);
-								mapInitialised = true;
+
+								mapInit = true;
 							}
 						}
 
