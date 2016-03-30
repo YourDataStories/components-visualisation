@@ -1,18 +1,20 @@
 var app = angular.module('yds', ['ui.bootstrap', 'rzModule', 'ui.checkbox', 'oc.lazyLoad']);
 
 var host="http://ydsdev.iit.demokritos.gr:8085";
-var searchUrl = host+"/YDSAPI/yds/api/search";
 var visualizationUrl = host+"/YDSAPI/yds/api/couch/visualization/";
 var espaProjectURL = host+"/YDSAPI/yds/api/couch/espa/";
 var geoRouteUrl = host+"/YDSAPI/yds/geo/route";
-var embedUrl = host+"/YDSAPI/yds/embed/";
 
 
 // Defining global variables for the YDS lib
 app.constant("YDS_CONSTANTS", {
     /*"SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",*/
+    "PROXY": "/",
+    "API_GRID": "platform.yourdatastories.eu/api/json-ld/component/grid",
+    "API_SEARCH": "ydsdev.iit.demokritos.gr/api/mudcat/public-projects",
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
     "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
+    "API_EMBED": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/embed/",
     "BASKET_URL": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/basket/"
 });
 
@@ -37,7 +39,7 @@ app.directive('clipboard', [ '$document', function(){
 }]);
 
 
-app.factory('Data', ['$http', '$q', function ($http, $q) {
+app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CONSTANTS) {
     var backButtonUsed = false;
 
     var notifyObservers = function (observerStack) { //function to trigger the callbacks of observers
@@ -149,7 +151,7 @@ app.factory('Data', ['$http', '$q', function ($http, $q) {
 
             $http({
                 method: 'POST',
-                url: embedUrl + "save",
+                url: YDS_CONSTANTS.API_EMBED + "save",
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 transformRequest: function (obj) {
                     var str = [];
@@ -176,7 +178,7 @@ app.factory('Data', ['$http', '$q', function ($http, $q) {
 
             $http({
                 method: 'GET',
-                url: embedUrl + embedCode
+                url: YDS_CONSTANTS.API_EMBED + embedCode
             }).success(function (data) {
                 deferred.resolve(data);
             }).error(function (error) {
@@ -235,6 +237,25 @@ app.factory('Data', ['$http', '$q', function ($http, $q) {
             return deferred.promise;
         }, createRandomId : function () {
             return '_' + Math.random().toString(36).substr(2, 9);
+        }, getGrid : function(resourceId, gridType, gridLang) {
+            var deferred = $q.defer();
+
+            $http({
+                method: 'GET',
+                url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_GRID,
+                headers: {'Content-Type': 'application/json; charset=UTF-8'},
+                params: {
+                    id: resourceId,
+                    type: gridType,
+                    lang: gridLang
+                }
+            }).success(function (data) {
+                deferred.resolve(data);
+            }).error(function (error) {
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
         }
     }
 }]);
@@ -273,13 +294,10 @@ app.factory('Search', ['$http', '$q', function ($http, $q) {
         clearKeyword: function() { keyword = ""; },
         performSearch: function (newKeyword) {
             var deferred = $q.defer();
-            var proxyUrl = "localhost:9292/";
-            proxyUrl = "";
-            var baseUrl = "ydsdev.iit.demokritos.gr/api/mudcat/public-projects";
 
             $http({
                 method: 'GET',
-                url: "http://" + proxyUrl + baseUrl + "?filter=" + newKeyword,
+                url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_SEARCH + "?filter=" + newKeyword,
                 headers: {'Content-Type': 'application/json'}
             }).success(function (data) {
                 searchResults = angular.copy(data);

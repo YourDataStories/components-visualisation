@@ -20,6 +20,12 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
         },
         templateUrl:'templates/grid.html',
         link: function(scope, element, attrs) {
+            var defaultDatatypes = [
+                "project","project.related.projects",
+                "project.decisions","project.decisions.financial",
+                "project.decisions.non_financial"
+            ];
+
             var gridWrapper = angular.element(element[0].querySelector('.component-wrapper'));
             var gridContainer = angular.element(element[0].querySelector('.grid-container'));
 
@@ -30,6 +36,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
             var projectId = scope.projectId;
             var tableType = scope.tableType;
             var lang = scope.lang;
+
             var sorting = scope.sorting;
             var filtering = scope.filtering;
             var quickFiltering = scope.quickFiltering;
@@ -41,7 +48,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
             scope.quickFilterValue = "";
 
             //check if project id or grid type are defined
-            if(angular.isUndefined(projectId) || projectId.trim()=="" || angular.isUndefined(tableType) || tableType.trim()=="") {
+            if(angular.isUndefined(projectId) || projectId.trim()=="" || angular.isUndefined(tableType) || _.indexOf(defaultDatatypes, tableType)==-1) {
                 scope.ydsAlert = "The YDS component is not properly initialized " +
                     "because the projectId or the tableType attribute aren't configured properly." +
                     "Please check the corresponding documentation sertion";
@@ -104,34 +111,81 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                 Filters.addGridFilter(elementId, gridFilters);
             };
 
+
             //If quick filtering is enabled, create function to handle quick filtering
             scope.applyQuickFilter = function(input) {
                 scope.gridOptions.api.setQuickFilter(input);
             };
 
 
+            //function to extract the nested attributes of the view
+            var prepeareView = function (newView) {
+                var viewAttrs = [];
+                var tmpAttrs = _.pluck(newView, 'attribute');
+
+                _.forEach(tmpAttrs, function(val, i) {
+                    var tokens = val.split('.');
+
+                    if(tokens.length==2) {
+                        viewAttrs.push({
+                            parent: tokens[0],
+                            attrName: val
+                        });
+                    }
+                });
+
+                return viewAttrs;
+            };
+
+            //function to format the nested data of the grid
+            var prepareData = function (newData, newView) {
+                for (var i=0; i<newData.length; i++) {
+                    _.each(newView, function(viewVal) {
+                        if (_.has(newData[i], viewVal.parent))
+                            newData[i][viewVal.parent] =  deep_value(newData[i], viewVal.attrName);
+                        else
+                            newData[i][viewVal.parent] = "";
+                    });
+                }
+            };
+
+            //function to get the value of an object property, by defining its path
+            var deep_value = function(obj, path){
+                for (var i=0, path=path.split('.'), len=path.length; i<len; i++){
+                    obj = obj[path[i]];
+                };
+                return obj;
+            };
+
+
             /***********************************************************/
             /******* GET DATA FROM THE SERVER AND RENDER THEM **********/
             /***********************************************************/
-            Data.getVisualizationData(projectId, tableType)
-            .then(function (response) {
+            Data.getGrid(projectId, tableType, lang)
+            .then(function(response) {
+                var rawData = [];
+                var dataView = [];
                 var columnDefs = [];
 
-                if (response.length==0)
+                if (response.success == false || response.view.length==0) {
+                    console.log('an error was occurred');
                     return false;
+                } else {
+                    rawData = response.data;
+                    dataView = response.view;
+                }
 
-                //Get the first object's keys and values
-                var objectKeys = _.keys(response[0]);
-                var objectValues = _.values(response[0]);
+                var formattedView = prepeareView(dataView);
+                prepareData(rawData, formattedView);
 
                 //Define the name of the grid's columns and the filters which can be applied on them
-                for (var i=0; i<objectKeys.length; i++) {
+                for (var i=0; i<dataView.length; i++) {
                     var columnInfo = {
-                        headerName: objectKeys[i],
-                        field: objectKeys[i]
+                        headerName: dataView[i].header,
+                        field: dataView[i].attribute.split(".")[0]
                     };
 
-                    if (!_.isNaN(parseFloat(objectValues[i]))) //is number or date
+                    if (dataView[i].type.indexOf("string")==-1 && dataView[i].type.indexOf("url")==-1) //is number or date
                         columnInfo.filter = 'number';
 
                     columnDefs.push(columnInfo)
@@ -149,16 +203,16 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                 //If paging enabled set the required options to the grid configuration
                 if (paging==="true") {
                     var localDataSource = {
-                        rowCount: parseInt(response.length),    // not setting the row count, infinite paging will be used
+                        rowCount: parseInt(rawData.length),    // not setting the row count, infinite paging will be used
                         pageSize: parseInt(pageSize),           // changing to number, as scope keeps it as a string
                         getRows: function (params) {
-                            var rowsThisPage = response.slice(params.startRow, params.endRow);
+                            var rowsThisPage = rawData.slice(params.startRow, params.endRow);
                             // see if we have come to the last page. if we have, set lastRow to
                             // the very last row of the last page. if you are getting data from
                             // a server, lastRow could be returned separately if the lastRow is not in the current page.
                             var lastRow = -1;
-                            if (response.length <= params.endRow) {
-                                lastRow = response.length;
+                            if (rawData.length <= params.endRow) {
+                                lastRow = rawData.length;
                             }
                             params.successCallback(rowsThisPage, lastRow);
                         }
@@ -166,7 +220,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
 
                     scope.gridOptions.datasource = localDataSource;
                 } else
-                    scope.gridOptions.rowData = response;
+                    scope.gridOptions.rowData = rawData;
 
                 //Create a new Grid Component
                 new agGrid.Grid(gridContainer[0], scope.gridOptions);
@@ -175,9 +229,8 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                 if (filtering === "true" || quickFiltering === "true") {
                     scope.gridOptions.api.addEventListener('afterFilterChanged', filterModifiedListener);
                 }
-            }, function (error) {
+            }, function(error){
                 scope.ydsAlert = error.message;
-                console.error('error', error);
             });
 
 
