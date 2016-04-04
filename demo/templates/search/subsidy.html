@@ -1,0 +1,33 @@
+<script type="text/ng-template" id="Subsidy.html">
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-md-12">
+                <h4><%- rc.result["title." + rc.lang] %>
+                    <% _.each( rc.result.type, function( projType ){ %>
+                        <span class="label label-primary"><%- projType %></span>
+                    <% }) %>
+                </h4>
+            </div>
+        </div>
+        <p><strong><%- rc.attrHeaders[rc.lang].projectId %></strong> : <%- rc.result["projectId"] %></p>
+        <p><strong><%- rc.attrHeaders[rc.lang].sector %></strong> : <%- rc.result["sector.prefLabel"] %></p>
+        <p><strong><%- rc.attrHeaders[rc.lang].beneficiary %></strong> : <%- rc.result["beneficiary.name"] %></p>
+        <p><strong><%- rc.attrHeaders[rc.lang].completion %></strong> : <%- rc.result["completion"] %>%</p>
+        <p><strong><%- rc.attrHeaders[rc.lang].issued %></strong> : <%- rc.result["issued"] %></p>
+        <p><strong><%- rc.attrHeaders[rc.lang].date %></strong> : <%- rc.result["startDate"] %> - <%- rc.result["endDate"] %></p>
+        <p><strong><%- rc.attrHeaders[rc.lang].budget %></strong> : <%- rc.result["hasRelatedBudgetItem.price.hasCurrencyValue"] %></p>
+        <p><strong><%- rc.attrHeaders[rc.lang].spending %></strong> : <%- rc.result["hasRelatedSpendingItem.hasExpenditureLine.amount.hasCurrencyValue"] %></p>
+        <p><strong><%- rc.attrHeaders[rc.lang].relatedProjects %></strong> : <%- rc.result["countOfRelatedProjects"] %></p>
+        <p><strong><%- rc.attrHeaders[rc.lang].description %></strong> : <%- rc.result["description." + rc.lang] %></p>
+        <div class="row">
+            <div class="col col-12 pull-right">
+                <div class="btn-group col-md-12" role="group" aria-label="">
+                    <button class="btn btn-default btn-md"
+                            ng-click="visitResult(item)">View</button>
+                    <button class="btn btn-default btn-md"
+                            ng-click="resultsPreview(item, 'bar')">Preview</button>
+                </div>
+            </div>
+        </div>
+    </li>
+</script>

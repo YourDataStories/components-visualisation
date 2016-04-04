@@ -1,0 +1,34 @@
+<script type="text/ng-template" id="FinancialDecision.html">
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-md-12">
+                <h4><%- rc.result["subject." + rc.lang] %>
+                    <% _.each( rc.result.type, function( projType ){ %>
+                    <span class="label label-primary"><%- projType %></span>
+                    <% }) %>
+                </h4>
+            </div>
+        </div>
+        <p><strong><%- rc.attrHeaders[rc.lang].ada %></strong> : <%- rc.result["ada"] %></p>
+        <p><strong><%- rc.attrHeaders[rc.lang].seller %></strong> : <%- rc.result["seller"] %></p>
+        <p><strong><%- rc.attrHeaders[rc.lang].buyer %></strong> : <%- rc.result["buyer"] %>%</p>
+        <p><strong><%- rc.attrHeaders[rc.lang].financialYear %></strong> : <%- rc.result["financialYear"] %></p>
+        <p><strong><%- rc.attrHeaders[rc.lang].price %></strong> : <%- rc.result["price.hasCurrencyValue"] %>
+            <%-rc.result["price.hasCurrency.prefLabel." + rc.lang]%></p>
+        <p><strong><%- rc.attrHeaders[rc.lang].hasThematicCategory %></strong> : <%- rc.result["hasThematicCategory.prefLabel." + rc.lang] %></p>
+        <p><strong><%- rc.attrHeaders[rc.lang].hasBudgetCategory %></strong> : <%- rc.result["hasBudgetCategory.prefLabel." + rc.lang] %></p>
+        <p><strong><%- rc.attrHeaders[rc.lang].decisionType %></strong> : <%- rc.result["decisionType"] %></p>
+        <p><strong><%- rc.attrHeaders[rc.lang].decisionTypeId %></strong> : <%- rc.result["decisionTypeId"] %></p>
+        <p><strong><%- rc.attrHeaders[rc.lang].status %></strong> : <%- rc.result["decisionStatus.prefLabel." + rc.lang] %></p>
+        <div class="row">
+            <div class="col col-12 pull-right">
+                <div class="btn-group col-md-12" role="group" aria-label="">
+                    <a class="btn btn-default btn-md" href="<%- rc.result['documentUrl'] %>"
+                       target="_blank"><%- rc.attrHeaders[rc.lang].downloadDecision %></a>
+                    <button class="btn btn-default btn-md"
+                            ng-click="visitResult(item)">View</button>
+                </div>
+            </div>
+        </div>
+    </li>
+</script>
