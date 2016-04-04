@@ -16,7 +16,7 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
             var compiledTemplates = {};
             
             $ocLazyLoad.load ({
-                files: ['/templates/search/subsidy.html', '/templates/search/decision.html'],
+                files: ['templates/search/subsidy.html', 'templates/search/decision.html'],
                 cache: true
             }).then(function() {
                 compiledTemplates = {
