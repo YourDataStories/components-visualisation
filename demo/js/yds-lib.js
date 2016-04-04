@@ -8,11 +8,12 @@ var geoRouteUrl = host+"/YDSAPI/yds/geo/route";
 
 // Defining global variables for the YDS lib
 app.constant("YDS_CONSTANTS", {
-    /*"SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",*/
     "PROXY": "/",
+    /*"PROXY": "localhost:9292/",*/
     "API_GRID": "platform.yourdatastories.eu/api/json-ld/component/grid",
-    "API_SEARCH": "ydsdev.iit.demokritos.gr/api/mudcat/public-projects",
-    "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
+    "API_SEARCH": "petasis.dyndns.org//api/json-ld/component/search.tcl?q=",
+    /*"SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",*/
+    "SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
     "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
     "API_EMBED": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/embed/",
     "BASKET_URL": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/basket/"
@@ -247,7 +248,8 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                 params: {
                     id: resourceId,
                     type: gridType,
-                    lang: gridLang
+                    lang: gridLang,
+                    context: 0  
                 }
             }).success(function (data) {
                 deferred.resolve(data);
@@ -263,16 +265,9 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
 /**************************************************/
 /********* NEW VERSION OF SEARCH SERVICE **********/
 /**************************************************/
-app.factory('Search', ['$http', '$q', function ($http, $q) {
+app.factory('Search', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CONSTANTS) {
     var keyword = "";
     var searchResults = [];
-
-    var createNewTerm = function (keyword) {	//return a new term object
-        return {			//term object
-            term: keyword,
-            facets: []
-        };
-    };
 
     var createNewFacet = function (type, value) {	//return a new facet object
         return {
@@ -297,7 +292,10 @@ app.factory('Search', ['$http', '$q', function ($http, $q) {
 
             $http({
                 method: 'GET',
-                url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_SEARCH + "?filter=" + newKeyword,
+                url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_SEARCH + newKeyword,
+/*
+                url: "http://petasis.dyndns.org/api/json-ld/component/search.tcl?q=%CE%B4%CE%B1%CF%80%CE%B1%CE%BD%CE%B7&lang=el&fq=type:FinancialDecision",
+*/
                 headers: {'Content-Type': 'application/json'}
             }).success(function (data) {
                 searchResults = angular.copy(data);

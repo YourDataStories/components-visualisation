@@ -29,9 +29,8 @@ angular.module('yds').directive('ydsSearch', ['$window', '$rootScope', '$locatio
 				if (!searchForm.$valid)
 					return false;
 
-				var redirectURL = YDS_CONSTANTS.SEARCH_RESULTS_URL;
 				var encodedKeyword = encodeURIComponent(scope.searchKeyword);
-				$window.location.href = redirectURL + "#q=" + encodedKeyword;
+				$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL + "#q=" + encodedKeyword;
 			}
 
 		}

@@ -252,6 +252,19 @@ body #main .container:first-child {
 }
 
 /**********************************/
+/******* SEARCH RESULTS ***********/
+/**********************************/
+
+.results-content .list-group-item h4{
+    font-size: 15px;
+    font-weight: bold;
+    text-align: justify;
+}
+.results-content .list-group-item .label{
+    font-size: 10px;
+
+}
+/**********************************/
 /**** SEARCH RESULTS PREVIEW ******/
 /**********************************/
 .yds-search-prev-wrapper {
