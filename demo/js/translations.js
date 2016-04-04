@@ -26,7 +26,10 @@ var translations = {
 		documentType: "Document Type",
 		documentUrl: "Document URL",
 		status: "Status",
-		downloadDecision: "Μεταφόρτωση Απόφασης"
+		
+		downloadDecision: "Μεταφόρτωση Απόφασης",
+		showMore: "Περισσότερα..",
+		showLess: "Λιγότερα.."
 	},
 	el: {
 		title: "Τίτλος",
@@ -55,6 +58,9 @@ var translations = {
 		documentType: "Τύπος Εγγράφου",
 		documentUrl: "URL Εγγράφου",
 		status: "Κατάσταση",
-		downloadDecision: "Download Decision"
+		
+		downloadDecision: "Download Decision",
+		showMore: "Show more..",
+		showLess: "Show less.."
 	}
 };

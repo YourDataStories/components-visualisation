@@ -1,4 +1,4 @@
-var app = angular.module('yds', ['ui.bootstrap', 'rzModule', 'ui.checkbox', 'oc.lazyLoad']);
+var app = angular.module('yds', ['ui.bootstrap', 'rzModule', 'ui.checkbox', 'oc.lazyLoad', 'ngTextTruncate']);
 
 var host="http://ydsdev.iit.demokritos.gr:8085";
 var visualizationUrl = host+"/YDSAPI/yds/api/couch/visualization/";
@@ -11,6 +11,7 @@ app.constant("YDS_CONSTANTS", {
     "PROXY": "/",
     /*"PROXY": "localhost:9292/",*/
     "API_GRID": "platform.yourdatastories.eu/api/json-ld/component/grid.tcl",
+    "API_INFO": "platform.yourdatastories.eu/api/json-ld/component/info.tcl",
     "API_SEARCH": "petasis.dyndns.org//api/json-ld/component/search.tcl?q=",
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
     /*"SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",*/
@@ -258,6 +259,26 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                     type: gridType,
                     lang: gridLang,
                     context: 0  
+                }
+            }).success(function (data) {
+                deferred.resolve(data);
+            }).error(function (error) {
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
+        }, getInfo : function(resourceId, infoType, infoLang) {
+            var deferred = $q.defer();
+
+            $http({
+                method: 'GET',
+                url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_INFO,
+                headers: {'Content-Type': 'application/json; charset=UTF-8'},
+                params: {
+                    id: resourceId,
+                    type: infoType,
+                    lang: infoLang,
+                    context: 0
                 }
             }).success(function (data) {
                 deferred.resolve(data);
