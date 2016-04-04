@@ -3,7 +3,7 @@ angular.module('yds').directive('ydsMap', ['Data', function(Data){
         restrict: 'E',
         scope: {
             projectId: '@',     //id of the project that the data belong
-            tableType: '@',     //name of the array that contains the visualised data
+            mapType: '@',     //name of the array that contains the visualised data
             lang: '@',          //lang of the visualised data
 
             zoomControl: '@',   //enable or disable map's zoom control
@@ -27,17 +27,21 @@ angular.module('yds').directive('ydsMap', ['Data', function(Data){
             mapContainer[0].id = elementId;
 
             var projectId = scope.projectId;
-            var tableType = scope.tableType;
+            var mapType = scope.mapType;
             var lang = scope.lang;
             var zoomControl = scope.zoomControl;
             var elementH = scope.elementH;
 
-            //check if the projectId and the tableType attr is defined, else stop the process
-            if (angular.isUndefined(projectId)|| angular.isUndefined(tableType)) {
+            //check if the projectId is defined, else stop the process
+            if (_.isUndefined(projectId) || projectId.trim()=="") {
                 scope.ydsAlert = "The YDS component is not properly configured." +
                     "Please check the corresponding documentation section";
                 return false;
             }
+
+            //check if info-type attribute is empty and assign the default value
+            if(_.isUndefined(mapType) || mapType.trim()=="")
+                mapType = "default";
 
             //check if the language attr is defined, else assign default value
             if(angular.isUndefined(lang))
@@ -54,39 +58,12 @@ angular.module('yds').directive('ydsMap', ['Data', function(Data){
             //set the height of the chart
             mapContainer[0].style.height = elementH + 'px';
 
-            /*var map = L.map('map-container', {
-                center: [35.52,23.80],
-                zoom: 5
-            });
-
-            L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 18,
-                attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
-            }).addTo(map);
-
-            var polyline = L.polyline([]).addTo(map);
-
-            Data.projectVisualization(scope.projectId, "map")
-            .then(function (response) {
-                var route = angular.copy(response.route);
-                for (var i=0; i<route.length; i++){
-                    polyline.addLatLng([parseFloat(route[i].lng),parseFloat(route[i].lat)]);
-                }
-
-                // zoom the map to the polyline
-                map.fitBounds(polyline.getBounds());
-            }, function (error) {
-                console.log('error', error);
-            });*/
-
-
-
             /***************************************/
             /**** UPDATED CODE FOR ALL PROJECTS ****/
             /***************************************/
             var map = L.map(elementId, {
                 center: [37.9833333,23.7333333],
-                zoom: 5,
+                zoom: 4,
                 zoomControl: (zoomControl === "true")
             });
 
@@ -111,43 +88,52 @@ angular.module('yds').directive('ydsMap', ['Data', function(Data){
             // Create a general Feature Group to add each project layer
             var allFeatureGroup = L.featureGroup([]);
 
-            Data.getVisualizationData(projectId, tableType)
+            Data.getMap(projectId, mapType, lang)
             .then(function (response) {
-                for(var i=0; i<response.length; i++) {
+                var routePoints = _.findWhere(response.view, {type: "geo-route"});
+                var routeTitle = _.findWhere(response.view, {type: "string-i18n"});
 
-                    var projectLayer = L.featureGroup([])
-                    //var polyline = L.polyline([]).addTo(map);
-                    var polyline = L.polyline([]);
+                if (!_.isUndefined(routePoints)) {
+                    var projectLayer = L.featureGroup([]);
+                    var routePath = _.rest(routePoints.attribute.split("."), 1).join();
 
-                    var route = angular.copy(response[i].route);
-                    for (var j=0; j<route.length; j++){
-                        polyline.addLatLng([parseFloat(route[j].lat), parseFloat(route[j].lng)]);
-                    }
+                    _.each(response.data.routes, function(routeObj) {
+                        var polyline = L.polyline([]);
+                        var route = Data.deepObjSearch(routeObj, routePath);
 
-                    //TODO: add different marker icon
-                    var StartMarker = L.marker(
-                        [parseFloat(route[0].lat), parseFloat(route[0].lng)],{icon: startIcon}
-                    );
-                    var EndMarker = L.marker(
-                        [parseFloat(route[route.length-1].lat), parseFloat(route[route.length-1].lng)],{icon: endIcon}
-                    );
+                        _.each(route, function(routePoints){
+                            polyline.addLatLng([parseFloat(routePoints.lng), parseFloat(routePoints.lat)]);
+                        });
 
+                        var StartMarker = L.marker(
+                            [parseFloat(_.first(route).lng), parseFloat(_.first(route).lat)],{icon: startIcon}
+                        );
 
-                    projectLayer.addLayer(StartMarker);
-                    projectLayer.addLayer(EndMarker);
-                    projectLayer.addLayer(polyline);
-                    projectLayer.bindPopup(response[i].projectName);
+                        var EndMarker = L.marker(
+                            [parseFloat(_.last(route).lng), parseFloat(_.last(route).lat)],{icon: endIcon}
+                        );
 
-                    allFeatureGroup.addLayer(projectLayer);
+                        projectLayer.addLayer(StartMarker);
+                        projectLayer.addLayer(EndMarker);
+                        projectLayer.addLayer(polyline);
+                        projectLayer.bindPopup(Data.deepObjSearch(response.data, routeTitle.attribute), {
+                            offset: new L.Point(0, -33)
+                        });
+
+                        allFeatureGroup.addLayer(projectLayer);
+                    });
+
+                    allFeatureGroup.addTo(map);
+                    // zoom the map to the layerGroup
+                    map.fitBounds(allFeatureGroup.getBounds(), {
+                        padding: new L.Point(21, 21)
+                    });
                 }
-
-                allFeatureGroup.addTo(map);
-                // zoom the map to the layerGroup
-                map.fitBounds(allFeatureGroup.getBounds());
-
             }, function (error) {
-                scope.ydsAlert = error.message;
-                console.error('error', error);
+                if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
+                    scope.ydsAlert = "An error was occurred, please check the configuration of the component";
+                else
+                    scope.ydsAlert = error.message;
             });
         }
     };

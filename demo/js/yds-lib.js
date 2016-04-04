@@ -12,6 +12,7 @@ app.constant("YDS_CONSTANTS", {
     /*"PROXY": "localhost:9292/",*/
     "API_GRID": "platform.yourdatastories.eu/api/json-ld/component/grid.tcl",
     "API_INFO": "platform.yourdatastories.eu/api/json-ld/component/info.tcl",
+    "API_MAP": "platform.yourdatastories.eu/api/json-ld/component/map.tcl",
     "API_SEARCH": "petasis.dyndns.org//api/json-ld/component/search.tcl?q=",
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
     /*"SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",*/
@@ -278,6 +279,26 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                     id: resourceId,
                     type: infoType,
                     lang: infoLang,
+                    context: 0
+                }
+            }).success(function (data) {
+                deferred.resolve(data);
+            }).error(function (error) {
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
+        }, getMap : function(resourceId, mapType, mapLang) {
+            var deferred = $q.defer();
+
+            $http({
+                method: 'GET',
+                url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_MAP,
+                headers: {'Content-Type': 'application/json; charset=UTF-8'},
+                params: {
+                    id: resourceId,
+                    type: mapType,
+                    lang: mapLang,
                     context: 0
                 }
             }).success(function (data) {
