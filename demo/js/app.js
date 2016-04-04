@@ -18,6 +18,9 @@ ydsDemo.config(function($stateProvider, $urlRouterProvider) {
 	.state('projects', {
 		url: '/projects',
 		templateUrl: 'templates-demo/resource.html'
+	}).state('projects-el', {
+		url: '/projects',
+		templateUrl: 'templates-demo/resource-el.html'
 	})
 	.state('map', {
 		url: '/map',

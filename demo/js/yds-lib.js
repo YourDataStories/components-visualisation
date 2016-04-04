@@ -456,15 +456,13 @@ app.factory('Filters', [ function () {
 
         //if the component exists in the filters array-update it, else push a new array item
         if (!angular.isUndefined(componentFilter))
-            componentFilter.filters = angular.copy(newFilter)
+            componentFilter.filters = angular.copy(newFilter);
         else {
             filters.push({
                 componentId: newCompId,
                 filters: newFilter
             });
         }
-
-        console.log(filters);
     };
 
     return {
