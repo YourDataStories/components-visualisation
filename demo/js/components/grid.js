@@ -124,23 +124,13 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                         var attributeTokens = viewVal.attribute.split(".");
 
                         if (_.has(newData[i], attributeTokens[0]) && attributeTokens.length>1) {
-                            newData[i][viewVal.attribute] = deep_value(newData[i], viewVal.attribute);
+                            newData[i][viewVal.attribute] = Data.deepObjSearch(newData[i], viewVal.attribute);
                         } else
                             newData[i][viewVal.parent] = "";
                     });
                 }
             };
-
-            //function to get the value of an object property, by defining its path
-            var deep_value = function(obj, path){
-                for (var i=0, path=path.split('.'), len=path.length; i<len; i++){
-                    obj = obj[path[i]];
-                }
-                
-                return obj;
-            };
-
-
+            
             /***********************************************************/
             /******* GET DATA FROM THE SERVER AND RENDER THEM **********/
             /***********************************************************/
