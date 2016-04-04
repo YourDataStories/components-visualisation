@@ -13,9 +13,9 @@ app.constant("YDS_CONSTANTS", {
     "API_GRID": "platform.yourdatastories.eu/api/json-ld/component/grid.tcl",
     "API_INFO": "platform.yourdatastories.eu/api/json-ld/component/info.tcl",
     "API_MAP": "platform.yourdatastories.eu/api/json-ld/component/map.tcl",
-    "API_SEARCH": "petasis.dyndns.org//api/json-ld/component/search.tcl?q=",
+    "API_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/search.tcl",
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
-    /*"SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",*/
+    //"SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
     "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
     "API_EMBED": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/embed/",
     "BASKET_URL": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/basket/"
@@ -337,15 +337,17 @@ app.factory('Search', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_
         setKeyword: function(newKeyword) { keyword = angular.copy(newKeyword); },
         getKeyword: function() { return keyword; },
         clearKeyword: function() { keyword = ""; },
-        performSearch: function (newKeyword) {
+        performSearch: function (newKeyword, pageLimit, pageNumber) {
             var deferred = $q.defer();
 
             $http({
                 method: 'GET',
-                url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_SEARCH + newKeyword,
-/*
-                url: "http://petasis.dyndns.org/api/json-ld/component/search.tcl?q=%CE%B4%CE%B1%CF%80%CE%B1%CE%BD%CE%B7&lang=el&fq=type:FinancialDecision",
-*/
+                url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_SEARCH,
+                params: {
+                    q: newKeyword,
+                    rows: pageLimit,
+                    start: pageNumber
+                },
                 headers: {'Content-Type': 'application/json'}
             }).success(function (data) {
                 searchResults = angular.copy(data);

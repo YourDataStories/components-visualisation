@@ -1,12 +1,20 @@
 <div>
     <div class="row list-group results-content"  style="margin-top: 10px; padding: 10px;"></div>
-    <div ng-if="results.data.length==0" class="row list-group"  style="border: 0.5px solid grey; margin-top: 10px; padding: 10px;">
+    <div ng-show="showNoResultsMsg" class="row list-group"  style="border: 0.5px solid grey; margin-top: 10px; padding: 10px;">
         <a class="list-group-item">
             <h4>We are sorry we could not find datasets relative to your query..</h4>
         </a>
     </div>
-    <!--<uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage"
-                    max-size="maxSize" class="pagination-sm" boundary-links="true"
-                    force-ellipses="true">-->
-    </uib-pagination>
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <uib-pagination ng-hide="pagination.hidden"
+                            ng-model="pagination.current"
+                            ng-change="changePage()"
+                            items-per-page="pagination.perPage"
+                            total-items="pagination.total"
+                            class="pagination-sm" boundary-links="true"
+                            force-ellipses="true">
+            </uib-pagination>
+        </div>
+    </div>
 </div>
