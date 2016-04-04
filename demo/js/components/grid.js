@@ -116,34 +116,16 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
             scope.applyQuickFilter = function(input) {
                 scope.gridOptions.api.setQuickFilter(input);
             };
-
-
-            //function to extract the nested attributes of the view
-            var prepeareView = function (newView) {
-                var viewAttrs = [];
-                var tmpAttrs = _.pluck(newView, 'attribute');
-
-                _.forEach(tmpAttrs, function(val, i) {
-                    var tokens = val.split('.');
-
-                    if(tokens.length==2) {
-                        viewAttrs.push({
-                            parent: tokens[0],
-                            attrName: val
-                        });
-                    }
-                });
-
-                return viewAttrs;
-            };
-
+            
             //function to format the nested data of the grid
             var prepareData = function (newData, newView) {
                 for (var i=0; i<newData.length; i++) {
                     _.each(newView, function(viewVal) {
-                        if (_.has(newData[i], viewVal.parent))
-                            newData[i][viewVal.parent] =  deep_value(newData[i], viewVal.attrName);
-                        else
+                        var attributeTokens = viewVal.attribute.split(".");
+
+                        if (_.has(newData[i], attributeTokens[0]) && attributeTokens.length>1) {
+                            newData[i][viewVal.attribute] = deep_value(newData[i], viewVal.attribute);
+                        } else
                             newData[i][viewVal.parent] = "";
                     });
                 }
@@ -153,7 +135,8 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
             var deep_value = function(obj, path){
                 for (var i=0, path=path.split('.'), len=path.length; i<len; i++){
                     obj = obj[path[i]];
-                };
+                }
+                
                 return obj;
             };
 
@@ -174,15 +157,14 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                     rawData = response.data;
                     dataView = response.view;
                 }
-
-                var formattedView = prepeareView(dataView);
-                prepareData(rawData, formattedView);
+                
+                prepareData(rawData, dataView);
 
                 //Define the name of the grid's columns and the filters which can be applied on them
                 for (var i=0; i<dataView.length; i++) {
                     var columnInfo = {
                         headerName: dataView[i].header,
-                        field: dataView[i].attribute.split(".")[0]
+                        field: dataView[i].attribute
                     };
 
                     if (dataView[i].type.indexOf("string")==-1 && dataView[i].type.indexOf("url")==-1) //is number or date
@@ -229,6 +211,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                 if (filtering === "true" || quickFiltering === "true") {
                     scope.gridOptions.api.addEventListener('afterFilterChanged', filterModifiedListener);
                 }
+                //scope.gridOptions.api.sizeColumnsToFit();
             }, function(error){
                 scope.ydsAlert = error.message;
             });
