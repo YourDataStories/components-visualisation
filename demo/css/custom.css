@@ -51,6 +51,7 @@ body #main .container:first-child {
 
 .yds-info-wrapper .row { line-height:30px; }
 .yds-info-wrapper span{ font-size: 95%; }
+.yds-info-wrapper .ngTruncateToggleText { font-weight: bold; }
 
 .statistics-wrapper {
     max-width: 300px;

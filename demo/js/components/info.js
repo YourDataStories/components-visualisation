@@ -12,7 +12,7 @@ angular.module('yds').directive('ydsInfo', ['Data', function(Data){
             var infoType = scope.infoType;
             var lang = scope.lang;
             scope.translations = translations;
-scope.showMore="dada";
+
             //check if project id or grid type are defined
             if(_.isUndefined(projectId) || projectId.trim()=="") {
                 scope.ydsAlert = "The YDS component is not properly initialized " +
