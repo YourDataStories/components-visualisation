@@ -28,8 +28,8 @@ var translations = {
 		status: "Status",
 
 		downloadDecision: "Download Decision",
-		showMore: "Show more...",
-		showLess: "Show less..."
+		showMore: "[Show More]",
+		showLess: "[Show Less]"
 	},
 	el: {
 		title: "Τίτλος",
@@ -60,7 +60,7 @@ var translations = {
 		status: "Κατάσταση",
 
 		downloadDecision: "Μεταφόρτωση Απόφασης",
-		showMore: "Περισσότερα...",
-		showLess: "Λιγότερα..."
+		showMore: "[Περισσότερα]",
+		showLess: "[Λιγότερα]"
 	}
 };
