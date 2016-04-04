@@ -8,13 +8,9 @@
         <div class="col-xs-3">
 
             <div class="yds-basket-prev-content" id="workbench-basket">
-                <div class="yds-basket-prev-title text-center" title="Basket Preview">
-                    Basket Preview
-                </div>
                 <div class="yds-basket-prev-title text-center">
                     <div class="btn-group btn-group-justified">
-                        <label class="btn btn-primary" ng-model="basketType" uib-btn-radio="'Dataset'" ng-click="changeBasketView('Dataset')">Dataset</label>
-                        <label class="btn btn-primary" ng-model="basketType" uib-btn-radio="'Visualisation'" ng-click="changeBasketView('Visualisation')">Visualisation</label>
+                        <label class="btn btn-primary">My Datasets</label>
                     </div>
                 </div>
                 <div class="yds-basket-prev-inner">
@@ -36,7 +32,7 @@
                                     <span class="glyphicon glyphicon-globe" aria-hidden="true" ng-if="item.component_type=='map'"></span>
                                     <br/>
                                     <label for="">Tags: </label><span ng-repeat="tag in item.tags">{{tag}}{{$last ? '' : ', '}}</span>
-                                </div>
+                                    </div>
                                 <!--<div class="col-md-1 yds-basket-prev-delete-btn">
                                     <span class="glyphicon glyphicon-trash text-danger" title="Delete" aria-hidden="true" ng-click="deleteBasketItem(item.basket_item_id)"></span>
                                 </div>-->
@@ -51,8 +47,6 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
         <div class="col-xs-4">
             <uib-carousel active="active"  no-wrap="noWrapSlides">
