@@ -13,7 +13,7 @@ app.constant("YDS_CONSTANTS", {
     "API_GRID": "platform.yourdatastories.eu/api/json-ld/component/grid",
     "API_SEARCH": "petasis.dyndns.org//api/json-ld/component/search.tcl?q=",
     /*"SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",*/
-    "SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
+    "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
     "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
     "API_EMBED": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/embed/",
     "BASKET_URL": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/basket/"
