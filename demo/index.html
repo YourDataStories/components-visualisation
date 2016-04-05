@@ -19,14 +19,12 @@
         Includes: leaflet 0.7.7, Leaflet.contextmenu, ag-grid 3.3.3, highcharts-standalone,
         highstock 2.1.9, highstock-exporting 2.1.9, highmaps 1.1.9, underscore 1.8.3,
         angularJS 1.4.7, angular-ui-router 0.2.15, ocLazyload 1.0.8, ui-bootstrap-tpls 0.14.3,
-        angularjs-slider 2.8.0, angular-bootstrap-checkbox
+        angularjs-slider 2.8.0, angular-bootstrap-checkbox, lorenooliveira/ng-text-truncate
         -->
 
         <script src="lib/merged-libs.min.js"></script>
-
         <script src="js/app.js"></script>
         <script src="js/yds-lib.js"></script>
-        <script src="lib/dev/ng-text-truncate.js"></script>
 
         <!-- library & directive to fix same origin iframe on IE & FF -->
         <script src="lib/dev/xdm/easyXDM.min.js"></script>
@@ -55,24 +53,18 @@
         <script src="js/components/embed-button.js"></script>
         <script src="js/components/basket-button.js"></script>
         <script src="js/components/hybrid.js"></script>
-
-
-
-
-
-
-
     </head>
-    <body  ng-app="ydsDemo">
+    <body ng-app="ydsDemo">
         <nav ng-include="'templates-demo/navigation.html'"
              ng-if="location.path().indexOf('embed')!==1"
-             class="navbar navbar-default navbar-fixed-top"
-        ></nav>
+             class="navbar navbar-default navbar-fixed-top">
+        </nav>
         <div id="main">
             <div ui-view></div>
         </div>
         <footer ng-include="'templates-demo/footer.html'"
                 ng-if="location.path().indexOf('embed')!==1"
-                class="footer"></footer>
+                class="footer">
+        </footer>
     </body>
 </html>
