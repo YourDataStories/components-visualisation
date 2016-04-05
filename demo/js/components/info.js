@@ -1,4 +1,4 @@
-angular.module('yds').directive('ydsInfo', ['Data', function(Data){
+angular.module('yds').directive('ydsInfo', ['Data', 'Translations', function(Data, Translations){
     return {
         restrict: 'E',
         scope: {
@@ -11,7 +11,6 @@ angular.module('yds').directive('ydsInfo', ['Data', function(Data){
             var projectId = scope.projectId;
             var infoType = scope.infoType;
             var lang = scope.lang;
-            scope.translations = translations;
 
             //check if project id or grid type are defined
             if(_.isUndefined(projectId) || projectId.trim()=="") {
@@ -26,10 +25,15 @@ angular.module('yds').directive('ydsInfo', ['Data', function(Data){
                 infoType = "default";
 
             //check if the language attr is defined, else assign default value
-            if(angular.isUndefined(lang))
+            if(angular.isUndefined(lang) || lang.trim()=="")
                 lang = "en";
 
             scope.info = {};
+            scope.translations = {
+                showMore: Translations.get(lang, "showMore"),
+                showLess: Translations.get(lang, "showLess")
+            };
+            
             Data.getInfo(projectId, infoType, lang)
             .then(function (response) {
                 _.each(response.view, function(infoValue){

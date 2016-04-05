@@ -1,5 +1,3 @@
-
-
 <div class="yds-info-wrapper">
     <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length>0">
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
@@ -9,8 +7,8 @@
     <div class="row" ng-repeat="(key, infoObj) in info">
         <div class="col col-md-4"><span class="label label-primary">{{key}}:</span></div>
         <div class="col col-md-8" ng-if="infoObj.type=='string-i18n-long'"
-             ng-tt-more-label="{{translations[lang].showMore}}"
-             ng-tt-less-label="{{translations[lang].showLess}}"
+             ng-tt-more-label="{{translations.showMore}}"
+             ng-tt-less-label="{{translations.showLess}}"
              ng-text-truncate="infoObj.value" ng-tt-words-threshold="40">
             {{infoObj.value}}
         </div>
