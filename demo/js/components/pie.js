@@ -3,7 +3,7 @@ angular.module('yds').directive('ydsPie', ['Data', function(Data){
         restrict: 'E',
         scope: {
             projectId: '@',     //id of the project that the data belong
-            tableType: '@',     //name of the array that contains the visualised data
+            pieType: '@',     //name of the array that contains the visualised data
             lang: '@',          //lang of the visualised data
 
             showLegend: '@',    //enable or disable the chart's legend
@@ -29,22 +29,26 @@ angular.module('yds').directive('ydsPie', ['Data', function(Data){
             pieContainer[0].id = elementId;
 
             var projectId = scope.projectId;
-            var tableType = scope.tableType;
+            var pieType = scope.pieType;
             var lang = scope.lang;
             var showLegend = scope.showLegend;
             var exporting = scope.exporting;
             var elementH = scope.elementH;
             var titleSize = scope.titleSize;
 
-            //check if the projectId and the tableType attr is defined, else stop the process
-            if (angular.isUndefined(projectId)|| angular.isUndefined(tableType)) {
+            //check if the projectId is defined, else stop the process
+            if (angular.isUndefined(projectId) || projectId.trim()=="") {
                 scope.ydsAlert = "The YDS component is not properly configured." +
                     "Please check the corresponding documentation section";
                 return false;
             }
 
+            //check if pie-type attribute is empty and assign the default value
+            if(_.isUndefined(pieType) || pieType.trim()=="")
+                pieType = "default";
+
             //check if the language attr is defined, else assign default value
-            if(angular.isUndefined(lang))
+            if(angular.isUndefined(lang) || lang.trim()=="")
                 lang = "en";
 
             //check if the showLegend attr is defined, else assign default value
@@ -67,12 +71,15 @@ angular.module('yds').directive('ydsPie', ['Data', function(Data){
             pieContainer[0].style.height = elementH + 'px';
 
             //get the pie data from the server
-            Data.projectVisualization(scope.projectId,"pie")
+            Data.getPie(scope.projectId, pieType, lang)
             .then(function (response) {
-                //check if the component is properly rendered
-                if (angular.isUndefined(response.data) || !_.isArray(response.data) ||
-                    angular.isUndefined(response.title) || angular.isUndefined(response.series)) {
+                var pieData = response.data.data;
+                var pieSeries = response.data.series;
+                var pieTitleAttr = _.first(response.view).attribute;
+                var pieTitle = Data.deepObjSearch(response.data, pieTitleAttr);
 
+                //check if the component is properly rendered
+                if (_.isUndefined(pieData) || !_.isArray(pieData) || _.isUndefined(pieSeries) || _.isUndefined(pieTitle)) {
                     scope.ydsAlert = "The YDS component is not properly configured." +
                         "Please check the corresponding documentation section";
                     return false;
@@ -87,7 +94,7 @@ angular.module('yds').directive('ydsPie', ['Data', function(Data){
                         renderTo: elementId
                     },
                     title: {
-                        text: response.title,
+                        text: pieTitle,
                         style: {
                             fontSize: titleSize + "px"
                         }
@@ -112,9 +119,9 @@ angular.module('yds').directive('ydsPie', ['Data', function(Data){
                         }
                     },
                     series: [{
-                        name: response.series,
+                        name: pieSeries,
                         colorByPoint: true,
-                        data: response.data
+                        data: pieData
                     }]
                 };
 

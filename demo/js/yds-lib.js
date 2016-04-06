@@ -5,7 +5,6 @@ var visualizationUrl = host+"/YDSAPI/yds/api/couch/visualization/";
 var espaProjectURL = host+"/YDSAPI/yds/api/couch/espa/";
 var geoRouteUrl = host+"/YDSAPI/yds/geo/route";
 
-
 // Defining global variables for the YDS lib
 app.constant("YDS_CONSTANTS", {
     "PROXY": "/",
@@ -13,6 +12,7 @@ app.constant("YDS_CONSTANTS", {
     "API_GRID": "platform.yourdatastories.eu/api/json-ld/component/grid.tcl",
     "API_INFO": "platform.yourdatastories.eu/api/json-ld/component/info.tcl",
     "API_MAP": "platform.yourdatastories.eu/api/json-ld/component/map.tcl",
+    "API_PIE": "platform.yourdatastories.eu/api/json-ld/component/piechart.tcl",
     "API_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/search.tcl",
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
     //"SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
@@ -308,6 +308,26 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             });
 
             return deferred.promise;
+        }, getPie : function(resourceId, pieType, pieLang) {
+            var deferred = $q.defer();
+
+            $http({
+                method: 'GET',
+                url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_PIE,
+                headers: {'Content-Type': 'application/json; charset=UTF-8'},
+                params: {
+                    id: resourceId,
+                    type: pieType,
+                    lang: pieLang,
+                    context: 0
+                }
+            }).success(function (data) {
+                deferred.resolve(data);
+            }).error(function (error) {
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
         }
     }
 }]);
@@ -317,23 +337,17 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
 /**************************************************/
 app.factory('Search', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CONSTANTS) {
     var keyword = "";
+    var facetsCallbacks = [];
     var searchResults = [];
-
-    var createNewFacet = function (type, value) {	//return a new facet object
-        return {
-            facet_type: type,
-            facet_value: [value]
-        }
+    var searchFacets = {};
+    
+    var notifyObservers = function (observerStack) { //function to trigger the callbacks of observers
+        angular.forEach(observerStack, function (callback) {
+            callback();
+        });
     };
 
     return {
-        initialiseSearchObj: function () {		//initialise the search object
-            searchObj = {
-                advanced: false,
-                terms: [],
-                relations: []
-            };
-        },
         setKeyword: function(newKeyword) { keyword = angular.copy(newKeyword); },
         getKeyword: function() { return keyword; },
         clearKeyword: function() { keyword = ""; },
@@ -349,8 +363,11 @@ app.factory('Search', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_
                     start: pageNumber
                 },
                 headers: {'Content-Type': 'application/json'}
-            }).success(function (data) {
-                searchResults = angular.copy(data);
+            }).success(function (response) {
+                searchResults = angular.copy(response);
+                searchFacets = angular.copy(response.data.facet_counts);
+                notifyObservers(facetsCallbacks);
+                
                 deferred.resolve(searchResults);
             }).error(function (error) {
                 deferred.reject(error);
@@ -360,29 +377,9 @@ app.factory('Search', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_
         },
         getResults: function () { return searchResults; },
         clearResults: function () { searchResults = []; },
-        updateFacet: function (ftype, fvalue) {
-            var tmpTerm = searchObj.terms[0];
-
-            var facetObjIndex = _.findIndex(tmpTerm.facets, {facet_type: ftype});		//find if the facet exists and get its index
-            var facetObj = tmpTerm.facets[facetObjIndex];
-
-            if (angular.isUndefined(facetObj)) {		//if facet_type doesn't exist, add new facet obj
-                var newFacet = createNewFacet(ftype, fvalue);
-                tmpTerm.facets.push(newFacet);
-            } else {
-                var facetValueIndex = _.indexOf(facetObj.facet_value, fvalue);		//search the index of the fvalue, if exists;
-
-                if (facetValueIndex > -1) {		//if the value exists remove it
-                    facetObj.facet_value.splice(facetValueIndex, 1);
-
-                    if (facetObj.facet_value.length == 0) {		//if the facet_value list is empty, remove the entire facet
-                        tmpTerm.facets.splice(facetObjIndex, 1);
-                    }
-                } else { 						//if the value doesn't exist, add it
-                    facetObj.facet_value.push(fvalue);
-                }
-            }
-        }
+        
+        registerFacetsCallback: function(callback) { facetsCallbacks.push(callback); },
+        getFacets: function() { return searchFacets; }
     }
 }]);
 

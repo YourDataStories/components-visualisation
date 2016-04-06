@@ -85,11 +85,12 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-            <h2>Pie</h2>
+            <h2>Financial Decisions</h2>
             <yds-pie
-                    project-id="1"
-                    table-type = "organizations"
-                    show-legend="true"
+                    project-id="http://linkedeconomy.org/resource/Subsidy/519339"
+                    pie-type="project.decisions.financial"
+                    show-legend="false"
+                    lang="el"
                     element-h="300"
                     add-to-basket="true"
                     basket-btn-x="465"
@@ -101,6 +102,25 @@
             </yds-pie>
         </div>
         <div class="col-md-6">
+            <h2>Non Financial Decisions</h2>
+            <yds-pie
+                    project-id="http://linkedeconomy.org/resource/Subsidy/519339"
+                    pie-type="project.decisions.non_financial"
+                    show-legend="false"
+                    lang="el"
+                    element-h="300"
+                    add-to-basket="true"
+                    basket-btn-x="465"
+                    basket-btn-y="12"
+                    embeddable="true"
+                    embed-btn-x="495"
+                    embed-btn-y="12"
+                    popover-pos="left">
+            </yds-pie>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
             <h2>Map</h2>
             <yds-map
                     lang="el"
