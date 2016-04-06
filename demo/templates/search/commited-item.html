@@ -1,0 +1,47 @@
+<script type="text/ng-template" id="commited-item.html">
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-md-12">
+                <h4><%- rc.result["subject." + rc.lang] %>
+                    <% _.each( rc.result.type, function( projType ){ %>
+                    <span class="label label-primary"><%- projType %></span>
+                    <% }) %>
+                </h4>
+            </div>
+        </div>
+        <p><strong><%- rc.attrHeaders.ada %></strong> : <%- rc.result["ada"] %></p>
+        <p><strong><%- rc.attrHeaders.seller %></strong> : <%- rc.result["seller.legalName"] %></p>
+        <p><strong><%- rc.attrHeaders.buyer %></strong> : <%- rc.result["buyer.legalName"] %>%</p>
+        <p><strong><%- rc.attrHeaders.financialYear %></strong> : <%- rc.result["financialYear"] %></p>
+        <div ng-hide="results[<%- rc.index %>]._hidden">
+            <p><strong><%- rc.attrHeaders.price %></strong> : <%- rc.result["price.hasCurrencyValue"] %>
+                <%-rc.result["price.hasCurrency.prefLabel." + rc.lang]%></p>
+            <p><strong><%- rc.attrHeaders.hasThematicCategory %></strong> : <%- rc.result["hasThematicCategory.prefLabel." + rc.lang] %></p>
+            <p><strong><%- rc.attrHeaders.hasBudgetCategory %></strong> : <%- rc.result["hasBudgetCategory.prefLabel." + rc.lang] %></p>
+            <p><strong><%- rc.attrHeaders.decisionType %></strong> : <%- rc.result["decisionType"] %></p>
+            <p><strong><%- rc.attrHeaders.decisionTypeId %></strong> : <%- rc.result["decisionTypeId"] %></p>
+            <p><strong><%- rc.attrHeaders.documentType %></strong> : <%- rc.result["documentType"] %></p>
+            <p><strong><%- rc.attrHeaders.documentUrl %></strong> :
+                <a class="btn external-decision-link" href="<%- rc.result['documentUrl'] %>"
+                   target="_blank"><span class="glyphicon glyphicon-new-window icon-primary"></span></a>
+            </p>
+            <p><strong><%- rc.attrHeaders.status %></strong> : <%- rc.result["decisionStatus.prefLabel." + rc.lang] %></p>
+            <p><strong><%- rc.attrHeaders.protocolNumber %></strong> : <%- rc.result["protocolNumber"] %></p>
+            <p><strong><%- rc.attrHeaders.issued %></strong> : <%- rc.result["issued"] %></p>
+        </div>
+        <div class="row">
+            <div class="col col-12 pull-right">
+                <div class="btn-group col-md-12" role="group" aria-label="">
+                    <button class="btn btn-default btn-md view-result-btn"
+                            ng-click="showMore('<%- rc.index %>')">
+                        {{ results['<%- rc.index %>']._hidden ? '<%- rc.attrHeaders.showMoreTxt %>' : '<%- rc.attrHeaders.showLessTxt %>' }}
+                    </button>
+                    <button class="btn btn-default btn-md view-result-btn"
+                            ng-click="visitResult('<%- rc.result['id'] %>')">
+                        <%- rc.attrHeaders.viewResult %>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </li>
+</script>

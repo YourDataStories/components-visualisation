@@ -1,10 +1,10 @@
-<script type="text/ng-template" id="subsidy.html">
+<script type="text/ng-template" id="public-project.html">
     <li class="list-group-item">
         <div class="row">
             <div class="col-md-12">
                 <h4><%- rc.result["title." + rc.lang] %>
                     <% _.each( rc.result.type, function( projType ){ %>
-                        <span class="label label-primary"><%- projType %></span>
+                    <span class="label label-primary"><%- projType %></span>
                     <% }) %>
                 </h4>
             </div>
