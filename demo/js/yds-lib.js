@@ -11,6 +11,7 @@ app.constant("YDS_CONSTANTS", {
     /*"PROXY": "localhost:9292/",*/
     "API_GRID": "platform.yourdatastories.eu/api/json-ld/component/grid.tcl",
     "API_INFO": "platform.yourdatastories.eu/api/json-ld/component/info.tcl",
+    "API_LINE": "platform.yourdatastories.eu/api/json-ld/component/linechart.tcl",
     "API_MAP": "platform.yourdatastories.eu/api/json-ld/component/map.tcl",
     "API_PIE": "platform.yourdatastories.eu/api/json-ld/component/piechart.tcl",
     "API_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/search.tcl",
@@ -328,6 +329,26 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             });
 
             return deferred.promise;
+        }, getLine : function(resourceId, lineType, lineLang) {
+            var deferred = $q.defer();
+
+            $http({
+                method: 'GET',
+                url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_LINE,
+                headers: {'Content-Type': 'application/json; charset=UTF-8'},
+                params: {
+                    id: resourceId,
+                    type: lineType,
+                    lang: lineLang,
+                    context: 0
+                }
+            }).success(function (data) {
+                deferred.resolve(data);
+            }).error(function (error) {
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
         }
     }
 }]);
@@ -360,7 +381,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', function ($h
                 start: pageNumber
             };
             _.extend(searchParameters, $location.search());
-
+debugger;
             $http({
                 method: 'GET',
                 url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_SEARCH,

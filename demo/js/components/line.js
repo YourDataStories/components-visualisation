@@ -3,7 +3,7 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
         restrict: 'E',
         scope: {
             projectId: '@',     //id of the project that the data belong
-            tableType: '@',     //name of the array that contains the visualised data
+            lineType: '@',     //name of the array that contains the visualised data
             lang: '@',          //lang of the visualised data
 
             showNavigator: '@', //enable or disable line chart's navigation
@@ -29,7 +29,7 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
             lineContainer[0].id = elementId;
 
             var projectId = scope.projectId;
-            var tableType = scope.tableType;
+            var lineType = scope.lineType;
             var lang = scope.lang;
             var showNavigator = scope.showNavigator;
             var exporting = scope.exporting;
@@ -37,14 +37,18 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
             var titleSize = scope.titleSize;
 
             //check if the projectId and the tableType attr is defined, else stop the process
-            if (angular.isUndefined(projectId)|| angular.isUndefined(tableType)) {
+            if (angular.isUndefined(projectId) || projectId.trim()=="") {
                 scope.ydsAlert = "The YDS component is not properly configured." +
                     "Please check the corresponding documentation section";
                 return false;
             }
 
+            //check if pie-type attribute is empty and assign the default value
+            if(_.isUndefined(lineType) || lineType.trim()=="")
+                lineType = "default";
+
             //check if the language attr is defined, else assign default value
-            if(angular.isUndefined(lang))
+            if(angular.isUndefined(lang) || lang.trim()=="")
                 lang = "en";
 
             //check if the exporting attr is defined, else assign default value
@@ -66,13 +70,15 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
             //set the height of the chart
             lineContainer[0].style.height = elementH + 'px';
 
-            Data.projectVisualization(scope.projectId,"line")
+            Data.getLine(projectId, lineType, lang)
             .then(function (response) {
+                var lineData = response.data.data;
+                var lineSeries = response.data.series;
+                var lineTitleAttr = _.first(response.view).attribute;
+                var lineTitle = Data.deepObjSearch(response.data, lineTitleAttr);
+
                 //check if the component is properly rendered
-
-                if (angular.isUndefined(response.data) || !_.isArray(response.data) ||
-                    angular.isUndefined(response.title) || angular.isUndefined(response.series)) {
-
+                if (_.isUndefined(lineData) || !_.isArray(lineData) || _.isUndefined(lineSeries) || _.isUndefined(lineTitle)) {
                     scope.ydsAlert = "The YDS component is not properly configured." +
                         "Please check the corresponding documentation section";
                     return false;
@@ -91,7 +97,7 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
                         selected : 1
                     },
                     title : {
-                        text : response.title,
+                        text : lineTitle,
                         style: {
                             fontSize: titleSize + "px"
                         }
@@ -103,8 +109,8 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
                         enabled: (showNavigator === "true")
                     },
                     series : [{
-                        name : response.series,
-                        data : response.data,
+                        name : lineSeries,
+                        data : lineData,
                         tooltip: {
                             valueDecimals: 2
                         }
@@ -120,7 +126,10 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
 
                 new Highcharts.StockChart(options);
             }, function (error) {
-                console.log('error', error);
+                if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
+                    scope.ydsAlert = "An error was occurred, please check the configuration of the component";
+                else
+                    scope.ydsAlert = error.message;
             });
         }
     };

@@ -136,10 +136,11 @@
     </div>
     <div class="row">
         <div class="col-lg-6">
-            <h2>Line</h2>
+            <h2>Financial Amount Over Date</h2>
             <yds-line
-                    project-id="1"
-                    table-type = "organizations"
+                    project-id="http://linkedeconomy.org/resource/Subsidy/519339"
+                    line-type="project.decisions.financial.amount.over.date"
+                    lang="en"
                     element-H="350"
                     add-to-basket="true"
                     basket-btn-x="465"
@@ -150,6 +151,24 @@
                     popover-pos="left">
             </yds-line>
         </div>
+        <div class="col-md-6">
+            <h2>Financial Decision Over Date</h2>
+            <yds-line
+                    project-id="http://linkedeconomy.org/resource/Subsidy/519339"
+                    line-type="project.decisions.financial.decisions.over.date"
+                    lang="en"
+                    element-H="350"
+                    add-to-basket="true"
+                    basket-btn-x="465"
+                    basket-btn-y="12"
+                    embeddable="true"
+                    embed-btn-x="495"
+                    embed-btn-y="12"
+                    popover-pos="left">
+            </yds-line>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-6">
             <h2>Bar</h2>
             <yds-bar
