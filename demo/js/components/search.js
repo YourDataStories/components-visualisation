@@ -1,4 +1,4 @@
-angular.module('yds').directive('ydsSearch', ['$window', '$rootScope', '$location','YDS_CONSTANTS', 'Search',
+angular.module('yds').directive('ydsSearch', ['$window', '$rootScope', '$location', 'YDS_CONSTANTS', 'Search',
 	function ($window, $rootScope, $location, YDS_CONSTANTS, Search) {
 	return {
 		restrict: 'E',
@@ -43,10 +43,8 @@ angular.module('yds').directive('ydsSearch', ['$window', '$rootScope', '$locatio
 				if (!searchForm.$valid)
 					return false;
 
-				var encodedKeyword = encodeURIComponent(scope.searchKeyword);
-				$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL + "#q=" + encodedKeyword;
+				$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL + "?q=" + scope.searchKeyword;
 			}
-
 		}
 	};
 }]);
