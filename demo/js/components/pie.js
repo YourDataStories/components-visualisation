@@ -127,7 +127,10 @@ angular.module('yds').directive('ydsPie', ['Data', function(Data){
 
                 var chart = new Highcharts.Chart(options);
             }, function (error) {
-                console.log('error', error);
+                if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
+                    scope.ydsAlert = "An error was occurred, please check the configuration of the component";
+                else
+                    scope.ydsAlert = error.message;
             });
         }
     };

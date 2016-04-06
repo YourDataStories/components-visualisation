@@ -203,7 +203,10 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                 }
                 //scope.gridOptions.api.sizeColumnsToFit();
             }, function(error){
-                scope.ydsAlert = error.message;
+                if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
+                    scope.ydsAlert = "An error was occurred, please check the configuration of the component";
+                else
+                    scope.ydsAlert = error.message;
             });
 
 
