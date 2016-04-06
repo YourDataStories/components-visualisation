@@ -3,13 +3,27 @@ angular.module('yds').directive('ydsSearch', ['$window', '$rootScope', '$locatio
 	return {
 		restrict: 'E',
 		scope: {
+			lang:'@',
 			standalone: '@'
 		},
 		templateUrl: 'templates/search.html',
 		link: function (scope, element) {
 			scope.searchKeyword = "";
-			scope.placeholder = "Search for...";
 			var standalone = scope.standalone;
+
+			//check if the language attr is defined, else assign default value
+			if(angular.isUndefined(scope.lang) || scope.lang.trim()=="")
+				scope.lang = "en";
+
+			switch(scope.lang) {
+				case "el":
+					scope.placeholder = "Αναζήτηση για...";
+					scope.searchBtnText = "Αναζήτηση";
+					break;
+				default:
+					scope.placeholder = "Search for...";
+					scope.searchBtnText = "Search";
+			}
 
 			//check if the standalone attr is defined, else assign default value
 			if(angular.isUndefined(standalone) || (standalone!="true" && standalone!="false"))
