@@ -1,19 +1,34 @@
 <div>
-    <div class="row list-group results-content"  style="margin-top: 10px; padding: 10px;"></div>
-    <div ng-show="showNoResultsMsg" class="row list-group"  style="border: 0.5px solid grey; margin-top: 10px; padding: 10px;">
-        <a class="list-group-item">
-            <h4>We are sorry we could not find datasets relative to your query..</h4>
-        </a>
+    <div class="row">
+        <div ng-show="showNoResultsMsg" class="bs-callout bs-callout-primary">
+            <h4>{{ translations.noResultsFound }}</h4>
+            {{ translations.noResultsFoundDisclaimer }}
+        </div>
     </div>
+    <div class="row" ng-show="pagination.total>0">
+        <div class="col-xs-12 results-counter" ng-if="pagination.total==1">
+            <strong>{{pagination.total}} {{ translations.resultFound }}</strong>
+        </div>
+        <div class="col-xs-12 results-counter" ng-if="pagination.total>1">
+            <strong>{{pagination.total}} {{ translations.resultsFound }}</strong>
+        </div>
+    </div>
+    <div class="row list-group results-content"></div>
     <div class="row">
         <div class="col-xs-12 text-center">
             <uib-pagination ng-hide="pagination.hidden"
                             ng-model="pagination.current"
+                            boundary-links="true"
                             ng-change="changePage()"
+                            max-size="pagination.maxSize"
                             items-per-page="pagination.perPage"
                             total-items="pagination.total"
-                            class="pagination-sm" boundary-links="true"
-                            force-ellipses="true">
+                            class="pagination-sm"
+                            force-ellipses="true"
+                            first-text="{{pagination.firstText}}"
+                            last-text="{{pagination.lastText}}"
+                            next-text="{{pagination.nextText}}"
+                            previous-text="{{pagination.previousText}}">
             </uib-pagination>
         </div>
     </div>

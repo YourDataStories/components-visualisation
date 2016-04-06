@@ -255,7 +255,11 @@ body #main .container:first-child {
 /**********************************/
 /******* SEARCH RESULTS ***********/
 /**********************************/
-
+.results-counter {
+    margin: 10px 0;
+    padding-left: 10px;
+    font-style: italic;
+}
 .results-content .list-group-item h4{
     font-size: 15px;
     font-weight: bold;
@@ -263,7 +267,10 @@ body #main .container:first-child {
 }
 .results-content .list-group-item .label{
     font-size: 10px;
-
+}
+.results-content .external-decision-link{
+    border: none;
+    padding: 0 6px;
 }
 /**********************************/
 /**** SEARCH RESULTS PREVIEW ******/
@@ -562,3 +569,24 @@ rzslider .rz-pointer:after {
     webkit-border-radius: 3px;
     moz-border-radius: 3px;
 }.vis-area { min-height: 400px; }
+
+
+/**********************************/
+/******* BOOTSTRAP CALLOUTS ******/
+/*********************************/
+.bs-callout {
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+}
+.bs-callout h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+.bs-callout p:last-child { margin-bottom: 0; }
+.bs-callout code { border-radius: 3px; }
+.bs-callout+.bs-callout { margin-top: -5px; }
+.bs-callout-primary { border-left-color: #428bca; }
+.bs-callout-primary h4 { color: #428bca; }
