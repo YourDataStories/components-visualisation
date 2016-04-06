@@ -338,6 +338,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
 app.factory('Search', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CONSTANTS) {
     var keyword = "";
     var facetsCallbacks = [];
+    var facetsView= {};
     var searchResults = [];
     var searchFacets = {};
     
@@ -366,8 +367,9 @@ app.factory('Search', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_
             }).success(function (response) {
                 searchResults = angular.copy(response);
                 searchFacets = angular.copy(response.data.facet_counts);
+                facetsView  = _.find(response.view , function (view) { return "SearchFacets" in view })["SearchFacets"];
+               
                 notifyObservers(facetsCallbacks);
-                
                 deferred.resolve(searchResults);
             }).error(function (error) {
                 deferred.reject(error);
@@ -379,7 +381,8 @@ app.factory('Search', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_
         clearResults: function () { searchResults = []; },
         
         registerFacetsCallback: function(callback) { facetsCallbacks.push(callback); },
-        getFacets: function() { return searchFacets; }
+        getFacets: function() { return searchFacets; },
+        getFacetsView: function() { return facetsView; }
     }
 }]);
 

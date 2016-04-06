@@ -1,17 +1,23 @@
-<div class="col-md-12">
-    <div class="row" ng-if="angular.isUndefined(facets) || facets.length==0">
-        <h4 class="text-center">Sorry, there are not available facets for your search.</h4>
+<div class="col-md-12 yds-checkbox-wrapper">
+    <div class="row" ng-repeat="facet in checkboxFacets track by $index">
+        <div class="col col-md-12">
+            <h4><span class="label label-default">{{facet.facet_name}}</span></h4>
+            <ul>
+                <li class="col col-md-12 yds-checkbox"
+                    ng-repeat="option in facet.facet_options"
+                    title="{{option.name}}">
+                    <div>{{option.name}} ({{option.value}})</div>
+                    <!--<checkbox ng-model="item.selected" class="pull-right"></checkbox>-->
+                </li>
+            </ul>
+        </div>
     </div>
-    <div class="row" ng-repeat="(key, value) in facets" >
-        <h3 class="text-center">{{key}}</h3>
-        <div class="list-group">
-            <a href="#"
-               class="list-group-item"
-               ng-repeat="(fname, fcount) in value"
-               ng-class="{'active': _.findIndex(rawAppliedFacets, {category: key, value: fname})>-1}"
-               ng-click="updateFilter(key,fname)">
-                {{fname}}<span class="badge">{{fcount}}</span>
-            </a>
+    <div class="row" ng-repeat="facet in rangeFacets track by $index">
+        <div class="col col-md-12">
+            <h4><span class="label label-default">{{facet.facet_name}}</span></h4>
+            <rzslider rz-slider-model="facet.facet_options.model"
+                      rz-slider-high="facet.facet_options.high"
+                      rz-slider-options="facet.facet_options.options"></rzslider>
         </div>
     </div>
 </div>

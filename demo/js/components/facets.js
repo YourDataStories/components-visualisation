@@ -1,45 +1,78 @@
-angular.module('yds').directive('ydsFacets', ['Data', function(Data){
-    return {
-        restrict: 'A',
-        scope: {},
-        templateUrl:'templates/facets.html',
-        link: function(scope) {
-            scope._ = _;           //make underscore.js accessible as scope variable
-            scope.facets = [];     //copy the facets returned from the server
-            scope.rawAppliedFacets = [];       //array to insert the applied facets in a format that can be used by ng-class
+angular.module('yds').directive('ydsFacets', ['Data', 'Search', function(Data, Search){
+	return {
+		restrict: 'E',
+		scope: {},
+		templateUrl:'templates/facets.html',
+		link: function(scope) {
+			scope._ = _;           //make underscore.js accessible as scope variable
+			scope.facets = [];     //copy the facets returned from the server
+			scope.rawAppliedFacets = [];       //array to insert the applied facets in a format that can be used by ng-class
+			scope.checkboxFacets = [];
+			scope.rangeFacets = [];
 
-            var updateFacets = function() {
-                var appliedFacets = Data.getAppliedFacets();        //get the applied facets from the server
+			var formatCheckboxFacets = function (checkboxFacets, facetsView) {
+				_.each(_.keys(checkboxFacets), function(facetName){
+					var rawFacetOptions = checkboxFacets[facetName];
+					var newFacet = {
+						facet_name: _.findWhere(facetsView, {attribute: facetName}).header,
+						facet_options: []
+					};
 
-                //insert the applied facets like objects {category:x , value: y}
-                // in the rawAppliedFacets array
+					for(var i=0; i<rawFacetOptions.length; i+=2) {
+						newFacet.facet_options.push({
+							name: rawFacetOptions[i],
+							value: rawFacetOptions[i+1]
+						});
+					}
 
-                scope.rawAppliedFacets = [];
-                for (var i=0; i<appliedFacets.length; i++) {
-                    for (var j=0; j<appliedFacets[i].facet_value.length; j++){
-                        scope.rawAppliedFacets.push({
-                            category: appliedFacets[i].facet_type,
-                            value: appliedFacets[i].facet_value[j]
-                        });
-                    }
-                }
+					scope.checkboxFacets.push(newFacet);
+				});
+			};
 
-                //copy the whole list of available facets returned from the server
-                scope.facets = Data.getFacetData();
-            };
+			var formatRangeFacets = function (rangeFacets, facetsView) {
+				_.each(_.keys(rangeFacets), function(facetName){
+					var rawFacetOptions = rangeFacets[facetName];
+					
+					var newFacet = {
+						facet_name: _.findWhere(facetsView, {attribute: facetName}).header,
+						facet_options: {
+							model: rawFacetOptions.start,
+							high: rawFacetOptions.end,
+							options: {
+								hideLimitLabels: true,
+								floor: rawFacetOptions.start,
+								ceil: rawFacetOptions.end,
+								/*translate: function (value, sliderId, label) {
+									switch (label) {
+										case 'model':
+											return '%' + value;
+										case 'high':
+											return '%' + value;
+										default:
+											return '%' + value
+									}
+								}*/
+							}
+						}
+					};
 
-           // Data.registerServerDataCallback(updateFacets);
-        }, controller: function($scope) {
-            $scope.updateFilter = function(facetType,facetName) {
-                Data.updateFacet(facetType, facetName);
+					scope.rangeFacets.push(newFacet);
+					debugger;
+				});
+			};
 
-                Data.search()
-                .then(function (response) { //TODO: Check query succeded
-                    Data.setServerData(response);
-                }, function (error) {
-                    console.log('error', error);
-                });
-            };
-        }
-    };
+			var updateFacets = function() {
+				var newFacets = Search.getFacets();
+				var facetsView = Search.getFacetsView();
+
+				formatCheckboxFacets(newFacets.facet_fields, facetsView);
+				formatRangeFacets(newFacets.facet_ranges, facetsView);
+			};
+
+			scope.applyFacets = function () {
+				
+			}
+			Search.registerFacetsCallback(updateFacets)
+		}
+	};
 }]);
