@@ -1,5 +1,5 @@
 <div class="col-md-12 yds-checkbox-wrapper">
-    <div class="row" ng-repeat="facet in checkboxFacets track by $index" ng-if="facet.facet_options.length>0">
+    <div class="row" ng-repeat="facet in checkboxFacets track by $index">
         <div class="col col-md-12">
             <h4><span class="label label-default">{{facet.facet_name}}</span></h4>
             <ul>
@@ -7,7 +7,7 @@
                     ng-repeat="option in facet.facet_options"
                     title="{{option.name}}">
                     <div>{{option.name}} ({{option.value}})</div>
-                    <checkbox ng-model="option.selected" ng-change="applyFacets()" class="pull-right"></checkbox>
+                    <checkbox ng-model="option.selected" class="pull-right"></checkbox>
                 </li>
             </ul>
         </div>
@@ -20,4 +20,9 @@
                       rz-slider-options="facet.facet_options.options"></rzslider>
         </div>
     </div>
+    <hr>
+    <button type="button" class="btn btn-yds btn-block"
+            ng-click="applyFacets()" aria-label="Left Align">
+        {{applyBtnText}}
+    </button>
 </div>

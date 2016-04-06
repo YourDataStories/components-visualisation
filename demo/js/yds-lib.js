@@ -360,6 +360,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', function ($h
     var keyword = "";
     var facetsCallbacks = [];
     var facetsView= {};
+    var appliedFacets = [];
     var searchResults = [];
     var searchFacets = {};
     
@@ -367,6 +368,47 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', function ($h
         angular.forEach(observerStack, function (callback) {
             callback();
         });
+    };
+
+    var formatAppliedFacets = function (facets) {
+        var formattedFacets = [];
+
+        _.each(facets, function(facet){
+            var facetContents = [];
+
+            if(!_.isUndefined(facet)){
+                if (facet.indexOf(":") > -1) {
+                    facetContents = facet.match(/}(\D+):(.+)/);
+                    
+                    if (facetContents!=null && facetContents.length==3) {
+                        facetTokens = facetContents[2].split(",");
+
+                        _.each(facetTokens, function(token) {
+                            formattedFacets.push({
+                                type: "field",
+                                attribute: facetContents[1],
+                                value:  token
+                            });
+                        })
+                    }
+                } else {
+                    facetContents = facet.match(/}(\D+)\[(\d)\sTO\s(\d+)]/);
+
+                    if (facetContents!=null && facetContents.length==4) {
+                        formattedFacets.push({
+                            type: "range",
+                            attribute: facetContents[1],
+                            value: {
+                                model: facetContents[2],
+                                high: facetContents[3]
+                            }
+                        });
+                    }
+                }
+            }
+        });
+
+        return formattedFacets;
     };
 
     return {
@@ -381,14 +423,21 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', function ($h
                 start: pageNumber
             };
             _.extend(searchParameters, $location.search());
-debugger;
+
+            if(!_.isUndefined(searchParameters.fq)) {
+                if(!_.isArray(searchParameters.fq))
+                    searchParameters.fq = searchParameters.fq.split("$$");
+
+                appliedFacets = formatAppliedFacets(searchParameters.fq);
+            } else
+                appliedFacets = [];
+
             $http({
                 method: 'GET',
                 url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_SEARCH,
                 params: searchParameters,
                 headers: {'Content-Type': 'application/json'}
             }).success(function (response) {
-                debugger;
                 searchResults = angular.copy(response);
                 searchFacets = angular.copy(response.data.facet_counts);
                 facetsView  = _.find(response.view , function (view) { return "SearchFacets" in view })["SearchFacets"];
@@ -406,6 +455,7 @@ debugger;
         
         registerFacetsCallback: function(callback) { facetsCallbacks.push(callback); },
         getFacets: function() { return searchFacets; },
+        getAppliedFacets: function() { return appliedFacets; },
         getFacetsView: function() { return facetsView; }
     }
 }]);

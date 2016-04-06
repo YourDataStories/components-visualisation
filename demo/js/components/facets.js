@@ -2,7 +2,9 @@ angular.module('yds').directive('ydsFacets', ['Data', 'Search', '$location', '$w
 	function(Data, Search, $location, $window, YDS_CONSTANTS){
 	return {
 		restrict: 'E',
-		scope: {},
+		scope: {
+			lang : '@'
+		},
 		templateUrl:'templates/facets.html',
 		link: function(scope) {
 			scope._ = _;           //make underscore.js accessible as scope variable
@@ -10,6 +12,21 @@ angular.module('yds').directive('ydsFacets', ['Data', 'Search', '$location', '$w
 			scope.rawAppliedFacets = [];       //array to insert the applied facets in a format that can be used by ng-class
 			scope.checkboxFacets = [];
 			scope.rangeFacets = [];
+			scope.applyBtnText = "";
+
+			//check if the language attr is defined, else assign default value
+			if(angular.isUndefined(scope.lang) || scope.lang.trim()=="")
+				scope.lang = "en";
+
+			//define the apply button text based on the components language
+			switch(scope.lang) {
+				case "el":
+					scope.applyBtnText = "Εφαρμογή";
+					break;
+				case "en":
+					scope.applyBtnText = "Apply";
+					break;
+			}
 
 			var initFacetArrays = function() {
 				scope.rawAppliedFacets = [];
@@ -17,7 +34,7 @@ angular.module('yds').directive('ydsFacets', ['Data', 'Search', '$location', '$w
 				scope.rangeFacets = [];
 			};
 
-			var formatCheckboxFacets = function (checkboxFacets, facetsView) {
+			var formatCheckboxFacets = function (checkboxFacets, appliedFacets, facetsView) {
 				_.each(_.keys(checkboxFacets), function(facetAttr){
 					var rawFacetOptions = checkboxFacets[facetAttr];
 
@@ -28,18 +45,24 @@ angular.module('yds').directive('ydsFacets', ['Data', 'Search', '$location', '$w
 					};
 
 					for(var i=0; i<rawFacetOptions.length; i+=2) {
-						newFacet.facet_options.push({
+						var facetOptions = {
 							name: rawFacetOptions[i],
 							value: rawFacetOptions[i+1],
 							selected: false
-						});
+						};
+
+						var existingFacet = _.findWhere(appliedFacets, {type:"field", attribute: facetAttr, value: rawFacetOptions[i]});
+						if(!_.isUndefined(existingFacet))
+							facetOptions.selected = true;
+
+						newFacet.facet_options.push(facetOptions);
 					}
 
 					scope.checkboxFacets.push(newFacet);
 				});
 			};
 
-			var formatRangeFacets = function (rangeFacets, facetsView) {
+			var formatRangeFacets = function (rangeFacets, appliedFacets, facetsView) {
 				_.each(_.keys(rangeFacets), function(facetAttr){
 					var rawFacetOptions = rangeFacets[facetAttr];
 
@@ -53,10 +76,7 @@ angular.module('yds').directive('ydsFacets', ['Data', 'Search', '$location', '$w
 								id: facetAttr,
 								hideLimitLabels: true,
 								floor: rawFacetOptions.start,
-								ceil: rawFacetOptions.end,
-								onChange: function () {
-									scope.applyFacets();
-								}
+								ceil: rawFacetOptions.end
 								/*translate: function (value, sliderId, label) {
 									switch (label) {
 										case 'model':
@@ -71,17 +91,24 @@ angular.module('yds').directive('ydsFacets', ['Data', 'Search', '$location', '$w
 						}
 					};
 
+					var existingFacet = _.findWhere(appliedFacets, {type:"range", attribute: facetAttr});
+					if(!_.isUndefined(existingFacet)) {
+						newFacet.facet_options.model = parseInt(existingFacet.value.model);
+						newFacet.facet_options.high = parseInt(existingFacet.value.high);
+					}
+
 					scope.rangeFacets.push(newFacet);
 				});
 			};
 
 			var updateFacets = function() {
 				initFacetArrays();
+				var appliedFacets = Search.getAppliedFacets();
 				var newFacets = Search.getFacets();
 				var facetsView = Search.getFacetsView();
 
-				formatCheckboxFacets(newFacets.facet_fields, facetsView);
-				formatRangeFacets(newFacets.facet_ranges, facetsView);
+				formatCheckboxFacets(newFacets.facet_fields, appliedFacets, facetsView);
+				formatRangeFacets(newFacets.facet_ranges, appliedFacets, facetsView);
 			};
 
 
@@ -94,19 +121,28 @@ angular.module('yds').directive('ydsFacets', ['Data', 'Search', '$location', '$w
 				_.each(checkboxFacets, function (facet) {
 					var activeFacets = _.pluck( _.where(facet.facet_options, {selected: true}), 'name').join();
 					if (activeFacets.trim().length>0)
-						facetUrlString+= "&fq=" + facet.facet_attribute + ":" + activeFacets;
+						facetUrlString+= "&fq={!tag=" + facet.facet_attribute.toUpperCase() + "}" +
+										 facet.facet_attribute + ":" + activeFacets;
 				});
 
 				var rangeFacets = scope.rangeFacets;
 				_.each(rangeFacets, function (facet) {
-					facetUrlString+= "&fq=" + facet.facet_options.options.id
+					facetUrlString+= "&fq=" + "{!tag=" + facet.facet_options.options.id.toUpperCase() + "}"
+											+ facet.facet_options.options.id
 											+ "["
 											+ facet.facet_options.model
 											+ "+TO+"
 											+ facet.facet_options.high
 											+ "]";
+
+											/*+ facet.facet_options.options.id
+											+ "("
+											+ facet.facet_options.model
+											+ ","
+											+ facet.facet_options.high
+											+ ")";*/
 				});
-				
+
 				var urlParams = "?q="+ $location.search().q + facetUrlString;
 				$window.location.href = (YDS_CONSTANTS.SEARCH_RESULTS_URL + urlParams);
 			};
