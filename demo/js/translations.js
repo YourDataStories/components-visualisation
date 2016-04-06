@@ -44,6 +44,11 @@ angular.module('yds').factory('Translations', [ function() {
 			noResultsFound: "No results found...",
 			noResultsFoundDisclaimer: "Unfortunately we could not find results relative to your search query. Why don't you search about 'Road'?;",
 
+			paginationFirstText: "First",
+			paginationLastText: "Last",
+			paginationNextText: "Next",
+			paginationPreviousText: "Previous",
+
 			viewResult: "View",
 			showMore: "[Show More]",
 			showLess: "[Show Less]",
@@ -93,6 +98,11 @@ angular.module('yds').factory('Translations', [ function() {
 			resultsFound: "αποτελέσματα βρέθηκαν",
 			noResultsFound: "Δεν βρέθηκαν αποτελέσματα...",
 			noResultsFoundDisclaimer: "Δυστυχώς δεν μπορέσαμε να βρούμε αποτελέσματα που να ικανοποιούν τα κριτήρια της αναζήτησής σας. Γιατί δεν κάνετε μια αναζήτηση με τον όρο 'Δρόμος';",
+
+			paginationFirstText: "Πρώτη",
+			paginationLastText: "Τελευταία",
+			paginationNextText: "Επόμενη",
+			paginationPreviousText: "Προηγούμενη",
 
 			viewResult: "Επισκόπηση",
 			showMore: "[Περισσότερα]",
