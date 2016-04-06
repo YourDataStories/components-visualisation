@@ -1,5 +1,6 @@
-angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$templateCache', '$location', '$compile', '$ocLazyLoad', 'Search', 'Translations',
-    function(YDS_CONSTANTS, $window, $templateCache, $location, $compile, $ocLazyLoad, Search, Translations){
+angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$templateCache', '$location',
+    '$compile', '$ocLazyLoad', '$location', 'Search', 'Translations',  function(YDS_CONSTANTS, $window, $templateCache,
+    $location, $compile, $ocLazyLoad, $location, Search, Translations){
     return {
         restrict: 'E',
         scope: {
@@ -142,23 +143,19 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
 
             
             //watch location hash change in order to perform search query
-            scope.$watch(function () { return location.hash }, function (value) {
-                var searchTerm = "";
-                var urlComponents = [];
+            scope.$watch(function () { return $location.search() }, function (value) {
 
                 //get the original search term from the url
-                if(!angular.isUndefined(value)) {
-                    urlComponents = value.split('q=');
+                var urlParams = $location.search();
+                var searchTerm = urlParams.q;
 
-                    if (!angular.isUndefined(urlComponents[1]))
-                        searchTerm = decodeURIComponent(urlComponents[1]);
+                if (!_.isUndefined(searchTerm)) {
+                    //if search term is empty, stop the execution
+                    if (searchTerm.trim() == "")
+                        return false;
+
+                    performSearch(searchTerm, 10, 1);
                 }
-
-                //if search term is empty, stop the execution
-                if (searchTerm == "")
-                    return false;
-
-                performSearch(searchTerm, 10, 1);
             });
 
             scope.$on("$destroy", function() {

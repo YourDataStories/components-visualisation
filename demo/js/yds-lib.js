@@ -335,7 +335,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
 /**************************************************/
 /********* NEW VERSION OF SEARCH SERVICE **********/
 /**************************************************/
-app.factory('Search', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CONSTANTS) {
+app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', function ($http, $q, $location, YDS_CONSTANTS) {
     var keyword = "";
     var facetsCallbacks = [];
     var facetsView= {};
@@ -355,16 +355,19 @@ app.factory('Search', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_
         performSearch: function (newKeyword, pageLimit, pageNumber) {
             var deferred = $q.defer();
 
+            var searchParameters = {
+                rows: pageLimit,
+                start: pageNumber
+            };
+            _.extend(searchParameters, $location.search());
+
             $http({
                 method: 'GET',
                 url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_SEARCH,
-                params: {
-                    q: newKeyword,
-                    rows: pageLimit,
-                    start: pageNumber
-                },
+                params: searchParameters,
                 headers: {'Content-Type': 'application/json'}
             }).success(function (response) {
+                debugger;
                 searchResults = angular.copy(response);
                 searchFacets = angular.copy(response.data.facet_counts);
                 facetsView  = _.find(response.view , function (view) { return "SearchFacets" in view })["SearchFacets"];
