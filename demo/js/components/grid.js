@@ -56,7 +56,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
             }
 
             //check if the language attr is defined, else assign default value
-            if(angular.isUndefined(lang))
+            if(angular.isUndefined(lang) || lang.trim()=="")
                 lang = "en";
 
             //check if the sorting attr is defined, else assign the default value
