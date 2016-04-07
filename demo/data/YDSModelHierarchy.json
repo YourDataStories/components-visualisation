@@ -1,0 +1,728 @@
+[{
+    "id"      : 9,
+    "@type"   : "http://linkedeconomy.org/ontology#AdministrativeDecision",
+    "label"   : {
+        "el" : "Διοικητική απόφαση",
+        "en" : "Administrative Decision"
+    },
+    "comment" : {
+        "en" : "This class represents the Administrative Decisions(Financial & Non Financial)."
+    },
+    "values"  : [{
+        "id"      : 6,
+        "@type"   : "http://linkedeconomy.org/ontology#FinancialDecision",
+        "label"   : {
+            "el" : "Οικονομικού Τύπου",
+            "en" : "Financial Decision"
+        },
+        "comment" : {
+            "en" : "This class represents the Financial Decisions"
+        },
+        "values"  : [{
+            "id"      : 1,
+            "@type"   : "http://linkedeconomy.org/ontology#BudgetItem",
+            "label"   : {
+                "el" : "Αντικείμενο Προϋπολογισμού",
+                "en" : "Budget Item"
+            },
+            "comment" : {
+                "en" : " the Budget of a Public Project."
+            },
+            "values"  : []
+        },{
+            "id"      : 2,
+            "@type"   : "http://linkedeconomy.org/ontology#CommittedItem",
+            "label"   : {
+                "el" : "Δεσμευθέν Αντικείμενο",
+                "en" : "Committed Item"
+            },
+            "comment" : {
+                ""   : "The total amount of all firm, written obligations from a donor or provider to provide a specified amount of funds, under particular terms and conditions, for specific purposes, for the benefit of the recipient.",
+                "en" : "This class represents decisions having type B.1.3."
+            },
+            "values"  : []
+        },{
+            "id"      : 3,
+            "@type"   : "http://linkedeconomy.org/ontology#ExpenseApprovalItem",
+            "label"   : {
+                "el" : "Έγκριση Δαπάνης",
+                "en" : "Expense Approval Item"
+            },
+            "comment" : {
+                "en" : "This class represents decisions that involve approval of expenses."
+            },
+            "values"  : []
+        },{
+            "id"      : 4,
+            "@type"   : "http://linkedeconomy.org/ontology#SpendingItem",
+            "label"   : {
+                "el" : "Αντικείμενο Δαπάνης",
+                "en" : "Spending Item"
+            },
+            "comment" : {
+                "en" : " the Payments of a Public Project. Also, represents decisions that involve spending actions."
+            },
+            "values"  : []
+        },{
+            "id"      : 5,
+            "@type"   : "http://purl.org/procurement/public-contracts#Contract",
+            "label"   : {
+                "el" : "Δημόσια Σύμβαση",
+                "en" : "Public Contract"
+            },
+            "comment" : {
+                "en" : "This class represents public contracts during all stages of their existence."
+            },
+            "values"  : []
+        }]
+    },{
+        "id"      : 8,
+        "@type"   : "http://linkedeconomy.org/ontology#NonFinancialDecision",
+        "label"   : {
+            "el" : "Μη Οικονομικού Τύπου",
+            "en" : "Non Financial Decision"
+        },
+        "comment" : {
+            "en" : "This class represents the Non Financial Decisions"
+        },
+        "values"  : [{
+            "id"      : 7,
+            "@type"   : "http://linkedeconomy.org/ontology#Decision",
+            "label"   : {
+                "el" : "Πράξη",
+                "en" : "Decision"
+            },
+            "comment" : {
+                "en" : "This class represents decisions having other type than B.1.3, B.2.1, B.2.2, Δ.1, Δ.2.1, Δ.2.2."
+            },
+            "values"  : []
+        }]
+    }]
+},{
+    "id"      : 10,
+    "@type"   : "http://linkedeconomy.org/ontology#AidActivity",
+    "label"   : {
+        "" : "Aid activity"
+    },
+    "comment" : {
+        "" : "Activity supported through development aid"
+    },
+    "values"  : []
+},{
+    "id"     : 11,
+    "@type"  : "http://linkedeconomy.org/ontology#Amount",
+    "label"  : {
+        ""   : "Amount",
+        "en" : "Amount"
+    },
+    "values" : []
+},{
+    "id"      : 12,
+    "@type"   : "http://linkedeconomy.org/ontology#Attachment",
+    "label"   : {
+        "el" : "Συνημμένα Έγγραφα",
+        "en" : "Attachments"
+    },
+    "comment" : {
+        "en" : "This class represents the Attachments documents found in the Decisions."
+    },
+    "values"  : []
+},{
+    "id"      : 13,
+    "@type"   : "http://linkedeconomy.org/ontology#CPV",
+    "label"   : {
+        "el" : "Κοινό Λεξιλόγιο Προμηθειών",
+        "en" : "Common Procurement Vocabulary"
+    },
+    "comment" : {
+        "en" : "This class represents the CPV codes. It is a vocabulary which is used to characterize the products or services purchased by a contract."
+    },
+    "values"  : []
+},{
+    "id"      : 14,
+    "@type"   : "http://linkedeconomy.org/ontology#DisbursedItem",
+    "label"   : {
+        "en" : "\"DisbursedItem\""
+    },
+    "comment" : {
+        "" : "The total amount of outgoing funds that are placed at the disposal of a recipient government or organisation, or funds transferred between two separately reported activities."
+    },
+    "values"  : []
+},{
+    "id"      : 15,
+    "@type"   : "http://linkedeconomy.org/ontology#ExpenditureLine",
+    "label"   : {
+        "el" : "Τμήμα Δαπάνης",
+        "en" : "Expenditure Line"
+    },
+    "comment" : {
+        "en" : " Decisions that involve expenses."
+    },
+    "values"  : []
+},{
+    "id"      : 16,
+    "@type"   : "http://linkedeconomy.org/ontology#Fek",
+    "label"   : {
+        "el" : "Φύλλο Εφημερίδος Κυβερνήσεως",
+        "en" : "Greek Government Gazzette"
+    },
+    "comment" : {
+        "en" : "This class represents the Greek Government Gazette issues."
+    },
+    "values"  : []
+},{
+    "id"      : 17,
+    "@type"   : "http://linkedeconomy.org/ontology#KAE",
+    "label"   : {
+        "el" : "Κωδικός Αριθμού Εσόδων/Εξόδων",
+        "en" : "Code Number of Revenues/Expenses"
+    },
+    "comment" : {
+        "en" : "This class represents the Kae codes."
+    },
+    "values"  : []
+},{
+    "id"      : 19,
+    "@type"   : "http://linkedeconomy.org/ontology#PublicProject",
+    "label"   : {
+        "el" : "Δημόσιο Έργο",
+        "en" : "Public Project"
+    },
+    "comment" : {
+        "en" : " The Public Projects of NSRF data source."
+    },
+    "values"  : [{
+        "id"      : 18,
+        "@type"   : "http://linkedeconomy.org/ontology#Subsidy",
+        "label"   : {
+            "en" : "Subsidy"
+        },
+        "comment" : {
+            "en" : " the Public Projects which are Subsidies. "
+        },
+        "values"  : []
+    }]
+},{
+    "id"      : 20,
+    "@type"   : "http://linkedeconomy.org/ontology#Subproject",
+    "label"   : {
+        "el" : "Υποέργο",
+        "en" : "Subproject"
+    },
+    "comment" : {
+        "en" : " the Subprojects for each Public Project."
+    },
+    "values"  : []
+},{
+    "id"      : 21,
+    "@type"   : "http://linkedeconomy.org/ontology#TradeActivity",
+    "label"   : {
+        "" : "Trade activity"
+    },
+    "comment" : {
+        "" : "Activity defined by trade of a commodity between two agents"
+    },
+    "values"  : []
+},{
+    "id"      : 22,
+    "@type"   : "http://linkedeconomy.org/ontology#Transaction",
+    "label"   : {
+        "en" : "Transaction"
+    },
+    "comment" : {
+        "" : "Any financial transaction between two agents."
+    },
+    "values"  : []
+},{
+    "id"      : 23,
+    "@type"   : "http://purl.org/goodrelations/v1#UnitPriceSpecification",
+    "label"   : {
+        "el" : "Προδιαγραφή τιμής ανά μονάδα",
+        "en" : "Unit Price Specification"
+    },
+    "comment" : {
+        "en" : "A conceptual entity that specifies the price asked for a service or product. It specifies the price, the currency and whether the price includes VAT or not."
+    },
+    "values"  : []
+},{
+    "id"      : 25,
+    "@type"   : "http://www.opengis.net/ont/geosparql#Feature",
+    "label"   : {
+        "en" : "Feature"
+    },
+    "comment" : {
+        "en" : "The class Feature, superclass of everything feature."
+    },
+    "values"  : [{
+        "id"      : 24,
+        "@type"   : "http://linkedeconomy.org/ontology#PlaceOfInterest",
+        "label"   : {
+            "en" : "Place Of Interest"
+        },
+        "comment" : {
+            "en" : "The place where the Geo Infomation belongs to"
+        },
+        "values"  : []
+    }]
+},{
+    "id"      : 29,
+    "@type"   : "http://www.opengis.net/ont/geosparql#Geometry",
+    "label"   : {
+        "el" : "Γεωμετρία",
+        "en" : "Geometry"
+    },
+    "comment" : {
+        "en" : "The class Geometry, superclass of everything geometry."
+    },
+    "values"  : [{
+        "id"      : 27,
+        "@type"   : "http://www.opengis.net/ont/sf#Curve",
+        "label"   : {
+            "el" : "Καμπύλη",
+            "en" : "Curve"
+        },
+        "comment" : {
+            "en" : "Topological 1-dimensional geometric primitive representing the continuous image of a line."
+        },
+        "values"  : [{
+            "id"      : 26,
+            "@type"   : "http://www.opengis.net/ont/sf#LineString",
+            "label"   : {
+                "en" : "Line String"
+            },
+            "comment" : {
+                "en" : "A curve composed of straight line segments."
+            },
+            "values"  : []
+        }]
+    },{
+        "id"      : 28,
+        "@type"   : "http://www.opengis.net/ont/sf#Point",
+        "label"   : {
+            "el" : "Σημείο",
+            "en" : "Point"
+        },
+        "comment" : {
+            "en" : "Topological 0-dimensional geometric primitive representing a position."
+        },
+        "values"  : []
+    }]
+},{
+    "id"      : 58,
+    "@type"   : "http://www.w3.org/2004/02/skos/core#Concept",
+    "label"   : {
+        "en" : "Concept"
+    },
+    "comment" : {
+        "en" : "This class represents the units of thought - ideas, meanings, or (categories of) objects and events - which underlie many knowledge organization systems."
+    },
+    "values"  : [{
+        "id"      : 30,
+        "@type"   : "http://linkedeconomy.org/geoOntology#Municipality",
+        "label"   : {
+            "en" : "Municipality"
+        },
+        "comment" : {
+            "en" : "The municipality where the Decision refers to."
+        },
+        "values"  : []
+    },{
+        "id"      : 31,
+        "@type"   : "http://linkedeconomy.org/geoOntology#PostalCodeArea",
+        "label"   : {
+            "en" : "Postal Code Area"
+        },
+        "comment" : {
+            "en" : "This class representes the total informations about a postal code area."
+        },
+        "values"  : []
+    },{
+        "id"      : 32,
+        "@type"   : "http://linkedeconomy.org/ontology#AccountType",
+        "label"   : {
+            "el" : "Τύπος Λογαριασμού",
+            "en" : "Account Type"
+        },
+        "comment" : {
+            "en" : "This class represents the Account Types."
+        },
+        "values"  : []
+    },{
+        "id"      : 33,
+        "@type"   : "http://linkedeconomy.org/ontology#BudgetCategory",
+        "label"   : {
+            "el" : "Κατηγορία Προϋπολογισμού",
+            "en" : "Budget Category"
+        },
+        "comment" : {
+            "en" : "This class represents the Budget Categories."
+        },
+        "values"  : []
+    },{
+        "id"     : 34,
+        "@type"  : "http://linkedeconomy.org/ontology#BudgetKind",
+        "label"  : {
+            "el" : "Είδος Προϋπολογισμού",
+            "en" : "Budget Kind"
+        },
+        "values" : []
+    },{
+        "id"      : 35,
+        "@type"   : "http://linkedeconomy.org/ontology#CollectiveBodyKind",
+        "label"   : {
+            "el" : "Είδος Συλλογικού",
+            "en" : "Collective Body Kind"
+        },
+        "comment" : {
+            "en" : "This class represents different kinds of a Collective Body."
+        },
+        "values"  : []
+    },{
+        "id"      : 36,
+        "@type"   : "http://linkedeconomy.org/ontology#CollectiveBodyType",
+        "label"   : {
+            "el" : "Τύπος Συλλογικού",
+            "en" : "Collective Body Type"
+        },
+        "comment" : {
+            "en" : "This class represents different types of a Collective Body."
+        },
+        "values"  : []
+    },{
+        "id"      : 37,
+        "@type"   : "http://linkedeconomy.org/ontology#Country",
+        "label"   : {
+            "en" : "Country"
+        },
+        "comment" : {
+            "en" : "This class represents countries."
+        },
+        "values"  : []
+    },{
+        "id"      : 38,
+        "@type"   : "http://linkedeconomy.org/ontology#Currency",
+        "label"   : {
+            "el" : "Νόμισμα",
+            "en" : "Currency"
+        },
+        "comment" : {
+            "en" : "This class represents currencies."
+        },
+        "values"  : []
+    },{
+        "id"      : 39,
+        "@type"   : "http://linkedeconomy.org/ontology#DecisionStatus",
+        "label"   : {
+            "el" : "Κατάσταση Πράξης",
+            "en" : "Decision Status"
+        },
+        "comment" : {
+            "en" : "This class represents the Statuses of the Decisions."
+        },
+        "values"  : []
+    },{
+        "id"      : 40,
+        "@type"   : "http://linkedeconomy.org/ontology#FekType",
+        "label"   : {
+            "el" : "Τύπος Τεύχους Φύλλου Εφημερίδος Κυβερνήσεως",
+            "en" : "Greek Government Gazzette Issue Type "
+        },
+        "comment" : {
+            "en" : "This class represents the types of the Greek Government Gazette issues."
+        },
+        "values"  : []
+    },{
+        "id"      : 41,
+        "@type"   : "http://linkedeconomy.org/ontology#Law",
+        "label"   : {
+            "el" : "Νόμος",
+            "en" : "Law"
+        },
+        "comment" : {
+            "en" : "This class represents the Law which is defined in a Decision."
+        },
+        "values"  : []
+    },{
+        "id"      : 42,
+        "@type"   : "http://linkedeconomy.org/ontology#OfficialAdministrativeChange",
+        "label"   : {
+            "en" : "Official Administrative Change"
+        },
+        "comment" : {
+            "en" : "This class represents the Official Administrative Changes"
+        },
+        "values"  : []
+    },{
+        "id"      : 43,
+        "@type"   : "http://linkedeconomy.org/ontology#OpinionOrgType",
+        "label"   : {
+            "el" : "Φορέας Γνωμοδότησης",
+            "en" : "Opinion Organization Type"
+        },
+        "comment" : {
+            "en" : "This class represents the types of Opinion Organizations."
+        },
+        "values"  : []
+    },{
+        "id"      : 44,
+        "@type"   : "http://linkedeconomy.org/ontology#OrganizationCategory",
+        "label"   : {
+            "el" : "Κατηγορίες Φορέων",
+            "en" : "Organization Category"
+        },
+        "comment" : {
+            "en" : "This class represents the Categories of the Organizations."
+        },
+        "values"  : []
+    },{
+        "id"      : 45,
+        "@type"   : "http://linkedeconomy.org/ontology#OrganizationDomain",
+        "label"   : {
+            "el" : "Πεδίο Αρμοδιότητας Φορέων",
+            "en" : "Organization Domain"
+        },
+        "comment" : {
+            "en" : "This class represents the Domains of the Organizations."
+        },
+        "values"  : []
+    },{
+        "id"      : 46,
+        "@type"   : "http://linkedeconomy.org/ontology#OrganizationStatus",
+        "label"   : {
+            "el" : "Κατάσταση Οργανισμού",
+            "en" : "Organization Status"
+        },
+        "comment" : {
+            "en" : "This class represents the Statuses of the Organizations."
+        },
+        "values"  : []
+    },{
+        "id"      : 47,
+        "@type"   : "http://linkedeconomy.org/ontology#OrganizationalUnitCategory",
+        "label"   : {
+            "el" : "Τύποι Οργανωτικών Μονάδων",
+            "en" : "Organizational Unit Category"
+        },
+        "comment" : {
+            "en" : "This class represents the categories of the Organizational Units."
+        },
+        "values"  : []
+    },{
+        "id"      : 48,
+        "@type"   : "http://linkedeconomy.org/ontology#Position",
+        "label"   : {
+            "el" : "Θέση",
+            "en" : "Position"
+        },
+        "comment" : {
+            "en" : "This class represents the Positions."
+        },
+        "values"  : []
+    },{
+        "id"      : 49,
+        "@type"   : "http://linkedeconomy.org/ontology#PositionType",
+        "label"   : {
+            "el" : "Τύπος Θέσης",
+            "en" : "Position Type"
+        },
+        "comment" : {
+            "en" : "This class represents the Position Types."
+        },
+        "values"  : []
+    },{
+        "id"      : 50,
+        "@type"   : "http://linkedeconomy.org/ontology#RegulatoryAct",
+        "label"   : {
+            "el" : "Κανονιστική Πράξη",
+            "en" : "Regulatory Act"
+        },
+        "comment" : {
+            "en" : "This class represents the Regulatory Acts."
+        },
+        "values"  : []
+    },{
+        "id"      : 51,
+        "@type"   : "http://linkedeconomy.org/ontology#SelectionCriterion",
+        "label"   : {
+            "el" : "Κριτήριο Επιλογής",
+            "en" : "Selection Criterion"
+        },
+        "comment" : {
+            "en" : "This class represents the Criteria that a Contract has been selected."
+        },
+        "values"  : []
+    },{
+        "id"      : 52,
+        "@type"   : "http://linkedeconomy.org/ontology#SpatialType",
+        "label"   : {
+            "en" : "Spatial Type"
+        },
+        "comment" : {
+            "en" : "This class represents the Spatial Types."
+        },
+        "values"  : []
+    },{
+        "id"      : 53,
+        "@type"   : "http://linkedeconomy.org/ontology#ThematicCategory",
+        "label"   : {
+            "el" : "Τύπος Θεματικής Κατηγορίας",
+            "en" : "Thematic Category"
+        },
+        "comment" : {
+            "en" : "This class represents the Thematic Categories."
+        },
+        "values"  : []
+    },{
+        "id"      : 54,
+        "@type"   : "http://linkedeconomy.org/ontology#TimePeriod",
+        "label"   : {
+            "el" : "Χρονική Περίοδος",
+            "en" : "Time Period"
+        },
+        "comment" : {
+            "en" : "This class represents the Time Period."
+        },
+        "values"  : []
+    },{
+        "id"      : 55,
+        "@type"   : "http://linkedeconomy.org/ontology#VacancyType",
+        "label"   : {
+            "el" : "Είδος Πλήρωσης Θέσης",
+            "en" : "Vacancy Type"
+        },
+        "comment" : {
+            "en" : "This class represents the Vacancy Types."
+        },
+        "values"  : []
+    },{
+        "id"      : 56,
+        "@type"   : "http://linkedeconomy.org/ontology#VatType",
+        "label"   : {
+            "el" : "Τύπος ΑΦΜ",
+            "en" : "Vat Type"
+        },
+        "comment" : {
+            "en" : "This class represents the Vat Types of the Organizations."
+        },
+        "values"  : []
+    },{
+        "id"      : 57,
+        "@type"   : "http://www.w3.org/ns/org#Role",
+        "label"   : {
+            "el" : "Ρόλος",
+            "en" : "Role"
+        },
+        "comment" : {
+            "en" : "This class represents the Role that the Agent plays in a Membership relationship with an Organization."
+        },
+        "values"  : []
+    }]
+},{
+    "id"      : 59,
+    "@type"   : "http://www.w3.org/2004/02/skos/core#ConceptScheme",
+    "label"   : {
+        "en" : "Concept Scheme"
+    },
+    "comment" : {
+        "en" : "This class represents a collection of skos:Concept as means of representing knowledge."
+    },
+    "values"  : []
+},{
+    "id"      : 60,
+    "@type"   : "http://www.w3.org/2006/vcard/ns#Address",
+    "label"   : {
+        "el" : "Διεύθυνση",
+        "en" : "Address"
+    },
+    "comment" : {
+        "en" : "The address details of an agent"
+    },
+    "values"  : []
+},{
+    "id"      : 68,
+    "@type"   : "http://xmlns.com/foaf/0.1/Agent",
+    "label"   : {
+        "el" : "Πράκτορας",
+        "en" : "Agent"
+    },
+    "comment" : {
+        "en" : "This class represents the entities that participate in actions."
+    },
+    "values"  : [{
+        "id"      : 61,
+        "@type"   : "http://linkedeconomy.org/ontology#GroupNationalAgent",
+        "label"   : {
+            "" : "Group national agent"
+        },
+        "comment" : {
+            "" : "Entity representing the collection of all national agents involved in international trade"
+        },
+        "values"  : []
+    },{
+        "id"      : 62,
+        "@type"   : "http://purl.org/goodrelations/v1#BusinessEntity",
+        "label"   : {
+            "el" : "Επιχειρηματική Οντότητα",
+            "en" : "Business Entity"
+        },
+        "comment" : {
+            "en" : "This class represents the organization. It is one of the four classes used for their modeling."
+        },
+        "values"  : []
+    },{
+        "id"      : 63,
+        "@type"   : "http://www.w3.org/ns/org#Organization",
+        "label"   : {
+            "el" : "Οργανισμός",
+            "en" : "Organization"
+        },
+        "comment" : {
+            "en" : "This class represents the organization. It is one of the four classes used for their modeling."
+        },
+        "values"  : []
+    },{
+        "id"      : 64,
+        "@type"   : "http://www.w3.org/ns/org#OrganizationalUnit",
+        "label"   : {
+            "el" : "Μονάδα Οργανισμού",
+            "en" : "Organizational Unit"
+        },
+        "comment" : {
+            "en" : "This class represents the Organizational Units of Organizations."
+        },
+        "values"  : []
+    },{
+        "id"      : 65,
+        "@type"   : "http://www.w3.org/ns/regorg#RegisteredOrganization",
+        "label"   : {
+            "el" : "Καταχωρημένος Οργανισμός",
+            "en" : "Registered Organization"
+        },
+        "comment" : {
+            "en" : "This class represents the organization. It is one of the four classes used for their modeling."
+        },
+        "values"  : []
+    },{
+        "id"      : 66,
+        "@type"   : "http://xmlns.com/foaf/0.1/Organization",
+        "label"   : {
+            "el" : "Οργανισμός",
+            "en" : "Organization"
+        },
+        "comment" : {
+            "en" : "This class represents the organization. It is one of the four classes used for their modeling."
+        },
+        "values"  : []
+    },{
+        "id"      : 67,
+        "@type"   : "http://xmlns.com/foaf/0.1/Person",
+        "label"   : {
+            "el" : "Πρόσωπο",
+            "en" : "Person"
+        },
+        "comment" : {
+            "en" : "This class represents Physical Persons."
+        },
+        "values"  : []
+    }]
+}]
