@@ -8,15 +8,16 @@ var geoRouteUrl = host+"/YDSAPI/yds/geo/route";
 // Defining global variables for the YDS lib
 app.constant("YDS_CONSTANTS", {
     "PROXY": "/",
-    /*"PROXY": "localhost:9292/",*/
+    //"PROXY": "localhost:9292/",
+    "API_YDS_MODEL_HIERARCHY":"platform.yourdatastories.eu/api/json-ld/model/YDSModelHierarchy.json",
     "API_GRID": "platform.yourdatastories.eu/api/json-ld/component/grid.tcl",
     "API_INFO": "platform.yourdatastories.eu/api/json-ld/component/info.tcl",
     "API_LINE": "platform.yourdatastories.eu/api/json-ld/component/linechart.tcl",
     "API_MAP": "platform.yourdatastories.eu/api/json-ld/component/map.tcl",
     "API_PIE": "platform.yourdatastories.eu/api/json-ld/component/piechart.tcl",
     "API_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/search.tcl",
-    "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
     //"SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
+    "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
     "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
     "API_EMBED": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/embed/",
     "BASKET_URL": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/basket/"
@@ -234,11 +235,10 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             return colors[index];
         }, getBrowseData: function () {
             var deferred = $q.defer();
-            var serverURL = "data/YDSModelHierarchy.json";
 
             $http({
                 method: 'GET',
-                url: serverURL,
+                url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_YDS_MODEL_HIERARCHY,
                 headers: {'Content-Type': 'application/json'}
             }).success(function (data) {
                 deferred.resolve(data);
@@ -387,43 +387,47 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', function ($h
                 facets = facets.split("$$");
 
             //iterate through the applied facets extracted from the search url
-            _.each(facets, function(facet) {
+            for (var j=0; j<facets.length; j++) {
+                var facetExtracted = false;     //flag that indicates if the faces has been extracted successfully
                 var facetContents = [];
 
-                //recognize if the facet contains ":", field facet, ie {!tag=TYPE}type:Decision
-                if (facet.indexOf(":") > -1) {
-                    //apply regex to extract the attribute and the value of the facet(type, Decision)
-                    facetContents = facet.match(/}(\D+):(.+)/);
+                //in case it is a range facet, ie {!tag=COMPLETION}completion[0 TO 87], attempt to extract its contents(completion, 0, 87)
+                facetContents = facets[j].match(/}(\D+):\[(\d+)\s+TO\s+(\d+)]/);
 
-                    if (facetContents!=null && facetContents.length==3) {
-                        facetTokens = facetContents[2].split(",");
-
-                        //iterate through the facet tokens and create a new object representing the current facet
-                        _.each(facetTokens, function(token) {
-                            appliedFacets.push({
-                                type: "field",
-                                attribute: facetContents[1],
-                                value:  token
-                            });
-                        })
-                    }
-                } else {
-                    //in case it is a range facet, ie {!tag=COMPLETION}completion[0 TO 87], attempt to extract its contents(completion, 0, 87)
-                    facetContents = facet.match(/}(\D+)\[(\d+)\s+TO\s+(\d+)]/);
-
-                    if (facetContents!=null && facetContents.length==4) {
-                        //iterate through the facet tokens and create a new object representing the current facet
-                        appliedFacets.push({
-                            type: "range",
-                            attribute: facetContents[1],
-                            value: {
-                                model: facetContents[2],
-                                high: facetContents[3]
-                            }
-                        });
-                    }
+                if (facetContents!=null && facetContents.length==4) {
+                    //iterate through the facet tokens and create a new object representing the current facet
+                    appliedFacets.push({
+                        type: "range",
+                        attribute: facetContents[1],
+                        value: {
+                            model: facetContents[2],
+                            high: facetContents[3]
+                        }
+                    });
+                    
+                    facetExtracted = true;
                 }
-            });
+                
+                
+                if (facetExtracted)     //if the facet has been extracted, continue to the next facets
+                    continue;
+
+                //in case it is a field facet, ie {!tag=TYPE}type:Decision, attempt to extract its contents(type, Decision)
+                facetContents = facets[j].match(/}(\D+):(.+)/);
+
+                if (facetContents!=null && facetContents.length==3) {
+                    facetTokens = facetContents[2].split(",");
+
+                    //iterate through the facet tokens and create a new object representing the current facet
+                    _.each(facetTokens, function(token) {
+                        appliedFacets.push({
+                            type: "field",
+                            attribute: facetContents[1],
+                            value:  token
+                        });
+                    });
+                }
+            }
         }
     };
 

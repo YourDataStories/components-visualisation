@@ -144,7 +144,7 @@ angular.module('yds').directive('ydsFacets', ['Data', 'Search', '$location', '$w
 
 						facetUrlString+= "&fq=" + "{!tag=" + facet.facet_options.options.id.toUpperCase() + "}"
 							+ facet.facet_options.options.id
-							+ "["
+							+ ":["
 							+ facet.facet_options.model
 							+ "+TO+"
 							+ facet.facet_options.high
