@@ -83,8 +83,7 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                 //save the keyword and perform search
                 Search.setKeyword(searchTerm);
                 scope.pagination.setCurrent(pageNumber);
-
-               // Search.performSearch(searchTerm, pageLimit, scope.pagination.getCurrent())
+                
                 Search.performSearch(searchTerm, 10, scope.pagination.getCurrent())
                 .then(function (response) {
                     var resultsCount = response.data.response.numFound;
@@ -143,18 +142,16 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
 
             
             //watch location hash change in order to perform search query
-            scope.$watch(function () { return $location.search() }, function (value) {
-
+            scope.$watch(function () { return $location.search() }, function (urlParams) {
                 //get the original search term from the url
-                var urlParams = $location.search();
-                var searchTerm = urlParams.q;
-
-                if (!_.isUndefined(searchTerm)) {
+                var keyword = urlParams.q;
+         
+                if (!_.isUndefined(keyword)) {
                     //if search term is empty, stop the execution
-                    if (searchTerm.trim() == "")
+                    if (keyword.trim() == "")
                         return false;
 
-                    performSearch(searchTerm, 10, 1);
+                    performSearch(keyword, 10, 1);
                 }
             });
 

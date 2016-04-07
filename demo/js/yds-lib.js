@@ -15,8 +15,8 @@ app.constant("YDS_CONSTANTS", {
     "API_MAP": "platform.yourdatastories.eu/api/json-ld/component/map.tcl",
     "API_PIE": "platform.yourdatastories.eu/api/json-ld/component/piechart.tcl",
     "API_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/search.tcl",
-    "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
-    //"SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
+    //"SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
+    "SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
     "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
     "API_EMBED": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/embed/",
     "BASKET_URL": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/basket/"
@@ -363,28 +363,44 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', function ($h
     var appliedFacets = [];
     var searchResults = [];
     var searchFacets = {};
-    
-    var notifyObservers = function (observerStack) { //function to trigger the callbacks of observers
+
+    /**
+    * function to trigger the callbacks of observers
+    **/
+    var notifyObservers = function (observerStack) {
         angular.forEach(observerStack, function (callback) {
             callback();
         });
     };
 
+    /**
+     * function to format the applied facets returned fromm the search API.
+     * @param {Object | Array} facets, an array or object containing the facets of the API.
+     **/
     var formatAppliedFacets = function (facets) {
-        var formattedFacets = [];
+        appliedFacets = [];
 
-        _.each(facets, function(facet){
-            var facetContents = [];
+        //check if the facet object or array is defined
+        if(!_.isUndefined(facets)) {
+            //check if the facets are formed as object, else convert them in array
+            if(!_.isArray(facets))
+                facets = facets.split("$$");
 
-            if(!_.isUndefined(facet)){
+            //iterate through the applied facets extracted from the search url
+            _.each(facets, function(facet) {
+                var facetContents = [];
+
+                //recognize if the facet contains ":", field facet, ie {!tag=TYPE}type:Decision
                 if (facet.indexOf(":") > -1) {
+                    //apply regex to extract the attribute and the value of the facet(type, Decision)
                     facetContents = facet.match(/}(\D+):(.+)/);
-                    
+
                     if (facetContents!=null && facetContents.length==3) {
                         facetTokens = facetContents[2].split(",");
 
+                        //iterate through the facet tokens and create a new object representing the current facet
                         _.each(facetTokens, function(token) {
-                            formattedFacets.push({
+                            appliedFacets.push({
                                 type: "field",
                                 attribute: facetContents[1],
                                 value:  token
@@ -392,10 +408,12 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', function ($h
                         })
                     }
                 } else {
-                    facetContents = facet.match(/}(\D+)\[(\d)\sTO\s(\d+)]/);
+                    //in case it is a range facet, ie {!tag=COMPLETION}completion[0 TO 87], attempt to extract its contents(completion, 0, 87)
+                    facetContents = facet.match(/}(\D+)\[(\d+)\s+TO\s+(\d+)]/);
 
                     if (facetContents!=null && facetContents.length==4) {
-                        formattedFacets.push({
+                        //iterate through the facet tokens and create a new object representing the current facet
+                        appliedFacets.push({
                             type: "range",
                             attribute: facetContents[1],
                             value: {
@@ -405,51 +423,58 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', function ($h
                         });
                     }
                 }
-            }
-        });
-
-        return formattedFacets;
+            });
+        }
     };
 
+    /**
+     * function to format the applied facets located inside the search url
+     * @param {String} newKeyword, the search term
+     * @param {Integer} pageLimit, the max number of results returned from the API
+     * @param {Integer} pageNumber, the page number of the results
+     **/
+    var performSearch = function (newKeyword, pageLimit, pageNumber) {
+        var deferred = $q.defer();
+
+        //define an object with the standard params required for the search query
+        var searchParameters = {
+            rows: pageLimit,
+            start: pageNumber
+        };
+
+        //merge the url params with the aforementioned object
+        _.extend(searchParameters, $location.search());
+
+        $http({
+            method: 'GET',
+            url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_SEARCH,
+            params: searchParameters,
+            headers: {'Content-Type': 'application/json'}
+        }).success(function (response) {
+            //if the search query is successful, copy the results in a local variable
+            searchResults = angular.copy(response);
+            //copy the available facets in a local variable
+            searchFacets = angular.copy(response.data.facet_counts);
+            //get the facet view from the response of the search API
+            facetsView  = _.find(response.view , function (view) { return "SearchFacets" in view })["SearchFacets"];
+            //format the facets returned from the search API
+            formatAppliedFacets(searchParameters.fq);
+
+            notifyObservers(facetsCallbacks);
+            deferred.resolve(searchResults);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+    
     return {
-        setKeyword: function(newKeyword) { keyword = angular.copy(newKeyword); },
+        setKeyword: function(newKeyword) { keyword = newKeyword },
         getKeyword: function() { return keyword; },
         clearKeyword: function() { keyword = ""; },
-        performSearch: function (newKeyword, pageLimit, pageNumber) {
-            var deferred = $q.defer();
 
-            var searchParameters = {
-                rows: pageLimit,
-                start: pageNumber
-            };
-            _.extend(searchParameters, $location.search());
-
-            if(!_.isUndefined(searchParameters.fq)) {
-                if(!_.isArray(searchParameters.fq))
-                    searchParameters.fq = searchParameters.fq.split("$$");
-
-                appliedFacets = formatAppliedFacets(searchParameters.fq);
-            } else
-                appliedFacets = [];
-
-            $http({
-                method: 'GET',
-                url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_SEARCH,
-                params: searchParameters,
-                headers: {'Content-Type': 'application/json'}
-            }).success(function (response) {
-                searchResults = angular.copy(response);
-                searchFacets = angular.copy(response.data.facet_counts);
-                facetsView  = _.find(response.view , function (view) { return "SearchFacets" in view })["SearchFacets"];
-               
-                notifyObservers(facetsCallbacks);
-                deferred.resolve(searchResults);
-            }).error(function (error) {
-                deferred.reject(error);
-            });
-
-            return deferred.promise;
-        },
+        performSearch: performSearch,
         getResults: function () { return searchResults; },
         clearResults: function () { searchResults = []; },
         
