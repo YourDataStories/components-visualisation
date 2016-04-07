@@ -125,14 +125,14 @@ angular.module('yds').directive('ydsFacets', ['Data', 'Search', '$location', '$w
 				var fieldFacets = scope.fieldFacets;
 				//iterate through the field facets and transform it in a string valid for the query, (based on solr specification)
 				_.each(fieldFacets, function (facet) {
-					//find the active facets
-					var activeFacets = _.pluck( _.where(facet.facet_options, {selected: true}), 'name').join();
-
-					//if one ore more facets of one category are applied convert them to a valid string
-					//ie "&fq={!tag=TYPE}type:Decision,NonFinancialDecision"
-					if (activeFacets.trim().length>0)
+					//get the selected values of the field facet
+					var activeFacets = _.pluck( _.where(facet.facet_options, {selected: true}), 'name');
+					
+					//iterate though the selected values of the facet and format the query parameter
+					_.each(activeFacets, function(active){
 						facetUrlString+= "&fq={!tag=" + facet.facet_attribute.toUpperCase() + "}" +
-										 facet.facet_attribute + ":" + activeFacets;
+							facet.facet_attribute + ":" + active;
+					});
 				});
 
 				var rangeFacets = scope.rangeFacets;

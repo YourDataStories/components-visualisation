@@ -416,15 +416,10 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', function ($h
                 facetContents = facets[j].match(/}(\D+):(.+)/);
 
                 if (facetContents!=null && facetContents.length==3) {
-                    facetTokens = facetContents[2].split(",");
-
-                    //iterate through the facet tokens and create a new object representing the current facet
-                    _.each(facetTokens, function(token) {
-                        appliedFacets.push({
-                            type: "field",
-                            attribute: facetContents[1],
-                            value:  token
-                        });
+                    appliedFacets.push({
+                        type: "field",
+                        attribute: facetContents[1],
+                        value:  facetContents[2]
                     });
                 }
             }
