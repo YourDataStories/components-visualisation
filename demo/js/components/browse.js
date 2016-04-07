@@ -8,12 +8,15 @@ angular.module('yds').directive('ydsBrowse', ['Data', '$q', '$window', '$locatio
         templateUrl:'templates/browse.html',
         link: function(scope, element) {
             var initialCall = true;
+            scope.prefLang = scope.lang;
             scope.rawData = [];       //array containing the data fetched from the server
             scope.levels = [];        //array containing the data of each level of the browse component
-
+            debugger;
+            
+            
             //check if the language attr is defined, else assign default value
-            if(angular.isUndefined(scope.lang) || scope.lang.trim()=="")
-                scope.lang = "en";
+            if(_.isUndefined(scope.prefLang) || scope.prefLang.trim()=="")
+                scope.prefLang = "en";
 
             //fetch the browse data from the server
             var fetchYDSModelHierarch = function() {
@@ -67,18 +70,20 @@ angular.module('yds').directive('ydsBrowse', ['Data', '$q', '$window', '$locatio
              **/
             var prepareSearchQuery = function(breadcrumps) {
                 var concepts = [];
-
+debugger;
                 _.each(breadcrumps, function(item){
                    var selectedConcepts = _.where(item.values, { selected: true });
-                   concepts = _.union(concepts, selectedConcepts);
+
+                    _.each(selectedConcepts, function(concept){
+                        concepts.push("fq=type:" + concept.facet);
+                    });
                 });
 
-                var facets = _.pluck(concepts, 'facet').join();
-
-                if (facets.trim().length ==0)
+                var facetsParam = concepts.join("&");
+                if (facetsParam.trim().length ==0)
                     $location.search({q : '*:*'});
                 else
-                    $location.search({q : '*:*', fq : "type:" + facets});
+                    $location.search('q=*:*&' + facetsParam);
             };
 
             // function to initialize the first level of the shown data

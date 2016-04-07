@@ -4,7 +4,7 @@
             <ul >
                 <li><h4><span class="label label-default">Level {{$index+1}}</span></h4></li>
                 <li ng-repeat="details in item.values track by $index">
-                    <span style="color:{{details.color}}">{{details.label[preferredLanguage]}}</span>
+                    <span style="color:{{details.color}}">{{details.label[prefLang]}}</span>
                 </li>
             </ul>
         </div>
@@ -30,37 +30,37 @@
                  ng-click="addLevel(outerIndex , $index, levels[level.id-1].values[$index].uniqueId)"
                  ng-class="(levels[level.id-1].values[$index].selected) ? 'selected' : ''"
                  ng-if="$index<level.values.length">
-                <button type="button" class="btn btn-md btn-block" title="{{levels[level.id-1].values[$index].label[lang]}}">
+                <button type="button" class="btn btn-md btn-block" title="{{levels[level.id-1].values[$index].label[prefLang]}}">
                     <span class="glyphicon pull-left" aria-hidden="true"
                           ng-class="(levels[level.id-1].values[$index].selected) ? 'glyphicon-ok-sign yds-blue' : 'glyphicon-ok-circle yds-grey'"></span>
-                    <span>{{levels[level.id-1].values[$index].label[lang]}}</span><span>({{levels[level.id-1].values[$index].count}})</span></button>
+                    <span>{{levels[level.id-1].values[$index].label[prefLang]}}</span><span>({{levels[level.id-1].values[$index].count}})</span></button>
             </div>
             <div class="col col-sm-3"
                  ng-click="addLevel(outerIndex , $index+1, levels[level.id-1].values[$index+1].uniqueId)"
                  ng-class="(levels[level.id-1].values[$index+1].selected) ? 'selected' : ''"
                  ng-if="($index+1)<level.values.length">
-                <button type="button" class="btn btn-md btn-block" title="{{levels[level.id-1].values[$index+1].label[lang]}}">
+                <button type="button" class="btn btn-md btn-block" title="{{levels[level.id-1].values[$index+1].label[prefLang]}}">
                     <span class="glyphicon pull-left" aria-hidden="true"
                           ng-class="(levels[level.id-1].values[$index+1].selected) ? 'glyphicon-ok-sign yds-blue' : 'glyphicon-ok-circle yds-grey'"></span>
-                    <span>{{levels[level.id-1].values[$index+1].label[lang]}}</span><span>({{levels[level.id-1].values[$index+1].count}})</span></button>
+                    <span>{{levels[level.id-1].values[$index+1].label[prefLang]}}</span><span>({{levels[level.id-1].values[$index+1].count}})</span></button>
             </div>
             <div class="col col-sm-3"
                  ng-click="addLevel(outerIndex , $index+2, levels[level.id-1].values[$index+2].uniqueId)"
                  ng-class="(levels[level.id-1].values[$index+2].selected) ? 'selected' : ''"
                  ng-if="($index+2)<level.values.length">
-                <button type="button" class="btn btn-md btn-block" title="{{levels[level.id-1].values[$index+2].label[lang]}}">
+                <button type="button" class="btn btn-md btn-block" title="{{levels[level.id-1].values[$index+2].label[prefLang]}}">
                     <span class="glyphicon pull-left" aria-hidden="true"
                           ng-class="(levels[level.id-1].values[$index+2].selected) ? 'glyphicon-ok-sign yds-blue' : 'glyphicon-ok-circle yds-grey'"></span>
-                    <span>{{levels[level.id-1].values[$index+2].label[lang]}}</span><span>({{levels[level.id-1].values[$index+2].count}})</span></button>
+                    <span>{{levels[level.id-1].values[$index+2].label[prefLang]}}</span><span>({{levels[level.id-1].values[$index+2].count}})</span></button>
             </div>
             <div class="col col-sm-3"
                  ng-click="addLevel(outerIndex , $index+3, levels[level.id-1].values[$index+3].uniqueId)"
                  ng-class="(levels[level.id-1].values[$index+3].selected) ? 'selected' : ''"
                  ng-if="($index+3)<level.values.length">
-                <button type="button" class="btn btn-md btn-block" title="{{levels[level.id-1].values[$index+3].label[lang]}}">
+                <button type="button" class="btn btn-md btn-block" title="{{levels[level.id-1].values[$index+3].label[prefLang]}}">
                     <span class="glyphicon pull-left" aria-hidden="true"
                           ng-class="(levels[level.id-1].values[$index+3].selected) ? 'glyphicon-ok-sign yds-blue' : 'glyphicon-ok-circle yds-grey'"></span>
-                    <span>{{levels[level.id-1].values[$index+3].label[lang]}}</span><span>({{levels[level.id-1].values[$index+3].count}})</span></button>
+                    <span>{{levels[level.id-1].values[$index+3].label[prefLang]}}</span><span>({{levels[level.id-1].values[$index+3].count}})</span></button>
             </div>
         </div>
         <hr/>
