@@ -10,7 +10,7 @@ angular.module('yds').factory('Translations', [ function() {
 			date: "Date",
 			startDate: "Start Date",
 			endDate: "End Date",
-			hasRelatedBudgetItem: "Budget",
+			budget: "Budget",
 			spending: "Spending",
 			relatedProjects: "Related Projects",
 			projectId: "Project Id",
@@ -38,6 +38,7 @@ angular.module('yds').factory('Translations', [ function() {
 			publisher: "Publisher",
 			businessEntity: "Business Entity",
 			amount: "Amount",
+			currency: "Currency",
 
 			resultFound: "result found",
 			resultsFound: "results found",
@@ -93,6 +94,7 @@ angular.module('yds').factory('Translations', [ function() {
 			publisher: "Publisher",
 			businessEntity: "Business Entity",
 			amount: "Amount",
+			currency: "Νόμισμα",
 
 			resultFound: "αποτέλεσμα βρέθηκε",
 			resultsFound: "αποτελέσματα βρέθηκαν",
