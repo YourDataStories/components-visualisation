@@ -1,4 +1,5 @@
-angular.module('yds').directive('ydsBrowse', ['Data', '$q', '$http', function(Data, $q, $http){
+angular.module('yds').directive('ydsBrowse', ['Data', '$q', '$window', '$location',
+    function(Data, $q, $window, $location){
     return {
         restrict: 'E',
         scope: {
@@ -7,20 +8,25 @@ angular.module('yds').directive('ydsBrowse', ['Data', '$q', '$http', function(Da
         templateUrl:'templates/browse.html',
         link: function(scope, element) {
             var initialCall = true;
-            scope.preferredLanguage = scope.lang;
-            scope.rawData = [];       //array holding the data fetched from the server
-            scope.levels = [];
+            scope.rawData = [];       //array containing the data fetched from the server
+            scope.levels = [];        //array containing the data of each level of the browse component
+
+            //check if the language attr is defined, else assign default value
+            if(angular.isUndefined(scope.lang) || scope.lang.trim()=="")
+                scope.lang = "en";
 
             //fetch the browse data from the server
-            Data.getBrowseData()
-            .then(function (response) {
-                scope. rawData = response;
+            var fetchYDSModelHierarch = function() {
+                Data.getBrowseData()
+                .then(function (response) {
+                    scope. rawData = response;
 
-                var firstLvl = formatLevel(scope.rawData, -1, -1);
-                scope.levels.push(firstLvl);
-            }, function(error) {
-                console.log ("error in get browse data", error);
-            });
+                    var firstLvl = formatLevel(scope.rawData, -1, -1);
+                    scope.levels.push(firstLvl);
+                }, function(error) {
+                    console.log ("error in get browse data", error);
+                });
+            };
 
 
             //function to show or hide a specific level
@@ -38,8 +44,9 @@ angular.module('yds').directive('ydsBrowse', ['Data', '$q', '$http', function(Da
 
                 for (var l=0; l<scope.levels.length; l++) {
                     clickedItems = _.where(scope.levels[l].values, {selected: true});
+
                     for (var m=0; m<clickedItems.length; m++) {
-                        var identifier = parseInt(clickedItems[m].uniqueId.split("_")[0]);
+                        var identifier = parseInt(clickedItems[m].uniqueId.split("_"));
                         clickedItems[m].color = Data.getBreadcrumbColor(identifier);
                     }
 
@@ -54,6 +61,25 @@ angular.module('yds').directive('ydsBrowse', ['Data', '$q', '$http', function(Da
                 scope.breadcrumbs = angular.copy(breadcrumbs);
             };
 
+            /**
+             * function to format the breadcrumps from array to url parameter and trigger the search of concepts
+             * @param {Array} breadcrumps, an array containing the selected concepts of each level
+             **/
+            var prepareSearchQuery = function(breadcrumps) {
+                var concepts = [];
+
+                _.each(breadcrumps, function(item){
+                   var selectedConcepts = _.where(item.values, { selected: true });
+                   concepts = _.union(concepts, selectedConcepts);
+                });
+
+                var facets = _.pluck(concepts, 'facet').join();
+
+                if (facets.trim().length ==0)
+                    $location.search({q : '*:*'});
+                else
+                    $location.search({q : '*:*', fq : "type:" + facets});
+            };
 
             // function to initialize the first level of the shown data
             var formatLevel = function(inputData, parId, currentLevel) {
@@ -71,25 +97,20 @@ angular.module('yds').directive('ydsBrowse', ['Data', '$q', '$http', function(Da
                 }
 
                 for (var i=0; i<inputData.length; i++) {
-                    if (angular.isUndefined(inputData[i].label) || inputData[i].label==null)
+                    if (_.isUndefined(inputData[i].label) || inputData[i].label==null)
                         continue;
 
-                    if (parId == -1) {
-                        newLvl.values.push({
-                            id: inputData[i].id,
-                            uniqueId: inputData[i].id,
-                            label: inputData[i].label,
-                            content: inputData[i].values,
-                            count: inputData[i].values.length
-                        });
-                    } else {
-                        newLvl.values.push({
-                            id: inputData[i].id,
-                            uniqueId: parId + "_" + inputData[i].id,
-                            label: inputData[i].label,
-                            content: inputData[i].values,
-                            count: inputData[i].values.length
-                        });
+                    newLvl.values.push({
+                        id: inputData[i].id,
+                        facet: inputData[i].facet,
+                        uniqueId: inputData[i].id + "",
+                        label: inputData[i].label,
+                        content: inputData[i].values,
+                        count: inputData[i].values.length
+                    });
+
+                    if (parId != -1) {
+                        _.last(newLvl.values).uniqueId = parId + "_" + inputData[i].id;
                     }
                 }
 
@@ -102,6 +123,7 @@ angular.module('yds').directive('ydsBrowse', ['Data', '$q', '$http', function(Da
                 if (angular.isUndefined(scope.levels[index].values[position].selected)) {
                     scope.levels[index].values[position].selected = true;
                     formatBreadcrumbs();
+                    prepareSearchQuery(scope.breadcrumbs);
                 } else {        //if element has already been manipulated
                     scope.levels[index].values[position].selected = !scope.levels[index].values[position].selected;
                     formatBreadcrumbs();
@@ -122,6 +144,7 @@ angular.module('yds').directive('ydsBrowse', ['Data', '$q', '$http', function(Da
                         }
 
                         formatBreadcrumbs();
+                        prepareSearchQuery(scope.breadcrumbs);
                         return false;
                     }
                 }
@@ -148,101 +171,15 @@ angular.module('yds').directive('ydsBrowse', ['Data', '$q', '$http', function(Da
                     scope.levels.push(formatted);
                 else
                     scope.levels[formatted.id-1] = formatted;
-
-
-                //Temp solution for initializing grid
-                if(initialCall) {
-                    renewDataOnGrid();
-                    initialCall = false;
-                }
             };
 
+            //fetch the YDS Model data from the server
+            fetchYDSModelHierarch();
 
-            //Fetching Demonstration Data from the Server
-            var getGridData = function () {
-                var deferred = $q.defer();
-                var proxyUrl = "localhost:9292/";
-               // proxyUrl = "";
-                var baseUrl = "ydsdev.iit.demokritos.gr/api/mudcat/public-projects";
-                //call the service with POST method
-                $http({
-                    method: 'GET',
-                    url: "http://" + proxyUrl + baseUrl,
-                    headers: {'Content-Type': 'application/json'}
-                })
-                .success(function (data) {
-                    deferred.resolve(data);
-                }).error(function (error) {
-                    deferred.reject(error);
-                });
-
-                return deferred.promise;
-            };
-
-
-            /***************************************/
-            /*** RENDER THE DATA IN PAGGED GRID ***/
-			/***********************************/
-
-            var renewDataOnGrid = function() {
-                getGridData().then(function (response) {
-                    var gridData = response.data;
-                    var columnDefs = [];
-
-                    var gridContainer = angular.element(element[0].querySelector('.grid-container'));
-
-                    //create a random id for the element that will render the chart
-                    var elementId = "grid" + Data.createRandomId();
-                    gridContainer[0].id = elementId;
-
-                    //reformat
-                    for (var i=0; i<gridData.length; i++)
-                        gridData[i] = gridData[i].attributes;
-
-                    //define the name of each column based on the object property names
-                    var objectKeys = _.keys(gridData[0]);
-                    var objectValues = _.values(gridData[0]);
-                    for (var i=0; i<objectKeys.length; i++){
-                        var columnInfo = {
-                            headerName: objectKeys[i],
-                            field: objectKeys[i]
-                        };
-
-                        if (!_.isNaN(parseFloat(objectValues[i]))) //is number or date
-                            columnInfo.filter = 'number';
-
-                        columnDefs.push(columnInfo)
-                    }
-
-                    scope.gridOptions = {
-                        columnDefs: columnDefs,
-                        rowSelection: 'multiple',
-                        enableColResize: true,
-                        enableSorting: true,
-                        enableFilter: true
-                    };
-
-                    var localDataSource = {
-                        rowCount: parseInt(gridData.length),    // not setting the row count, infinite paging will be used
-                        pageSize: 10,           // changing to number, as scope keeps it as a string
-                        getRows: function (params) {
-                            //console.log('asking for ' + params.startRow + ' to ' + params.endRow);
-                            var rowsThisPage = gridData.slice(params.startRow, params.endRow);
-
-                            var lastRow = -1;
-                            if (gridData.length <= params.endRow) {
-                                lastRow = gridData.length;
-                            }
-                            params.successCallback(rowsThisPage, lastRow);
-                        }
-                    };
-
-                    scope.gridOptions.datasource = localDataSource;
-                    new agGrid.Grid(gridContainer[0], scope.gridOptions);
-
-                }, function(error) {
-                    console.log ("error in get browse data", error);
-                });
+            //initialize results for the first time
+            if(initialCall) {
+                $location.search({q : '*:*'});
+                initialCall = false;
             }
         }
     };
