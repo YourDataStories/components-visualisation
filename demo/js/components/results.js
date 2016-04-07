@@ -145,7 +145,7 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
             scope.$watch(function () { return $location.search() }, function (urlParams) {
                 //get the original search term from the url
                 var keyword = urlParams.q;
-         
+
                 if (!_.isUndefined(keyword)) {
                     //if search term is empty, stop the execution
                     if (keyword.trim() == "")
@@ -177,8 +177,11 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
             };
 
             $scope.visitResult = function(projectId) {
-                var redirectURL = YDS_CONSTANTS.PROJECT_DETAILS_URL + '?id=' + projectId;
-                $window.location.href = redirectURL;
+                var resourceTypes = _.findWhere($scope.results, {id: projectId}).type.join();
+
+                if (resourceTypes!=null || !_.isUndefined(resourceTypes)) {
+                    $window.location.href = YDS_CONSTANTS.PROJECT_DETAILS_URL + '?id=' + projectId + '&type=' + resourceTypes;
+                }
             };
         }
     };
