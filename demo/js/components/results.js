@@ -72,7 +72,7 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                         NonFinancialDecision : _.template($templateCache.get("non-financial-decision.html")),
                         Organization : _.template($templateCache.get("organization.html")),
                         PublicProject : _.template($templateCache.get("public-project.html")),
-                        SubProject : _.template($templateCache.get("subproject.html")),
+                        Subproject : _.template($templateCache.get("subproject.html")),
                         Subsidy : _.template($templateCache.get("subsidy.html")),
                         Transaction : _.template($templateCache.get("transaction.html"))
                     };

@@ -11,9 +11,7 @@ angular.module('yds').directive('ydsBrowse', ['Data', '$q', '$window', '$locatio
             scope.prefLang = scope.lang;
             scope.rawData = [];       //array containing the data fetched from the server
             scope.levels = [];        //array containing the data of each level of the browse component
-            debugger;
-            
-            
+
             //check if the language attr is defined, else assign default value
             if(_.isUndefined(scope.prefLang) || scope.prefLang.trim()=="")
                 scope.prefLang = "en";
@@ -70,7 +68,7 @@ angular.module('yds').directive('ydsBrowse', ['Data', '$q', '$window', '$locatio
              **/
             var prepareSearchQuery = function(breadcrumps) {
                 var concepts = [];
-debugger;
+
                 _.each(breadcrumps, function(item){
                    var selectedConcepts = _.where(item.values, { selected: true });
 
