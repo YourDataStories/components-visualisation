@@ -156,6 +156,37 @@ public class Basket {
         ).entity(br.toJSON()).build();
     }
 
+    @Path("exists_item")
+    @GET
+    public Response existsItem(
+            @QueryParam("user_id") String user_id,
+            @QueryParam("component_parent_uuid") String component_parent_uuid,
+            @QueryParam("component_type") String component_type,
+            @QueryParam("content_type") String content_type,
+            @QueryParam("type") String type,
+            @QueryParam("lang") String lang
+    ) {
+        YDSAPI api = MongoAPIImpl.getInstance();
+        final BasketItem bskt;
+        BasketItemLoadResponse blr;
+        LOG.info(String.format("user_id: %s", user_id));
+        try {
+            bskt = api.getBasketItem(user_id, component_parent_uuid, component_type, content_type, type, lang);
+            blr = new BasketItemLoadResponse(bskt);
+        } catch (Exception ex) {
+            blr = new BasketItemLoadResponse(
+                    null,
+                    Status.ERROR,
+                    ex.getMessage() != null ? ex.getMessage() : ex.toString()
+            );
+        }
+        return Response.status(
+                blr.getStatus() == Status.OK || blr.getStatus() == Status.NOT_EXISTS
+                        ? Response.Status.OK
+                        : Response.Status.INTERNAL_SERVER_ERROR
+        ).entity(blr.toJSON()).build();
+    }
+
     private static String getMessage(boolean res, String basket_item_id) {
         return res ? String.format("id: '%s' removed succesfully", basket_item_id) : String.format("id: '%s' not found", basket_item_id);
     }

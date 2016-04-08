@@ -43,6 +43,26 @@ public interface YDSAPI {
      */
     BasketItem getBasketItem(String id);
 
+
+    /**
+     * 
+     * @param user_id
+     * @param component_parent_uuid
+     * @param component_type
+     * @param content_type
+     * @param type
+     * @param lang
+     * @return the item that corresponds to the supplied params. If not exists, return null
+     */
+    BasketItem getBasketItem(
+            String user_id, 
+            String component_parent_uuid, 
+            String component_type, 
+            String content_type, 
+            String type, 
+            String lang
+    );
+
     /**
      * get basket items, by basket type
      *
