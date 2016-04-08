@@ -18,6 +18,7 @@
             <p><strong><%- rc.attrHeaders.issued %></strong> : <%- rc.result["issued"] %></p>
             <p><strong><%- rc.attrHeaders.budget %></strong> : <%- rc.result["hasRelatedBudgetItem.price.hasCurrencyValue"] %></p>
             <p><strong><%- rc.attrHeaders.spending %></strong> : <%- rc.result["hasRelatedSpendingItem.hasExpenditureLine.amount.hasCurrencyValue"] %></p>
+            <p><strong><%- rc.attrHeaders.currency %></strong> : <%- rc.result["hasRelatedBudgetItem.price.hasCurrency.prefLabel." + rc.lang] %></p>
             <p><strong><%- rc.attrHeaders.relatedProjects %></strong> : <%- rc.result["countOfRelatedProjects"] %></p>
             <p><strong><%- rc.attrHeaders.description %></strong> : <%- rc.result["description." + rc.lang] %></p>
         </div>

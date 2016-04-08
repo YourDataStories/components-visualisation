@@ -12,6 +12,7 @@
         <p><strong><%- rc.attrHeaders.seller %></strong> : <%- rc.result["seller.name"] %></p>
         <p><strong><%- rc.attrHeaders.date %></strong> : <%- rc.result["startDate"] %> - <%- rc.result["endDate"] %></p>
         <p><strong><%- rc.attrHeaders.budget %></strong> : <%- rc.result["hasRelatedBudgetItem.price.hasCurrencyValue"] %></p>
+        <p><strong><%- rc.attrHeaders.currency %></strong> : <%- rc.result["hasRelatedBudgetItem.price.hasCurrency.prefLabel." + rc.lang] %></p>
         <div class="row">
             <div class="col col-12 pull-right">
                 <div class="btn-group col-md-12" role="group" aria-label="">
