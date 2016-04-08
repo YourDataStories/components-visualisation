@@ -57,6 +57,11 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         deepObjSearch: function(obj, path){
             //function to get the value of an object property, by defining its path
             for (var i=0, path=path.split('.'), len=path.length; i<len; i++){
+                if(_.isUndefined(obj)) {
+                    obj = "";
+                    break;
+                }
+
                 obj = obj[path[i]];
             }
 
