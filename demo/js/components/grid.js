@@ -23,7 +23,8 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
             var defaultDatatypes = [
                 "project","project.related.projects",
                 "project.decisions","project.decisions.financial",
-                "project.decisions.non_financial"
+                "project.decisions.non_financial",
+                "project.related.subprojects"
             ];
 
             var gridWrapper = angular.element(element[0].querySelector('.component-wrapper'));
@@ -46,7 +47,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
             var elementH = scope.elementH;
 
             scope.quickFilterValue = "";
-
+            
             //check if project id or grid type are defined
             if(angular.isUndefined(projectId) || projectId.trim()=="" || angular.isUndefined(tableType) || _.indexOf(defaultDatatypes, tableType)==-1) {
                 scope.ydsAlert = "The YDS component is not properly initialized " +
