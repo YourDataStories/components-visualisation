@@ -3,7 +3,7 @@ angular.module('yds').directive('ydsBar', ['Data', function(Data){
         restrict: 'E',
         scope: {
             projectId: '@',     //id of the project that the data belong
-            tableType: '@',     //name of the array that contains the visualised data
+            viewType: '@',     //name of the array that contains the visualised data
             lang: '@',          //lang of the visualised data
 
             titleX: '@',        //the text of the X-axis title
@@ -33,7 +33,7 @@ angular.module('yds').directive('ydsBar', ['Data', function(Data){
             barContainer[0].id = elementId;
 
             var projectId = scope.projectId;
-            var tableType = scope.tableType;
+            var viewType = scope.viewType;
             var lang = scope.lang;
             var titleX = scope.titleX;
             var titleY = scope.titleY;
@@ -44,8 +44,8 @@ angular.module('yds').directive('ydsBar', ['Data', function(Data){
             var elementH = scope.elementH;
             var titleSize = scope.titleSize;
 
-            //check if the projectId and the tableType attr is defined, else stop the process
-            if (angular.isUndefined(projectId)|| angular.isUndefined(tableType)) {
+            //check if the projectId and the viewType attr is defined, else stop the process
+            if (angular.isUndefined(projectId)|| angular.isUndefined(viewType)) {
                 scope.ydsAlert = "The YDS component is not properly configured." +
                     "Please check the corresponding documentation section";
                 return false;

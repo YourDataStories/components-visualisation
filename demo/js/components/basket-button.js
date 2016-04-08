@@ -4,7 +4,7 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', '$uibModal'
 		restrict: 'A',
 		link: function (scope, element, attrs) {
 			var projectId = scope.projectId;
-			var tableType = scope.tableType;
+			var viewType = scope.viewType;
 			var lang = scope.lang;
 
 			var elementClass = attrs.class;
@@ -12,8 +12,8 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', '$uibModal'
 			var defaultVisTypes = ["pie", "line", "bar", "map", "grid"];
 			scope.basketItem = Basket.createItem();
 
-			//if projectId or tableType attr is undefined, stop the execution of the directive
-			if (angular.isUndefined(projectId)|| angular.isUndefined(tableType)) {
+			//if projectId or viewType attr is undefined, stop the execution of the directive
+			if (angular.isUndefined(projectId)|| angular.isUndefined(viewType)) {
 				scope.addToBasket = false;
 				return false;
 			}
@@ -47,7 +47,7 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', '$uibModal'
 			//formulate the basket item based on the element's attributes
 			scope.basketItem.lang = lang;
 			scope.basketItem.component_type = visualisationType;
-			scope.basketItem.content_type = tableType;
+			scope.basketItem.content_type = viewType;
 			scope.basketItem.component_parent_uuid = projectId;
 
 			//check if the user has enabled the embedding of the selected element

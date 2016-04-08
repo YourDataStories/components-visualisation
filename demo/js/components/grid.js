@@ -3,7 +3,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
         restrict: 'E',
         scope: {
             projectId: '@',         //id of the project that the data belong
-            tableType: '@',         //name of the array that contains the visualised data
+            viewType: '@',         //name of the array that contains the visualised data
             lang: '@',              //lang of the visualised data
 
             sorting: '@',           //enable or disable array sorting, values: true, false
@@ -35,7 +35,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
             gridContainer[0].id = elementId;
 
             var projectId = scope.projectId;
-            var tableType = scope.tableType;
+            var viewType = scope.viewType;
             var lang = scope.lang;
 
             var sorting = scope.sorting;
@@ -49,9 +49,9 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
             scope.quickFilterValue = "";
             
             //check if project id or grid type are defined
-            if(angular.isUndefined(projectId) || projectId.trim()=="" || angular.isUndefined(tableType) || _.indexOf(defaultDatatypes, tableType)==-1) {
+            if(angular.isUndefined(projectId) || projectId.trim()=="" || angular.isUndefined(viewType) || _.indexOf(defaultDatatypes, viewType)==-1) {
                 scope.ydsAlert = "The YDS component is not properly initialized " +
-                    "because the projectId or the tableType attribute aren't configured properly." +
+                    "because the projectId or the viewType attribute aren't configured properly." +
                     "Please check the corresponding documentation sertion";
                 return false;
             }
@@ -135,7 +135,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
             /***********************************************************/
             /******* GET DATA FROM THE SERVER AND RENDER THEM **********/
             /***********************************************************/
-            Data.getGrid(projectId, tableType, lang)
+            Data.getGrid(projectId, viewType, lang)
             .then(function(response) {
                 var rawData = [];
                 var dataView = [];

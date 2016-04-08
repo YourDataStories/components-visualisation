@@ -3,7 +3,7 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
         restrict: 'E',
         scope: {
             projectId: '@',     //id of the project that the data belong
-            lineType: '@',     //name of the array that contains the visualised data
+            viewType: '@',     //name of the array that contains the visualised data
             lang: '@',          //lang of the visualised data
 
             showNavigator: '@', //enable or disable line chart's navigation
@@ -29,14 +29,14 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
             lineContainer[0].id = elementId;
 
             var projectId = scope.projectId;
-            var lineType = scope.lineType;
+            var viewType = scope.viewType;
             var lang = scope.lang;
             var showNavigator = scope.showNavigator;
             var exporting = scope.exporting;
             var elementH = scope.elementH;
             var titleSize = scope.titleSize;
 
-            //check if the projectId and the tableType attr is defined, else stop the process
+            //check if the projectId and the viewType attr is defined, else stop the process
             if (angular.isUndefined(projectId) || projectId.trim()=="") {
                 scope.ydsAlert = "The YDS component is not properly configured." +
                     "Please check the corresponding documentation section";
@@ -44,8 +44,8 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
             }
 
             //check if pie-type attribute is empty and assign the default value
-            if(_.isUndefined(lineType) || lineType.trim()=="")
-                lineType = "default";
+            if(_.isUndefined(viewType) || viewType.trim()=="")
+                viewType = "default";
 
             //check if the language attr is defined, else assign default value
             if(angular.isUndefined(lang) || lang.trim()=="")
@@ -70,7 +70,7 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
             //set the height of the chart
             lineContainer[0].style.height = elementH + 'px';
 
-            Data.getLine(projectId, lineType, lang)
+            Data.getLine(projectId, viewType, lang)
             .then(function (response) {
                 var lineData = response.data.data;
                 var lineSeries = response.data.series;

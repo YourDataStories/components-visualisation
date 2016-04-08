@@ -3,7 +3,7 @@ angular.module('yds').directive('ydsMap', ['Data', function(Data){
         restrict: 'E',
         scope: {
             projectId: '@',     //id of the project that the data belong
-            mapType: '@',     //name of the array that contains the visualised data
+            viewType: '@',     //name of the array that contains the visualised data
             lang: '@',          //lang of the visualised data
 
             zoomControl: '@',   //enable or disable map's zoom control
@@ -27,7 +27,7 @@ angular.module('yds').directive('ydsMap', ['Data', function(Data){
             mapContainer[0].id = elementId;
 
             var projectId = scope.projectId;
-            var mapType = scope.mapType;
+            var viewType = scope.viewType;
             var lang = scope.lang;
             var zoomControl = scope.zoomControl;
             var elementH = scope.elementH;
@@ -40,8 +40,8 @@ angular.module('yds').directive('ydsMap', ['Data', function(Data){
             }
 
             //check if info-type attribute is empty and assign the default value
-            if(_.isUndefined(mapType) || mapType.trim()=="")
-                mapType = "default";
+            if(_.isUndefined(viewType) || viewType.trim()=="")
+                viewType = "default";
 
             //check if the language attr is defined, else assign default value
             if(angular.isUndefined(lang))
@@ -88,7 +88,7 @@ angular.module('yds').directive('ydsMap', ['Data', function(Data){
             // Create a general Feature Group to add each project layer
             var allFeatureGroup = L.featureGroup([]);
 
-            Data.getMap(projectId, mapType, lang)
+            Data.getMap(projectId, viewType, lang)
             .then(function (response) {
                 var routePoints = _.findWhere(response.view, {type: "geo-route"});
                 var routeTitle = _.findWhere(response.view, {type: "string-i18n"});

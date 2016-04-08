@@ -3,26 +3,26 @@ angular.module('yds').directive('ydsInfo', ['Data', 'Translations', function(Dat
         restrict: 'E',
         scope: {
             projectId: '@',     //id of the project that the data belong
-            infoType: '@',      //type of the info object
+            viewType: '@',      //type of the info object
             lang: '@'           //lang of the visualised data
         },
         templateUrl:'templates/info.html',
         link: function(scope) {
             var projectId = scope.projectId;
-            var infoType = scope.infoType;
+            var viewType = scope.viewType;
             var lang = scope.lang;
 
             //check if project id or grid type are defined
             if(_.isUndefined(projectId) || projectId.trim()=="") {
                 scope.ydsAlert = "The YDS component is not properly initialized " +
-                    "because the projectId or the tableType attribute aren't configured properly." +
+                    "because the projectId or the viewType attribute aren't configured properly." +
                     "Please check the corresponding documentation sertion";
                 return false;
             }
 
             //check if info-type attribute is empty and assign the default value
-            if(_.isUndefined(infoType) || infoType.trim()=="")
-                infoType = "default";
+            if(_.isUndefined(viewType) || viewType.trim()=="")
+                viewType = "default";
 
             //check if the language attr is defined, else assign default value
             if(angular.isUndefined(lang) || lang.trim()=="")
@@ -34,7 +34,7 @@ angular.module('yds').directive('ydsInfo', ['Data', 'Translations', function(Dat
                 showLess: Translations.get(lang, "showLess")
             };
             
-            Data.getInfo(projectId, infoType, lang)
+            Data.getInfo(projectId, viewType, lang)
             .then(function (response) {
                 _.each(response.view, function(infoValue){
                     scope.info[infoValue.header] = {
