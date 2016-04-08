@@ -63,14 +63,14 @@ public class MongoAPIImpl implements YDSAPI {
     private static final DBObject REVERSED_INSERTION_ORDER = new BasicDBObject("$natural", -1);
 
     private MongoAPIImpl() {
-        ResourceUtil senti_res = new ResourceUtil("resources");
+        ResourceUtil resource = new ResourceUtil("resources");
         Configuration conf = new Configuration();
         // get DB credentials
-        String db_host = senti_res.getProperty(Configuration.DATABASE_HOST_DECLARATION, "localhost");
-        String db_port = senti_res.getProperty(Configuration.DATABASE_PORT_DECLARATION, "27017");
-        String db_name = senti_res.getProperty(Configuration.DATABASE_NAME_DECLARATION);
-        String db_user_name = senti_res.getProperty(Configuration.DATABASE_USERNAME_DECLARATION);
-        String db_pw = senti_res.getProperty(Configuration.DATABASE_PASSWORD_DECLARATION);
+        String db_host = resource.getProperty(Configuration.DATABASE_HOST_DECLARATION, "localhost");
+        String db_port = resource.getProperty(Configuration.DATABASE_PORT_DECLARATION, "27017");
+        String db_name = resource.getProperty(Configuration.DATABASE_NAME_DECLARATION);
+        String db_user_name = resource.getProperty(Configuration.DATABASE_USERNAME_DECLARATION);
+        String db_pw = resource.getProperty(Configuration.DATABASE_PASSWORD_DECLARATION);
         conf.setProperty(Configuration.DATABASE_HOST_DECLARATION, db_host);
         conf.setProperty(Configuration.DATABASE_PORT_DECLARATION, db_port);
         conf.setProperty(Configuration.DATABASE_NAME_DECLARATION, db_name);
@@ -86,7 +86,7 @@ public class MongoAPIImpl implements YDSAPI {
             LOGGER.log(Level.SEVERE, null, ex);
         }
         // init cache
-        long max_cache_size = Long.valueOf(senti_res.getProperty(Configuration.BASKET_MAX_CACHE_SIZE, "10000"));
+        long max_cache_size = Long.valueOf(resource.getProperty(Configuration.BASKET_MAX_CACHE_SIZE, "10000"));
         this.basket_cache
                 = CacheBuilder.newBuilder()
                 .initialCapacity(10)
@@ -202,12 +202,10 @@ public class MongoAPIImpl implements YDSAPI {
             } else {
                 curs = col.find(QueryBuilder.start(BasketItem.FLD_USERID).is(user_id).get());
             }
+        } else if (USER_ID_PUBLIC.equalsIgnoreCase(user_id)) {
+            curs = col.find(QueryBuilder.start(BasketItem.FLD_IS_PRIVATE).is(Boolean.FALSE).and(BasketItem.FLD_TYPE).is(bType.getDecl()).get());
         } else {
-            if (USER_ID_PUBLIC.equalsIgnoreCase(user_id)) {
-                curs = col.find(QueryBuilder.start(BasketItem.FLD_IS_PRIVATE).is(Boolean.FALSE).and(BasketItem.FLD_TYPE).is(bType.getDecl()).get());
-            } else {
-                curs = col.find(QueryBuilder.start(BasketItem.FLD_USERID).is(user_id).and(BasketItem.FLD_TYPE).is(bType.getDecl()).get());
-            }
+            curs = col.find(QueryBuilder.start(BasketItem.FLD_USERID).is(user_id).and(BasketItem.FLD_TYPE).is(bType.getDecl()).get());
         }
         // order by reverse insertion order - should we transfer the sorting upwards to the API?
         curs = curs.sort(REVERSED_INSERTION_ORDER);
@@ -244,6 +242,27 @@ public class MongoAPIImpl implements YDSAPI {
             res = getBasketItem(_id);
         } catch (Exception ex) {
             LOGGER.warning(String.format("%s", ex.getMessage()));
+        }
+        return res;
+    }
+
+    @Override
+    public BasketItem getBasketItem(String user_id, String component_parent_uuid, String component_type, String content_type, String type, String lang) {
+        BasketItem res = null;
+        DBCollection col = db.getCollection(COL_BASKETS);
+
+        DBCursor curs = col.find(QueryBuilder
+                .start(BasketItem.FLD_USERID).is(user_id)
+                .and(BasketItem.FLD_COMPONENT_PARENT_UUID).is(component_parent_uuid)
+                .and(BasketItem.FLD_COMPONENT_TYPE).is(component_type)
+                .and(BasketItem.FLD_CONTENT_TYPE).is(content_type)
+                .and(BasketItem.FLD_TYPE).is(type)
+                .and(BasketItem.FLD_LANG).is(lang)
+                .get());
+        
+        if (curs.hasNext()) {
+            DBObject dbo = curs.next();
+            res = extractBasketItem(dbo);
         }
         return res;
     }
@@ -354,8 +373,6 @@ public class MongoAPIImpl implements YDSAPI {
         BasketType type = item.getType();
         int hashCodeAll = Objects.hashCode(user_id, BasketType.ALL);
         int hashCodeTyped = Objects.hashCode(user_id, type);
-        // debug
-        // LOGGER.info(String.format("clear 2 items cache for user: %s: [%s, %s]", user_id, BasketType.ALL.getDecl(), type.getDecl()));
         return Arrays.asList(new Integer[]{hashCodeAll, hashCodeTyped});
     }
 
@@ -396,8 +413,9 @@ public class MongoAPIImpl implements YDSAPI {
 
     /**
      * get single field indexes
+     *
      * @param indexInfo
-     * @return 
+     * @return
      */
     private Set<String> extractIndexNames(List<DBObject> indexInfo) {
         Set<String> res = new HashSet();
@@ -416,4 +434,5 @@ public class MongoAPIImpl implements YDSAPI {
         }
         return res;
     }
+
 }
