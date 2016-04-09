@@ -17,8 +17,8 @@ app.constant("YDS_CONSTANTS", {
     "API_PIE": "platform.yourdatastories.eu/api/json-ld/component/piechart.tcl",
     "API_PLOT_INFO": "platform.yourdatastories.eu/api/json-ld/component/plotinfo.tcl",
     "API_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/search.tcl",
-    "SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
-    //"SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
+    //"SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
+    "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
     "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
     "API_EMBED": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/embed/",
     "BASKET_URL": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/basket/"
