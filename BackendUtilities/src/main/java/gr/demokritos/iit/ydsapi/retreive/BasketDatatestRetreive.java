@@ -8,6 +8,7 @@ package gr.demokritos.iit.ydsapi.retreive;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Set;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -51,7 +52,7 @@ public class BasketDatatestRetreive {
         return response;
     }
 
-    public String getLineDataset(String id, String type, String lang) throws IOException {
+    public String getLineDataset(String id, String type, String lang, Set filters) throws IOException {
         //Create the url to call the YDS API
         String url= API_LINE
                 .concat("id=").concat(id)
@@ -65,7 +66,7 @@ public class BasketDatatestRetreive {
         return response;
     }
 
-    public String getGridDataset(String id, String type, String lang) throws IOException {
+    public String getGridDataset(String id, String type, String lang, Set filters) throws IOException {
         //Create the url to call the YDS API
         String url= API_GRID
                 .concat("id=").concat(id)
@@ -79,7 +80,7 @@ public class BasketDatatestRetreive {
         return response;
     }
 
-    public String getSearchDataset(String id, String type, String lang) throws IOException {
+    public String getSearchDataset(String id, String type, String lang, Set filters) throws IOException {
         //Create the url to call the YDS API
         String url= API_SEARCH
                 .concat("id=").concat(id)
