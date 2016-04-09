@@ -259,7 +259,24 @@ public class MongoAPIImpl implements YDSAPI {
                 .and(BasketItem.FLD_TYPE).is(type)
                 .and(BasketItem.FLD_LANG).is(lang)
                 .get());
-        
+
+        if (curs.hasNext()) {
+            DBObject dbo = curs.next();
+            res = extractBasketItem(dbo);
+        }
+        return res;
+    }
+
+    @Override
+    public BasketItem getBasketItem(String user_id, String basket_item_id) {
+        BasketItem res = null;
+        DBCollection col = db.getCollection(COL_BASKETS);
+        // query item
+        DBCursor curs = col.find(QueryBuilder
+                .start(BasketItem.FLD_USERID).is(user_id)
+                .and(BasketItem.FLD_BASKET_ITEM_ID).is(basket_item_id)
+                .get());
+        // return
         if (curs.hasNext()) {
             DBObject dbo = curs.next();
             res = extractBasketItem(dbo);
