@@ -10,6 +10,7 @@ import gr.demokritos.iit.ydsapi.responses.BasketSaveResponse;
 import gr.demokritos.iit.ydsapi.retreive.BasketDatatestRetreive;
 import gr.demokritos.iit.ydsapi.storage.MongoAPIImpl;
 import gr.demokritos.iit.ydsapi.storage.YDSAPI;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.ws.rs.FormParam;
@@ -128,15 +129,15 @@ public class Basket {
                     break;
                 case "line":
                     dataset = bdr.getLineDataset(item.getComponentParentUUID(), 
-                            item.getContentType(), item.getLang());
+                            item.getContentType(), item.getLang(), item.getFilters());
                     break;
                 case "grid":
                     dataset = bdr.getGridDataset(item.getComponentParentUUID(), 
-                            item.getContentType(), item.getLang());
+                            item.getContentType(), item.getLang(), item.getFilters());
                     break;
                 case "search":
                     dataset = bdr.getSearchDataset(item.getComponentParentUUID(), 
-                            item.getContentType(), item.getLang());
+                            item.getContentType(), item.getLang(), item.getFilters());
                     break;
             }
 
