@@ -15,9 +15,10 @@ app.constant("YDS_CONSTANTS", {
     "API_LINE": "platform.yourdatastories.eu/api/json-ld/component/linechart.tcl",
     "API_MAP": "platform.yourdatastories.eu/api/json-ld/component/map.tcl",
     "API_PIE": "platform.yourdatastories.eu/api/json-ld/component/piechart.tcl",
+    "API_PLOT_INFO": "platform.yourdatastories.eu/api/json-ld/component/plotinfo.tcl",
     "API_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/search.tcl",
-    //"SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
-    "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
+    "SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
+    //"SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
     "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
     "API_EMBED": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/embed/",
     "BASKET_URL": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/basket/"
@@ -367,50 +368,34 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', function ($h
     var formatAppliedFacets = function (facets) {
         appliedFacets = [];
 
-        //check if the facet object or array is defined
-        if(!_.isUndefined(facets)) {
-            //check if the facets are formed as object, else convert them in array
-            if(!_.isArray(facets))
-                facets = facets.split("$$");
+        _.each(facets, function(facet) {
+            //if it is a field facet, extract each values
+            if ( facet.type.indexOf("field")>-1 ){
+               _.each(facet.value, function (facetVal) {
+                   appliedFacets.push({
+                       type: "field",
+                       attribute: facet.attribute,
+                       value: facetVal
+                   });
+               });
+           } else if ( facet.type.indexOf("range")>-1 ) {
+               //if it is range facet, extract its type, extract and parse its values
+               var facetTypeTokens = facet.type.split("-");
 
-            //iterate through the applied facets extracted from the search url
-            for (var j=0; j<facets.length; j++) {
-                var facetExtracted = false;     //flag that indicates if the faces has been extracted successfully
-                var facetContents = [];
-
-                //in case it is a range facet, ie {!tag=COMPLETION}completion[0 TO 87], attempt to extract its contents(completion, 0, 87)
-                facetContents = facets[j].match(/}(\D+):\[(\d+)\s+TO\s+(\d+)]/);
-
-                if (facetContents!=null && facetContents.length==4) {
-                    //iterate through the facet tokens and create a new object representing the current facet
-                    appliedFacets.push({
-                        type: "range",
-                        attribute: facetContents[1],
-                        value: {
-                            model: facetContents[2],
-                            high: facetContents[3]
-                        }
-                    });
-                    
-                    facetExtracted = true;
-                }
-                
-                
-                if (facetExtracted)     //if the facet has been extracted, continue to the next facets
-                    continue;
-
-                //in case it is a field facet, ie {!tag=TYPE}type:Decision, attempt to extract its contents(type, Decision)
-                facetContents = facets[j].match(/}(\D+):(.+)/);
-
-                if (facetContents!=null && facetContents.length==3) {
-                    appliedFacets.push({
-                        type: "field",
-                        attribute: facetContents[1],
-                        value:  facetContents[2]
-                    });
-                }
-            }
-        }
+               if (facetTypeTokens.length>1 && facetTypeTokens[1]=="float") {
+                   if (facet.value.length == 2) {
+                       appliedFacets.push({
+                           type: "range",
+                           attribute: facet.attribute,
+                           value: {
+                               model: parseFloat(facet.value[0]),
+                               high: parseFloat(facet.value[1])
+                           }
+                       });
+                   }
+               }
+           }
+        });
     };
 
     /**
@@ -443,8 +428,9 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', function ($h
             searchFacets = angular.copy(response.data.facet_counts);
             //get the facet view from the response of the search API
             facetsView  = _.find(response.view , function (view) { return "SearchFacets" in view })["SearchFacets"];
-            //format the facets returned from the search API
-            formatAppliedFacets(searchParameters.fq);
+            //format the facets returned from the search API based on the facet view
+            formatAppliedFacets(facetsView);
+
 
             notifyObservers(facetsCallbacks);
             deferred.resolve(searchResults);
@@ -470,8 +456,6 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', function ($h
         getFacetsView: function() { return facetsView; }
     }
 }]);
-
-
 
 
 app.factory('Filters', [ function () {
