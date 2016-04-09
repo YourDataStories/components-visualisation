@@ -1,19 +1,19 @@
 <div class="modal-header">
-    <h4 class="modal-title">{{modalOptions.title}}</h4>
+    <h4 class="modal-title">{{modalConfig.title}}</h4>
 </div>
 <div class="modal-body basket-modal-body">
-    <div class="alert alert-danger" role="alert" ng-if="modalInput.alert.length>0">
+    <div class="alert alert-danger" role="alert" ng-if="modalConfig.alert.length>0">
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
         <span class="sr-only">Error:</span>
-        {{modalInput.alert}}
+        {{modalConfig.alert}}
     </div>
     <form class="form-horizontal">
         <div class="form-group">
             <label class="col-sm-3 control-label">Title(*):</label>
             <div class="col-sm-9">
                 <input type="text" class="form-control"
-                       ng-model="modalInput.title"
-                       ng-change="clearModalWarnings(modalInput)"
+                       ng-model="basketObj.title"
+                       ng-change="clearModalWarnings(modalConfig)"
                        placeholder="Enter a title..">
             </div>
         </div>
@@ -21,8 +21,8 @@
             <label class="col-sm-3 control-label">Type: </label>
             <div class="col-sm-9">
                 <div class="btn-group">
-                    <label class="btn btn-primary" ng-model="modalInput.type" uib-btn-radio="'Dataset'">Dataset</label>
-                    <label class="btn btn-primary" ng-model="modalInput.type" uib-btn-radio="'Visualisation'">Visualisation</label>
+                    <label class="btn btn-primary" ng-model="basketObj.type" uib-btn-radio="'Dataset'">Dataset</label>
+                    <label class="btn btn-primary" ng-model="basketObj.type" uib-btn-radio="'Visualisation'">Visualisation</label>
                 </div>
             </div>
         </div>
@@ -30,8 +30,8 @@
             <label class="col-sm-3 control-label">Access Level: </label>
             <div class="col-sm-9">
                 <div class="btn-group">
-                    <label class="btn btn-primary" ng-model="modalInput.is_private" uib-btn-radio="true">Private</label>
-                    <label class="btn btn-primary" ng-model="modalInput.is_private" uib-btn-radio="false">Public</label>
+                    <label class="btn btn-primary" ng-model="basketObj.is_private" uib-btn-radio="true">Private</label>
+                    <label class="btn btn-primary" ng-model="basketObj.is_private" uib-btn-radio="false">Public</label>
                 </div>
             </div>
         </div>
@@ -39,13 +39,13 @@
             <label class="col-sm-3 control-label">Tags: </label>
             <div class="col-sm-9">
                 <input type="text" class="form-control"
-                       ng-model="modalInput.tags"
+                       ng-model="basketObj.tags"
                        placeholder="Enter a list of tags (comma-separated)..">
             </div>
         </div>
     </form>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-success" type="button" ng-click="insertToBasket(modalInput,basketItem)">Add</button>
-    <button class="btn btn-active" type="button" ng-click="dismissBasketModal()">Cancel</button>
+    <button class="btn btn-success" type="button" ng-click="saveBasketItem()">Add</button>
+    <button class="btn btn-active" type="button" ng-click="dismissModal()">Cancel</button>
 </div>
