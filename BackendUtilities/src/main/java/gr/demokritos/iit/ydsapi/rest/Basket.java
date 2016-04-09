@@ -7,6 +7,7 @@ import gr.demokritos.iit.ydsapi.responses.BaseResponse.Status;
 import gr.demokritos.iit.ydsapi.responses.BasketItemLoadResponse;
 import gr.demokritos.iit.ydsapi.responses.BasketListLoadResponse;
 import gr.demokritos.iit.ydsapi.responses.BasketSaveResponse;
+import gr.demokritos.iit.ydsapi.retreive.BasketDatatestRetreive;
 import gr.demokritos.iit.ydsapi.storage.MongoAPIImpl;
 import gr.demokritos.iit.ydsapi.storage.YDSAPI;
 import java.util.List;
@@ -96,16 +97,18 @@ public class Basket {
                         : Response.Status.INTERNAL_SERVER_ERROR
         ).entity(blr.toJSON()).build();
     }
-    
-    @Path("retrieve/{user_id}")
+
+    @Path("retrieve/{user_id}/{basket_item_id}")
     @GET
     public Response retreive(
             @PathParam("user_id") String user_id,
-            @QueryParam("basket_item_id") String basket_item_id
+            @PathParam("basket_item_id") String basket_item_id
     ) {
         YDSAPI api = MongoAPIImpl.getInstance();
         BasketItem item;
         BasketItemLoadResponse bi;
+        String dataset = null;
+        BasketDatatestRetreive bdr = new BasketDatatestRetreive();
         LOG.info(String.format("user_id: %s", user_id));
         LOG.info(String.format("basket_item_id: %s", basket_item_id));
         try {
@@ -113,9 +116,32 @@ public class Basket {
                     user_id,
                     basket_item_id
             );
-            
-            bi = new BasketItemLoadResponse(item);
-            
+
+            switch (item.getComponentType()) {
+                case "pie":
+                    dataset = bdr.getPieDataset(item.getComponentParentUUID(), 
+                            item.getContentType(), item.getLang());
+                    break;
+                case "map":
+                    dataset = bdr.getMapDataset(item.getComponentParentUUID(), 
+                            item.getContentType(), item.getLang());
+                    break;
+                case "line":
+                    dataset = bdr.getLineDataset(item.getComponentParentUUID(), 
+                            item.getContentType(), item.getLang());
+                    break;
+                case "grid":
+                    dataset = bdr.getGridDataset(item.getComponentParentUUID(), 
+                            item.getContentType(), item.getLang());
+                    break;
+                case "search":
+                    dataset = bdr.getSearchDataset(item.getComponentParentUUID(), 
+                            item.getContentType(), item.getLang());
+                    break;
+            }
+
+//            bi = new BasketItemLoadResponse(item);
+//
         } catch (Exception ex) {
             bi = new BasketItemLoadResponse(
                     null,
@@ -123,13 +149,16 @@ public class Basket {
                     ex.getMessage() != null ? ex.getMessage() : ex.toString()
             );
         }
+//        return Response.status(
+//                bi.getStatus() == Status.OK || bi.getStatus() == Status.NOT_EXISTS
+//                        ? Response.Status.OK
+//                        : Response.Status.INTERNAL_SERVER_ERROR
+//        ).entity(bi.toJSON()).build();
         return Response.status(
-                bi.getStatus() == Status.OK || bi.getStatus() == Status.NOT_EXISTS
-                        ? Response.Status.OK
-                        : Response.Status.INTERNAL_SERVER_ERROR
-        ).entity(bi.toJSON()).build();
+                Response.Status.OK
+        ).entity(dataset).build();
     }
-    
+
     @Path("get_item/{basket_item_id}")
     @GET
     public Response getItem(
