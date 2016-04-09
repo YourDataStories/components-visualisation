@@ -43,6 +43,11 @@ public interface YDSAPI {
      */
     BasketItem getBasketItem(String id);
 
+    BasketItem getBasketItem(
+                    String user_id,
+                    String basket_item_id
+            );
+
 
     /**
      * 

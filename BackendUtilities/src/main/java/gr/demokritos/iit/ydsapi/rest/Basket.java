@@ -96,7 +96,40 @@ public class Basket {
                         : Response.Status.INTERNAL_SERVER_ERROR
         ).entity(blr.toJSON()).build();
     }
-
+    
+    @Path("retrieve/{user_id}")
+    @GET
+    public Response retreive(
+            @PathParam("user_id") String user_id,
+            @QueryParam("basket_item_id") String basket_item_id
+    ) {
+        YDSAPI api = MongoAPIImpl.getInstance();
+        BasketItem item;
+        BasketItemLoadResponse bi;
+        LOG.info(String.format("user_id: %s", user_id));
+        LOG.info(String.format("basket_item_id: %s", basket_item_id));
+        try {
+            item = api.getBasketItem(
+                    user_id,
+                    basket_item_id
+            );
+            
+            bi = new BasketItemLoadResponse(item);
+            
+        } catch (Exception ex) {
+            bi = new BasketItemLoadResponse(
+                    null,
+                    Status.ERROR,
+                    ex.getMessage() != null ? ex.getMessage() : ex.toString()
+            );
+        }
+        return Response.status(
+                bi.getStatus() == Status.OK || bi.getStatus() == Status.NOT_EXISTS
+                        ? Response.Status.OK
+                        : Response.Status.INTERNAL_SERVER_ERROR
+        ).entity(bi.toJSON()).build();
+    }
+    
     @Path("get_item/{basket_item_id}")
     @GET
     public Response getItem(
