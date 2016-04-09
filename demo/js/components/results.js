@@ -1,16 +1,17 @@
-angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$templateCache', '$location',
-    '$compile', '$ocLazyLoad', '$location', 'Search', 'Translations',  function(YDS_CONSTANTS, $window, $templateCache,
-    $location, $compile, $ocLazyLoad, $location, Search, Translations){
+angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$templateCache', '$location','$compile', '$ocLazyLoad', 'Search',
+    'Basket', 'Translations', function(YDS_CONSTANTS, $window, $templateCache, $location, $compile, $ocLazyLoad, Search, Basket, Translations){
     return {
         restrict: 'E',
         scope: {
-            lang:'@'
+            lang:'@',
+            userId:'@'
         },
         templateUrl:'templates/results.html',
         link: function(scope, element, attrs) {
             var resultsContainer = angular.element(element[0].querySelector('.results-content'));
             var compiledTemplates = {};
 
+            scope.basketEnabled = false;
             scope.showNoResultsMsg = false;
             scope.results = [];
             scope.translations = {};
@@ -18,6 +19,11 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
             //check if the language attr is defined, else assign default value
             if(angular.isUndefined(scope.lang) || scope.lang.trim()=="")
                 scope.lang = "en";
+
+
+            if (!_.isUndefined(scope.userId) && scope.userId.trim()!="") {
+                scope.basketEnabled = true;
+            }
 
             //configure pagination options
             scope.pagination = {
@@ -138,6 +144,41 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
 
                 performSearch(keyword, 10, newPage);
                 $window.scrollTo(0, 0);
+            };
+
+
+            //function to add a specific result in the user's basket
+            scope.addToBasket = function(resourceId) {
+                //initialize the basket's modal reference;
+                var userId ="ydsUser";
+                var basketConfig = {
+                    lang: scope.lang,
+                    type: "Dataset",
+                    component_type: "result",
+                    content_type: "default",
+                    component_parent_uuid: resourceId,
+                    user_id: userId,
+                    filters: []
+                };
+
+                var modalRestrictions = {
+                    Dataset: true,
+                    Visualisation: false
+                };
+
+                Basket.checkIfItemExists(basketConfig)
+                .then(function (response) {
+                    debugger;
+                    if(!_.isUndefined(response.status) && response.status=="NOT_EXISTS") {
+                        Basket.openModal(basketConfig, modalRestrictions)
+                    } else {
+                        alert('item already exists')
+                    }
+                   debugger;
+                }, function(error) {
+                    debugger;
+                    console.log ("error in get browse data", error);
+                });
             };
 
             

@@ -67,21 +67,22 @@ angular.module('yds').directive('ydsBrowse', ['Data', '$q', '$window', '$locatio
              * @param {Array} breadcrumps, an array containing the selected concepts of each level
              **/
             var prepareSearchQuery = function(breadcrumps) {
-                var concepts = [];
+                var queryParams = [];
 
                 _.each(breadcrumps, function(item){
                    var selectedConcepts = _.where(item.values, { selected: true });
 
                     _.each(selectedConcepts, function(concept){
-                        concepts.push("fq=type:" + concept.facet);
+                        var trimmedQValue = concept.q.trim();
+
+                        if (trimmedQValue.length > 0) {
+                            queryParams.push(trimmedQValue);
+                        }
                     });
                 });
 
-                var facetsParam = concepts.join("&");
-                if (facetsParam.trim().length ==0)
-                    $location.search({q : '*:*'});
-                else
-                    $location.search('q=*:*&' + facetsParam);
+                var facetsParam = queryParams.join(" OR ");
+                $location.search({q: facetsParam});
             };
 
             // function to initialize the first level of the shown data
@@ -105,6 +106,7 @@ angular.module('yds').directive('ydsBrowse', ['Data', '$q', '$window', '$locatio
 
                     newLvl.values.push({
                         id: inputData[i].id,
+                        q: inputData[i].q,
                         facet: inputData[i].facet,
                         uniqueId: inputData[i].id + "",
                         label: inputData[i].label,
@@ -181,7 +183,7 @@ angular.module('yds').directive('ydsBrowse', ['Data', '$q', '$window', '$locatio
 
             //initialize results for the first time
             if(initialCall) {
-                $location.search({q : '*:*'});
+                $location.search({q : null});
                 initialCall = false;
             }
         }
