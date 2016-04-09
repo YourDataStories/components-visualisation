@@ -7,7 +7,7 @@ import gr.demokritos.iit.ydsapi.responses.BaseResponse.Status;
 import gr.demokritos.iit.ydsapi.responses.BasketItemLoadResponse;
 import gr.demokritos.iit.ydsapi.responses.BasketListLoadResponse;
 import gr.demokritos.iit.ydsapi.responses.BasketSaveResponse;
-import gr.demokritos.iit.ydsapi.retreive.BasketDatatestRetreive;
+import gr.demokritos.iit.ydsapi.retreive.BasketDatatestRetrieve;
 import gr.demokritos.iit.ydsapi.storage.MongoAPIImpl;
 import gr.demokritos.iit.ydsapi.storage.YDSAPI;
 import java.util.LinkedHashSet;
@@ -101,7 +101,7 @@ public class Basket {
 
     @Path("retrieve/{user_id}/{basket_item_id}")
     @GET
-    public Response retreive(
+    public Response retrieve(
             @PathParam("user_id") String user_id,
             @PathParam("basket_item_id") String basket_item_id
     ) {
@@ -109,7 +109,7 @@ public class Basket {
         BasketItem item;
         BasketItemLoadResponse bi;
         String dataset = null;
-        BasketDatatestRetreive bdr = new BasketDatatestRetreive();
+        BasketDatatestRetrieve bdr = new BasketDatatestRetrieve();
         LOG.info(String.format("user_id: %s", user_id));
         LOG.info(String.format("basket_item_id: %s", basket_item_id));
         try {
@@ -118,7 +118,7 @@ public class Basket {
                     basket_item_id
             );
 
-            switch (item.getComponentType()) {
+            switch (item.getComponentType().toLowerCase()) {
                 case "pie":
                     dataset = bdr.getPieDataset(item.getComponentParentUUID(), 
                             item.getContentType(), item.getLang());
@@ -135,7 +135,7 @@ public class Basket {
                     dataset = bdr.getGridDataset(item.getComponentParentUUID(), 
                             item.getContentType(), item.getLang(), item.getFilters());
                     break;
-                case "search":
+                case "result":
                     dataset = bdr.getSearchDataset(item.getComponentParentUUID(), 
                             item.getContentType(), item.getLang(), item.getFilters());
                     break;

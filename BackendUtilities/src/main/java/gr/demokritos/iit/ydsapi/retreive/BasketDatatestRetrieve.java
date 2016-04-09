@@ -18,16 +18,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
  *
  * @author Panagiotis Giotis giotis.p@gmail.com
  */
-public class BasketDatatestRetreive {
+public class BasketDatatestRetrieve {
 
     private final static String API_PIE = "http://platform.yourdatastories.eu/api/json-ld/component/piechart.tcl?context=0&";
     private final static String API_MAP = "http://platform.yourdatastories.eu/api/json-ld/component/map.tcl?context=0&";
     private final static String API_LINE = "http://platform.yourdatastories.eu/api/json-ld/component/linechart.tcl?context=0&";
     private final static String API_GRID = "http://platform.yourdatastories.eu/api/json-ld/component/grid.tcl?context=0&";
     private final static String API_SEARCH = "http://platform.yourdatastories.eu/api/json-ld/component/search.tcl?context=0&";
-
-    public BasketDatatestRetreive() {
-    }
 
     public String getPieDataset(String id, String type, String lang) throws IOException {
         
