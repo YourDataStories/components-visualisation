@@ -225,7 +225,7 @@ public class MongoAPIImpl implements YDSAPI {
         BasketItem res = null;
         DBCollection col = db.getCollection(COL_BASKETS);
 
-        DBCursor curs = col.find(QueryBuilder.start("_id").is(id).get());
+        DBCursor curs = col.find(QueryBuilder.start(BasketItem.FLD_OBJ_ID).is(id).get());
         if (curs.hasNext()) {
             DBObject dbo = curs.next();
             res = extractBasketItem(dbo);
@@ -271,15 +271,21 @@ public class MongoAPIImpl implements YDSAPI {
     public BasketItem getBasketItem(String user_id, String basket_item_id) {
         BasketItem res = null;
         DBCollection col = db.getCollection(COL_BASKETS);
-        // query item
-        DBCursor curs = col.find(QueryBuilder
-                .start(BasketItem.FLD_USERID).is(user_id)
-                .and(BasketItem.FLD_BASKET_ITEM_ID).is(basket_item_id)
-                .get());
-        // return
-        if (curs.hasNext()) {
-            DBObject dbo = curs.next();
-            res = extractBasketItem(dbo);
+        // query item        
+        ObjectId _id;
+        try {
+            _id = new ObjectId(basket_item_id);
+            DBCursor curs = col.find(QueryBuilder
+                    .start(BasketItem.FLD_OBJ_ID).is(_id)
+                    .and(BasketItem.FLD_USERID).is(user_id)
+                    .get());
+            // return
+            if (curs.hasNext()) {
+                DBObject dbo = curs.next();
+                res = extractBasketItem(dbo);
+            }
+        } catch (Exception ex) {
+            LOGGER.warning(String.format("%s", ex.getMessage()));
         }
         return res;
     }
