@@ -232,6 +232,7 @@ public class Basket {
         final BasketItem bskt;
         BasketItemLoadResponse blr;
         LOG.info(String.format("user_id: %s", user_id));
+        LOG.info(String.format("user_id: %s", component_parent_uuid));
         try {
             bskt = api.getBasketItem(user_id, component_parent_uuid, component_type, content_type, type, lang);
             blr = new BasketItemLoadResponse(bskt);

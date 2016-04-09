@@ -250,19 +250,23 @@ public class MongoAPIImpl implements YDSAPI {
     public BasketItem getBasketItem(String user_id, String component_parent_uuid, String component_type, String content_type, String type, String lang) {
         BasketItem res = null;
         DBCollection col = db.getCollection(COL_BASKETS);
+        try {
 
-        DBCursor curs = col.find(QueryBuilder
-                .start(BasketItem.FLD_USERID).is(user_id)
-                .and(BasketItem.FLD_COMPONENT_PARENT_UUID).is(component_parent_uuid)
-                .and(BasketItem.FLD_COMPONENT_TYPE).is(component_type)
-                .and(BasketItem.FLD_CONTENT_TYPE).is(content_type)
-                .and(BasketItem.FLD_TYPE).is(type)
-                .and(BasketItem.FLD_LANG).is(lang)
-                .get());
+            DBCursor curs = col.find(QueryBuilder
+                    .start(BasketItem.FLD_USERID).is(user_id)
+                    .and(BasketItem.FLD_COMPONENT_PARENT_UUID).is(component_parent_uuid)
+                    .and(BasketItem.FLD_COMPONENT_TYPE).is(component_type)
+                    .and(BasketItem.FLD_CONTENT_TYPE).is(content_type)
+                    .and(BasketItem.FLD_TYPE).is(type.toLowerCase())
+                    .and(BasketItem.FLD_LANG).is(lang)
+                    .get());
 
-        if (curs.hasNext()) {
-            DBObject dbo = curs.next();
-            res = extractBasketItem(dbo);
+            if (curs.hasNext()) {
+                DBObject dbo = curs.next();
+                res = extractBasketItem(dbo);
+            }
+        } catch (Exception ex) {
+            LOGGER.warning(String.format("%s", ex.toString()));
         }
         return res;
     }
@@ -285,7 +289,7 @@ public class MongoAPIImpl implements YDSAPI {
                 res = extractBasketItem(dbo);
             }
         } catch (Exception ex) {
-            LOGGER.warning(String.format("%s", ex.getMessage()));
+            LOGGER.warning(String.format("%s", ex.toString()));
         }
         return res;
     }
