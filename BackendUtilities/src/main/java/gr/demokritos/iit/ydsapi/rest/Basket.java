@@ -117,7 +117,7 @@ public class Basket {
                     basket_item_id
             );
 
-            switch (item.getComponentType()) {
+            switch (item.getComponentType().toLowerCase()) {
                 case "pie":
                     dataset = bdr.getPieDataset(item.getComponentParentUUID(), 
                             item.getContentType(), item.getLang());
@@ -134,7 +134,7 @@ public class Basket {
                     dataset = bdr.getGridDataset(item.getComponentParentUUID(), 
                             item.getContentType(), item.getLang(), item.getFilters());
                     break;
-                case "search":
+                case "result":
                     dataset = bdr.getSearchDataset(item.getComponentParentUUID(), 
                             item.getContentType(), item.getLang(), item.getFilters());
                     break;
@@ -232,6 +232,7 @@ public class Basket {
         final BasketItem bskt;
         BasketItemLoadResponse blr;
         LOG.info(String.format("user_id: %s", user_id));
+        LOG.info(String.format("user_id: %s", component_parent_uuid));
         try {
             bskt = api.getBasketItem(user_id, component_parent_uuid, component_type, content_type, type, lang);
             blr = new BasketItemLoadResponse(bskt);
