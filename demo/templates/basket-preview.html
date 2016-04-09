@@ -24,11 +24,13 @@
                         </div>
                         <div class="col-md-9 col-md-offset-1 yds-basket-prev-desc">
                             <b>{{item.title}}</b>
-                            <span class="glyphicon glyphicon-list-alt" aria-hidden="true" ng-if="item.component_type=='grid'"></span>
-                            <span class="glyphicon glyphicon-signal" aria-hidden="true" ng-if="item.component_type=='line'"></span>
-                            <span class="glyphicon glyphicon-record" aria-hidden="true" ng-if="item.component_type=='pie'"></span>
-                            <span class="glyphicon glyphicon-stats" aria-hidden="true" ng-if="item.component_type=='bar'"></span>
-                            <span class="glyphicon glyphicon-globe" aria-hidden="true" ng-if="item.component_type=='map'"></span>
+                            <span ng-switch="item.component_type" ng-if="item.type=='visualisation'">
+                                <span ng-switch-when="grid" class="glyphicon glyphicon-list-alt"></span>
+                                <span ng-switch-when="line" class="glyphicon glyphicon-signal"></span>
+                                <span ng-switch-when="pie" class="glyphicon glyphicon-record"></span>
+                                <span ng-switch-when="bar" class="glyphicon glyphicon-stats"></span>
+                                <span ng-switch-when="map" class="glyphicon glyphicon-globe"></span>
+                            </span>
                             <br/>
                             <label for="">Tags: </label><span ng-repeat="tag in item.tags">{{tag}}{{$last ? '' : ', '}}</span>
                         </div>
@@ -47,4 +49,3 @@
         </div>
     </div>
 </div>
-

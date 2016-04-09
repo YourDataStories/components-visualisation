@@ -3,7 +3,7 @@ angular.module('yds').directive('ydsPie', ['Data', function(Data){
         restrict: 'E',
         scope: {
             projectId: '@',     //id of the project that the data belong
-            pieType: '@',     //name of the array that contains the visualised data
+            viewType: '@',     //name of the array that contains the visualised data
             lang: '@',          //lang of the visualised data
 
             showLegend: '@',    //enable or disable the chart's legend
@@ -29,7 +29,7 @@ angular.module('yds').directive('ydsPie', ['Data', function(Data){
             pieContainer[0].id = elementId;
 
             var projectId = scope.projectId;
-            var pieType = scope.pieType;
+            var viewType = scope.viewType;
             var lang = scope.lang;
             var showLegend = scope.showLegend;
             var exporting = scope.exporting;
@@ -44,8 +44,8 @@ angular.module('yds').directive('ydsPie', ['Data', function(Data){
             }
 
             //check if pie-type attribute is empty and assign the default value
-            if(_.isUndefined(pieType) || pieType.trim()=="")
-                pieType = "default";
+            if(_.isUndefined(viewType) || viewType.trim()=="")
+                viewType = "default";
 
             //check if the language attr is defined, else assign default value
             if(angular.isUndefined(lang) || lang.trim()=="")
@@ -71,7 +71,7 @@ angular.module('yds').directive('ydsPie', ['Data', function(Data){
             pieContainer[0].style.height = elementH + 'px';
 
             //get the pie data from the server
-            Data.getPie(scope.projectId, pieType, lang)
+            Data.getPie(scope.projectId, viewType, lang)
             .then(function (response) {
                 var pieData = response.data.data;
                 var pieSeries = response.data.series;

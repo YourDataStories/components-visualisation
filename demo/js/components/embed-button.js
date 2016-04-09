@@ -3,15 +3,15 @@ angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', function($compi
 		restrict: 'A',
 		link: function (scope, element, attrs) {
 			var projectId = scope.projectId;
-			var tableType = scope.tableType;
+			var viewType = scope.viewType;
 
 			var elementClass = attrs.class;
 			var embedCode ="";
 			var visualisationType = "";
 			var defaultVisTypes = ["pie", "line", "bar", "map"];
 
-			//if projectId or tableType attr is undefined, stop the execution of the directive
-			if (angular.isUndefined(projectId)|| angular.isUndefined(tableType)) {
+			//if projectId or viewType attr is undefined, stop the execution of the directive
+			if (angular.isUndefined(projectId)|| angular.isUndefined(viewType)) {
 				scope.embeddable = false;
 				return false;
 			}

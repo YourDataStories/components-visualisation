@@ -1,19 +1,18 @@
-angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', '$uibModal', 'Basket', 'Filters',
-	function($compile, Data, $uibModal, Basket, Filters) {
+angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', 'Basket', 'Filters',
+	function($compile, Data, Basket, Filters) {
 	return {
 		restrict: 'A',
 		link: function (scope, element, attrs) {
 			var projectId = scope.projectId;
-			var tableType = scope.tableType;
+			var viewType = scope.viewType;
 			var lang = scope.lang;
 
 			var elementClass = attrs.class;
 			var visualisationType = "";
-			var defaultVisTypes = ["pie", "line", "bar", "map", "grid"];
-			scope.basketItem = Basket.createItem();
-
-			//if projectId or tableType attr is undefined, stop the execution of the directive
-			if (angular.isUndefined(projectId)|| angular.isUndefined(tableType)) {
+			var defaultVisTypes = ["pie", "line", "bar", "map", "grid", "result"];
+			
+			//if projectId or viewType attr is undefined, stop the execution of the directive
+			if (angular.isUndefined(projectId)|| angular.isUndefined(viewType)) {
 				scope.addToBasket = false;
 				return false;
 			}
@@ -44,16 +43,10 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', '$uibModal'
 			} else
 				return false;
 
-			//formulate the basket item based on the element's attributes
-			scope.basketItem.lang = lang;
-			scope.basketItem.component_type = visualisationType;
-			scope.basketItem.content_type = tableType;
-			scope.basketItem.component_parent_uuid = projectId;
-
 			//check if the user has enabled the embedding of the selected element
 			var enableBasket = scope.addToBasket;
 
-			if (!angular.isUndefined(enableBasket) && enableBasket=="true"){
+			if (!_.isUndefined(enableBasket) && enableBasket=="true"){
 				if (!angular.isUndefined(projectId) /*&& !isNaN(projectId)*/){
 					var basketBtnX = scope.basketBtnX;		//indicates the x position the embed button
 					var basketBtnY = scope.basketBtnY;		//indicates the y position the embed button
@@ -97,72 +90,23 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', '$uibModal'
 			/***************************************/
 
 			//initialize the basket's modal reference;
-			var basketModal = {};
-
+			var userId ="ydsUser";
+			var basketConfig = {
+				lang: lang,
+				component_type: visualisationType,
+				content_type: viewType,
+				component_parent_uuid: projectId,
+				user_id: userId
+			};
+			
 			//function used to open the basket modal
 			scope.openBasketModal = function () {
-				//initialize object
-				scope.basketItem = Basket.initializeItem(scope.basketItem);
-				scope.basketItem.filters = Filters.get(element[0].id);
+				var basketInput = {
+					filters: Filters.get(element[0].id)
+				};
 
-				scope.modalInput = Basket.initializeModalItem();
-				scope.modalOptions = { title: "Add to Basket" };
-
-				basketModal = $uibModal.open({
-					animation: false,
-					templateUrl: 'templates/basket-modal.html',
-					scope: scope,
-					size: 'md'
-				});
-			};
-
-			//function to be called when the modal's cancel button is pressed
-			scope.dismissBasketModal = function () { basketModal.dismiss(''); };
-
-			//function to clear basket's modal warnings
-			scope.clearModalWarnings = function (inputObj) {
-				if (inputObj.alert.length>0)
-					inputObj.alert = "";
-			};
-
-			//function to be called when save to basket button of the modal is pressed
-			scope.insertToBasket = function (inputObj, basketItemObj) {
-				if (inputObj.title.length==0) {
-					inputObj.alert = "Please provide a title for your item";
-					return false;
-				}
-
-				//tokenize the basket item tags and save them to the basket item obj
-				//if not tag is available, assign the default value "untagged"
-				var tmpTags = [];
-				inputObj.tags= inputObj.tags.trim();
-
-				if (inputObj.tags.length>0) {
-					tmpTags=inputObj.tags.split(',');
-				}
-
-				if(tmpTags.length>0){
-					for (var j=0; j<tmpTags.length; j++) {
-						basketItemObj.tags.push(tmpTags[j].trim());
-					}
-				} else {
-					basketItemObj.tags.push("untagged");
-				}
-
-				//save the title, type and public attributes to the basket item obj
-				basketItemObj.title = inputObj.title;
-				basketItemObj.type = inputObj.type;
-				basketItemObj.is_private = inputObj.is_private;
-
-				//TODO: Call Service and save the basket item obj
-				Basket.saveBasketItem(basketItemObj)
-				.then(function(response){
-					inputObj.alert = "";
-					basketModal.close();
-
-				}, function(error){
-					inputObj.alert = "An error occurred, please try again";
-				});
+				_.extendOwn(basketInput, basketConfig);
+				Basket.openModal(basketInput);
 			};
 		}
 	}
