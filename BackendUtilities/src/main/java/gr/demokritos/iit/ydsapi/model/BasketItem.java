@@ -268,7 +268,7 @@ public class BasketItem {
          */
         public Builder withComponentType(String compTarg) {
             String compTargLower = compTarg.toLowerCase();
-            if (!ComponentType.accepted.contains(compTargLower)) {
+            if (!ComponentType.ACCEPTED.contains(compTargLower)) {
                 throw new IllegalArgumentException(String.format("'%s' not accepted as a valid component type", compTarg));
             } else {
                 this.component_type = compTargLower;

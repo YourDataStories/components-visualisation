@@ -2,11 +2,14 @@ package gr.demokritos.iit.ydsapi.rest;
 
 import gr.demokritos.iit.ydsapi.model.BasketItem;
 import gr.demokritos.iit.ydsapi.model.BasketItem.BasketType;
+import gr.demokritos.iit.ydsapi.model.ComponentType;
+import static gr.demokritos.iit.ydsapi.model.ComponentType.RESULTSET;
 import gr.demokritos.iit.ydsapi.responses.BaseResponse;
 import gr.demokritos.iit.ydsapi.responses.BaseResponse.Status;
 import gr.demokritos.iit.ydsapi.responses.BasketItemLoadResponse;
 import gr.demokritos.iit.ydsapi.responses.BasketListLoadResponse;
 import gr.demokritos.iit.ydsapi.responses.BasketSaveResponse;
+import gr.demokritos.iit.ydsapi.responses.RetrieveLoadResponse;
 import gr.demokritos.iit.ydsapi.retrieve.BasketDatatestRetrieve;
 import gr.demokritos.iit.ydsapi.storage.MongoAPIImpl;
 import gr.demokritos.iit.ydsapi.storage.YDSAPI;
@@ -21,6 +24,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 /**
  *
@@ -104,9 +108,10 @@ public class Basket {
             @PathParam("user_id") String user_id,
             @PathParam("basket_item_id") String basket_item_id
     ) {
+        ResponseBuilder r = Response.noContent();
+        Response res;
         YDSAPI api = MongoAPIImpl.getInstance();
         BasketItem item;
-        BasketItemLoadResponse bi;
         String dataset = null;
         BasketDatatestRetrieve bdr = new BasketDatatestRetrieve();
         LOG.info(String.format("user_id: %s", user_id));
@@ -116,47 +121,41 @@ public class Basket {
                     user_id,
                     basket_item_id
             );
-
-            switch (item.getComponentType().toLowerCase()) {
-                case "pie":
-                    dataset = bdr.getPieDataset(item.getComponentParentUUID(), 
+            switch (ComponentType.valueOf(item.getComponentType().toUpperCase())) {
+                case PIE:
+                    dataset = bdr.getPieDataset(item.getComponentParentUUID(),
                             item.getContentType(), item.getLang());
                     break;
-                case "map":
-                    dataset = bdr.getMapDataset(item.getComponentParentUUID(), 
+                case MAP:
+                    dataset = bdr.getMapDataset(item.getComponentParentUUID(),
                             item.getContentType(), item.getLang());
                     break;
-                case "line":
-                    dataset = bdr.getLineDataset(item.getComponentParentUUID(), 
+                case LINE:
+                    dataset = bdr.getLineDataset(item.getComponentParentUUID(),
                             item.getContentType(), item.getLang(), item.getFilters());
                     break;
-                case "grid":
-                    dataset = bdr.getGridDataset(item.getComponentParentUUID(), 
+                case GRID:
+                    dataset = bdr.getGridDataset(item.getComponentParentUUID(),
                             item.getContentType(), item.getLang(), item.getFilters());
                     break;
-                case "result":
-                    dataset = bdr.getSearchDataset(item.getComponentParentUUID(), 
+                case RESULT:
+                    dataset = bdr.getSearchDataset(item.getComponentParentUUID(),
+                            item.getContentType(), item.getLang(), item.getFilters());
+                    break;
+                case RESULTSET:
+                    dataset = bdr.getSearchDataset(item.getComponentParentUUID(),
                             item.getContentType(), item.getLang(), item.getFilters());
                     break;
             }
-
-//            bi = new BasketItemLoadResponse(item);
-//
+            res = r.status(Response.Status.OK).entity(dataset).build();
         } catch (Exception ex) {
-            bi = new BasketItemLoadResponse(
-                    null,
-                    Status.ERROR,
+            RetrieveLoadResponse rlr = new RetrieveLoadResponse(
+                    false,
                     ex.getMessage() != null ? ex.getMessage() : ex.toString()
             );
+            res = r.status(Response.Status.INTERNAL_SERVER_ERROR).entity(rlr.toJSON()).build();
         }
-//        return Response.status(
-//                bi.getStatus() == Status.OK || bi.getStatus() == Status.NOT_EXISTS
-//                        ? Response.Status.OK
-//                        : Response.Status.INTERNAL_SERVER_ERROR
-//        ).entity(bi.toJSON()).build();
-        return Response.status(
-                Response.Status.OK
-        ).entity(dataset).build();
+        return res;
     }
 
     @Path("get_item/{basket_item_id}")
@@ -228,6 +227,7 @@ public class Basket {
             @QueryParam("type") String type,
             @QueryParam("lang") String lang
     ) {
+
         YDSAPI api = MongoAPIImpl.getInstance();
         final BasketItem bskt;
         BasketItemLoadResponse blr;
