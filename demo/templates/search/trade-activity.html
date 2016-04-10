@@ -2,11 +2,11 @@
     <li class="list-group-item">
         <div class="row">
             <div class="col-md-12">
-                <h4><%  if(!_.isUndefined(rc.result["concerns.prefLabel"])) {   %>
-                    <%-      rc.result["concerns.prefLabel." + rc.lang]         %>
-                    <%  } else {                                                %>
-                    <%-      rc.result["concerns.prefLabel"].join(", ")         %>
-                    <%  }                                                       %>
+                <h4><%  if(!_.isUndefined(rc.result["concerns.prefLabel" + rc.lang])) {     %>
+                    <%-      rc.result["concerns.prefLabel." + rc.lang]                     %>
+                    <%  } else {                                                            %>
+                    <%-      rc.result["concerns.prefLabel"].join(", ")                     %>
+                    <%  }                                                                   %>
                     <% _.each( rc.result.type, function( projType ){ %>
                         <span class="label label-primary"><%- projType %></span>
                     <% }) %>
