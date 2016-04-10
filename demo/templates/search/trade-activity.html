@@ -1,0 +1,56 @@
+<script type="text/ng-template" id="trade-activity.html">
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-md-12">
+                <h4><%  if(!_.isUndefined(rc.result["concerns.prefLabel"])) {   %>
+                    <%-      rc.result["concerns.prefLabel." + rc.lang]         %>
+                    <%  } else {                                                %>
+                    <%-      rc.result["concerns.prefLabel"].join(", ")         %>
+                    <%  }                                                       %>
+                    <% _.each( rc.result.type, function( projType ){ %>
+                        <span class="label label-primary"><%- projType %></span>
+                    <% }) %>
+                </h4>
+            </div>
+        </div>
+        <p><strong><%- rc.attrHeaders.concernsBroaded %></strong> :
+            <%  if(!_.isUndefined(rc.result["concerns.broader.prefLabel" + rc.lang])) {     %>
+            <%-      rc.result["concerns.broader.prefLabel." + rc.lang]                     %>
+            <%  } else {                                                                    %>
+            <%-      rc.result["concerns.broader.prefLabel"].join(", ")                     %>
+            <%  }                                                                           %>
+        </p>
+        <p><strong><%- rc.attrHeaders.origin %></strong> :
+            <%  if(!_.isUndefined(rc.result["hasOrigin.countryIsoCode.prefLabel." + rc.lang])) {   %>
+            <%-     rc.result["hasOrigin.countryIsoCode.prefLabel."  + rc.lang]                    %>
+            <%  } else {                                                                           %>
+            <%-     rc.result["hasOrigin.countryIsoCode.prefLabel"].join(", ")                     %>
+            <%  }                                                                                  %>
+        </p>
+        <p><strong><%- rc.attrHeaders.destination %></strong> :
+            <%  if(!_.isUndefined(rc.result["hasDestination.countryIsoCode.prefLabel." + rc.lang])) {   %>
+            <%-      rc.result["hasDestination.countryIsoCode.prefLabel." + rc.lang]                    %>
+            <%  } else {                                                                                %>
+            <%-      rc.result["hasDestination.countryIsoCode.prefLabel"].join(", ")                    %>
+            <%  }                                                                                       %>
+        </p>
+        <p><strong><%- rc.attrHeaders.amount %></strong> : <%- rc.result["amount.hasCurrencyValue"] %></p>
+        <p><strong><%- rc.attrHeaders.currency %></strong> : <%- rc.result["amount.hasCurrency.prefLabel." + rc.lang] %></p>
+        <p><strong><%- rc.attrHeaders.financialYear %></strong> : <%- rc.result["financialYear"] %></p>
+        <div class="row">
+            <div class="col col-12 pull-right">
+                <div class="btn-group col-md-12" role="group" aria-label="">
+                    <button class="btn btn-default btn-xs view-result-btn"
+                            ng-if = "basketEnabled"
+                            ng-click="addToBasket('<%- rc.result['id'] %>')">
+                        <%- rc.attrHeaders.saveDataset %>
+                    </button>
+                    <button class="btn btn-default btn-xs view-result-btn"
+                            ng-click="visitResult('<%- rc.result['id'] %>')">
+                        <%- rc.attrHeaders.viewResult %>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </li>
+</script>
