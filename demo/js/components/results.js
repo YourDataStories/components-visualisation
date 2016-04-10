@@ -66,7 +66,7 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                             'templates/search/financial-decision.html','templates/search/non-financial-decision.html',
                             'templates/search/organization.html', 'templates/search/public-project.html',
                             'templates/search/subproject.html', 'templates/search/subsidy.html',
-                            'templates/search/transaction.html'],
+                            'templates/search/transaction.html', 'templates/search/trade-activity.html'],
                     cache: true
                 }).then(function() {
                     compiledTemplates = {
@@ -80,7 +80,8 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                         PublicProject : _.template($templateCache.get("public-project.html")),
                         Subproject : _.template($templateCache.get("subproject.html")),
                         Subsidy : _.template($templateCache.get("subsidy.html")),
-                        Transaction : _.template($templateCache.get("transaction.html"))
+                        Transaction : _.template($templateCache.get("transaction.html")),
+                        TradeActivity : _.template($templateCache.get("trade-activity.html"))
                     };
                 });
             };
