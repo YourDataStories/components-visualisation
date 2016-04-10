@@ -54,13 +54,17 @@ public class MongoAPIImpl implements YDSAPI {
      */
     private static final long MAX_CACHE_DURATION_MINUTES = 60l;
 
+    /**
+     * reverse insertion order sorting mark
+     */
+    private static final DBObject REVERSED_INSERTION_ORDER = new BasicDBObject("$natural", -1);
+    
     public synchronized static YDSAPI getInstance() {
         if (instance == null) {
             instance = new MongoAPIImpl();
         }
         return instance;
     }
-    private static final DBObject REVERSED_INSERTION_ORDER = new BasicDBObject("$natural", -1);
 
     private MongoAPIImpl() {
         ResourceUtil resource = new ResourceUtil("resources");
@@ -257,6 +261,7 @@ public class MongoAPIImpl implements YDSAPI {
                     .and(BasketItem.FLD_COMPONENT_PARENT_UUID).is(component_parent_uuid)
                     .and(BasketItem.FLD_COMPONENT_TYPE).is(component_type)
                     .and(BasketItem.FLD_CONTENT_TYPE).is(content_type)
+                    // during input, we lower case the 'type', so we have to do so now as well
                     .and(BasketItem.FLD_TYPE).is(type.toLowerCase())
                     .and(BasketItem.FLD_LANG).is(lang)
                     .get());
@@ -414,7 +419,7 @@ public class MongoAPIImpl implements YDSAPI {
 
     /**
      * tries to generate required indexes for performance. Useful for new
-     * installments
+     * installations
      *
      */
     private void ensureIndexes() {

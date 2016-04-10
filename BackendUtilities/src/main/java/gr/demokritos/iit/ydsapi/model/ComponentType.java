@@ -10,7 +10,7 @@ import java.util.Set;
  */
 public enum ComponentType {
 
-    LINE("line"), PIE("pie"), BAR("bar"), MAP("map"), GRID("grid"), RESULT("result");
+    LINE("line"), PIE("pie"), BAR("bar"), MAP("map"), GRID("grid"), RESULT("result"), RESULTSET("resultset");
     private final String type;
 
     private ComponentType(String type) {
@@ -20,14 +20,15 @@ public enum ComponentType {
     public String getDecl() {
         return type;
     }
-    public static final Set<String> accepted = new HashSet();
+    public static final Set<String> ACCEPTED = new HashSet();
 
     static {
-        accepted.add(LINE.getDecl());
-        accepted.add(PIE.getDecl());
-        accepted.add(BAR.getDecl());
-        accepted.add(MAP.getDecl());
-        accepted.add(GRID.getDecl());
-        accepted.add(RESULT.getDecl());
+        ACCEPTED.add(LINE.getDecl());
+        ACCEPTED.add(PIE.getDecl());
+        ACCEPTED.add(BAR.getDecl());
+        ACCEPTED.add(MAP.getDecl());
+        ACCEPTED.add(GRID.getDecl());
+        ACCEPTED.add(RESULT.getDecl());
+        ACCEPTED.add(RESULTSET.getDecl());
     }
 }
