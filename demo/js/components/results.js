@@ -1,5 +1,5 @@
 angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$templateCache', '$location','$compile', '$ocLazyLoad', 'Search',
-    'Basket', 'Translations', function(YDS_CONSTANTS, $window, $templateCache, $location, $compile, $ocLazyLoad, Search, Basket, Translations){
+    'Basket', 'Translations', 'Data', function(YDS_CONSTANTS, $window, $templateCache, $location, $compile, $ocLazyLoad, Search, Basket, Translations, Data){
     return {
         restrict: 'E',
         scope: {
@@ -13,7 +13,6 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
 
             scope.basketEnabled = false;
             scope.showNoResultsMsg = false;
-            scope.results = [];
             scope.translations = {};
 
             //check if the language attr is defined, else assign default value
@@ -61,30 +60,79 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                 scope.translations = Translations.getAll(scope.lang);
 
                 $ocLazyLoad.load ({
-                    files: ['templates/search/aid-activity.html', 'templates/search/commited-item.html',
-                            'templates/search/contract.html','templates/search/decision.html',
-                            'templates/search/financial-decision.html','templates/search/non-financial-decision.html',
-                            'templates/search/organization.html', 'templates/search/public-project.html',
-                            'templates/search/subproject.html', 'templates/search/subsidy.html',
-                            'templates/search/transaction.html', 'templates/search/trade-activity.html'],
+                    files: ['templates/search-result.html'],
                     cache: true
                 }).then(function() {
                     compiledTemplates = {
-                        AidActivity : _.template($templateCache.get("aid-activity.html")),
-                        CommittedItem : _.template($templateCache.get("commited-item.html")),
-                        Contract : _.template($templateCache.get("contract.html")),
-                        Decision : _.template($templateCache.get("decision.html")),
-                        FinancialDecision : _.template($templateCache.get("financial-decision.html")),
-                        NonFinancialDecision : _.template($templateCache.get("non-financial-decision.html")),
-                        Organization : _.template($templateCache.get("organization.html")),
-                        PublicProject : _.template($templateCache.get("public-project.html")),
-                        Subproject : _.template($templateCache.get("subproject.html")),
-                        Subsidy : _.template($templateCache.get("subsidy.html")),
-                        Transaction : _.template($templateCache.get("transaction.html")),
-                        TradeActivity : _.template($templateCache.get("trade-activity.html"))
+                        SearchResult : _.template($templateCache.get("search-result.html"))
                     };
                 });
             };
+
+            var formatResults = function(results, resultsView, resultsViewNames) {
+                var formattedResults = [];
+                //iterate through the results and format its data
+                _.each(results, function(result) {
+                    //iterate through the types of the result
+                    for (var j=0; j<result.type.length; j++) {
+                        var viewName = result.type[j];
+
+                        //search if the type of the result exists inside the available views
+                        if (_.contains(resultsViewNames, viewName)) {
+                            //create an object for each result
+                            var formattedResult = {
+                                _hidden: true,
+                                id: result.id,
+                                type: result.type,
+                                rows: []
+                            };
+
+                            //get the contents of the result view
+                            var resultView = _.find(resultsView, function (view) { return viewName in view })[viewName];
+
+                            //iterate inside the view of the result in order to acquire the required data for each result
+                            _.each(resultView, function(view){
+                                var resultRow = {};
+                                resultRow.header = view.header;
+                                resultRow.type = view.type;
+                                resultRow.value = result[view.attribute];
+
+                                //if the value of a result doesn't exist
+                                if (_.isUndefined(resultRow.value) || String(resultRow.value).trim().length==0) {
+                                    //extract the last 3 characters of the specific attribute of the result
+                                    var last3chars = view.attribute.substr(view.attribute.length-3);
+
+                                    //if it is internationalized
+                                    if (last3chars == ("." + scope.lang)) {
+                                        //search if the attribute exists without the internationalization
+                                        var attributeTokens = view.attribute.split(".");
+                                        var nonInternationalizedAttr = _.first(attributeTokens, attributeTokens.length-1).join(".");
+                                        resultRow.value = result [nonInternationalizedAttr];
+                                    }
+                                }
+
+                                //if the value is not available assign an empty string, 
+                                // else check if it is an array and convert it to comma separated string
+                                if(_.isUndefined(resultRow.value))
+                                    resultRow.value = "";
+                                else if (_.isArray(resultRow.value))
+                                    resultRow.value = resultRow.value.join(", ");
+                                
+                                //push the formatted row of the result in the array of the corresponding result
+                                formattedResult.rows.push(resultRow);
+                            });
+
+                            //if the view of the result has been found, don't search further for its view
+                            break;
+                        }
+                    }
+                    
+                    //push the result in the array containing all the results that will be visible to the user
+                    formattedResults.push(formattedResult);
+                });
+
+                return formattedResults;
+            }
 
             var performSearch = function(searchTerm, pageLimit, pageNumber) {
                 //save the keyword and perform search
@@ -93,12 +141,20 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                 
                 Search.performSearch(searchTerm, 10, scope.pagination.getCurrent())
                 .then(function (response) {
+                    var results = angular.copy(response.data.response.docs);
                     var resultsCount = response.data.response.numFound;
-                    scope.results = angular.copy(response.data.response.docs);
+                    var resultsView = response.view;
+
+                    //get the names of all the available views
+                    var resultsViewNames = [];
+                    _.each(resultsView, function (view) {
+                        resultsViewNames = resultsViewNames.concat( _.keys(view) );
+                    });
 
                     //clear the existing results
                     resultsContainer[0].innerHTML = "";
                     scope.pagination.setTotal(resultsCount);
+                    scope.formattedResults = formatResults(results, resultsView, resultsViewNames);
                     
                     //check if the length of the results is greater than 0, and handle pagination
                     if (resultsCount>0) {
@@ -108,30 +164,20 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                         return false;
                     }
 
-                    //iterate through the results and get the template based on the type of the result
-                    _.each(scope.results, function(result, index) {
-                        result._hidden = true;
-
-                        var templateData = {
-                            attrHeaders: scope.translations,
-                            lang: scope.lang,
-                            result: scope.results[index],
-                            index: index
-                        };
-
-                        //fill the data of the template and append it to the result list
-                        var resultTemplate = "";
-                        for(var j=0; j<result.type.length; j++) {
-                            resultTemplate = compiledTemplates[result.type[j]];
-                            if(!_.isUndefined(resultTemplate))
-                                break;
+                    var templateData = {
+                        results: scope.formattedResults,
+                        translations: {
+                            saveResultSet: Translations.get(scope.lang, "saveResultSet"),
+                            saveResult: Translations.get(scope.lang, "saveResult"),
+                            visitResultText: Translations.get(scope.lang, "viewResult"),
+                            showMoreText: Translations.get(scope.lang, "showMoreTxt"),
+                            showLessText: Translations.get(scope.lang, "showLessTxt")
                         }
+                    };
 
-                        if (!_.isUndefined(resultTemplate)) {
-                            var content = $compile(resultTemplate(templateData))(scope);
-                            resultsContainer.append(content);
-                        }
-                    });
+                    var resultTemplate = compiledTemplates["SearchResult"];
+                    var content = $compile(resultTemplate(templateData))(scope);
+                    resultsContainer.append(content);
                 }, function (error) {
                     scope.pagination.hide();
                     console.log('error', error);
@@ -214,7 +260,7 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
             };
             
             $scope.showMore = function (projectIndex) {
-                var selectedItem = $scope.results[projectIndex];
+                var selectedItem = $scope.formattedResults[parseInt(projectIndex)];
                 selectedItem._hidden = !selectedItem._hidden;
             };
 

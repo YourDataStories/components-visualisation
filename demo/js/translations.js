@@ -44,6 +44,8 @@ angular.module('yds').factory('Translations', [ function() {
 			origin: "Origin",
 			destination: "Destination",
 
+			saveResult: "Save",
+			saveResultSet: "Save Results",
 			saveDataset: "Save to basket",
 			savedDataset: "Saved to basket",
 			resultFound: "result found",
@@ -106,6 +108,8 @@ angular.module('yds').factory('Translations', [ function() {
 			origin: "Προέλευση",
 			destination: "Προορισμός",
 
+			saveResult: "Αποθήκευση",
+			saveResultSet: "Αποθήκευση Αποτελεσμάτων",
 			saveDataset: "Αποθήκευση",
 			savedDataset: "Αποθήκευτηκε",
 			resultFound: "αποτέλεσμα βρέθηκε",

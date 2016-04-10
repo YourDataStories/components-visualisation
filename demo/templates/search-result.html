@@ -1,0 +1,59 @@
+<script type="text/ng-template" id="search-result.html">
+    <% _.each( rc.results, function( result, resultIndex ){ %>
+        <li class="list-group-item">
+            <% _.each( result.rows, function( resultRow, index ){ %>
+                <% if (index==0) { %>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4><%- resultRow.value %>
+                                <% _.each( result.type, function( type ){ %>
+                                <span class="label label-primary"><%- type %></span>
+                                <% }) %>
+                            </h4>
+                        </div>
+                    </div>
+                <% } %>
+
+                <% if (index==4) { %>
+                    <div ng-hide="formattedResults[<%- resultIndex %>]._hidden">
+                <% } %>
+
+                <% if (index>0) {  %>
+                    <p><strong><%- resultRow.header %></strong> :
+                        <% if (resultRow.type=="url") {%>
+                            <a class="btn external-decision-link" href="<%- resultRow.value %>"
+                               target="_blank"><span class="glyphicon glyphicon-new-window icon-primary"></span></a>
+                        <% } else { %>
+                            <%- resultRow.value %>
+                        <% } %>
+                    </p>
+                <% } %>
+            <% }); %>
+
+            <% if (result.rows.length>4) { %>
+                </div>
+            <% } %>
+
+            <div class="row">
+                <div class="col col-12 pull-right">
+                    <div class="btn-group col-md-12" role="group" aria-label="">
+                        <button class="btn btn-default btn-xs view-result-btn"
+                                ng-if="<%- result.rows.length>4 %>"
+                                ng-click="showMore('<%- resultIndex %>')">
+                            {{ formattedResults['<%- resultIndex %>']._hidden ? '<%- rc.translations.showMoreText %>' : '<%- rc.translations.showLessText %>' }}
+                        </button>
+                        <button class="btn btn-default btn-xs view-result-btn"
+                                ng-if = "basketEnabled"
+                                ng-click="addToBasket('<%- result['id'] %>')">
+                            <%- rc.translations.saveResult %>
+                        </button>
+                        <button class="btn btn-default btn-xs view-result-btn"
+                                ng-click="visitResult('<%- result['id'] %>')">
+                            <%- rc.translations.visitResultText %>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </li>
+    <% }) %>
+</script>
