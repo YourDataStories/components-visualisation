@@ -154,7 +154,10 @@ angular.module('yds').directive('ydsFacets', ['Data', 'Search', '$location', '$w
 
 				//compose the url params string and pass it to the url
 				var urlParams = "?q="+ $location.search().q + facetUrlString;
-				$window.location.href = (YDS_CONSTANTS.SEARCH_RESULTS_URL + urlParams);
+				if (scope.lang == "en")
+					$window.location.href = (YDS_CONSTANTS.SEARCH_RESULTS_URL + urlParams);
+				else
+					$window.location.href = (YDS_CONSTANTS.SEARCH_RESULTS_URL_EL + urlParams);
 			};
 
 			//register callback function in order to be notified for the completion of a search query

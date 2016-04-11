@@ -257,7 +257,7 @@ body #main .container:first-child {
 /**********************************/
 .results-counter {
     margin: 10px 0;
-    padding-left: 10px;
+    padding: 0 7px;
     font-style: italic;
 }
 .results-content .list-group-item h4{
@@ -430,6 +430,11 @@ body #main .container:first-child {
 }
 .yds-basket-prev-inner div .row div:last-child span{
     cursor: pointer;
+}
+.yds-basket-prev-inner div.basket-item.active {
+    background-color: #f1f1f1;
+    color: #333;
+    border-color: #ddd;
 }
 /********************************/
 /**** RZSLIDER CUSTOMIZATION ****/
