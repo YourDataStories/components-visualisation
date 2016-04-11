@@ -21,8 +21,14 @@
             <label class="col-sm-3 control-label">Type: </label>
             <div class="col-sm-9">
                 <div class="btn-group">
-                    <label class="btn btn-primary" ng-model="basketObj.type" uib-btn-radio="'Dataset'">Dataset</label>
-                    <label class="btn btn-primary" ng-model="basketObj.type" uib-btn-radio="'Visualisation'">Visualisation</label>
+                    <label class="btn btn-primary"
+                           ng-model="basketObj.type"
+                           ng-if="modalConfig.restriction.Dataset"
+                           uib-btn-radio="'Dataset'">Dataset</label>
+                    <label class="btn btn-primary"
+                           ng-model="basketObj.type"
+                           ng-if="modalConfig.restriction.Visualisation"
+                           uib-btn-radio="'Visualisation'">Visualisation</label>
                 </div>
             </div>
         </div>
