@@ -13,6 +13,10 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
             scope.basketEnabled = false;
             scope.showNoResultsMsg = false;
             scope.translations = {};
+            var basketModalRestrictions = {
+                Dataset: true,
+                Visualisation: false
+            };
 
             //check if the language attr is defined, else assign default value
             if(angular.isUndefined(scope.lang) || scope.lang.trim()=="")
@@ -141,19 +145,16 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
             };
 
             //function to add a specific result in the user's basket
-            scope.addResultToBasket = function() {
+            scope.addResultToBasket = function(resourceId) {
                 //initialize the basket's modal reference;
                 var basketConfig = initializeBasketItem(resourceId, "result");
-                var modalRestrictions = {
-                    Dataset: true,
-                    Visualisation: false
-                };
+
 
                 Basket.checkIfItemExists(basketConfig)
                 .then(function (response) {
                     debugger;
                     if(!_.isUndefined(response.status) && response.status=="NOT_EXISTS") {
-                        Basket.openModal(basketConfig, modalRestrictions)
+                        Basket.openModal(basketConfig, basketModalRestrictions)
                     } else {
                         alert('item already exists')
                     }
@@ -196,15 +197,10 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                     attrs: searchFilters
                 });
 
-                var modalRestrictions = {
-                    Dataset: true,
-                    Visualisation: false
-                };
-
                 Basket.checkIfItemExists(basketConfig)
                     .then(function (response) {
                         if(!_.isUndefined(response.status) && response.status=="NOT_EXISTS") {
-                            Basket.openModal(basketConfig, modalRestrictions)
+                            Basket.openModal(basketConfig, basketModalRestrictions)
                         } else {
                             alert('item already exists')
                         }
