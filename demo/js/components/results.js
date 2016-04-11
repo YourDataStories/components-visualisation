@@ -273,8 +273,8 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
             };
 
             $scope.visitResult = function(projectId) {
-                var resourceTypes = _.findWhere($scope.results, {id: projectId}).type.join();
-
+                var resourceTypes = _.findWhere($scope.formattedResults, {id: projectId}).type.join();
+          
                 if (resourceTypes!=null || !_.isUndefined(resourceTypes)) {
                     $window.location.href = YDS_CONSTANTS.PROJECT_DETAILS_URL + '?id=' + projectId + '&type=' + resourceTypes;
                 }
