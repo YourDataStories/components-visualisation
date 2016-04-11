@@ -100,7 +100,7 @@ angular.module('yds').directive('ydsPie', ['Data', function(Data){
                         }
                     },
                     tooltip: {
-                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                        pointFormat: '({point.y}) <b>{point.percentage:.1f}%</b>'
                     },
                     legend: {
                         enabled: (showLegend === "true")
@@ -113,9 +113,12 @@ angular.module('yds').directive('ydsPie', ['Data', function(Data){
                             allowPointSelect: true,
                             cursor: 'pointer',
                             dataLabels: {
-                                enabled: false
-                            },
-                            showInLegend: true
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                style: {
+                                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                }
+                            }
                         }
                     },
                     series: [{

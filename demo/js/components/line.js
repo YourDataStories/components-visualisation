@@ -94,7 +94,11 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
                         }
                     },
                     rangeSelector : {
+                        enabled: (showNavigator === "true"),
                         selected : 1
+                    },
+                    scrollbar : {
+                        enabled: (showNavigator === "true")
                     },
                     title : {
                         text : lineTitle,
