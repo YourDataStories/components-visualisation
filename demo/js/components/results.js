@@ -18,8 +18,7 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
             //check if the language attr is defined, else assign default value
             if(angular.isUndefined(scope.lang) || scope.lang.trim()=="")
                 scope.lang = "en";
-
-
+            
             if (!_.isUndefined(scope.userId) && scope.userId.trim()!="") {
                 scope.basketEnabled = true;
             }
@@ -117,6 +116,15 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                                     resultRow.value = "";
                                 else if (_.isArray(resultRow.value))
                                     resultRow.value = resultRow.value.join(", ");
+                                else if (resultRow.type == "date") {
+                                    var formattedDate = new Date(parseFloat(resultRow.value));
+
+                                    if (formattedDate != null) {
+                                        resultRow.value = formattedDate.getDate() + "-" +
+                                                          (formattedDate.getMonth() + 1) + "-" +
+                                                          formattedDate.getFullYear();
+                                    }
+                                }
                                 
                                 //push the formatted row of the result in the array of the corresponding result
                                 formattedResult.rows.push(resultRow);
@@ -132,14 +140,14 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                 });
 
                 return formattedResults;
-            }
+            };
 
             var performSearch = function(searchTerm, pageLimit, pageNumber) {
                 //save the keyword and perform search
                 Search.setKeyword(searchTerm);
                 scope.pagination.setCurrent(pageNumber);
                 
-                Search.performSearch(searchTerm, 10, scope.pagination.getCurrent())
+                Search.performSearch(searchTerm, scope.lang, 10, scope.pagination.getCurrent())
                 .then(function (response) {
                     var results = angular.copy(response.data.response.docs);
                     var resultsCount = response.data.response.numFound;

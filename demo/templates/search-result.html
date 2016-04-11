@@ -37,17 +37,17 @@
             <div class="row">
                 <div class="col col-12 pull-right">
                     <div class="btn-group col-md-12" role="group" aria-label="">
-                        <button class="btn btn-default btn-xs view-result-btn"
+                        <button class="btn btn-default btn-sm view-result-btn"
                                 ng-if="<%- result.rows.length>4 %>"
                                 ng-click="showMore('<%- resultIndex %>')">
                             {{ formattedResults['<%- resultIndex %>']._hidden ? '<%- rc.translations.showMoreText %>' : '<%- rc.translations.showLessText %>' }}
                         </button>
-                        <button class="btn btn-default btn-xs view-result-btn"
+                        <button class="btn btn-default btn-sm view-result-btn"
                                 ng-if = "basketEnabled"
                                 ng-click="addToBasket('<%- result['id'] %>')">
                             <%- rc.translations.saveResult %>
                         </button>
-                        <button class="btn btn-default btn-xs view-result-btn"
+                        <button class="btn btn-default btn-sm view-result-btn"
                                 ng-click="visitResult('<%- result['id'] %>')">
                             <%- rc.translations.visitResultText %>
                         </button>

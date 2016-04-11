@@ -18,7 +18,9 @@ app.constant("YDS_CONSTANTS", {
     "API_PLOT_INFO": "platform.yourdatastories.eu/api/json-ld/component/plotinfo.tcl",
     "API_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/search.tcl",
     //"SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
+    //"SEARCH_RESULTS_URL_EL": "http://yds-lib.dev/#/search-el",
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
+    "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search-el",
     "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
     "API_EMBED": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/embed/",
     "BASKET_URL": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/basket/"
@@ -67,6 +69,22 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             }
 
             return obj;
+        },
+        transform: function (data) {
+            if (!angular.isObject(data))		    	 // If this is not an object, defer to native stringification.
+                return ( ( data == null ) ? "" : data.toString() );
+
+            var buffer = [];
+            for (var name in data) {
+                if (!data.hasOwnProperty(name))
+                    continue;
+
+                var value = data[name];
+                buffer.push(encodeURIComponent(name) + "=" + encodeURIComponent(( value == null ) ? "" : value));
+            }
+
+            var source = buffer.join("&").replace(/%20/g, "+");
+            return source;
         },
         projectVisualization: function (projectId,visualizationType) {
             //param search_obj = {}
@@ -404,11 +422,12 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', function ($h
      * @param {Integer} pageLimit, the max number of results returned from the API
      * @param {Integer} pageNumber, the page number of the results
      **/
-    var performSearch = function (newKeyword, pageLimit, pageNumber) {
+    var performSearch = function (newKeyword, prefLang, pageLimit, pageNumber) {
         var deferred = $q.defer();
 
         //define an object with the standard params required for the search query
         var searchParameters = {
+            lang: prefLang,
             rows: pageLimit,
             start: pageNumber
         };

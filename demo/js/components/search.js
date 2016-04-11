@@ -43,7 +43,10 @@ angular.module('yds').directive('ydsSearch', ['$window', '$rootScope', '$locatio
 				if (!searchForm.$valid)
 					return false;
 
-				$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL + "?q=" + scope.searchKeyword;
+				if (scope.lang == "en")
+					$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL + "?q=" + scope.searchKeyword;
+				else if (scope.lang == "el")
+					$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL_EL + "?q=" + scope.searchKeyword;
 			}
 		}
 	};

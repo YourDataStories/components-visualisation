@@ -5,15 +5,15 @@ ydsDemo.run(function($rootScope, $location) {
 });
 
 ydsDemo.config(function($stateProvider, $urlRouterProvider) {
-	$urlRouterProvider.otherwise('/');
+	$urlRouterProvider.otherwise('/search');
 
-	$stateProvider.state('home', {
-		url: '/',
-		templateUrl: 'templates-demo/home.html'
-	})
-	.state('search', {
+	$stateProvider.state('search', {
 		url: '/search',
 		templateUrl: 'templates-demo/search.html'
+	})
+	.state('search-el', {
+		url: '/search-el',
+		templateUrl: 'templates-demo/search-el.html'
 	})
 	.state('projects', {
 		url: '/projects',

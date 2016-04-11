@@ -6,11 +6,9 @@
         </div>
     </div>
     <div class="row" ng-show="pagination.total>0">
-        <div class="col-xs-12 results-counter" ng-if="pagination.total==1">
-            <strong>{{pagination.total}} {{ translations.resultFound }}</strong>
-        </div>
-        <div class="col-xs-12 results-counter" ng-if="pagination.total>1">
-            <strong>{{pagination.total}} {{ translations.resultsFound }}</strong>
+        <div class="col-xs-12 results-counter">
+            <strong>{{pagination.total}} {{pagination.total==1 ? translations.resultFound : translations.resultsFound }}</strong>
+            <button type="button" class="btn btn-success btn-xs pull-right">{{translations.saveResultSet}}</button>
         </div>
     </div>
     <div class="row list-group results-content"></div>
