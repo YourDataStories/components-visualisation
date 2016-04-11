@@ -25,6 +25,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import sun.swing.BakedArrayList;
 
 /**
  *
@@ -116,6 +117,11 @@ public class Basket {
         BasketDatatestRetrieve bdr = new BasketDatatestRetrieve();
         LOG.info(String.format("user_id: %s", user_id));
         LOG.info(String.format("basket_item_id: %s", basket_item_id));
+        Object[] re;
+        RetrieveLoadResponse rlr = null;
+        // signify when we want to return the DB item or delegate the call to 
+        // the other API
+        boolean returnItem = false;
         try {
             item = api.getBasketItem(
                     user_id,
@@ -138,18 +144,22 @@ public class Basket {
                     dataset = bdr.getGridDataset(item.getComponentParentUUID(),
                             item.getContentType(), item.getLang(), item.getFilters());
                     break;
+                // on result / resultset, we return the item from the repository.
+                // we wrap the basket item in the retrieveloadresponse class 
+                // to mimic the 'dataset' format
                 case RESULT:
-                    dataset = bdr.getSearchDataset(item.getComponentParentUUID(),
-                            item.getContentType(), item.getLang(), item.getFilters());
+                    returnItem = true;
+                    rlr = new RetrieveLoadResponse(true, Status.OK.toString().toLowerCase(), item);
                     break;
                 case RESULTSET:
-                    dataset = bdr.getSearchDataset(item.getComponentParentUUID(),
-                            item.getContentType(), item.getLang(), item.getFilters());
+                    returnItem = true;
+                    re = new Object[]{item.toJSON()};
+                    rlr = new RetrieveLoadResponse(true, Status.OK.toString().toLowerCase(), item);
                     break;
             }
-            res = r.status(Response.Status.OK).entity(dataset).build();
+            res = r.status(Response.Status.OK).entity(returnItem ? rlr.toJSON() : dataset).build();
         } catch (Exception ex) {
-            RetrieveLoadResponse rlr = new RetrieveLoadResponse(
+            rlr = new RetrieveLoadResponse(
                     false,
                     ex.getMessage() != null ? ex.getMessage() : ex.toString()
             );
