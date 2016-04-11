@@ -8,7 +8,10 @@
     <div class="row" ng-show="pagination.total>0">
         <div class="col-xs-12 results-counter">
             <strong>{{pagination.total}} {{pagination.total==1 ? translations.resultFound : translations.resultsFound }}</strong>
-            <button type="button" class="btn btn-success btn-xs pull-right">{{translations.saveResultSet}}</button>
+            <button type="button"
+                    ng-if="basketEnabled && pagination.total>0"
+                    ng-click="addResultsetToBasket()"
+                    class="btn btn-success btn-xs pull-right">{{translations.saveResultSet}}</button>
         </div>
     </div>
     <div class="row list-group results-content"></div>

@@ -18,10 +18,11 @@ function (YDS_CONSTANTS, $q, $http, $uibModal) {
 	return {
 		registerCallback: function(callback) { basketCallbacks.push(callback); },
 		getLastSavedItem: function() { return lastSavedItem; },
-		openModal: function(basketInput) {
+		openModal: function(basketInput, modalRestrictions) {
 			var modalInput = {
 				title: "Add to Basket",
-				closeModal: closeModal
+				closeModal: closeModal,
+				modalRestrict: modalRestrictions
 			};
 
 			modalInstance = $uibModal.open({
@@ -58,6 +59,22 @@ function (YDS_CONSTANTS, $q, $http, $uibModal) {
 
 			return basketTags;
 		},
+		checkIfItemExists: function(bskItem){
+			var deferred = $q.defer();
+
+			$http({
+				method: 'GET',
+				url: YDS_CONSTANTS.BASKET_URL + "exists_item",
+				headers: {'Content-Type': 'application/json; charset=UTF-8'},
+				params: bskItem
+			}).success(function (data) {
+				deferred.resolve(data);
+			}).error(function (error) {
+				deferred.reject(error);
+			});
+
+			return deferred.promise;
+		},
 		saveBasketItem: function(bskItem) {
 			var deferred = $q.defer();
 			lastSavedItem = angular.copy(bskItem);
@@ -69,6 +86,21 @@ function (YDS_CONSTANTS, $q, $http, $uibModal) {
 				data: JSON.stringify(bskItem)
 			}).success(function (data) {
 				notifyObservers(basketCallbacks);
+				deferred.resolve(data);
+			}).error(function (error) {
+				deferred.reject(error);
+			});
+
+			return deferred.promise;
+		},
+		getBasketItem : function (userId, basketItemId) {
+			var deferred = $q.defer();
+
+			$http({
+				method: 'GET',
+				url: YDS_CONSTANTS.BASKET_URL + "retrieve/" + userId + "/" + basketItemId,
+				headers: {'Content-Type': 'application/json'}
+			}).success(function (data) {
 				deferred.resolve(data);
 			}).error(function (error) {
 				deferred.reject(error);
@@ -128,6 +160,7 @@ function (YDS_CONSTANTS, $q, $http, $uibModal) {
 angular.module('yds').controller('BasketModalCtrl', function ($scope, modalInput, basketInput, Basket) {
 	//configuration of the shown modal
 	$scope.modalConfig = {
+		restriction: modalInput.modalRestrict,
 		closeModal: modalInput.closeModal,
 		title: modalInput.title,
 		alert: ""
@@ -136,7 +169,7 @@ angular.module('yds').controller('BasketModalCtrl', function ($scope, modalInput
 	//prepare the basket item
 	$scope.basketObj = {
 		title: "",
-		type: "Dataset",
+		type: basketInput.type,
 		filters: basketInput.filters,
 		lang: basketInput.lang,
 		user_id: basketInput.user_id,

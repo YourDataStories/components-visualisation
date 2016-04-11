@@ -10,7 +10,6 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
         link: function(scope, element, attrs) {
             var resultsContainer = angular.element(element[0].querySelector('.results-content'));
             var compiledTemplates = {};
-
             scope.basketEnabled = false;
             scope.showNoResultsMsg = false;
             scope.translations = {};
@@ -68,80 +67,20 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                 });
             };
 
-            var formatResults = function(results, resultsView, resultsViewNames) {
-                var formattedResults = [];
-                //iterate through the results and format its data
-                _.each(results, function(result) {
-                    //iterate through the types of the result
-                    for (var j=0; j<result.type.length; j++) {
-                        var viewName = result.type[j];
-
-                        //search if the type of the result exists inside the available views
-                        if (_.contains(resultsViewNames, viewName)) {
-                            //create an object for each result
-                            var formattedResult = {
-                                _hidden: true,
-                                id: result.id,
-                                type: result.type,
-                                rows: []
-                            };
-
-                            //get the contents of the result view
-                            var resultView = _.find(resultsView, function (view) { return viewName in view })[viewName];
-
-                            //iterate inside the view of the result in order to acquire the required data for each result
-                            _.each(resultView, function(view){
-                                var resultRow = {};
-                                resultRow.header = view.header;
-                                resultRow.type = view.type;
-                                resultRow.value = result[view.attribute];
-
-                                //if the value of a result doesn't exist
-                                if (_.isUndefined(resultRow.value) || String(resultRow.value).trim().length==0) {
-                                    //extract the last 3 characters of the specific attribute of the result
-                                    var last3chars = view.attribute.substr(view.attribute.length-3);
-
-                                    //if it is internationalized
-                                    if (last3chars == ("." + scope.lang)) {
-                                        //search if the attribute exists without the internationalization
-                                        var attributeTokens = view.attribute.split(".");
-                                        var nonInternationalizedAttr = _.first(attributeTokens, attributeTokens.length-1).join(".");
-                                        resultRow.value = result [nonInternationalizedAttr];
-                                    }
-                                }
-
-                                //if the value is not available assign an empty string, 
-                                // else check if it is an array and convert it to comma separated string
-                                if(_.isUndefined(resultRow.value))
-                                    resultRow.value = "";
-                                else if (_.isArray(resultRow.value))
-                                    resultRow.value = resultRow.value.join(", ");
-                                else if (resultRow.type == "date") {
-                                    var formattedDate = new Date(parseFloat(resultRow.value));
-
-                                    if (formattedDate != null) {
-                                        resultRow.value = formattedDate.getDate() + "-" +
-                                                          (formattedDate.getMonth() + 1) + "-" +
-                                                          formattedDate.getFullYear();
-                                    }
-                                }
-                                
-                                //push the formatted row of the result in the array of the corresponding result
-                                formattedResult.rows.push(resultRow);
-                            });
-
-                            //if the view of the result has been found, don't search further for its view
-                            break;
-                        }
-                    }
-                    
-                    //push the result in the array containing all the results that will be visible to the user
-                    formattedResults.push(formattedResult);
-                });
-
-                return formattedResults;
+            //function to prepare the basic configuration of the basket item
+            var initializeBasketItem = function(resourceId, componentType) {
+                return {
+                    lang: scope.lang,
+                    type: "Dataset",
+                    component_type: componentType,
+                    content_type: "default",
+                    component_parent_uuid: resourceId,
+                    user_id: scope.userId,
+                    filters: []
+                };
             };
 
+            
             var performSearch = function(searchTerm, pageLimit, pageNumber) {
                 //save the keyword and perform search
                 Search.setKeyword(searchTerm);
@@ -162,7 +101,7 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                     //clear the existing results
                     resultsContainer[0].innerHTML = "";
                     scope.pagination.setTotal(resultsCount);
-                    scope.formattedResults = formatResults(results, resultsView, resultsViewNames);
+                    scope.formattedResults = Search.formatResults(results, resultsView, resultsViewNames, scope.lang);
                     
                     //check if the length of the results is greater than 0, and handle pagination
                     if (resultsCount>0) {
@@ -201,21 +140,10 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                 $window.scrollTo(0, 0);
             };
 
-
             //function to add a specific result in the user's basket
-            scope.addToBasket = function(resourceId) {
+            scope.addResultToBasket = function() {
                 //initialize the basket's modal reference;
-                var userId ="ydsUser";
-                var basketConfig = {
-                    lang: scope.lang,
-                    type: "Dataset",
-                    component_type: "result",
-                    content_type: "default",
-                    component_parent_uuid: resourceId,
-                    user_id: userId,
-                    filters: []
-                };
-
+                var basketConfig = initializeBasketItem(resourceId, "result");
                 var modalRestrictions = {
                     Dataset: true,
                     Visualisation: false
@@ -234,6 +162,55 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                     debugger;
                     console.log ("error in get browse data", error);
                 });
+            };
+
+            //function to add a specific result in the user's basket
+            scope.addResultsetToBasket = function() {
+                //get search parameters from the url
+                var searchFilters = {};
+                var searchParams = $location.search();
+
+                if (!_.isUndefined(searchParams.q))
+                    searchFilters.q = searchParams.q;
+                else
+                    return false;
+
+                if (!_.isUndefined(searchParams.fq))
+                    searchFilters.fq = searchParams.fq;
+
+                var resultHashObj = _.extend(searchFilters, {lang: scope.lang});
+                var resultsetUUID = Data.hashFromObject(resultHashObj);
+
+                //initialize the basket's modal reference;
+                var basketConfig = initializeBasketItem(resultsetUUID, "resultset");
+
+
+                if (!_.isUndefined(searchParams.q))
+                    searchFilters.q = searchParams.q;
+
+                if (!_.isUndefined(searchParams.fq))
+                    searchFilters.fq = searchParams.fq;
+
+                basketConfig.filters.push({
+                    applied_to: "search",
+                    attrs: searchFilters
+                });
+
+                var modalRestrictions = {
+                    Dataset: true,
+                    Visualisation: false
+                };
+
+                Basket.checkIfItemExists(basketConfig)
+                    .then(function (response) {
+                        if(!_.isUndefined(response.status) && response.status=="NOT_EXISTS") {
+                            Basket.openModal(basketConfig, modalRestrictions)
+                        } else {
+                            alert('item already exists')
+                        }
+                    }, function(error) {
+                        console.log ("error during check if basket item exists", error);
+                    });
             };
 
             
@@ -274,7 +251,7 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
 
             $scope.visitResult = function(projectId) {
                 var resourceTypes = _.findWhere($scope.formattedResults, {id: projectId}).type.join();
-          
+
                 if (resourceTypes!=null || !_.isUndefined(resourceTypes)) {
                     $window.location.href = YDS_CONSTANTS.PROJECT_DETAILS_URL + '?id=' + projectId + '&type=' + resourceTypes;
                 }

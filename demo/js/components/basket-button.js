@@ -90,23 +90,27 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', 'Basket', '
 			/***************************************/
 
 			//initialize the basket's modal reference;
-			var userId ="ydsUser";
-			var basketConfig = {
-				lang: lang,
-				component_type: visualisationType,
-				content_type: viewType,
-				component_parent_uuid: projectId,
-				user_id: userId
-			};
+
 			
 			//function used to open the basket modal
 			scope.openBasketModal = function () {
-				var basketInput = {
+				var userId ="ydsUser";
+				var basketConfig = {
+					user_id: userId,
+					lang: lang,
+					type: "Dataset",
+					component_type: visualisationType,
+					content_type: viewType,
+					component_parent_uuid: projectId,
 					filters: Filters.get(element[0].id)
 				};
 
-				_.extendOwn(basketInput, basketConfig);
-				Basket.openModal(basketInput);
+				var modalRestrictions = {
+					Dataset: true,
+					Visualisation: true
+				};
+				
+				Basket.openModal(basketConfig, modalRestrictions);
 			};
 		}
 	}

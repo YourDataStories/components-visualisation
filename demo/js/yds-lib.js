@@ -57,6 +57,10 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
     };
 
     return {
+        hashFromObject: function (inputObj) {
+            var str = JSON.stringify(inputObj);
+            return calcMD5(str);
+        },
         deepObjSearch: function(obj, path){
             //function to get the value of an object property, by defining its path
             for (var i=0, path=path.split('.'), len=path.length; i<len; i++){
@@ -379,6 +383,84 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', function ($h
         });
     };
 
+
+    /**
+    * function to format the search results returned fromm the search API.
+    **/
+    var formatResults = function(results, resultsView, resultsViewNames, prefLang) {
+        var formattedResults = [];
+        //iterate through the results and format its data
+        _.each(results, function(result) {
+            //iterate through the types of the result
+            for (var j=0; j<result.type.length; j++) {
+                var viewName = result.type[j];
+
+                //search if the type of the result exists inside the available views
+                if (_.contains(resultsViewNames, viewName)) {
+                    //create an object for each result
+                    var formattedResult = {
+                        _hidden: true,
+                        id: result.id,
+                        type: result.type,
+                        rows: []
+                    };
+
+                    //get the contents of the result view
+                    var resultView = _.find(resultsView, function (view) { return viewName in view })[viewName];
+
+                    //iterate inside the view of the result in order to acquire the required data for each result
+                    _.each(resultView, function(view){
+                        var resultRow = {};
+                        resultRow.header = view.header;
+                        resultRow.type = view.type;
+                        resultRow.value = result[view.attribute];
+
+                        //if the value of a result doesn't exist
+                        if (_.isUndefined(resultRow.value) || String(resultRow.value).trim().length==0) {
+                            //extract the last 3 characters of the specific attribute of the result
+                            var last3chars = view.attribute.substr(view.attribute.length-3);
+
+                            //if it is internationalized
+                            if (last3chars == ("." + prefLang)) {
+                                //search if the attribute exists without the internationalization
+                                var attributeTokens = view.attribute.split(".");
+                                var nonInternationalizedAttr = _.first(attributeTokens, attributeTokens.length-1).join(".");
+                                resultRow.value = result [nonInternationalizedAttr];
+                            }
+                        }
+
+                        //if the value is not available assign an empty string, 
+                        // else check if it is an array and convert it to comma separated string
+                        if(_.isUndefined(resultRow.value))
+                            resultRow.value = "";
+                        else if (_.isArray(resultRow.value))
+                            resultRow.value = resultRow.value.join(", ");
+                        else if (resultRow.type == "date") {
+                            var formattedDate = new Date(parseFloat(resultRow.value));
+
+                            if (formattedDate != null) {
+                                resultRow.value = formattedDate.getDate() + "-" +
+                                    (formattedDate.getMonth() + 1) + "-" +
+                                    formattedDate.getFullYear();
+                            }
+                        }
+
+                        //push the formatted row of the result in the array of the corresponding result
+                        formattedResult.rows.push(resultRow);
+                    });
+
+                    //if the view of the result has been found, don't search further for its view
+                    break;
+                }
+            }
+
+            //push the result in the array containing all the results that will be visible to the user
+            formattedResults.push(formattedResult);
+        });
+
+        return formattedResults;
+    };
+    
     /**
      * function to format the applied facets returned fromm the search API.
      * @param {Object | Array} facets, an array or object containing the facets of the API.
@@ -465,6 +547,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', function ($h
         getKeyword: function() { return keyword; },
         clearKeyword: function() { keyword = ""; },
 
+        formatResults: formatResults,
         performSearch: performSearch,
         getResults: function () { return searchResults; },
         clearResults: function () { searchResults = []; },
