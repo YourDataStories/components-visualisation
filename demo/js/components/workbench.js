@@ -1,36 +1,84 @@
-angular.module('yds').directive('ydsWorkbench', ['Data', 'Basket', '$timeout', '$window',
-	function(Data, Basket, $timeout, $window){
+angular.module('yds').directive('ydsWorkbench', ['Data', 'Basket', '$timeout', '$window', 'Workbench',
+	function(Data, Basket, $timeout, $window, Workbench){
 	return {
 		restrict: 'E',
 		scope: {
+			lang: '@',
 			userId:'@'
 		},
 		templateUrl: 'templates/workbench.html',
-		link: function (scope, element, attrs) {
-			var userId = scope.userId;
-			scope.selectedVisualisation = "";
+		link: function (scope, element) {
 			scope.ydsAlert = "";
-			scope.basketList = [];
 
 			//if userId is undefined or empty, stop the execution of the directive
-			if (angular.isUndefined(userId) || userId.trim().length==0) {
+			if (angular.isUndefined(scope.userId) || scope.userId.trim().length==0) {
 				scope.ydsAlert = "The YDS component is not properly configured." +
 					"Please check the corresponding documentation section";
 				return false;
 			}
 
+			//check if the language attr is defined, else assign default value
+			if(angular.isUndefined(scope.lang) || scope.lang.trim()=="")
+				scope.lang = "en";
+
 			var lineChartContainer = angular.element(element[0].querySelector('.vis-area-line'));
-			var barChartContainer = angular.element(element[0].querySelector('.vis-area-bar'));
 			var pieChartContainer = angular.element(element[0].querySelector('.vis-area-pie'));
 			var mapChartContainer = angular.element(element[0].querySelector('.vis-area-map'));
 
 			lineChartContainer[0].id = "line" + Data.createRandomId();
-			barChartContainer[0].id = "bar" + Data.createRandomId();
 			pieChartContainer[0].id = "pie" + Data.createRandomId();
 			mapChartContainer[0].id = "map" + Data.createRandomId();
+			
+			scope.basketVars = {
+				selBasketIds: [],
+				basketList: [],
+				searchText: ""
+			};
+			
+			scope.lineChart = {
+				data: [],
+				chart: {},
+				options: {
+					chart: { renderTo: lineChartContainer[0].id },
+					rangeSelector : { enabled: false },
+					scrollbar : { enabled: false },
+					title : { text : "Not available" },
+					exporting: { enabled: true },
+					navigator: { enabled: false },
+					series : []
+				},
+				selectedAxisX: "",
+				selectedAxisYa: "",
+				selectedAxisYb: "",
+				selectedAxisYc: "",
+				axisX: [],
+				axisY: []
+			};
+			
+			scope.workbenchVars = {
+				selectedVis: "default",
+				availableViews: [],
+				availableViewsRaw: [],
+				selectedView: "",
+				selectedViewObj: {}
+			};
+
+			scope.noWrapSlides = false;
+			scope.active = 0;
+			scope.slides = Workbench.getSlides();
+
+			//get all the basket items of the user
+			var getBasketItems = function () {
+				Basket.getBasketItems(scope.userId, "dataset")
+				.then(function(response){
+					scope.basketVars.basketList = response.items;
+				}, function(error) {
+					console.log('Get Basket Error in Workbench');
+				});
+			};
 
 			//custom filter for searching in basket tags or title
-			scope.customFilter = function(term){
+			scope.customBasketFilter = function(term){
 				return function(item) {
 					if (item.title.toLowerCase().indexOf(term.toLowerCase())>-1 || item.tags.join().toLowerCase().indexOf(term.toLowerCase())>-1 ) {
 						return item;
@@ -38,174 +86,118 @@ angular.module('yds').directive('ydsWorkbench', ['Data', 'Basket', '$timeout', '
 				};
 			};
 
-			//get all the basket items of the user
-			Basket.getBasketItems(userId, "")
-			.then(function(response){
-				scope.basketList = response.items;
+			//function to select a basket item
+			scope.selectBasketItem = function(itemIndex) {
+				var selectedItem = scope.basketVars.basketList[itemIndex];
 
-			}, function(error) {
-				console.log('Get Basket Error in Workbench');
+				if (_.isUndefined(selectedItem))
+					return false;
 
-			});
+				if (_.isUndefined(selectedItem.selected))
+					selectedItem.selected = true;
+				else
+					selectedItem.selected = !selectedItem.selected;
 
-			scope.myInterval = 5000;
-			scope.noWrapSlides = false;
-			scope.active = 0;
-			var slides = scope.slides = [];
+				scope.basketVars.selBasketIds = _.pluck(_.where(scope.basketVars.basketList, {selected: true}), 'basket_item_id');
 
-			var slides = [
-				{
-					id:0,
-					images : [ {
-						src: "img/thumbnails/line_chart.png",
-						name: "Line Chart",
-						type: "line"
-					}, {
-						src: "img/thumbnails/bar_chart.png",
-						name: "Bar Chart",
-						type: "bar"
-					}, {
-						src: "img/thumbnails/pie_chart.png",
-						name: "Pie Chart",
-						type: "pie"
-					}]
-				}, {
-					id:1,
-					images : [{
-						src: "img/thumbnails/map.png",
-						name: "Map",
-						type: "map"
-					}]
-				}
-			];
+				Workbench.getAvailableVisualisations(scope.lang, scope.basketVars.selBasketIds)
+					.then(function(response){
+						scope.workbenchVars.availableViews = _.pluck(response.data, 'type');
+						scope.workbenchVars.availableViewsRaw = response.data;
+					}, function(error) {
+						debugger
+					});
+			};
 
-			for (var i = 0; i < slides.length; i++) {
-				scope.slides.push(slides[i]);
-			}
+			//function called when user selects one of the available views
+			scope.selectView = function(viewName) {
+				scope.workbenchVars.selectedViewObj = _.findWhere(scope.workbenchVars.availableViewsRaw, {type: viewName});
 
-			/*******************************************/
-			/********* DELETE AFTER TESTING ************/
-			/******************************************/
-			scope.sampleSelectData = [
-				"ColumnA", "ColumnB", "ColumnC"
-			];
-			/*******************************************/
-			/****** END OF DELETE AFTER TESTING *******/
-			/******************************************/
+				if (!_.isUndefined(scope.workbenchVars.selectedViewObj)) {
+					var viewComponents = _.pluck(scope.workbenchVars.selectedViewObj.values, 'component');
 
+					_.each(scope.slides, function(slideView){
+						_.each(slideView.images, function(slide){
+							if(_.contains(viewComponents, slide.type) && slide.visible==false ) {
+								slide.visible = true;
+							}
+						});
+					})
+				} else {
+					scope.workbenchVars.selectedVis = "default"
+					_.each(scope.slides, function(slideView){
+						_.each(slideView.images, function(slide){
+							slide.visible = false;
+						});
+					})
 
-			//function that clears the visualisation area from previous charts
-			var clearVisArea = function () {
-				//check if element has client nodes and delete them.
-				if (visAreaContainer[0].childNodes.length != 0) {
-					while(visAreaContainer[0].firstChild){
-						visAreaContainer[0].removeChild(visAreaContainer[0].firstChild);
-					}
 				}
 			};
+
+			getBasketItems();
+
 
 			var triggerResizeEvt = function() {
 				var evt = $window.document.createEvent('UIEvents');
 				evt.initUIEvent('resize', true, false, $window, 0);
 				$window.dispatchEvent(evt);
 			};
+			
+			scope.createVisualization = function() {
+				Workbench.generateLinechart(scope.workbenchVars.selectedView, scope.lineChart.axisX[0].attribute,
+											scope.lineChart.axisY[0].attribute, scope.basketVars.selBasketIds)
+					.then(function(response){
+							scope.lineChart.data = response.data.data;
+							scope.lineChart.title = Data.deepObjSearch(response.data, response.view[0].attribute + "." + scope.lang)
 
+                            scope.lineChart.chart.setTitle({ text: scope.lineChart.title });
+							scope.lineChart.chart.addSeries({
+								name : scope.lineChart.series,
+								data : scope.lineChart.data,
+								tooltip: {
+									valueDecimals: 2
+								}
+							});
 
+							scope.lineChart.chart.redraw();
+					}, function (error) {
+						debugger;
+					})
+			};
+			
 			var lineInit = barInit = pieInit = mapInit = false;
-			scope.selectVisualisation = function(type) {
+			scope.selectVisualisation = function(slideId, type) {
+				if (!Workbench.checkVisAvailability(slideId, type)) {
+					return false;
+				} else {
+					scope.workbenchVars.selectedVis = type;
+
+					switch(scope.workbenchVars.selectedVis) {
+						case "linechart":
+							var linechartInput = _.findWhere(scope.workbenchVars.selectedViewObj.values, {component: type})//;.values;
+
+							if (!_.isUndefined(linechartInput)) {
+								scope.lineChart.axisX = linechartInput["axis-x"];
+								scope.lineChart.axisY = linechartInput["axis-y"];
+							}
+
+							break;
+					}
+				}
+
 				switch(type) {
-					case "line":
-						if (scope.selectedVisualisation != "line") {
-							//get data from server for line visualization
-							//and init an empty line visualisation
-						}
-
+					case "linechart":
 						if (!lineInit) {
-							var options = {
-								chart: {
-									renderTo: lineChartContainer[0].id
-								},
-								rangeSelector : {
-									selected : 1
-								},
-								title : {
-									text : "My Line Chart"/*,
-									 style: {
-									 fontSize: titlepx"
-									 }*/
-								},
-								exporting: {
-									enabled: true
-								},
-								navigator: {
-									enabled: true
-								},
-								series : [{
-									//name : response.series,
-									//data : response.data,
-									name : "Series Name",
-									data : [],
-									tooltip: {
-										valueDecimals: 2
-									}
-								}]
-							};
+							scope.lineChart.chart = new Highcharts.StockChart(scope.lineChart.options);
+							lineInit = true;
 
 							$timeout(function(){
 								triggerResizeEvt();
-								new Highcharts.StockChart(options);
-								lineInit = true;
 							});
 						}
 
 						break;
-					case "bar":
-						if (!barInit) {
-							var options = {
-								chart: {
-									type: 'column',
-									renderTo: barChartContainer[0].id
-								},
-								title: { text: "My Bar Chart" },
-								xAxis: {
-									categories: [],
-									//categories: response.categories,
-									crosshair: true,
-									title : { text: "xAxis" },
-									labels: { enabled: true }
-								},
-								yAxis: {
-									title : { text: "yAxis" },
-									labels: { enabled: true }
-								},
-								legend: { enabled: true },
-								exporting: { enabled: true },
-								/*tooltip: {
-									headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-									pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-									'<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
-									footerFormat: '</table>',
-									shared: true,
-									useHTML: true
-								},*/
-								plotOptions: {
-									column: {
-										pointPadding: 0.2,
-										borderWidth: 0
-									}
-								},
-								series: []
-							};
-
-							$timeout(function(){
-								triggerResizeEvt();
-								new Highcharts.Chart(options);
-								barInit = true;
-							});
-						}
-
-						break;
-					case "pie":
+					/*case "pie":
 						if (scope.selectedVisualisation != "pie") {
 							//get data from server for pie visualization
 							//and init an empty line visualisation
@@ -250,35 +242,8 @@ angular.module('yds').directive('ydsWorkbench', ['Data', 'Basket', '$timeout', '
 							});
 						}
 
-						break;
-					case "map":
-						if (scope.selectedVisualisation != "map") {
-							//get data from server for map visualization
-							//and init an empty line visualisation
-
-							if (!mapInit) {
-								var map = L.map(mapChartContainer[0].id, {
-									center: [37.9833333,23.7333333],
-									zoom: 5,
-									zoomControl: true
-								});
-
-								$timeout(function(){
-									triggerResizeEvt();
-									L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-										maxZoom: 18,
-										attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
-									}).addTo(map);
-
-									mapInit = true;
-								});
-							}
-						}
-
-						break;
+						break;*/
 				}
-
-				scope.selectedVisualisation = type;
 			}
 		}
 	};

@@ -14,32 +14,25 @@
                     </div>
                 </div>
                 <div class="yds-basket-prev-inner">
-                    <input type="text" ng-model="searchText" placeholder="Search basket.."/>
-                    <div ng-if="basketList.length>0" class="row list-group">
-                        <div ng-repeat="item in basketList " class="list-group-item"><!--ng-click="visitResult($index)"-->
-                            <div class="row">
+                    <input type="text" ng-model="basketVars.searchText" placeholder="Search basket.."/>
+                    <div ng-if="basketVars.basketList.length>0" class="row list-group">
+                        <div ng-repeat="item in basketVars.basketList | filter:customBasketFilter(basketVars.   searchText)"
+                             class="list-group-item basket-item"
+                             ng-click="selectBasketItem($index)" ng-class="item.selected ? 'active' : ''">
+                            <div class="row" >
                                 <div class="basket-public-icon">
                                     <i class="glyphicon"
                                        title="{{ item.is_private ? 'The resource is private.' : 'The resource is public.'}}"
                                        ng-class="(item.is_private) ? 'glyphicon-eye-close' : 'glyphicon-eye-open'"></i>
                                 </div>
                                 <div class="col-md-9 col-md-offset-1 yds-basket-prev-desc">
-                                    <b>{{item.title}}</b>
-                                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true" ng-if="item.component_type=='grid'"></span>
-                                    <span class="glyphicon glyphicon-signal" aria-hidden="true" ng-if="item.component_type=='line'"></span>
-                                    <span class="glyphicon glyphicon-record" aria-hidden="true" ng-if="item.component_type=='pie'"></span>
-                                    <span class="glyphicon glyphicon-stats" aria-hidden="true" ng-if="item.component_type=='bar'"></span>
-                                    <span class="glyphicon glyphicon-globe" aria-hidden="true" ng-if="item.component_type=='map'"></span>
-                                    <br/>
+                                        <b>{{item.title}}</b><br/>
                                     <label for="">Tags: </label><span ng-repeat="tag in item.tags">{{tag}}{{$last ? '' : ', '}}</span>
-                                    </div>
-                                <!--<div class="col-md-1 yds-basket-prev-delete-btn">
-                                    <span class="glyphicon glyphicon-trash text-danger" title="Delete" aria-hidden="true" ng-click="deleteBasketItem(item.basket_item_id)"></span>
-                                </div>-->
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div ng-if="basketList.data.length==0" class="row list-group"
+                    <div ng-if="basketVars.basketList.data.length==0" class="row list-group"
                          style="border: 0.5px solid grey; margin-top: 10px; padding: 10px;">
                         <a class="list-group-item">
                             <h4>We are sorry we could not find any item in your basket..</h4>
@@ -52,21 +45,25 @@
             <uib-carousel active="active"  no-wrap="noWrapSlides">
                 <uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id">
                     <div class="col-xs-4 slider-img-wrapper"
-
-                         ng-if="slide.images[0].src!=undefined" ng-click="selectVisualisation(slide.images[0].type)">
-                        <img ng-src="{{slide.images[0].src}}" ng-class="selectedVisualisation==slide.images[0].type?'active':''">
+                         ng-class="slide.images[0].visible ? '' : 'low-opacity'"
+                         ng-if="slide.images[0].src!=undefined" ng-click="selectVisualisation(slide.id, slide.images[0].type)">
+                        <img ng-src="{{slide.images[0].src}}" ng-class="workbenchVars.selectedVis==slide.images[0].type?'active':''">
                         <div class="carousel-caption" >
                             <p>{{slide.images[0].name}}</p>
                         </div>
                     </div>
-                    <div class="col-xs-4 slider-img-wrapper" ng-if="slide.images[1].src!=undefined" ng-click="selectVisualisation(slide.images[1].type)">
-                        <img ng-src="{{slide.images[1].src}}" ng-class="selectedVisualisation==slide.images[1].type?'active':''">
+                    <div class="col-xs-4 slider-img-wrapper"
+                         ng-class="slide.images[1].visible ? '' : 'low-opacity'"
+                         ng-if="slide.images[1].src!=undefined" ng-click="selectVisualisation(slide.id, slide.images[1].type)">
+                        <img ng-src="{{slide.images[1].src}}" ng-class="workbenchVars.selectedVis==slide.images[1].type?'active':''">
                         <div class="carousel-caption">
                             <p>{{slide.images[1].name}}</p>
                         </div>
                     </div>
-                    <div class="col-xs-4 slider-img-wrapper" ng-if="slide.images[2].src!=undefined" ng-click="selectVisualisation(slide.images[2].type)">
-                        <img ng-src="{{slide.images[2].src}}" ng-class="selectedVisualisation==slide.images[2].type?'active':''">
+                    <div class="col-xs-4 slider-img-wrapper"
+                         ng-class="slide.images[2].visible ? '' : 'low-opacity'"
+                         ng-if="slide.images[2].src!=undefined" ng-click="selectVisualisation(slide.id, slide.images[2].type)">
+                        <img ng-src="{{slide.images[2].src}}" ng-class="workbenchVars.selectedVis==slide.images[2].type?'active':''">
                         <div class="carousel-caption">
                             <p>{{slide.images[2].name}}</p>
                         </div>
@@ -75,32 +72,47 @@
             </uib-carousel>
             <hr>
             <div class="row">
-                <div class="col-md-12" class="animate-switch-container" ng-switch on="selectedVisualisation">
-                    <div class="animate-switch" ng-switch-when="line">
+                <div class="form-group col-md-10 col-md-offset-1">
+                    <label for="available-views">Available Views:</label>
+                    <select class="form-control"
+                            id="available-views"
+                            ng-model="workbenchVars.selectedView"
+                            ng-change="selectView(workbenchVars.selectedView)"
+                            ng-options="item as item for item in workbenchVars.availableViews">
+                        <option value="">Please select a valid dataset</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1 animate-switch-container" ng-switch on="workbenchVars.selectedVis">
+                    <div class="animate-switch" ng-switch-when="linechart">
                         <div class="form-group">
-                            <label for="lineAxisX">X Axis</label>
-                            <select class="form-control" id="lineAxisX" ng-model="selLineAxisX" ng-options="name for name in sampleSelectData">
-                                <option value="">Choose..</option>
+                            <label>X Axis:</label>
+                            <select class="form-control"
+                                    ng-model="lineChart.selectedAxisX"
+                                    ng-options="item as item.label for item in lineChart.axisX">
+                                <option value="">Choose...</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="lineAxisY">Y Axis</label>
-                            <select class="form-control" id="lineAxisY" ng-model="selLineAxisY" ng-options="name for name in sampleSelectData">
-                                <option value="">Choose..</option>
-                            </select>
+                            <label class="pull-left">Y Axis</label>
+                            <div class="form-group" style="margin-right:50px">
+                                <select class="form-control pull-left"
+                                        ng-model="lineChart.selectedAxisYa"
+                                        ng-options="item as item.label for item in lineChart.axisY">
+                                    <option value="">Choose...</option>
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-default pull-right">
+                                <span class="glyphicon glyphicon-plus-sign"></span>
+                            </button><div style="clear:both"></div>
                         </div>
-
-                        <button type="submit" class="btn btn-default btn-success pull-right">Visualise Data</button>
-                    </div>
-                    <div class="animate-switch" ng-switch-when="bar">
-                        <div class="form-group">
-                            <label for="barAxisX">X Axis</label>
-                            <select class="form-control" id="barAxisX" ng-model="selBarAxisX" ng-options="name for name in sampleSelectData">
-                                <option value="">Choose..</option>
-                            </select>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <button ng-click="createVisualization()"
+                                        class="btn btn-default btn-success pull-right">Visualise Data</button>
+                            </div>
                         </div>
-
-                        <button type="submit" class="btn btn-default btn-success pull-right">Visualise Data</button>
                     </div>
                     <div class="animate-switch" ng-switch-when="pie">
                         <div class="form-group">
@@ -120,20 +132,18 @@
                             </select>
                         </div>
 
-                        <button type="submit" class="btn btn-default btn-success pull-right">Visualise Data</button>
+                        <button ng-click="createVisualization()"
+                                class="btn btn-default btn-success pull-right">Visualise Data</button>
                     </div>
-                    <div ng-switch-default>
-                        You have to select a visualisation type first
-                    </div>
+                    <div ng-switch-default></div>
                 </div>
             </div>
         </div>
         <div class="col-xs-5 vis-area-wrapper">
-            <div class="vis-area" ng-show="selectedVisualisation==''">No data</div>
-            <div class="vis-area vis-area-line" ng-show="selectedVisualisation=='line'"></div>
-            <div class="vis-area vis-area-bar" ng-show="selectedVisualisation=='bar'"></div>
-            <div class="vis-area vis-area-pie" ng-show="selectedVisualisation=='pie'"></div>
-            <div class="vis-area vis-area-map" ng-show="selectedVisualisation=='map'"></div>
+            <div class="vis-area vis-area-default" ng-show="workbenchVars.selectedVis=='default'"></div>
+            <div class="vis-area vis-area-line" ng-show="workbenchVars.selectedVis=='linechart'"></div>
+            <div class="vis-area vis-area-pie" ng-show="workbenchVars.selectedVis=='pie'"></div>
+            <div class="vis-area vis-area-map" ng-show="workbenchVars.selectedVis=='map'"></div>
         </div>
     </div>
 </div>

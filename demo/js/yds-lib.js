@@ -16,6 +16,7 @@ app.constant("YDS_CONSTANTS", {
     "API_MAP": "platform.yourdatastories.eu/api/json-ld/component/map.tcl",
     "API_PIE": "platform.yourdatastories.eu/api/json-ld/component/piechart.tcl",
     "API_PLOT_INFO": "platform.yourdatastories.eu/api/json-ld/component/plotinfo.tcl",
+    "API_INTERACTIVE_LINE": "platform.yourdatastories.eu/api/json-ld/component/linechart.tcl/interactive",
     "API_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/search.tcl",
     //"SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
     //"SEARCH_RESULTS_URL_EL": "http://yds-lib.dev/#/search-el",
@@ -48,14 +49,6 @@ app.directive('clipboard', [ '$document', function(){
 
 
 app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CONSTANTS) {
-    var backButtonUsed = false;
-
-    var notifyObservers = function (observerStack) { //function to trigger the callbacks of observers
-        angular.forEach(observerStack, function (callback) {
-            callback();
-        });
-    };
-
     return {
         hashFromObject: function (inputObj) {
             var str = JSON.stringify(inputObj);
@@ -419,7 +412,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', function ($h
                         if (_.isUndefined(resultRow.value) || String(resultRow.value).trim().length==0) {
                             //extract the last 3 characters of the specific attribute of the result
                             var last3chars = view.attribute.substr(view.attribute.length-3);
-
+            
                             //if it is internationalized
                             if (last3chars == ("." + prefLang)) {
                                 //search if the attribute exists without the internationalization
@@ -531,8 +524,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', function ($h
             facetsView  = _.find(response.view , function (view) { return "SearchFacets" in view })["SearchFacets"];
             //format the facets returned from the search API based on the facet view
             formatAppliedFacets(facetsView);
-
-
+            
             notifyObservers(facetsCallbacks);
             deferred.resolve(searchResults);
         }).error(function (error) {
