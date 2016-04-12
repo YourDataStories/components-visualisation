@@ -118,50 +118,6 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                 scope.gridOptions.api.setQuickFilter(input);
             };
 
-
-            /*scope.menuOptions = [
-                ['Copy', function ($itemScope) {
-                    var copiedData = "";
-                    var selectedRows = scope.gridOptions.api.getSelectedRows();
-                    var selectedRows1 = scope.gridOptions.api.getSelectedNodes();
-                    debugger;
-                    var visibleAtts = _.pluck(scope.gridOptions.columnDefs, 'field');
-
-                    _.each(selectedRows, function(selRow) {
-                        var rowContents = [];
-                        _.each(visibleAtts, function(attr){
-                           var cellValue = Data.deepObjSearch(selRow, attr);
-
-                            if (_.isUndefined(cellValue) || cellValue.trim().length==0) {
-                                cellValue = "-"
-                            } else if(_.isArray(cellValue)) {
-                                cellValue = cellValue.join("/");
-                            }
-
-                            rowContents.push(cellValue);
-                        });
-
-                        var tt = rowContents.join(",");
-                        copiedData += (tt + "\r");
-                        debugger;
-                    });
-
-                    var clipboard = angular.element(element[0].querySelector('.clipboard-wrapper'));
-                    clipboard[0].innerHTML = copiedData;
-                    
-                    var range = document.createRange();         // create a Range object
-                    range.selectNode(clipboard[0]);             // set the Node to select the "range"
-          
-                    var selection = document.getSelection();
-                    selection.addRange(range);                  // add the Range to the set of window selections
-
-                    document.execCommand('copy');               // execute 'copy', can't 'cut' in this case
-                    selection.removeAllRanges();                // clear the selection
-
-                    clipboard[0].innerHTML = "";
-                }]
-            ];*/
-            
             //function to format the nested data of the grid
             var prepareData = function (newData, newView) {
                 for (var i=0; i<newData.length; i++) {
@@ -200,9 +156,20 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                     var columnInfo = {
                         headerName: dataView[i].header,
                         field: dataView[i].attribute
+                        //width: 300
                     };
 
-                    if (dataView[i].type=="url") {
+                    if (!_.isUndefined(dataView[i].style)) {
+                        columnInfo.cellStyle = dataView[i].style;
+                    }
+
+                    if (!_.isUndefined(dataView[i]["column-width"])) {
+                        columnInfo.width = parseInt(dataView[i]["column-width"]);
+                    }
+
+
+
+                    /*if (dataView[i].type=="url") {
                         columnInfo.cellStyle = {
                             "color": "#1998D5",
                             "text-decoration": "underline"
@@ -211,7 +178,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                             debugger;
                             window.open(cell.value, '_blank');
                         }
-                    }
+                    }*/
 
                     if (dataView[i].type.indexOf("string")==-1 && dataView[i].type.indexOf("url")==-1) //is number or date
                         columnInfo.filter = 'number';
@@ -252,6 +219,8 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
 
                 //Create a new Grid Component
                 new agGrid.Grid(gridContainer[0], scope.gridOptions);
+
+               // scope.gridOptions.api.sizeColumnsToFit();
 
                 //If filtering is enabled, register function to watch for filter updates
                 if (filtering === "true" || quickFiltering === "true") {
