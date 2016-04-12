@@ -117,6 +117,50 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
             scope.applyQuickFilter = function(input) {
                 scope.gridOptions.api.setQuickFilter(input);
             };
+
+
+            /*scope.menuOptions = [
+                ['Copy', function ($itemScope) {
+                    var copiedData = "";
+                    var selectedRows = scope.gridOptions.api.getSelectedRows();
+                    var selectedRows1 = scope.gridOptions.api.getSelectedNodes();
+                    debugger;
+                    var visibleAtts = _.pluck(scope.gridOptions.columnDefs, 'field');
+
+                    _.each(selectedRows, function(selRow) {
+                        var rowContents = [];
+                        _.each(visibleAtts, function(attr){
+                           var cellValue = Data.deepObjSearch(selRow, attr);
+
+                            if (_.isUndefined(cellValue) || cellValue.trim().length==0) {
+                                cellValue = "-"
+                            } else if(_.isArray(cellValue)) {
+                                cellValue = cellValue.join("/");
+                            }
+
+                            rowContents.push(cellValue);
+                        });
+
+                        var tt = rowContents.join(",");
+                        copiedData += (tt + "\r");
+                        debugger;
+                    });
+
+                    var clipboard = angular.element(element[0].querySelector('.clipboard-wrapper'));
+                    clipboard[0].innerHTML = copiedData;
+                    
+                    var range = document.createRange();         // create a Range object
+                    range.selectNode(clipboard[0]);             // set the Node to select the "range"
+          
+                    var selection = document.getSelection();
+                    selection.addRange(range);                  // add the Range to the set of window selections
+
+                    document.execCommand('copy');               // execute 'copy', can't 'cut' in this case
+                    selection.removeAllRanges();                // clear the selection
+
+                    clipboard[0].innerHTML = "";
+                }]
+            ];*/
             
             //function to format the nested data of the grid
             var prepareData = function (newData, newView) {
@@ -131,7 +175,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                     });
                 }
             };
-            
+
             /***********************************************************/
             /******* GET DATA FROM THE SERVER AND RENDER THEM **********/
             /***********************************************************/
@@ -158,6 +202,17 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                         field: dataView[i].attribute
                     };
 
+                    if (dataView[i].type=="url") {
+                        columnInfo.cellStyle = {
+                            "color": "#1998D5",
+                            "text-decoration": "underline"
+                        };
+                        columnInfo.onCellDoubleClicked = function(cell) {
+                            debugger;
+                            window.open(cell.value, '_blank');
+                        }
+                    }
+
                     if (dataView[i].type.indexOf("string")==-1 && dataView[i].type.indexOf("url")==-1) //is number or date
                         columnInfo.filter = 'number';
 
@@ -167,7 +222,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                 //Define the options of the grid component
                 scope.gridOptions = {
                     columnDefs: columnDefs,
-                    rowSelection: 'multiple',
+                   // rowSelection: 'multiple',
                     enableColResize: (colResize === "true"),
                     enableSorting: (sorting === "true"),
                     enableFilter: (filtering === "true")

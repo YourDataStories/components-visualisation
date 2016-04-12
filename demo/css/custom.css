@@ -547,6 +547,9 @@ rzslider .rz-pointer:after {
     padding-left: 10px;
     padding-right: 10px;
 }
+.slider-img-wrapper.low-opacity {
+    opacity: 0.5;
+}
 .slider-img-wrapper img.active{
     border-color: #337ab7;
 }
@@ -595,3 +598,14 @@ rzslider .rz-pointer:after {
 .bs-callout+.bs-callout { margin-top: -5px; }
 .bs-callout-primary { border-left-color: #428bca; }
 .bs-callout-primary h4 { color: #428bca; }
+
+
+/***************************************/
+/**** HACK FOR AG-GRID SELECTION ******/
+/**************************************/
+div.ag-root {
+    -webkit-user-select:text;
+    -moz-user-select:text;
+    -ms-user-select:text;
+    user-select:text;
+}
