@@ -579,7 +579,7 @@ rzslider .rz-pointer:after {
 }
 .vis-area { min-height: 500px; }
 .vis-area-default {
-    background: url(/img/vis-not-available.png) no-repeat center center;
+    background: url(../img/vis-not-available.png) no-repeat center center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
