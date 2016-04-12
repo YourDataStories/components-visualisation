@@ -25,7 +25,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
-import sun.swing.BakedArrayList;
 
 /**
  *
@@ -173,25 +172,27 @@ public class Basket {
     public Response getItem(
             @PathParam("basket_item_id") String basket_item_id
     ) {
+        ResponseBuilder r = Response.noContent();
+        Response res;
         YDSAPI api = MongoAPIImpl.getInstance();
         final BasketItem bskt;
-        BasketItemLoadResponse blr;
+        RetrieveLoadResponse rlr;
         LOG.info(String.format("basket_item_id: %s", basket_item_id));
         try {
             bskt = api.getBasketItem(basket_item_id);
-            blr = new BasketItemLoadResponse(bskt);
+            rlr = new RetrieveLoadResponse(
+                    true, 
+                    bskt == null ? Status.NOT_EXISTS.toString().toLowerCase() : Status.OK.toString().toLowerCase(), 
+                    bskt);
+            res = r.status(Response.Status.OK).entity(rlr.toJSON()).build();
         } catch (Exception ex) {
-            blr = new BasketItemLoadResponse(
-                    null,
-                    Status.ERROR,
+            rlr = new RetrieveLoadResponse(
+                    false,
                     ex.getMessage() != null ? ex.getMessage() : ex.toString()
             );
+            res = r.status(Response.Status.INTERNAL_SERVER_ERROR).entity(rlr.toJSON()).build();
         }
-        return Response.status(
-                blr.getStatus() == Status.OK || blr.getStatus() == Status.NOT_EXISTS
-                        ? Response.Status.OK
-                        : Response.Status.INTERNAL_SERVER_ERROR
-        ).entity(blr.toJSON()).build();
+        return res;
     }
 
     @Path("remove/{user_id}")
