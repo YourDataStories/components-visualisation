@@ -576,7 +576,15 @@ rzslider .rz-pointer:after {
     border-radius: 3px;
     webkit-border-radius: 3px;
     moz-border-radius: 3px;
-}.vis-area { min-height: 400px; }
+}
+.vis-area { min-height: 500px; }
+.vis-area-default {
+    background: url(/img/vis-not-available.png) no-repeat center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
 
 
 /**********************************/

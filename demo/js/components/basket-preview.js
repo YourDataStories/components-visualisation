@@ -62,7 +62,7 @@ angular.module('yds').directive('ydsBasketPreview', ['Data' , '$compile', '$time
 			};
 
 			//custom filter for searching in basket tags or title
-			scope.customFilter = function(term){
+			scope.customBasketFilter = function(term){
 				return function(item) {
 					if (item.title.toLowerCase().indexOf(term.toLowerCase())>-1 || item.tags.join().toLowerCase().indexOf(term.toLowerCase())>-1 ) {
 						return item;
