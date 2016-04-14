@@ -121,15 +121,37 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
             //function to format the nested data of the grid
             var prepareData = function (newData, newView) {
                 for (var i=0; i<newData.length; i++) {
+
                     _.each(newView, function(viewVal) {
+
                         var attributeTokens = viewVal.attribute.split(".");
 
+                        //if the data row has this attribute and it is nested..
                         if (_.has(newData[i], attributeTokens[0]) && attributeTokens.length>1) {
                             newData[i][viewVal.attribute] = Data.deepObjSearch(newData[i], viewVal.attribute);
-                        } else
-                            newData[i][viewVal.parent] = "";
+                        }
+
+                        if (_.isUndefined(newData[i][viewVal.attribute]) || String(newData[i][viewVal.attribute]).length==0) {
+                            newData[i][viewVal.attribute] = "";
+                        }
+
+                        /*if (_.isUndefined(newData[i][viewVal.attribute]) || String(newData[i][viewVal.attribute]).length==0) {
+                            if (_.has(viewVal, "attribute2")) {
+                                attributeTokens = viewVal["attribute2"].split(".");
+
+                                if (_.has(newData[i], attributeTokens[0]) && attributeTokens.length>1) {
+                                    newData[i][viewVal.attribute] = Data.deepObjSearch(newData[i], viewVal["attribute2"]);
+                                }
+                            }
+                        }*/
+
+
                     });
+
+                   // debugger;
                 }
+
+                return newData;
             };
 
             /***********************************************************/
@@ -149,14 +171,14 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                     dataView = response.view;
                 }
                 
-                prepareData(rawData, dataView);
+                rawData = angular.copy(prepareData(rawData, dataView));
+
 
                 //Define the name of the grid's columns and the filters which can be applied on them
                 for (var i=0; i<dataView.length; i++) {
                     var columnInfo = {
                         headerName: dataView[i].header,
                         field: dataView[i].attribute
-                        //width: 300
                     };
 
                     if (!_.isUndefined(dataView[i].style)) {
@@ -167,29 +189,34 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                         columnInfo.width = parseInt(dataView[i]["column-width"]);
                     }
 
-
-
-                    /*if (dataView[i].type=="url") {
-                        columnInfo.cellStyle = {
-                            "color": "#1998D5",
-                            "text-decoration": "underline"
-                        };
-                        columnInfo.onCellDoubleClicked = function(cell) {
-                            debugger;
-                            window.open(cell.value, '_blank');
-                        }
-                    }*/
-
-                    if (dataView[i].type.indexOf("string")==-1 && dataView[i].type.indexOf("url")==-1) //is number or date
+                    //if it is not string add number filtering
+                    if (dataView[i].type.indexOf("string")==-1 && dataView[i].type.indexOf("url")==-1) {
                         columnInfo.filter = 'number';
+                    }
 
-                    columnDefs.push(columnInfo)
+                    //if it is 'amount', apply custom filter to remove the currency and sort them
+                    if (dataView[i].type=="amount") {
+                        columnInfo.comparator = function (value1, value2) {
+                            debugger;
+                            if(_.isUndefined(value1) || value1==null)
+                                value1 = "0";
+
+                            if(_.isUndefined(value2) || value2==null)
+                                value2 = "0";
+
+                            value1 = parseInt(value1.split(" "));
+                            value2 = parseInt(value2.split(" "));
+
+                            return value1-value2;
+                        }
+                    }
+
+                    columnDefs.push(columnInfo);
                 }
 
                 //Define the options of the grid component
                 scope.gridOptions = {
                     columnDefs: columnDefs,
-                   // rowSelection: 'multiple',
                     enableColResize: (colResize === "true"),
                     enableSorting: (sorting === "true"),
                     enableFilter: (filtering === "true")
@@ -214,8 +241,10 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                     };
 
                     scope.gridOptions.datasource = localDataSource;
-                } else
+                } else {
+
                     scope.gridOptions.rowData = rawData;
+                }
 
                 //Create a new Grid Component
                 new agGrid.Grid(gridContainer[0], scope.gridOptions);
