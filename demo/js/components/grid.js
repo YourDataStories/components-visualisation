@@ -147,8 +147,6 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
 
 
                     });
-
-                   // debugger;
                 }
 
                 return newData;
@@ -173,7 +171,6 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                 
                 rawData = angular.copy(prepareData(rawData, dataView));
 
-
                 //Define the name of the grid's columns and the filters which can be applied on them
                 for (var i=0; i<dataView.length; i++) {
                     var columnInfo = {
@@ -197,15 +194,14 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                     //if it is 'amount', apply custom filter to remove the currency and sort them
                     if (dataView[i].type=="amount") {
                         columnInfo.comparator = function (value1, value2) {
-                            debugger;
                             if(_.isUndefined(value1) || value1==null)
                                 value1 = "0";
 
                             if(_.isUndefined(value2) || value2==null)
                                 value2 = "0";
 
-                            value1 = parseInt(value1.split(" "));
-                            value2 = parseInt(value2.split(" "));
+                            value1 = parseInt(String(value1).split(" "));
+                            value2 = parseInt(String(value2).split(" "));
 
                             return value1-value2;
                         }
