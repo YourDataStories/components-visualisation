@@ -58,7 +58,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 							renderTo: elementId,
 							borderWidth : 1
 						},
-						title : { text : 'Nordic countries' },
+						title : { text : '' },
 						mapNavigation: { enabled: true },
 						legend: { enabled: false },
 						series : [{
