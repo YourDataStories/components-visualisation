@@ -158,9 +158,7 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                     } else {
                         alert('item already exists')
                     }
-                   debugger;
                 }, function(error) {
-                    debugger;
                     console.log ("error in get browse data", error);
                 });
             };
@@ -228,25 +226,26 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                 Search.clearKeyword();
             });
 
-            prepareTemplates();
-        },
-        controller: function($scope) {
-            $scope.resultsPreview = function (project, vizType) {
+            //function to emit results preview event
+            scope.resultsPreview = function (project, vizType) {
                 // firing an event downwards from the parent scope
-                $scope.$parent.$broadcast('previsualiseResult', {
+                scope.$parent.$broadcast('previsualiseResult', {
                     projectId : project.attributes['project-id'],
                     projectTitle : project.attributes.title,
                     vizType : vizType
                 });
             };
-            
-            $scope.showMore = function (projectIndex) {
-                var selectedItem = $scope.formattedResults[parseInt(projectIndex)];
+
+            //function for expanding the contents of a result
+            scope.showMore = function (projectIndex) {
+                var selectedItem = scope.formattedResults[parseInt(projectIndex)];
                 selectedItem._hidden = !selectedItem._hidden;
             };
 
-            $scope.visitResult = function(projectId, clickEvent) {
-                var resourceTypes = _.findWhere($scope.formattedResults, {id: projectId}).type.join();
+            //function to handle the 'view' btn of a resutl
+            scope.visitResult = function(projectId, clickEvent) {
+                clickEvent.preventDefault();
+                var resourceTypes = _.findWhere(scope.formattedResults, {id: projectId}).type.join();
 
                 if (resourceTypes!=null || !_.isUndefined(resourceTypes)) {
                     switch(clickEvent.which) {
@@ -259,6 +258,8 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                     }
                 }
             };
+
+            prepareTemplates();
         }
     };
 }]);
