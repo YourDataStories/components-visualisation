@@ -68,15 +68,8 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 							resultRow.value = "";
 						else if (_.isArray(resultRow.value))
 							resultRow.value = resultRow.value.join(", ");
-						else if (resultRow.type == "date") {
-							var formattedDate = new Date(parseFloat(resultRow.value));
-
-							if (formattedDate != null) {
-								resultRow.value = formattedDate.getDate() + "-" +
-									(formattedDate.getMonth() + 1) + "-" +
-									formattedDate.getFullYear();
-							}
-						}
+						else if (resultRow.type == "date")
+							resultRow.value = resultRow.value.split("T")[0].replace(/-/g, "/");
 
 						//push the formatted row of the result in the array of the corresponding result
 						formattedResult.rows.push(resultRow);
