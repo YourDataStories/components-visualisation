@@ -31,92 +31,17 @@ angular.module('yds').directive('ydsFacets', ['Data', 'Search', '$location', '$w
 				scope.fieldFacets = [];
 				scope.rangeFacets = [];
 			};
-
-			//function to format the field facets returned from the search API
-			var formatCheckboxFacets = function (fieldFacets, appliedFacets, facetsView) {
-				//iterate through the keys of the field facets returned from the api
-				_.each(_.keys(fieldFacets), function(facetAttr){
-					//get the facet object based on its key value
-					var rawFacetOptions = fieldFacets[facetAttr];
-
-					//initialize a basic object which will hold the required attributes of each field facet
-					var newFacet = {
-						facet_name: _.findWhere(facetsView, {attribute: facetAttr}).header,
-						facet_attribute: facetAttr,
-						facet_options: []
-					};
-
-					//iterate through the values of the field facet
-					for(var i=0; i<rawFacetOptions.length; i+=2) {
-						//initialize a new object, which will hold the values of the corresponding facet
-						var facetOptions = {
-							name: rawFacetOptions[i],
-							value: rawFacetOptions[i+1],
-							selected: false
-						};
-
-						//check if the facet is already selected from the user, if it is selected make it selected
-						var existingFacet = _.findWhere(appliedFacets, {type:"field", attribute: facetAttr, value: rawFacetOptions[i]});
-
-						if(!_.isUndefined(existingFacet))
-							facetOptions.selected = true;
-
-						newFacet.facet_options.push(facetOptions);
-					}
-
-					scope.fieldFacets.push(newFacet);
-				});
-			};
-
-			//function to format the range facets returned from the search API
-			var formatRangeFacets = function (rangeFacets, appliedFacets, facetsView) {
-				//iterate through the keys of the field facets returned from the api
-				_.each(_.keys(rangeFacets), function(facetAttr){
-					//get the facet object based on its key value
-					var rawFacetOptions = rangeFacets[facetAttr];
-
-					//initialize a basic object which will hold the required attributes of each range facet
-					var newFacet = {
-						facet_name: _.findWhere(facetsView, {attribute: facetAttr}).header,
-						facet_attribute: facetAttr,
-						facet_options: {
-							model: rawFacetOptions.start,
-							high: rawFacetOptions.end,
-							options: {
-								id: facetAttr,
-								hideLimitLabels: true,
-								floor: rawFacetOptions.start,
-								ceil: rawFacetOptions.end
-							}
-						}
-					};
-
-					//check if the facet is already selected from the user, if it is selected apply its values
-					var existingFacet = _.findWhere(appliedFacets, {type:"range", attribute: facetAttr});
-					if(!_.isUndefined(existingFacet)) {
-						newFacet.facet_options.model = parseInt(existingFacet.value.model);
-						newFacet.facet_options.high = parseInt(existingFacet.value.high);
-					}
-
-					scope.rangeFacets.push(newFacet);
-				});
-			};
-
+			
 			//callback function called after each search query
 			var updateFacets = function() {
 				initFacetArrays();
-				var appliedFacets = Search.getAppliedFacets();
-				var newFacets = Search.getFacets();
-				var facetsView = Search.getFacetsView();
-
-				formatCheckboxFacets(newFacets.facet_fields, appliedFacets, facetsView);
-				formatRangeFacets(newFacets.facet_ranges, appliedFacets, facetsView);
+				scope.fieldFacets = Search.getFieldFacets();
+				scope.rangeFacets = Search.getRangeFacets();
 				
 				if (!scope.initialized)
 					scope.initialized = true;
 			};
-
-
+			
 			//function to transform the user selected facets list in a format
 			// which is valid so as to be used as a url param
 			scope.applyFacets = function () {
@@ -142,13 +67,23 @@ angular.module('yds').directive('ydsFacets', ['Data', 'Search', '$location', '$w
 					if ( facet.facet_options.model != facet.facet_options.options.floor ||
 						facet.facet_options.high != facet.facet_options.options.ceil ) {
 
-						facetUrlString+= "&fq=" + "{!tag=" + facet.facet_options.options.id.toUpperCase() + "}"
-							+ facet.facet_options.options.id
-							+ ":["
-							+ facet.facet_options.model
-							+ "+TO+"
-							+ facet.facet_options.high
-							+ "]";
+						if (facet.facet_type=="float") {
+							facetUrlString+= "&fq=" + "{!tag=" + facet.facet_options.options.id.toUpperCase() + "}"
+								+ facet.facet_options.options.id
+								+ ":["
+								+ facet.facet_options.model
+								+ "+TO+"
+								+ facet.facet_options.high
+								+ "]";
+						} else if (facet.facet_type=="date") {
+							facetUrlString+= "&fq=" + "{!tag=" + facet.facet_options.options.id.toUpperCase() + "}"
+								+ facet.facet_options.options.id
+								+ ":["
+								+ Data.getYearMonthFromTimestamp(facet.facet_options.model, true)
+								+ "+TO+"
+								+ Data.getYearMonthFromTimestamp(facet.facet_options.high, true)
+								+ "]";
+						}
 					}
 				});
 

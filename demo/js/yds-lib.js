@@ -50,6 +50,19 @@ app.directive('clipboard', [ '$document', function(){
 
 app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CONSTANTS) {
     return {
+        getYearMonthFromTimestamp: function (timestamp, yearToMonth) {
+            var d = new Date(timestamp*1000);
+            var month = ("0" + (d.getMonth() + 1)).slice(-2);
+            var year = d.getFullYear();
+
+            if (yearToMonth)
+                return year + "-" + month;
+            else
+                return month + "-" + year;
+        },
+        getTimestampFromDate: function (date) {
+            return parseInt(new Date(date).getTime() / 1000);
+        },
         hashFromObject: function (inputObj) {
             var str = JSON.stringify(inputObj);
             return calcMD5(str);
@@ -355,202 +368,6 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         }
     }
 }]);
-
-/**************************************************/
-/********* NEW VERSION OF SEARCH SERVICE **********/
-/**************************************************/
-app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', function ($http, $q, $location, YDS_CONSTANTS) {
-    var keyword = "";
-    var facetsCallbacks = [];
-    var facetsView= {};
-    var appliedFacets = [];
-    var searchResults = [];
-    var searchFacets = {};
-
-    /**
-    * function to trigger the callbacks of observers
-    **/
-    var notifyObservers = function (observerStack) {
-        angular.forEach(observerStack, function (callback) {
-            callback();
-        });
-    };
-
-
-    /**
-    * function to format the search results returned fromm the search API.
-    **/
-    var formatResults = function(results, resultsView, resultsViewNames, prefLang) {
-        var formattedResults = [];
-        //iterate through the results and format its data
-        _.each(results, function(result) {
-            //iterate through the types of the result
-            for (var j=0; j<result.type.length; j++) {
-                var viewName = result.type[j];
-
-                //search if the type of the result exists inside the available views
-                if (_.contains(resultsViewNames, viewName)) {
-                    //create an object for each result
-                    var formattedResult = {
-                        _hidden: true,
-                        id: result.id,
-                        type: result.type,
-                        rows: []
-                    };
-
-                    //get the contents of the result view
-                    var resultView = _.find(resultsView, function (view) { return viewName in view })[viewName];
-
-                    //iterate inside the view of the result in order to acquire the required data for each result
-                    _.each(resultView, function(view){
-                        var resultRow = {};
-                        resultRow.header = view.header;
-                        resultRow.type = view.type;
-                        resultRow.value = result[view.attribute];
-
-                        //if the value of a result doesn't exist
-                        if (_.isUndefined(resultRow.value) || String(resultRow.value).trim().length==0) {
-                            //extract the last 3 characters of the specific attribute of the result
-                            var last3chars = view.attribute.substr(view.attribute.length-3);
-            
-                            //if it is internationalized
-                            if (last3chars == ("." + prefLang)) {
-                                //search if the attribute exists without the internationalization
-                                var attributeTokens = view.attribute.split(".");
-                                var nonInternationalizedAttr = _.first(attributeTokens, attributeTokens.length-1).join(".");
-                                resultRow.value = result [nonInternationalizedAttr];
-                            }
-                        }
-
-                        //if the value is not available assign an empty string, 
-                        // else check if it is an array and convert it to comma separated string
-                        if(_.isUndefined(resultRow.value))
-                            resultRow.value = "";
-                        else if (_.isArray(resultRow.value))
-                            resultRow.value = resultRow.value.join(", ");
-                        else if (resultRow.type == "date") {
-                            var formattedDate = new Date(parseFloat(resultRow.value));
-
-                            if (formattedDate != null) {
-                                resultRow.value = formattedDate.getDate() + "-" +
-                                    (formattedDate.getMonth() + 1) + "-" +
-                                    formattedDate.getFullYear();
-                            }
-                        }
-
-                        //push the formatted row of the result in the array of the corresponding result
-                        formattedResult.rows.push(resultRow);
-                    });
-
-                    //if the view of the result has been found, don't search further for its view
-                    break;
-                }
-            }
-
-            //push the result in the array containing all the results that will be visible to the user
-            formattedResults.push(formattedResult);
-        });
-
-        return formattedResults;
-    };
-    
-    /**
-     * function to format the applied facets returned fromm the search API.
-     * @param {Object | Array} facets, an array or object containing the facets of the API.
-     **/
-    var formatAppliedFacets = function (facets) {
-        appliedFacets = [];
-
-        _.each(facets, function(facet) {
-            //if it is a field facet, extract each values
-            if ( facet.type.indexOf("field")>-1 ){
-               _.each(facet.value, function (facetVal) {
-                   appliedFacets.push({
-                       type: "field",
-                       attribute: facet.attribute,
-                       value: facetVal
-                   });
-               });
-           } else if ( facet.type.indexOf("range")>-1 ) {
-               //if it is range facet, extract its type, extract and parse its values
-               var facetTypeTokens = facet.type.split("-");
-
-               if (facetTypeTokens.length>1 && facetTypeTokens[1]=="float") {
-                   if (facet.value.length == 2) {
-                       appliedFacets.push({
-                           type: "range",
-                           attribute: facet.attribute,
-                           value: {
-                               model: parseFloat(facet.value[0]),
-                               high: parseFloat(facet.value[1])
-                           }
-                       });
-                   }
-               }
-           }
-        });
-    };
-
-    /**
-     * function to format the applied facets located inside the search url
-     * @param {String} newKeyword, the search term
-     * @param {Integer} pageLimit, the max number of results returned from the API
-     * @param {Integer} pageNumber, the page number of the results
-     **/
-    var performSearch = function (newKeyword, prefLang, pageLimit, pageNumber) {
-        var deferred = $q.defer();
-
-        //define an object with the standard params required for the search query
-        var searchParameters = {
-            lang: prefLang,
-            rows: pageLimit,
-            start: pageNumber
-        };
-
-        //merge the url params with the aforementioned object
-        _.extend(searchParameters, $location.search());
-
-        $http({
-            method: 'GET',
-            url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_SEARCH,
-            params: searchParameters,
-            headers: {'Content-Type': 'application/json'}
-        }).success(function (response) {
-            //if the search query is successful, copy the results in a local variable
-            searchResults = angular.copy(response);
-            //copy the available facets in a local variable
-            searchFacets = angular.copy(response.data.facet_counts);
-            //get the facet view from the response of the search API
-            facetsView  = _.find(response.view , function (view) { return "SearchFacets" in view })["SearchFacets"];
-            //format the facets returned from the search API based on the facet view
-            formatAppliedFacets(facetsView);
-            
-            notifyObservers(facetsCallbacks);
-            deferred.resolve(searchResults);
-        }).error(function (error) {
-            deferred.reject(error);
-        });
-
-        return deferred.promise;
-    };
-    
-    return {
-        setKeyword: function(newKeyword) { keyword = newKeyword },
-        getKeyword: function() { return keyword; },
-        clearKeyword: function() { keyword = ""; },
-
-        formatResults: formatResults,
-        performSearch: performSearch,
-        getResults: function () { return searchResults; },
-        clearResults: function () { searchResults = []; },
-        
-        registerFacetsCallback: function(callback) { facetsCallbacks.push(callback); },
-        getFacets: function() { return searchFacets; },
-        getAppliedFacets: function() { return appliedFacets; },
-        getFacetsView: function() { return facetsView; }
-    }
-}]);
-
 
 app.factory('Filters', [ function () {
     var filters = [];
