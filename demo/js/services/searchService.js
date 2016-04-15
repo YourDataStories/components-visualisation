@@ -162,7 +162,8 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 			//if the facet is of type "date"
 			if (facetTypeTokens[1] == "date") {
 				//make its step to be around a month and set the slider's floor and ceil values
-				newFacet.facet_options.options.step = 2592000;
+				newFacet.facet_options.options.step = 2629746;
+				newFacet.facet_options.options.enforceStep = false;
 				newFacet.facet_options.options.floor = Data.getTimestampFromDate(rawFacetOptions.start);
 				newFacet.facet_options.options.ceil = Data.getTimestampFromDate(rawFacetOptions.end);
 

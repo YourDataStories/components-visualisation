@@ -59,7 +59,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             if (yearToMonth)
                 return year + "-" + month;
             else
-                return month + "-" + year;
+                return month + "/" + year;
         },
         getTimestampFromDate: function (date) {
             return parseInt(new Date(date).getTime() / 1000);
