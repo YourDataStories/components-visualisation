@@ -5,6 +5,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 			projectId: '@',     //id of the project that the data belong
 			viewType: '@',      //name of the array that contains the visualised data
 			lang: '@',			//lang of the visualised data
+			exporting: '@',     //enable or disable the export of the chart
 			elementH: '@'		//set the height of the component
 		},
 		templateUrl: 'templates/heatmap.html',
@@ -12,6 +13,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 			var projectId = scope.projectId;
 			var viewType = scope.viewType;
 			var lang = scope.lang;
+			var exporting = scope.exporting;
 			var elementH = scope.elementH;
 
 			var heatmapContainer = angular.element(elem[0].querySelector('.heatmap-container'));
@@ -36,6 +38,10 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 			if(angular.isUndefined(lang) || lang.trim()=="")
 				lang = "en";
 
+			//check if the exporting attr is defined, else assign default value
+			if(angular.isUndefined(exporting) || (exporting!="true" && exporting!="false"))
+				exporting = "true";
+
 			//check if the component's height attr is defined, else assign default value
 			if(angular.isUndefined(elementH) || isNaN(elementH))
 				elementH = 300;
@@ -59,8 +65,14 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 							borderWidth : 1
 						},
 						title : { text : '' },
-						mapNavigation: { enabled: true },
+						mapNavigation: { 
+							enabled: true,
+							buttonOptions: {
+								style: {display: 'none'}
+							}
+						},
 						legend: { enabled: false },
+						exporting: { enabled: (exporting === "true") },
 						series : [{
 							name: 'Country',
 							mapData: Highcharts.maps['custom/world'],
