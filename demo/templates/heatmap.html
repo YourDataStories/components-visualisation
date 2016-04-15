@@ -1,7 +1,8 @@
 <div class="heatmap-wrapper">
-    <div class="heatmap-back" ng-click="goBack()">
-        <span class="glyphicon glyphicon-menu-left"></span>
-        Back
+    <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length>0">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        {{ydsAlert}}
     </div>
     <div class="heatmap-container" style="width: 100%;"></div>
 </div>
