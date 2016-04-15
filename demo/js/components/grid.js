@@ -20,13 +20,6 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
         },
         templateUrl:'templates/grid.html',
         link: function(scope, element, attrs) {
-            var defaultDatatypes = [
-                "project","project.related.projects",
-                "project.decisions","project.decisions.financial",
-                "project.decisions.non_financial",
-                "project.related.subprojects"
-            ];
-
             var gridWrapper = angular.element(element[0].querySelector('.component-wrapper'));
             var gridContainer = angular.element(element[0].querySelector('.grid-container'));
 
@@ -49,12 +42,16 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
             scope.quickFilterValue = "";
             
             //check if project id or grid type are defined
-            if(angular.isUndefined(projectId) || projectId.trim()=="" || angular.isUndefined(viewType) || _.indexOf(defaultDatatypes, viewType)==-1) {
+            if(angular.isUndefined(projectId) || projectId.trim()=="") {
                 scope.ydsAlert = "The YDS component is not properly initialized " +
                     "because the projectId or the viewType attribute aren't configured properly." +
                     "Please check the corresponding documentation sertion";
                 return false;
             }
+
+            //check if view-type attribute is empty and assign the default value
+            if(_.isUndefined(viewType) || viewType.trim()=="")
+                viewType = "default";
 
             //check if the language attr is defined, else assign default value
             if(angular.isUndefined(lang) || lang.trim()=="")
