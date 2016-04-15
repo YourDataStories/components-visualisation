@@ -245,11 +245,18 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                 selectedItem._hidden = !selectedItem._hidden;
             };
 
-            $scope.visitResult = function(projectId) {
+            $scope.visitResult = function(projectId, clickEvent) {
                 var resourceTypes = _.findWhere($scope.formattedResults, {id: projectId}).type.join();
 
                 if (resourceTypes!=null || !_.isUndefined(resourceTypes)) {
-                    $window.location.href = YDS_CONSTANTS.PROJECT_DETAILS_URL + '?id=' + projectId + '&type=' + resourceTypes;
+                    switch(clickEvent.which) {
+                        case 1:
+                            $window.location.href = YDS_CONSTANTS.PROJECT_DETAILS_URL + '?id=' + projectId + '&type=' + resourceTypes;
+                            break;
+                        case 2:
+                            $window.open(YDS_CONSTANTS.PROJECT_DETAILS_URL + '?id=' + projectId + '&type=' + resourceTypes);
+                            break;
+                    }
                 }
             };
         }
