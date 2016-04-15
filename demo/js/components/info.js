@@ -1,4 +1,4 @@
-angular.module('yds').directive('ydsInfo', ['Data', 'Translations', function(Data, Translations){
+angular.module('yds').directive('ydsInfo', ['Data', 'Translations', '$sce', function(Data, Translations, $sce){
     return {
         restrict: 'E',
         scope: {
@@ -37,10 +37,17 @@ angular.module('yds').directive('ydsInfo', ['Data', 'Translations', function(Dat
             Data.getInfo(projectId, viewType, lang)
             .then(function (response) {
                 _.each(response.view, function(infoValue){
-                    scope.info[infoValue.header] = {
-                        value: Data.deepObjSearch(response.data, infoValue.attribute),
-                        type: infoValue.type
-                    };
+                    if (infoValue.type=="url") {
+                        scope.info[infoValue.header] = {
+                            value: $sce.trustAsHtml(Data.deepObjSearch(response.data, infoValue.attribute)),
+                            type: infoValue.type
+                        };
+                    } else {
+                        scope.info[infoValue.header] = {
+                            value: Data.deepObjSearch(response.data, infoValue.attribute),
+                            type: infoValue.type
+                        };
+                    }
                     
                     if (_.isArray(scope.info[infoValue.header].value))
                         scope.info[infoValue.header].value = scope.info[infoValue.header].value.join()
