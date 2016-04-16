@@ -47,10 +47,10 @@
                                 ng-click="addResultToBasket('<%- result['id'] %>')">
                             <%- rc.translations.saveResult %>
                         </button>
-                        <button class="btn btn-default btn-sm view-result-btn"
-                                ng-mousedown="visitResult('<%- result['id'] %>', $event)">
+                        <a class="btn btn-default btn-sm view-result-btn"
+                           href="<%- rc.resultBaseUrl %>?id=<%- result['id'] %>&type=<%- result.type.join() %>">
                             <%- rc.translations.visitResultText %>
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>

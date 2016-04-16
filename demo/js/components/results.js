@@ -116,6 +116,7 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                     }
 
                     var templateData = {
+                        resultBaseUrl: YDS_CONSTANTS.PROJECT_DETAILS_URL,
                         results: scope.formattedResults,
                         translations: {
                             saveResultSet: Translations.get(scope.lang, "saveResultSet"),
@@ -241,24 +242,7 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                 var selectedItem = scope.formattedResults[parseInt(projectIndex)];
                 selectedItem._hidden = !selectedItem._hidden;
             };
-
-            //function to handle the 'view' btn of a resutl
-            scope.visitResult = function(projectId, clickEvent) {
-                clickEvent.preventDefault();
-                var resourceTypes = _.findWhere(scope.formattedResults, {id: projectId}).type.join();
-
-                if (resourceTypes!=null || !_.isUndefined(resourceTypes)) {
-                    switch(clickEvent.which) {
-                        case 1:
-                            $window.location.href = YDS_CONSTANTS.PROJECT_DETAILS_URL + '?id=' + projectId + '&type=' + resourceTypes;
-                            break;
-                        case 2:
-                            $window.open(YDS_CONSTANTS.PROJECT_DETAILS_URL + '?id=' + projectId + '&type=' + resourceTypes);
-                            break;
-                    }
-                }
-            };
-
+            
             prepareTemplates();
         }
     };
