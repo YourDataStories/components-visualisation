@@ -1,7 +1,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h2>Heatmap</h2>
+            <h3>Heatmap</h3>
             <yds-heatmap
                 exporting="false"
                 project-id="http://linkedeconomy.org/resource/TradeActivity/ES/NL/2009/0101">
@@ -10,7 +10,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h2>Trade Activity Exports</h2>
+            <h3>Trade Activity Exports</h3>
             <yds-grid-advanced
                     project-id="http://linkedeconomy.org/resource/TradeActivity/ES/NL/2009/0101"
                     view-type="tradeactivity.exports"
@@ -25,24 +25,30 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-            <h2>Trade Activity Development Over Date</h2>
-            <yds-line
+            <h3>Trade Activity Development Over Date</h3>
+            <yds-line-advanced
                     project-id="http://linkedeconomy.org/resource/TradeActivity/ES/NL/2009/0101"
                     view-type="tradeactivity.development.over.date"
                     lang="en"
                     element-H="350"
-                    show-navigator="false">
-            </yds-line>
+                    show-navigator="false"
+                    combobox="year"
+                    combobox-labels="Year"
+                    combobox-attrs="year">
+            </yds-line-advanced>
         </div>
         <div class="col-md-6">
-            <h2>Trade Activity Sector Development Over Date</h2>
-            <yds-line
+            <h3>Trade Activity Sector Development Over Date</h3>
+            <yds-line-advanced
                     project-id="http://linkedeconomy.org/resource/TradeActivity/ES/NL/2009/0101"
                     view-type="tradeactivity.sector.development.over.date"
                     lang="en"
                     element-H="350"
-                    show-navigator="false">
-            </yds-line>
+                    show-navigator="false"
+                    combobox="year"
+                    combobox-labels="Year"
+                    combobox-attrs="year">
+            </yds-line-advanced>
         </div>
     </div>
 </div>
