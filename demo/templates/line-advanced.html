@@ -1,0 +1,26 @@
+<div class="component-wrapper">
+    <uib-alert type="danger" ng-if="ydsAlert.length>0">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        {{ydsAlert}}
+    </uib-alert>
+    <div>
+        <button type="button"
+                ng-click="clearComboFilters()"
+                class="btn btn-default component-adv-filter-btn">Clear</button>
+        <button type="button"
+                ng-click="applyComboFilters()"
+                class="btn btn-primary component-adv-filter-btn">Apply Filters</button>
+        <div ng-repeat="combo in comboboxFilters">
+            <div class="form-group  component-adv-dropdown">
+                <label>{{combo.label}}:</label>
+                <select class="form-control"
+                        ng-model="combo.selected"
+                        ng-options="item as item.header for item in comboboxData[combo.type]">
+                    <option value="">Choose...</option>
+                </select>
+            </div>
+        </div>
+        <div style="clear: both"></div>
+    </div>
+    <div class="line-container" style="width:100%;" yds-embed yds-basket-btn></div>
+</div>
