@@ -1,10 +1,8 @@
 <div class="component-wrapper">
-    <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length>0">
+    <uib-alert type="danger" ng-if="ydsAlert.length>0">
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-        <span class="sr-only">Error:</span>
         {{ydsAlert}}
-    </div>
-    <uib-alert type="danger" ng-if="comboboxFiltersAlert.length>0">{{comboboxFiltersAlert}}</uib-alert>
+    </uib-alert>
     <div>
         <div class="grid-adv-quick-filter-label"><i class="glyphicon glyphicon-filter"></i>Quick Filter:</div>
         <input type="text"
