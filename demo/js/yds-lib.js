@@ -19,6 +19,7 @@ app.constant("YDS_CONSTANTS", {
     "API_PLOT_INFO": "platform.yourdatastories.eu/api/json-ld/component/plotinfo.tcl",
     "API_INTERACTIVE_LINE": "platform.yourdatastories.eu/api/json-ld/component/linechart.tcl/interactive",
     "API_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/search.tcl",
+    "API_COMBOBOX_FILTER": "platform.yourdatastories.eu/api/json-ld/component/filter.tcl",
     //"SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
     //"SEARCH_RESULTS_URL_EL": "http://yds-lib.dev/#/search-el",
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
@@ -50,344 +51,485 @@ app.directive('clipboard', [ '$document', function(){
 
 
 app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CONSTANTS) {
-    return {
-        getYearMonthFromTimestamp: function (timestamp, yearToMonth) {
-            var d = new Date(timestamp*1000);
-            var month = ("0" + (d.getMonth() + 1)).slice(-2);
-            var year = d.getFullYear();
+    var dataService = {};
 
-            if (yearToMonth)
-                return year + "-" + month;
-            else
-                return month + "/" + year;
-        },
-        getTimestampFromDate: function (date) {
-            return parseInt(new Date(date).getTime() / 1000);
-        },
-        hashFromObject: function (inputObj) {
-            var str = JSON.stringify(inputObj);
-            return calcMD5(str);
-        },
-        deepObjSearch: function(obj, path){
-            //function to get the value of an object property, by defining its path
-            for (var i=0, path=path.split('.'), len=path.length; i<len; i++){
-                if(_.isUndefined(obj)) {
-                    obj = "";
-                    break;
-                }
+    dataService.getYearMonthFromTimestamp = function(timestamp, yearToMonth) {
+        var d = new Date(timestamp*1000);
+        var month = ("0" + (d.getMonth() + 1)).slice(-2);
+        var year = d.getFullYear();
 
-                obj = obj[path[i]];
+        if (yearToMonth)
+            return year + "-" + month;
+        else
+            return month + "/" + year;
+    };
+
+    dataService.getTimestampFromDate = function(date) {
+        return parseInt(new Date(date).getTime() / 1000);
+    };
+
+    dataService.hashFromObject = function(inputObj) {
+        var str = JSON.stringify(inputObj);
+        return calcMD5(str);
+    };
+
+    dataService.deepObjSearch = function(obj, path){
+        //function to get the value of an object property, by defining its path
+        for (var i=0, path=path.split('.'), len=path.length; i<len; i++){
+            if(_.isUndefined(obj)) {
+                obj = "";
+                break;
             }
 
-            return obj;
-        },
-        transform: function (data) {
-            if (!angular.isObject(data))		    	 // If this is not an object, defer to native stringification.
-                return ( ( data == null ) ? "" : data.toString() );
-
-            var buffer = [];
-            for (var name in data) {
-                if (!data.hasOwnProperty(name))
-                    continue;
-
-                var value = data[name];
-                buffer.push(encodeURIComponent(name) + "=" + encodeURIComponent(( value == null ) ? "" : value));
-            }
-
-            var source = buffer.join("&").replace(/%20/g, "+");
-            return source;
-        },
-        projectVisualization: function (projectId,visualizationType) {
-            //param search_obj = {}
-            var deferred = $q.defer();
-
-            //call the service with POST method
-            $http({
-                method: 'POST',
-                url: visualizationUrl,
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                transformRequest: function (obj) {
-                    var str = [];
-                    for (var p in obj)
-                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                    return str.join("&");
-                },
-                data: {
-                    project_id: projectId,
-                    viz_type: visualizationType
-                }
-            })
-            .success(function (data) {
-                deferred.resolve(data);
-            }).error(function (error) {
-                deferred.reject(error);
-            });
-
-            return deferred.promise;
-        },
-        getRoutePoints: function(start, end, via) {
-            var deferred = $q.defer();
-
-            var inputData = {
-                startPoint: start,
-                endPoint: end,
-                viaPoints: via
-            };
-            $http({
-                method: 'POST',
-                url: geoRouteUrl,
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                transformRequest: function (obj) {
-                    var str = [];
-                    for (var p in obj)
-                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                    return str.join("&");
-                },
-                data: { geoData: angular.toJson(inputData) }
-            }).success(function (data) {
-                deferred.resolve(data);
-            }).error(function (error) {
-                deferred.reject(error);
-            });
-
-            return deferred.promise;
-        },
-        saveGeoObj: function(projectId,geoObj) {
-            var deferred = $q.defer();
-
-            $http({
-                method: 'POST',
-                url: geoRouteUrl+"/save/"+projectId,
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                transformRequest: function (obj) {
-                    var str = [];
-                    for (var p in obj)
-                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                    return str.join("&");
-                },
-                data: {
-                    geoData: angular.toJson(geoObj)
-                }
-            }).success(function (data) {
-                deferred.resolve(data);
-            }).error(function (error) {
-                deferred.reject(error);
-            });
-
-            return deferred.promise;
-        },
-        getGeoObj: function(projectId) {
-            var deferred = $q.defer();
-
-            $http({
-                method: 'GET',
-                url: geoRouteUrl+"/"+ projectId,
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-            }).success(function (data) {
-                deferred.resolve(data);
-            }).error(function (error) {
-                deferred.reject(error);
-            });
-
-            return deferred.promise;
-        },
-        requestEmbedCode: function(projectId, facets, visType) {
-            var deferred = $q.defer();
-
-            $http({
-                method: 'POST',
-                url: YDS_CONSTANTS.API_EMBED + "save",
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                transformRequest: function (obj) {
-                    var str = [];
-                    for (var p in obj)
-                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                    return str.join("&");
-                },
-                data: {
-                    "project_id": projectId,
-                    "facets": JSON.stringify(facets),
-                    "viz_type": visType
-                }
-            })
-            .success(function (data) {
-                deferred.resolve(data);
-            }).error(function (error) {
-                deferred.reject(error);
-            });
-
-            return deferred.promise;
-        },
-        recoverEmbedCode: function(embedCode) {
-            var deferred = $q.defer();
-
-            $http({
-                method: 'GET',
-                url: YDS_CONSTANTS.API_EMBED + embedCode
-            }).success(function (data) {
-                deferred.resolve(data);
-            }).error(function (error) {
-                deferred.reject(error);
-            });
-
-            return deferred.promise;
-        },
-        getBreadcrumbColor: function (index) {
-            var colors = [
-                "#0000ff", "#a52a2a", "#a020f0", "#ff0000", "#ffc0cd",
-                "#ffa500", "#00ff00", "#ffff00", "#C0C000", "#C0C0FF",
-                "#C0C0C0", "#800000", "#008000", "#000080", "#808000",
-                "#800080", "#008080", "#808080", "#C00000", "#00C000",
-                "#0000C0", "#C0C000", "#C000C0", "#00C0C0", "#C0C0C0",
-                "#C0DCC0", "#A6CAF0", "#006669", "#FFFF99", "#A0A0A4",
-                "#FFCC66", "#CC6600", "#996600", "#66CC3C", "#006699",
-                "#FF9900", "#a52a2a", "#0000ff", "#40e0d0", "#5f9ea0",
-                "#ff7f50", "#bdb76b", "#ff0000", "#7cfc00", "#f0fff0",
-                "#808080", "#ffa500", "#191970", "#d8bfd8", "#adff2f",
-                "#000000", "#00bfff", "#696969", "#ff8c00", "#f8f8ff",
-                "#4169e1", "#c71585", "#d3d3d3", "#800080", "#ffdead",
-                "#fa8072", "#48d1cc", "#4b0082", "#d2b48c", "#00ffff"
-            ];
-
-            return colors[index];
-        }, getBrowseData: function () {
-            var deferred = $q.defer();
-
-            $http({
-                method: 'GET',
-                url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_YDS_MODEL_HIERARCHY,
-                headers: {'Content-Type': 'application/json'}
-            }).success(function (data) {
-                deferred.resolve(data);
-            }).error(function (error) {
-                deferred.reject(error);
-            });
-
-            return deferred.promise;
-        }, createRandomId : function () {
-            return '_' + Math.random().toString(36).substr(2, 9);
-        }, getGrid : function(resourceId, gridType, gridLang) {
-            var deferred = $q.defer();
-
-            $http({
-                method: 'GET',
-                url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_GRID,
-                headers: {'Content-Type': 'application/json; charset=UTF-8'},
-                params: {
-                    id: resourceId,
-                    type: gridType,
-                    lang: gridLang,
-                    context: 0  
-                }
-            }).success(function (data) {
-                deferred.resolve(data);
-            }).error(function (error) {
-                deferred.reject(error);
-            });
-
-            return deferred.promise;
-        }, getInfo : function(resourceId, infoType, infoLang) {
-            var deferred = $q.defer();
-
-            $http({
-                method: 'GET',
-                url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_INFO,
-                headers: {'Content-Type': 'application/json; charset=UTF-8'},
-                params: {
-                    id: resourceId,
-                    type: infoType,
-                    lang: infoLang,
-                    context: 0
-                }
-            }).success(function (data) {
-                deferred.resolve(data);
-            }).error(function (error) {
-                deferred.reject(error);
-            });
-
-            return deferred.promise;
-        }, getMap : function(resourceId, mapType, mapLang) {
-            var deferred = $q.defer();
-
-            $http({
-                method: 'GET',
-                url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_MAP,
-                headers: {'Content-Type': 'application/json; charset=UTF-8'},
-                params: {
-                    id: resourceId,
-                    type: mapType,
-                    lang: mapLang,
-                    context: 0
-                }
-            }).success(function (data) {
-                deferred.resolve(data);
-            }).error(function (error) {
-                deferred.reject(error);
-            });
-
-            return deferred.promise;
-        }, getPie : function(resourceId, pieType, pieLang) {
-            var deferred = $q.defer();
-
-            $http({
-                method: 'GET',
-                url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_PIE,
-                headers: {'Content-Type': 'application/json; charset=UTF-8'},
-                params: {
-                    id: resourceId,
-                    type: pieType,
-                    lang: pieLang,
-                    context: 0
-                }
-            }).success(function (data) {
-                deferred.resolve(data);
-            }).error(function (error) {
-                deferred.reject(error);
-            });
-
-            return deferred.promise;
-        }, getLine : function(resourceId, lineType, lineLang) {
-            var deferred = $q.defer();
-
-            $http({
-                method: 'GET',
-                url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_LINE,
-                headers: {'Content-Type': 'application/json; charset=UTF-8'},
-                params: {
-                    id: resourceId,
-                    type: lineType,
-                    lang: lineLang,
-                    context: 0
-                }
-            }).success(function (data) {
-                deferred.resolve(data);
-            }).error(function (error) {
-                deferred.reject(error);
-            });
-
-            return deferred.promise;
-        }, getHeatmap : function(resourceId, lineType, lineLang) {
-            var deferred = $q.defer();
-
-            $http({
-                method: 'GET',
-                url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_HEATMAP,
-                headers: {'Content-Type': 'application/json; charset=UTF-8'},
-                params: {
-                    id: resourceId,
-                    type: lineType,
-                    lang: lineLang,
-                    context: 0
-                }
-            }).success(function (data) {
-                deferred.resolve(data);
-            }).error(function (error) {
-                deferred.reject(error);
-            });
-
-            return deferred.promise;
+            obj = obj[path[i]];
         }
-    }
+
+        return obj;
+    };
+
+    dataService.transform = function(data) {
+        if (!angular.isObject(data))		    	 // If this is not an object, defer to native stringification.
+            return ( ( data == null ) ? "" : data.toString() );
+
+        var buffer = [];
+        for (var name in data) {
+            if (!data.hasOwnProperty(name))
+                continue;
+
+            var value = data[name];
+            buffer.push(encodeURIComponent(name) + "=" + encodeURIComponent(( value == null ) ? "" : value));
+        }
+
+        var source = buffer.join("&").replace(/%20/g, "+");
+        return source;
+    };
+
+    dataService.projectVisualization = function(projectId,visualizationType) {
+        //param search_obj = {}
+        var deferred = $q.defer();
+
+        //call the service with POST method
+        $http({
+            method: 'POST',
+            url: visualizationUrl,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            transformRequest: function (obj) {
+                var str = [];
+                for (var p in obj)
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                return str.join("&");
+            },
+            data: {
+                project_id: projectId,
+                viz_type: visualizationType
+            }
+        })
+        .success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    dataService.getRoutePoints = function(start, end, via) {
+        var deferred = $q.defer();
+
+        var inputData = {
+            startPoint: start,
+            endPoint: end,
+            viaPoints: via
+        };
+        $http({
+            method: 'POST',
+            url: geoRouteUrl,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            transformRequest: function (obj) {
+                var str = [];
+                for (var p in obj)
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                return str.join("&");
+            },
+            data: { geoData: angular.toJson(inputData) }
+        }).success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    dataService.saveGeoObj = function(projectId,geoObj) {
+        var deferred = $q.defer();
+
+        $http({
+            method: 'POST',
+            url: geoRouteUrl+"/save/"+projectId,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            transformRequest: function (obj) {
+                var str = [];
+                for (var p in obj)
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                return str.join("&");
+            },
+            data: {
+                geoData: angular.toJson(geoObj)
+            }
+        }).success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    dataService.getGeoObj = function(projectId) {
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: geoRouteUrl+"/"+ projectId,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    dataService.requestEmbedCode = function(projectId, facets, visType) {
+        var deferred = $q.defer();
+
+        $http({
+            method: 'POST',
+            url: YDS_CONSTANTS.API_EMBED + "save",
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            transformRequest: function (obj) {
+                var str = [];
+                for (var p in obj)
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                return str.join("&");
+            },
+            data: {
+                "project_id": projectId,
+                "facets": JSON.stringify(facets),
+                "viz_type": visType
+            }
+        })
+        .success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    dataService.recoverEmbedCode = function(embedCode) {
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: YDS_CONSTANTS.API_EMBED + embedCode
+        }).success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    dataService.getBreadcrumbColor = function(index) {
+        var colors = [
+            "#0000ff", "#a52a2a", "#a020f0", "#ff0000", "#ffc0cd",
+            "#ffa500", "#00ff00", "#ffff00", "#C0C000", "#C0C0FF",
+            "#C0C0C0", "#800000", "#008000", "#000080", "#808000",
+            "#800080", "#008080", "#808080", "#C00000", "#00C000",
+            "#0000C0", "#C0C000", "#C000C0", "#00C0C0", "#C0C0C0",
+            "#C0DCC0", "#A6CAF0", "#006669", "#FFFF99", "#A0A0A4",
+            "#FFCC66", "#CC6600", "#996600", "#66CC3C", "#006699",
+            "#FF9900", "#a52a2a", "#0000ff", "#40e0d0", "#5f9ea0",
+            "#ff7f50", "#bdb76b", "#ff0000", "#7cfc00", "#f0fff0",
+            "#808080", "#ffa500", "#191970", "#d8bfd8", "#adff2f",
+            "#000000", "#00bfff", "#696969", "#ff8c00", "#f8f8ff",
+            "#4169e1", "#c71585", "#d3d3d3", "#800080", "#ffdead",
+            "#fa8072", "#48d1cc", "#4b0082", "#d2b48c", "#00ffff"
+        ];
+
+        return colors[index];
+    };
+
+    dataService.getBrowseData = function() {
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_YDS_MODEL_HIERARCHY,
+            headers: {'Content-Type': 'application/json'}
+        }).success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    dataService.createRandomId = function() {
+        return '_' + Math.random().toString(36).substr(2, 9);
+    };
+
+    dataService.prepareGridColumns = function(gridView) {
+        var gridColumns = [];
+
+        for (var i=0; i<gridView.length; i++) {
+            var columnInfo = {
+                headerName: gridView[i].header,
+                field: gridView[i].attribute
+            };
+
+            if (!_.isUndefined(gridView[i].style)) {
+                columnInfo.cellStyle = gridView[i].style;
+            }
+
+            if (!_.isUndefined(gridView[i]["column-width"])) {
+                columnInfo.width = parseInt(gridView[i]["column-width"]);
+            }
+
+            //if it is not string add number filtering
+            if (gridView[i].type.indexOf("string")==-1 && gridView[i].type.indexOf("url")==-1) {
+                columnInfo.filter = 'number';
+            }
+
+            //if it is 'amount', apply custom filter to remove the currency and sort them
+            if (gridView[i].type=="amount") {
+                columnInfo.comparator = function (value1, value2) {
+                    if(_.isUndefined(value1) || value1==null)
+                        value1 = "0";
+
+                    if(_.isUndefined(value2) || value2==null)
+                        value2 = "0";
+
+                    value1 = parseInt(String(value1).split(" "));
+                    value2 = parseInt(String(value2).split(" "));
+
+                    return value1-value2;
+                }
+            }
+
+            gridColumns.push(columnInfo);
+        }
+
+        return gridColumns;
+    };
+
+    dataService.prepareGridData = function(newData, newView) {
+        for (var i=0; i<newData.length; i++) {
+            _.each(newView, function(viewVal) {
+                var attributeTokens = viewVal.attribute.split(".");
+
+                //if the data row has this attribute and it is nested..
+                if (_.has(newData[i], attributeTokens[0]) && attributeTokens.length>1) {
+                    newData[i][viewVal.attribute] = dataService.deepObjSearch(newData[i], viewVal.attribute);
+                }
+
+                if (_.isUndefined(newData[i][viewVal.attribute]) || String(newData[i][viewVal.attribute]).length==0) {
+                    newData[i][viewVal.attribute] = "";
+                }
+            });
+        }
+
+        return newData;
+    };
+
+    dataService.getGrid = function(resourceId, gridType, gridLang) {
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_GRID,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            params: {
+                id: resourceId,
+                type: gridType,
+                lang: gridLang,
+                context: 0
+            }
+        }).success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    dataService.getGridAdvanced = function(resourceId, gridType, lang, comboFilters, start) {
+        var deferred = $q.defer();
+
+        var inputParams = {
+            "id": resourceId,
+            "type": gridType,
+            "lang": lang,
+            "start": start,
+            "context": 0
+        };
+
+        _.extendOwn(inputParams, comboFilters);
+
+        $http({
+            method: 'GET',
+            url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_GRID,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            params: inputParams
+        }).success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    dataService.getInfo = function(resourceId, infoType, infoLang) {
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_INFO,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            params: {
+                id: resourceId,
+                type: infoType,
+                lang: infoLang,
+                context: 0
+            }
+        }).success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    dataService.getMap = function(resourceId, mapType, mapLang) {
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_MAP,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            params: {
+                id: resourceId,
+                type: mapType,
+                lang: mapLang,
+                context: 0
+            }
+        }).success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    dataService.getPie = function(resourceId, pieType, pieLang) {
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_PIE,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            params: {
+                id: resourceId,
+                type: pieType,
+                lang: pieLang,
+                context: 0
+            }
+        }).success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    dataService.getLine = function(resourceId, lineType, lineLang) {
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_LINE,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            params: {
+                id: resourceId,
+                type: lineType,
+                lang: lineLang,
+                context: 0
+            }
+        }).success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    dataService.getHeatmap = function(resourceId, lineType, lineLang) {
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_HEATMAP,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            params: {
+                id: resourceId,
+                type: lineType,
+                lang: lineLang,
+                context: 0
+            }
+        }).success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    dataService.getComboboxFilters = function(resourceId, filterType, lang) {
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_COMBOBOX_FILTER,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            params: {
+                id: resourceId,
+                type: filterType,
+                lang: lang,
+                context: 0
+            }
+        }).success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    return dataService;
 }]);
 
 app.factory('Filters', [ function () {
