@@ -1,0 +1,34 @@
+<div class="component-wrapper">
+    <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length>0">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        {{ydsAlert}}
+    </div>
+    <uib-alert type="danger" ng-if="comboboxFiltersAlert.length>0">{{comboboxFiltersAlert}}</uib-alert>
+    <div>
+        <div class="grid-adv-quick-filter-label"><i class="glyphicon glyphicon-filter"></i>Quick Filter:</div>
+        <input type="text"
+               class="form-control grid-adv-quick-filter"
+               ng-model="quickFilterValue"
+               ng-change="applyQuickFilter(quickFilterValue)"/>
+
+        <button type="button"
+                ng-click="clearComboFilters()"
+                class="btn btn-default grid-adv-filter-btn">Clear</button>
+        <button type="button"
+                ng-click="applyComboFilters()"
+                class="btn btn-primary grid-adv-filter-btn">Apply Filters</button>
+        <div ng-repeat="combo in comboboxFilters">
+            <div class="form-group  grid-adv-dropdown">
+                <label>{{combo.label}}:</label>
+                <select class="form-control"
+                        ng-model="combo.selected"
+                        ng-options="item as item.header for item in comboboxData[combo.type]">
+                    <option value="">Choose...</option>
+                </select>
+            </div>
+        </div>
+        <div style="clear: both"></div>
+    </div>
+    <div style="height: 100%;" class="ag-fresh grid-container" yds-basket-btn></div>
+</div>
