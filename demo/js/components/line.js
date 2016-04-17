@@ -70,7 +70,7 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
             //set the height of the chart
             lineContainer[0].style.height = elementH + 'px';
 
-            Data.getProjectVisualization("line", projectId, viewType, lang)
+            Data.getProjectVis("line", projectId, viewType, lang)
             .then(function (response) {
                 var lineData = response.data.data;
                 var lineSeries = response.data.series;

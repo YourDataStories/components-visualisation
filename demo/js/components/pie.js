@@ -71,7 +71,7 @@ angular.module('yds').directive('ydsPie', ['Data', function(Data){
             pieContainer[0].style.height = elementH + 'px';
 
             //get the pie data from the server
-            Data.getProjectVisualization("pie", scope.projectId, viewType, lang)
+            Data.getProjectVis("pie", scope.projectId, viewType, lang)
             .then(function (response) {
                 var pieData = response.data.data;
                 var pieSeries = response.data.series;

@@ -152,7 +152,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
             /***********************************************************/
             /******* GET DATA FROM THE SERVER AND RENDER THEM **********/
             /***********************************************************/
-            Data.getProjectVisualization("grid", projectId, viewType, lang)
+            Data.getProjectVis("grid", projectId, viewType, lang)
             .then(function(response) {
                 var rawData = [];
                 var dataView = [];

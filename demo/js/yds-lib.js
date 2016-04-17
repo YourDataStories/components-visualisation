@@ -318,7 +318,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         return newData;
     };
 
-    dataService.getProjectVisualization = function(type, resourceId, viewType, lang) {
+    dataService.getProjectVis = function(type, resourceId, viewType, lang) {
         var deferred = $q.defer();
         var visualizationUrl = "";
 
@@ -369,22 +369,39 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         return deferred.promise;
     };
 
-    dataService.getGridAdvanced = function(resourceId, gridType, lang, comboFilters, start) {
+    dataService.getProvectVisAdvanced = function(type, resourceId, viewType, lang, comboFilters, start) {
         var deferred = $q.defer();
+        var visualizationUrl = "";
 
         var inputParams = {
             "id": resourceId,
-            "type": gridType,
+            "type": viewType,
             "lang": lang,
             "start": start,
             "context": 0
         };
 
         _.extendOwn(inputParams, comboFilters);
+        
+        switch(type) {
+            case "grid":
+                visualizationUrl="http://" + YDS_CONSTANTS.API_GRID;
+                break;
+            case "line":
+                visualizationUrl="http://" + YDS_CONSTANTS.API_LINE;
+                break;
+            default:
+                deferred.reject({
+                    success: false,
+                    message: "Error, unknown component type"
+                });
+
+                return deferred.promise;
+        }
 
         $http({
             method: 'GET',
-            url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_GRID,
+            url: visualizationUrl,
             headers: {'Content-Type': 'application/json; charset=UTF-8'},
             params: inputParams
         }).success(function (data) {

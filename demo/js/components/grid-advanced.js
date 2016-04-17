@@ -155,7 +155,7 @@ angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout
 					getRows: function (params) {
 						//get the data from the server using the projectId, viewType, lang and filters variable,
 						//as well as the number indicating the start index of the entire resultset
-						Data.getGridAdvanced(grid.projectId, grid.viewType, grid.lang, filters, params.startRow)
+						Data.getProvectVisAdvanced("grid", grid.projectId, grid.viewType, grid.lang, filters, params.startRow)
 						.then(function(response) {
 							//format the column definitions returned from the API and add them to the grid
 							columnDefs = Data.prepareGridColumns(response.view);

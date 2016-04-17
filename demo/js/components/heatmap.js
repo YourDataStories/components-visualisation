@@ -57,7 +57,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 
 			//function to fetch data and render the heatmap component
 			var createHeatmap = function() {
-				Data.getProjectVisualization("heatmap", projectId, viewType, lang)
+				Data.getProjectVis("heatmap", projectId, viewType, lang)
 				.then(function(response) {
 					var heatmapOptions = {
 						chart : {

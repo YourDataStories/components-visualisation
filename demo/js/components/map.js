@@ -88,7 +88,7 @@ angular.module('yds').directive('ydsMap', ['Data', function(Data){
             // Create a general Feature Group to add each project layer
             var allFeatureGroup = L.featureGroup([]);
 
-            Data.getProjectVisualization("map", projectId, viewType, lang)
+            Data.getProjectVis("map", projectId, viewType, lang)
             .then(function (response) {
                 var routePoints = _.findWhere(response.view, {type: "geo-route"});
                 var routeTitle = _.findWhere(response.view, {type: "string-i18n"});
