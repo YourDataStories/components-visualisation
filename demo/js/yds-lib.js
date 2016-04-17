@@ -390,6 +390,9 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             case "line":
                 visualizationUrl="http://" + YDS_CONSTANTS.API_LINE;
                 break;
+            case "pie":
+                visualizationUrl="http://" + YDS_CONSTANTS.API_PIE;
+                break;
             default:
                 deferred.reject({
                     success: false,
