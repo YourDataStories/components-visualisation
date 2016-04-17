@@ -609,7 +609,7 @@ rzslider .rz-pointer:after {
 
 
 /***************************************/
-/**** HACK FOR AG-GRID SELECTION ******/
+/******* AG-GRID CUSTOMIZATION *********/
 /**************************************/
 div.ag-root {
     -webkit-user-select:text;
@@ -617,43 +617,44 @@ div.ag-root {
     -ms-user-select:text;
     user-select:text;
 }
-
-/***************************************/
-/******** YDS-GRID-ADVANCED ***********/
-/**************************************/
 .ag-paging-page-summary-panel {
     display: block;
     text-align: center;
 }
-.grid-adv-quick-filter-label {
+
+/********************************************/
+/******** YDS-COMPONENTS-ADVANCED ***********/
+/********************************************/
+
+.component-adv-quick-filter-label {
     float: left;
     line-height: 34px;
     margin-right: 5px;
 }
-.grid-adv-quick-filter {
+.component-adv-quick-filter {
     width: 150px;
     float: left;
 }
-.grid-adv-dropdown {
+.component-adv-dropdown {
     float: right;
 }
-.grid-adv-dropdown select{
+.component-adv-dropdown select{
     float: left;
     width: 150px;
     margin-left: 5px;
 }
-.grid-adv-dropdown label{
+.component-adv-dropdown label{
     float: left;
     line-height: 34px;
     margin-left: 10px;
 }
 
-.grid-adv-dropdown select option {
+.component-adv-dropdown select option {
     min-width: 150px!important;
     width: 150px!important;
     max-width: 150px!important;
 }
-.grid-adv-filter-btn {
+.component-adv-filter-btn {
     float: right;
     margin-left: 10px;
 }
