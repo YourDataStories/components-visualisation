@@ -34,7 +34,7 @@ angular.module('yds').directive('ydsInfo', ['Data', 'Translations', '$sce', func
                 showLess: Translations.get(lang, "showLess")
             };
             
-            Data.getInfo(projectId, viewType, lang)
+            Data.getProjectVisualization("info", projectId, viewType, lang)
             .then(function (response) {
                 _.each(response.view, function(infoValue){
                     if (infoValue.type=="url") {

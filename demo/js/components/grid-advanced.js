@@ -17,7 +17,7 @@ angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout
 			//reference the dom elements in which the yds-grid-advanced is rendered
 			var gridWrapper = angular.element(element[0].querySelector('.component-wrapper'));
 			var gridContainer = angular.element(element[0].querySelector('.grid-container'));
-			//set the variables which will be users for the creation of the grid
+			//set the variables which will be used for the creation of the grid
 			var grid = {
 				elementId: "grid" + Data.createRandomId(),
 				lang: scope.lang,
