@@ -1,6 +1,6 @@
 <div class="container">
     <div class="row">
-        <div class="col-md-6">
+        <!--<div class="col-md-6">
             <h2>Map Data</h2>
             <yds-heatmap
                     exporting="false"
@@ -9,6 +9,42 @@
         <div class="col-md-6">
             <h2>Info</h2>
             <yds-info project-id="http://linkedeconomy.org/resource/Decision/4ΑΘΔ1-3Ι"></yds-info>
+        </div>-->
+
+        <div class="col-md-12">
+            <h2>Trade Activity Exports</h2>
+            <yds-grid-advanced
+                    project-id="http://linkedeconomy.org/resource/TradeActivity/ES/NL/2009/0101"
+                    view-type="tradeactivity.exports"
+                    lang="en"
+                    element-h="400"
+                    page-size="200"
+                    combobox="year"
+                    combobox-labels="Year"
+                    combobox-attrs="year">
+            </yds-grid-advanced>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Trade Activity Development Over Date</h2>
+            <yds-line
+                    project-id="http://linkedeconomy.org/resource/TradeActivity/ES/NL/2009/0101"
+                    view-type="tradeactivity.development.over.date"
+                    lang="en"
+                    element-H="350"
+                    show-navigator="false">
+            </yds-line>
+        </div>
+        <div class="col-md-6">
+            <h2>Trade Activity Sector Development Over Date</h2>
+            <yds-line
+                    project-id="http://linkedeconomy.org/resource/TradeActivity/ES/NL/2009/0101"
+                    view-type="tradeactivity.sector.development.over.date"
+                    lang="en"
+                    element-H="350"
+                    show-navigator="false">
+            </yds-line>
         </div>
     </div>
 </div>
