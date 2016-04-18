@@ -17,6 +17,7 @@ app.constant("YDS_CONSTANTS", {
     "API_INTERACTIVE_LINE": "platform.yourdatastories.eu/api/json-ld/component/linechart.tcl/interactive",
     "API_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/search.tcl",
     "API_COMBOBOX_FILTER": "platform.yourdatastories.eu/api/json-ld/component/filter.tcl",
+    "API_YDS_STATISTICS": "platform.yourdatastories.eu/api/json-ld/component/statistics.tcl",
     //"SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
     //"SEARCH_RESULTS_URL_EL": "http://yds-lib.dev/#/search-el",
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
@@ -315,6 +316,22 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         }
 
         return newData;
+    };
+
+    dataService.getYdsStatistics = function() {
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: "http://" + YDS_CONSTANTS.API_YDS_STATISTICS,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'}
+        }).success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
     };
 
     dataService.getProjectVis = function(type, resourceId, viewType, lang) {

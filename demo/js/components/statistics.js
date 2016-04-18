@@ -1,44 +1,41 @@
-angular.module('yds').directive('ydsStatistics', ['Data', '$interval', '$timeout', function(Data, $interval, $timeout){
+angular.module('yds').directive('ydsStatistics', ['Data', '$interval', function(Data, $interval){
 	return {
 		restrict: 'E',
-		scope: {
-			projectId: '@'
-		},
 		templateUrl: 'templates/statistics.html',
-		link: function (scope, element, attrs) {
-			var intervalIterations=0;
-			scope.statCounter = 0;
-			scope.statsLimit = {};
-			scope.stats = {
-				datasets: 0,
-				locations: 0,
-				sources: 0
+		link: function (scope) {
+			scope.statistics = {
+				initialized: false,
+				maxIterations: 0,
+				stats: {},
+				statsLimit: {}
 			};
 
+			//function to update the stats counters
 			var updateStatistics = function() {
-				angular.forEach(scope.stats, function(value, key) {
-					if (scope.stats[key] < scope.statsLimit[key])
-						scope.stats[key]++;
-					else
-						scope.statCounter++;
+				_.each(scope.statistics.stats, function(value, key) {
+					if (scope.statistics.stats[key] < scope.statistics.statsLimit[key])
+						scope.statistics.stats[key]++;
 				});
 			};
 
-			//TODO replace with the object received from server
-			scope.statsLimit = angular.copy({
-				datasets: 62,
-				locations: 58,
-				sources: 110
+			//fetch the statistics from the server
+			Data.getYdsStatistics()
+			.then(function(response){
+				//copy the statistics in a new variable and find the max number of iterations required
+				scope.statistics.statsLimit = angular.copy(response.data);
+				scope.statistics.maxIterations = _.max(_.values(response.data));
+
+				//initialize the counter of each statistic
+				_.each(response.data, function(value, key){
+					scope.statistics.stats[key] = 0;
+				});
+
+				//register interval to run every 15ms
+				scope.statistics.initialized = true;
+				$interval(updateStatistics, 15, scope.statistics.maxIterations);
+			}, function(error){
+				console.log(error.message);
 			});
-
-			angular.forEach(scope.statsLimit, function(value, key) {
-				scope.statCounter++;
-
-				if (value>intervalIterations)		//find the greatest value of the object returned from the server
-					intervalIterations=value;
-			});
-
-			$interval(updateStatistics, 30, intervalIterations);
 		}
 	};
 }]);

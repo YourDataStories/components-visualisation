@@ -1,5 +1,5 @@
-<div class="row statistics-wrapper">
-    <div class="col-lg-4" ng-repeat="(key, value) in stats">
+<div class="row statistics-wrapper" ng-if="statistics.initialized">
+    <div class="col-lg-4" ng-repeat="(key, value) in statistics.stats">
         <div class="row stat-value">{{value}}</div>
         <div class="row stat-title">{{key}}</div>
     </div>
