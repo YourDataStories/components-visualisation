@@ -19,9 +19,10 @@
                     project-id="http://linkedeconomy.org/resource/TradeActivity/ES/NL/2009/0101">
             </yds-heatmap>
         </div>
-    </div><br/>
+    </div>
     <div class="row">
         <div class="col-md-12">
+            <h3>Project Decisions</h3>
             <yds-grid
                     project-id="http://linkedeconomy.org/resource/Subsidy/519339"
                     view-type="project.decisions"
@@ -38,9 +39,10 @@
                     basket-btn-y="0">
             </yds-grid>
         </div>
-    </div><br/><br/>
+    </div>
     <div class="row">
         <div class="col-md-12">
+            <h3>Trade Activity Exports for Destination</h3>
             <yds-grid-advanced
                     project-id="http://linkedeconomy.org/resource/TradeActivity/ES/NL/2009/0101"
                     view-type="tradeactivity.exports.for.destination"
@@ -110,6 +112,32 @@
                     combobox-labels="Year"
                     combobox-attrs="year">
             </yds-pie-advanced>
+        </div>
+    </div><br/><br/>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Contract Number of Contracts per Country for Year</h3>
+            <yds-bar-advanced
+                    project-id="http://linkedeconomy.org/resource/Contract/1016606"
+                    view-type="contract.number.of.contracts.per.country.for.year"
+                    element-H="350"
+                    show-navigator="false"
+                    combobox="year"
+                    combobox-labels="Year"
+                    combobox-attrs="year">
+            </yds-bar-advanced>
+        </div>
+        <div class="col-md-6">
+            <h3>Contract Total vs Local Contracts for Year</h3>
+            <yds-bar-advanced
+                    project-id="http://linkedeconomy.org/resource/Contract/1016606"
+                    view-type="contract.total.vs.local.contracts.for.year"
+                    element-H="350"
+                    show-navigator="false"
+                    combobox="year"
+                    combobox-labels="Year"
+                    combobox-attrs="year">
+            </yds-bar-advanced>
         </div>
     </div>
 </div>
