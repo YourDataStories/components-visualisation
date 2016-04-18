@@ -1,13 +1,60 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            <h2>Routes of all projects</h2>
+            <yds-map
+                    lang="en"
+                    project-id="http://linkedeconomy.org/resource/Subsidy/519339"
+                    view-type="subsidy.all"
+                    element-h="600">
+            </yds-map>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
             <h3>Heatmap</h3>
             <yds-heatmap
-                exporting="false"
-                project-id="http://linkedeconomy.org/resource/TradeActivity/ES/NL/2009/0101">
+                    exporting="false"
+                    project-id="http://linkedeconomy.org/resource/TradeActivity/ES/NL/2009/0101">
             </yds-heatmap>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <yds-grid
+                    project-id="http://linkedeconomy.org/resource/Subsidy/519339"
+                    view-type="project.decisions"
+                    sorting="true"
+                    lang="en"
+                    filtering="true"
+                    quick-filtering="true"
+                    element-H="400"
+                    col-resize="false"
+                    paging="false"
+                    page-size="5"
+                    add-to-basket="true"
+                    basket-btn-x="400"
+                    basket-btn-y="0">
+            </yds-grid>
+        </div>
+    </div><br/><br/>
+    <div class="row">
+        <div class="col-md-12">
+            <yds-grid-advanced
+                    project-id="http://linkedeconomy.org/resource/TradeActivity/ES/NL/2009/0101"
+                    view-type="tradeactivity.exports.for.destination"
+                    lang="en"
+                    element-h="400"
+                    page-size="200"
+                    combobox="year, country"
+                    combobox-labels="Year, Destination"
+                    combobox-attrs="year, country">
+            </yds-grid-advanced>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-12">
             <h3>Trade Activity Exports</h3>
