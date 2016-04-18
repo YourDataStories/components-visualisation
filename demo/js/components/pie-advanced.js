@@ -209,9 +209,8 @@ angular.module('yds').directive('ydsPieAdvanced', ['$timeout', '$q', 'Data', fun
 					pie["chart"].setTitle({text: pieTitle});
 
 					//remove the existing pie chart series
-					_.each(pie["chart"].series, function(item) {
-						item.remove();
-					});
+					while(pie["chart"].series.length > 0)
+						pie["chart"].series[0].remove(true);
 
 					//add the new series to the pie chart
 					pie["chart"].addSeries({

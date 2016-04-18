@@ -194,9 +194,8 @@ angular.module('yds').directive('ydsLineAdvanced', ['$timeout', '$q', 'Data', 'F
 					line["chart"].setTitle({text: lineTitle});
 
 					//remove the existing line chart series
-					_.each(line["chart"].series, function(item) {
-						item.remove();
-					});
+					while(line["chart"].series.length > 0)
+						line["chart"].series[0].remove(true);
 
 					//add the new series to the line chart
 					line["chart"].addSeries({
