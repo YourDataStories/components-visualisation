@@ -6,6 +6,7 @@ angular.module('yds').directive('ydsStatistics', ['Data', '$interval', '$timeout
 		},
 		templateUrl: 'templates/statistics.html',
 		link: function (scope, element, attrs) {
+			var intervalIterations=0;
 			scope.statCounter = 0;
 			scope.statsLimit = {};
 			scope.stats = {
@@ -23,30 +24,21 @@ angular.module('yds').directive('ydsStatistics', ['Data', '$interval', '$timeout
 				});
 			};
 
-			Data.projectVisualization(scope.projectId,"bar")
-			.then(function (response) {
-				//clone the received object to a new in order to act as limit
-				var intervalIterations=0;
-				scope.statCounter = 0;
-
-				//TODO replace with the object received from server
-				scope.statsLimit = angular.copy({
-					datasets: 62,
-					locations: 58,
-					sources: 110
-				});
-
-				angular.forEach(scope.statsLimit, function(value, key) {
-					scope.statCounter++;
-
-					if (value>intervalIterations)		//find the greatest value of the object returned from the server
-						intervalIterations=value;
-				});
-
-				$interval(updateStatistics, 30, intervalIterations);
-			}, function (error) {
-				console.log('error', error);
+			//TODO replace with the object received from server
+			scope.statsLimit = angular.copy({
+				datasets: 62,
+				locations: 58,
+				sources: 110
 			});
+
+			angular.forEach(scope.statsLimit, function(value, key) {
+				scope.statCounter++;
+
+				if (value>intervalIterations)		//find the greatest value of the object returned from the server
+					intervalIterations=value;
+			});
+
+			$interval(updateStatistics, 30, intervalIterations);
 		}
 	};
 }]);
