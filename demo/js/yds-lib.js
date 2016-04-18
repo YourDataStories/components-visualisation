@@ -368,7 +368,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         return deferred.promise;
     };
 
-    dataService.getProvectVisAdvanced = function(type, resourceId, viewType, lang, comboFilters, start) {
+    dataService.getProjectVisAdvanced = function(type, resourceId, viewType, lang, comboFilters, start) {
         var deferred = $q.defer();
         var visualizationUrl = "";
 
@@ -376,9 +376,11 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             "id": resourceId,
             "type": viewType,
             "lang": lang,
-            "start": start,
             "context": 0
         };
+
+        if(!_.isUndefined(start))
+            inputParams["start"] = start;
 
         _.extendOwn(inputParams, comboFilters);
         
