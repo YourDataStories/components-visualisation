@@ -52,6 +52,20 @@ app.directive('clipboard', [ '$document', function(){
 app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CONSTANTS) {
     var dataService = {};
 
+    //function to convert date to timestamp
+    var monthToComparableNumber = function (date) {
+        if (date === undefined || date === null || date.length !== 10) {
+            return null;
+        }
+
+        var yearNumber = date.substring(6,10);
+        var monthNumber = date.substring(3,5);
+        var dayNumber = date.substring(0,2);
+
+        var result = (yearNumber*10000) + (monthNumber*100) + dayNumber;
+        return result;
+    };
+
     dataService.getYearMonthFromTimestamp = function(timestamp, yearToMonth) {
         var d = new Date(timestamp*1000);
         var month = ("0" + (d.getMonth() + 1)).slice(-2);
@@ -273,7 +287,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             }
 
             //if it is not string add number filtering
-            if (gridView[i].type.indexOf("string")==-1 && gridView[i].type.indexOf("url")==-1  && gridView[i].type.indexOf("date")==-1) {
+            if (gridView[i].type.indexOf("string")==-1 && gridView[i].type.indexOf("url")==-1 && gridView[i].type.indexOf("date")==-1) {
                 columnInfo.filter = 'number';
             }
 
@@ -290,6 +304,22 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                     value2 = parseInt(String(value2).split(" "));
 
                     return value1-value2;
+                }
+            } else if (gridView[i].type=="date") {
+                columnInfo.comparator = function (date1, date2) {
+                    var date1Number = monthToComparableNumber(date1);
+                    var date2Number = monthToComparableNumber(date2);
+
+                    if (date1Number === null && date2Number === null)
+                        return 0;
+
+                    if (date1Number === null)
+                        return -1;
+
+                    if (date2Number === null)
+                        return 1;
+
+                    return date1Number - date2Number;
                 }
             }
 
