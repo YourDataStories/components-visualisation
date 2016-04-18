@@ -192,10 +192,10 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                     if (dataView[i].type=="amount") {
                         columnInfo.comparator = function (value1, value2) {
                             if(_.isUndefined(value1) || value1==null)
-                                value1 = "0";
+                                value1 = "-1";
 
                             if(_.isUndefined(value2) || value2==null)
-                                value2 = "0";
+                                value2 = "-1";
 
                             value1 = parseInt(String(value1).split(" "));
                             value2 = parseInt(String(value2).split(" "));
