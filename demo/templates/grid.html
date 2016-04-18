@@ -4,9 +4,13 @@
         <span class="sr-only">Error:</span>
         {{ydsAlert}}
     </div>
-    <div style="margin-bottom: 10px;" ng-if="quickFiltering=='true'" >
-        <i class="glyphicon glyphicon-filter"></i>Quick Filter:
-        <input type="text" ng-model="$parent.quickFilterValue" ng-change="applyQuickFilter(quickFilterValue)"/>
+    <div>
+        <div class="component-adv-quick-filter-label"><i class="glyphicon glyphicon-filter"></i>Quick Filter:</div>
+        <input type="text"
+               class="form-control component-adv-quick-filter"
+               ng-model="quickFilterValue"
+               ng-change="applyQuickFilter(quickFilterValue)"/>
+        <div style="clear: both"></div>
     </div>
-    <div style="height: 100%;" class="ag-fresh grid-container" yds-basket-btn></div>
+    <div style="height: 100%; margin-top:10px;" class="ag-fresh grid-container" yds-basket-btn></div>
 </div>

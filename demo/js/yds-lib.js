@@ -6,7 +6,6 @@ var geoRouteUrl = host+"/YDSAPI/yds/geo/route";
 // Defining global variables for the YDS lib
 app.constant("YDS_CONSTANTS", {
     "PROXY": "/",
-    //"PROXY": "localhost:9292/",
     "API_YDS_MODEL_HIERARCHY":"platform.yourdatastories.eu/api/json-ld/model/YDSModelHierarchy.json",
     "API_GRID": "platform.yourdatastories.eu/api/json-ld/component/grid.tcl",
     "API_HEATMAP": "platform.yourdatastories.eu/api/json-ld/component/heatmap.tcl",
@@ -280,10 +279,10 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             if (gridView[i].type=="amount") {
                 columnInfo.comparator = function (value1, value2) {
                     if(_.isUndefined(value1) || value1==null)
-                        value1 = "0";
+                        value1 = "-1";
 
                     if(_.isUndefined(value2) || value2==null)
-                        value2 = "0";
+                        value2 = "-1";
 
                     value1 = parseInt(String(value1).split(" "));
                     value2 = parseInt(String(value2).split(" "));
