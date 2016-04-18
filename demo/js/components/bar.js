@@ -45,14 +45,18 @@ angular.module('yds').directive('ydsBar', ['Data', function(Data){
             var titleSize = scope.titleSize;
 
             //check if the projectId and the viewType attr is defined, else stop the process
-            if (angular.isUndefined(projectId)|| angular.isUndefined(viewType)) {
+            if (angular.isUndefined(projectId) || projectId.trim()=="") {
                 scope.ydsAlert = "The YDS component is not properly configured." +
                     "Please check the corresponding documentation section";
                 return false;
             }
 
+            //check if view-type attribute is empty and assign the default value
+            if(_.isUndefined(viewType) || viewType.trim()=="")
+                viewType = "default";
+
             //check if the language attr is defined, else assign default value
-            if(angular.isUndefined(lang))
+            if(angular.isUndefined(lang) || lang.trim()=="")
                 lang = "en";
 
             //check if the x-axis title attr is defined, else assign the default value
@@ -90,14 +94,16 @@ angular.module('yds').directive('ydsBar', ['Data', function(Data){
             //set the height of the chart
             barContainer[0].style.height = elementH + 'px';
 
-            Data.projectVisualization(scope.projectId,"bar")
+            Data.getProjectVis("bar", projectId, viewType, lang)
             .then(function (response) {
+                var barData = response.data.data;
+                var barCategories = response.data.categories;
+                var barTitleAttr = _.first(response.view).attribute;
+                var barTitle = Data.deepObjSearch(response.data, barTitleAttr);
+
                 //check if the component is properly rendered
-
-                if (angular.isUndefined(response.data) || !_.isArray(response.data) ||
-                    angular.isUndefined(response.title) || angular.isUndefined(response.categories)||
-                    !_.isArray(response.categories)) {
-
+                if (angular.isUndefined(barData) || !_.isArray(barData) || angular.isUndefined(barCategories)) {
+                    debugger;
                     scope.ydsAlert = "The YDS component is not properly configured." +
                         "Please check the corresponding documentation section";
                     return false;
@@ -109,13 +115,13 @@ angular.module('yds').directive('ydsBar', ['Data', function(Data){
                         renderTo: elementId
                     },
                     title: {
-                        text: response.title,
+                        text: barTitle,
                         style: {
                             fontSize: titleSize + "px"
                         }
                     },
                     xAxis: {
-                        categories: response.categories,
+                        categories: barCategories,
                         crosshair: true,
                         title : { text: titleX },
                         labels: { enabled: (showLabelsX === "true") }
@@ -144,12 +150,15 @@ angular.module('yds').directive('ydsBar', ['Data', function(Data){
                             borderWidth: 0
                         }
                     },
-                    series: response.data
+                    series: barData
                 };
 
                 var chart = new Highcharts.Chart(options);
             }, function (error) {
-                console.log('error', error);
+                if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
+                    scope.ydsAlert = "An error was occurred, please check the configuration of the component";
+                else
+                    scope.ydsAlert = error.message;
             });
         }
     };

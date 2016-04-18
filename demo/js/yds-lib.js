@@ -7,6 +7,7 @@ var geoRouteUrl = host+"/YDSAPI/yds/geo/route";
 app.constant("YDS_CONSTANTS", {
     "PROXY": "/",
     "API_YDS_MODEL_HIERARCHY":"platform.yourdatastories.eu/api/json-ld/model/YDSModelHierarchy.json",
+    "API_BAR": "platform.yourdatastories.eu/api/json-ld/component/barchart.tcl",
     "API_GRID": "platform.yourdatastories.eu/api/json-ld/component/grid.tcl",
     "API_HEATMAP": "platform.yourdatastories.eu/api/json-ld/component/heatmap.tcl",
     "API_INFO": "platform.yourdatastories.eu/api/json-ld/component/info.tcl",
@@ -339,6 +340,9 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         var visualizationUrl = "";
 
         switch(type) {
+            case "bar":
+                visualizationUrl="http://" + YDS_CONSTANTS.API_BAR;
+                break;
             case "info":
                 visualizationUrl="http://" + YDS_CONSTANTS.API_INFO;
                 break;
