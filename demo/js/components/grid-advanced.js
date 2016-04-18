@@ -1,4 +1,4 @@
-angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout', function(Data, Filters, $timeout){
+angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout', '$q', function(Data, Filters, $timeout, $q){
 	return {
 		restrict: 'E',
 		scope: {
@@ -67,21 +67,41 @@ angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout
 
 
 			/**
+			 * function show errors on top of the visualization
+			 **/
+			var showAlert = function(alertMsg, predefined, persistent) {
+				if(!predefined)
+					scope.ydsAlert = alertMsg;
+				else
+					scope.ydsAlert = "The YDS component is not properly initialized " +
+						"because the projectId or the viewType attribute aren't configured properly." +
+						"Please check the corresponding documentation section";
+
+				if (!persistent)
+					$timeout(function () { scope.ydsAlert = ""; }, 2000);
+			};
+
+			/**
 			 * function to get the required data of each different type of combobox
 			 **/
-			var getComboFilterData = function(name) {
-				//if the data of the specific type of combobox have already been fetched, return
-				if (!_.isUndefined(scope.comboboxData[name]) && scope.comboboxData[name].length>0) {
-					return false;
-				}
+			var getComboFilterData = function(name, attribute) {
+				var deferred = $q.defer();
 
-				//if the data of the specific type of combobox doesn't exist, fetch them from the server
-				Data.getComboboxFilters(grid.projectId, "combobox." + name , grid.lang)
+				Data.getComboboxFilters(grid.projectId, "combobox." + name , attribute, grid.lang)
 				.then(function(response) {
-					scope.comboboxData[name] = response.data;
+					scope.comboboxData[attribute] = response.data;
+
+					//find the filter entry and assign the default value
+					var filterObj  = _.findWhere(scope.comboboxFilters, {"attribute": attribute});
+					if (!_.isUndefined(filterObj))
+						filterObj.selected =  _.findWhere(response.data, response.default);
+
+					deferred.resolve(response);
 				}, function(error){
-					console.log("Error retrieving data for yds-grid-advanced filtes")
+					deferred.reject(error);
 				});
+
+				return deferred.promise;
 			};
 
 
@@ -92,6 +112,7 @@ angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout
 				//check if all the required attributes for the rendering of fthe comboboxes are defined
 				if (!_.isUndefined(grid.combobox) && !_.isUndefined(grid.comboboxLabels) && !_.isUndefined(grid.comboboxAttrs)) {
 					//extract and trim their values
+					var filterPromises = [];
 					grid.combobox = grid.combobox.replace(/ /g, "").split(",");
 					grid.comboboxAttrs = grid.comboboxAttrs.replace(/ /g, "").split(",");
 					grid.comboboxLabels = grid.comboboxLabels.split(",");
@@ -101,38 +122,42 @@ angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout
 						grid.combobox.length==grid.comboboxAttrs.length &&
 						grid.comboboxLabels.length==grid.comboboxAttrs.length ) {
 
+						//iterate through the user provided comboboxes and fetch their data
 						_.each(grid.combobox, function(value, index) {
-							getComboFilterData(value);
-
-							scope.comboboxFilters.push({
+							var newFilter = {
 								selected: "",
 								type: value,
 								label: grid.comboboxLabels[index],
 								attribute: grid.comboboxAttrs[index]
-							});
+							};
+
+							scope.comboboxFilters.push(newFilter);
+							filterPromises.push(getComboFilterData(newFilter.type, newFilter.attribute));
 						});
 
-						return true;
+						//when the data of all the filters have been returned, create the corresponding visualization
+						$q.all(filterPromises).then(function() {
+							scope.applyComboFilters();
+						}, function(error) {
+							showAlert("", true, true);
+						});
+					} else {
+						showAlert("", true, true);
 					}
-				}
-
-				//if the different attributes doesn't have the same length, show an error message and return
-				scope.ydsAlert = "The YDS component is not properly initialized " +
-					"because the projectId or the viewType attribute aren't configured properly." +
-					"Please check the corresponding documentation sertion";
-				return false;
+				} else
+					showAlert("", true, true);
 			};
 
 
 			/**
 			 * function to render the grid based on the available filters
 			 **/
-			var visualizeGrid = function(filters, initializeFlag) {
+			var visualizeGrid = function(filters) {
 				var rawData = [];
 				var columnDefs = [];
 
 				//if the grid is being rendered for the first time, create an empty grid
-				if (initializeFlag) {
+				if (_.isUndefined(scope.gridOptions)) {
 					//Define the options of the grid component
 					scope.gridOptions = {
 						columnDefs: columnDefs,
@@ -144,8 +169,6 @@ angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout
 
 					new agGrid.Grid(gridContainer[0], scope.gridOptions);
 					scope.gridOptions.api.setRowData(rawData);
-
-					return false;
 				}
 
 				//if the grid has already been rendered, setup a new datasource used for the paging of the results
@@ -164,7 +187,7 @@ angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout
 							var rowsThisPage = Data.prepareGridData(response.data, response.view);
 							params.successCallback(rowsThisPage, response.pager.total);
 						}, function(error) {
-							console.log("Error retrieving data for yds-grid-advanced")
+							showAlert(error.message, false, true);
 						});
 					}
 				};
@@ -177,29 +200,28 @@ angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout
 			 * function called when the 'apply filters' btn is clicked
 		 	 **/
 			scope.applyComboFilters = function() {
-				var valid = false;
 				var appliedFilters = {};
 
 				//iterate through the data of the rendered filters and check which of them are selected
 				_.each(scope.comboboxFilters, function (filter) {
-					if (filter.selected != null && !_.isUndefined(filter.selected.value)) {
+					if (filter.selected != null && !_.isUndefined(filter.selected.value))
 						appliedFilters[filter.attribute] = filter.selected.value;
-						valid = true;
-					}
 				});
 
-				//if none of the filters are selected show an error message
-				if (!valid) {
-					scope.ydsAlert = "Please select at least one filter";
-					$timeout(function () {
-						scope.ydsAlert = "";
-					}, 2000)
-				} else if (_.keys(appliedFilters).length > 0) {
-					//if at least one of the filters is selected update the grid
-					visualizeGrid(appliedFilters, false);
+				///if at least one of the filters is not selected show an error message
+				if (_.keys(appliedFilters).length != scope.comboboxFilters.length) {
+					var errorMsg = "Please select a value for all the available filters";
+					showAlert(errorMsg, false, false);
+				} else {
+					//if the length of the quickFilter input is greater than 0, append it to the object containing the selected filters
+					if (scope.quickFilterValue.trim().length>0)
+						appliedFilters["filter"] = scope.quickFilterValue.trim();
+
+					//if all the filters is selected update the grid
+					visualizeGrid(appliedFilters);
 				}
 			};
-
+			
 
 			/**
 			 * function called when the 'clear filters' btn is clicked
@@ -222,13 +244,8 @@ angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout
 					scope.gridOptions.api.setQuickFilter(input);
 			};
 
-			//initial attempt to render an empty grid, if the filter extraction is successful 
-			if (extractFilters())
-				visualizeGrid({}, true);
-			else
-				scope.ydsAlert = "The YDS component is not properly initialized " +
-					"because the projectId or the viewType attribute aren't configured properly." +
-					"Please check the corresponding documentation section";
+			//extract the user provided filters, and render the grid
+			extractFilters();
 		}
 	};
 }]);

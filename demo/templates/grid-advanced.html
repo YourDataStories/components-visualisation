@@ -21,7 +21,7 @@
                 <label>{{combo.label}}:</label>
                 <select class="form-control"
                         ng-model="combo.selected"
-                        ng-options="item as item.header for item in comboboxData[combo.type]">
+                        ng-options="item as item.header for item in comboboxData[combo.attribute]">
                     <option value="">Choose...</option>
                 </select>
             </div>

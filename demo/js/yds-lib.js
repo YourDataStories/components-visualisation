@@ -415,7 +415,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         return deferred.promise;
     };
 
-    dataService.getComboboxFilters = function(resourceId, filterType, lang) {
+    dataService.getComboboxFilters = function(resourceId, filterType, filterAttr, lang) {
         var deferred = $q.defer();
 
         $http({
@@ -425,6 +425,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             params: {
                 id: resourceId,
                 type: filterType,
+                attribute: filterAttr,
                 lang: lang,
                 context: 0
             }
