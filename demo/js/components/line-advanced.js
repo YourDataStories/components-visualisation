@@ -243,8 +243,8 @@ angular.module('yds').directive('ydsLineAdvanced', ['$timeout', '$q', 'Data', 'F
 					filter.selected = "";
 				});
 			};
-			
-			//initial attempt to render an empty line, if the filter extraction is successfull
+
+			//extract the user provided filters, and render the line chart
 			extractFilters();
 		}
 	};

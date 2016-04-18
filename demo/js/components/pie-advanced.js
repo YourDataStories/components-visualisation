@@ -1,4 +1,4 @@
-angular.module('yds').directive('ydsPieAdvanced', ['$timeout', 'Data', function($timeout, Data){
+angular.module('yds').directive('ydsPieAdvanced', ['$timeout', '$q', 'Data', function($timeout, $q, Data){
 	return {
 		restrict: 'E',
 		scope: {
@@ -76,22 +76,44 @@ angular.module('yds').directive('ydsPieAdvanced', ['$timeout', 'Data', function(
 			pieContainer[0].id = pie.elementId;
 			pieContainer[0].style.height = pie.elementH + 'px';
 
+
+			/**
+			 * function show errors on top of the visualization
+			 **/
+			var showAlert = function(alertMsg, predefined, persistent) {
+				if(!predefined)
+					scope.ydsAlert = alertMsg;
+				else
+					scope.ydsAlert = "The YDS component is not properly initialized " +
+						"because the projectId or the viewType attribute aren't configured properly." +
+						"Please check the corresponding documentation section";
+
+				if (!persistent)
+					$timeout(function () { scope.ydsAlert = ""; }, 2000);
+			};
+
+
 			/**
 			 * function to get the required data of each different type of combobox
 			 **/
-			var getComboFilterData = function(name) {
-				//if the data of the specific type of combobox have already been fetched, return
-				if (!_.isUndefined(scope.comboboxData[name]) && scope.comboboxData[name].length>0) {
-					return false;
-				}
+			var getComboFilterData = function(name, attribute) {
+				var deferred = $q.defer();
 
-				//if the data of the specific type of combobox doesn't exist, fetch them from the server
-				Data.getComboboxFilters(pie.projectId, "combobox." + name , pie.lang)
+				Data.getComboboxFilters(pie.projectId, "combobox." + name, attribute , pie.lang)
 					.then(function(response) {
-						scope.comboboxData[name] = response.data;
+						scope.comboboxData[attribute] = response.data;
+
+						//find the filter entry and assign the default value
+						var filterObj  = _.findWhere(scope.comboboxFilters, {"attribute": attribute});
+						if (!_.isUndefined(filterObj))
+							filterObj.selected =  _.findWhere(response.data, response.default);
+
+						deferred.resolve(response);
 					}, function(error){
-						console.log("Error retrieving data for yds-pie-advanced filters")
+						deferred.reject(error);
 					});
+
+				return deferred.promise;
 			};
 
 
@@ -102,6 +124,7 @@ angular.module('yds').directive('ydsPieAdvanced', ['$timeout', 'Data', function(
 				//check if all the required attributes for the rendering of fthe comboboxes are defined
 				if (!_.isUndefined(pie.combobox) && !_.isUndefined(pie.comboboxLabels) && !_.isUndefined(pie.comboboxAttrs)) {
 					//extract and trim their values
+					var filterPromises = [];
 					pie.combobox = pie.combobox.replace(/ /g, "").split(",");
 					pie.comboboxAttrs = pie.comboboxAttrs.replace(/ /g, "").split(",");
 					pie.comboboxLabels = pie.comboboxLabels.split(",");
@@ -112,42 +135,45 @@ angular.module('yds').directive('ydsPieAdvanced', ['$timeout', 'Data', function(
 						pie.comboboxLabels.length==pie.comboboxAttrs.length ) {
 
 						_.each(pie.combobox, function(value, index) {
-							getComboFilterData(value);
-
-							scope.comboboxFilters.push({
+							var newFilter = {
 								selected: "",
 								type: value,
 								label: pie.comboboxLabels[index],
 								attribute: pie.comboboxAttrs[index]
-							});
+							};
+
+							scope.comboboxFilters.push(newFilter);
+							filterPromises.push(getComboFilterData(newFilter.type, newFilter.attribute));
 						});
 
-						return true;
+						//when the data of all the filters have been returned, create the corresponding visualization
+						$q.all(filterPromises).then(function() {
+							scope.applyComboFilters();
+						}, function(error) {
+							showAlert("", true, true);
+						});
+					} else {
+						showAlert("", true, true);
 					}
-				}
-
-				//if the different attributes doesn't have the same length, show an error message and return
-				scope.ydsAlert = "The YDS component is not properly initialized " +
-					"because the projectId or the viewType attribute aren't configured properly." +
-					"Please check the corresponding documentation sertion";
-				return false;
+				} else
+					showAlert("", true, true);
 			};
 
 
 			/**
 			 * function to render the pie chart based on the available filters
 			 **/
-			var visualizePieChart = function(filters, initializeFlag) {
+			var visualizePieChart = function(filters) {
 				//if the pie chart is being initialized for the first time
 				//set its options and render the chart without data
-				if (initializeFlag) {
+				if (_.isUndefined(pie["chart"])) {
 					var options = {
 						chart: {
 							type: 'pie',
 							renderTo: pie.elementId
 						},
 						title: {
-							text : "Please apply one of the available filters",
+							text : "",
 							style: { fontSize: pie.titleSize + "px" }
 						},
 						tooltip: { pointFormat: '({point.y}) <b>{point.percentage:.1f}%</b>' },
@@ -161,6 +187,7 @@ angular.module('yds').directive('ydsPieAdvanced', ['$timeout', 'Data', function(
 									enabled: true,
 									format: '<b>{point.name}</b>: {point.percentage:.1f} %',
 									style: {
+										width: '300px',
 										color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
 									}
 								}
@@ -169,40 +196,32 @@ angular.module('yds').directive('ydsPieAdvanced', ['$timeout', 'Data', function(
 					};
 
 					pie["chart"] = new Highcharts.Chart(options);
-				} else {
-					//if the chart has already been rendered, fetch data from the server and visualize the results
-					Data.getProvectVisAdvanced("pie", pie.projectId, pie.viewType, pie.lang, filters)
-						.then(function(response) {
-							//get the title of the chart from the result
-							var titlePath = response.view[0].attribute;
-							var pieTitle = Data.deepObjSearch(response.data, titlePath);
-
-							//set the chart's title
-							pie["chart"].setTitle({text: pieTitle});
-
-							//remove the existing pie chart series
-							_.each(pie["chart"].series, function(item) {
-								item.remove();
-							});
-
-							//add the new series to the pie chart
-							pie["chart"].addSeries({
-								name: response.data.series,
-								data: response.data.data,
-								colorByPoint: true
-							});
-
-						}, function (error) {
-							if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
-								scope.ydsAlert = "An error was occurred, please try with a different filter";
-							else
-								scope.ydsAlert = error.message;
-
-							$timeout(function () {
-								scope.ydsAlert = "";
-							}, 4000)
-						});
 				}
+
+				//if the chart has already been rendered, fetch data from the server and visualize the results
+				Data.getProjectVisAdvanced("pie", pie.projectId, pie.viewType, pie.lang, filters)
+				.then(function(response) {
+					//get the title of the chart from the result
+					var titlePath = response.view[0].attribute;
+					var pieTitle = Data.deepObjSearch(response.data, titlePath);
+
+					//set the chart's title
+					pie["chart"].setTitle({text: pieTitle});
+
+					//remove the existing pie chart series
+					_.each(pie["chart"].series, function(item) {
+						item.remove();
+					});
+
+					//add the new series to the pie chart
+					pie["chart"].addSeries({
+						name: response.data.series,
+						data: response.data.data,
+						colorByPoint: true
+					});
+				}, function (error) {
+					showAlert(error.message, false, false);
+				});
 			};
 
 
@@ -210,26 +229,21 @@ angular.module('yds').directive('ydsPieAdvanced', ['$timeout', 'Data', function(
 			 * function called when the 'apply filters' btn is clicked
 			 **/
 			scope.applyComboFilters = function() {
-				var valid = false;
 				var appliedFilters = {};
 
 				//iterate through the data of the rendered filters and check which of them are selected
 				_.each(scope.comboboxFilters, function (filter) {
-					if (filter.selected != null && !_.isUndefined(filter.selected.value)) {
+					if (filter.selected != null && !_.isUndefined(filter.selected.value))
 						appliedFilters[filter.attribute] = filter.selected.value;
-						valid = true;
-					}
 				});
 
-				//if none of the filters are selected show an error message
-				if (!valid) {
-					scope.ydsAlert = "Please select at least one filter";
-					$timeout(function () {
-						scope.ydsAlert = "";
-					}, 2000)
-				} else if (_.keys(appliedFilters).length > 0) {
-					//if at least one of the filters is selected update the pie
-					visualizePieChart(appliedFilters, false);
+				///if at least one of the filters is not selected show an error message
+				if (_.keys(appliedFilters).length != scope.comboboxFilters.length) {
+					var errorMsg = "Please select a value for all the available filters";
+					showAlert(errorMsg, false, false);
+				} else {
+					//if all the filters is selected update the pie
+					visualizePieChart(appliedFilters);
 				}
 			};
 
@@ -246,13 +260,8 @@ angular.module('yds').directive('ydsPieAdvanced', ['$timeout', 'Data', function(
 				});
 			};
 
-			//initial attempt to render an empty pie, if the filter extraction is successfull
-			if (extractFilters())
-				visualizePieChart({}, true);
-			else
-				scope.ydsAlert = "The YDS component is not properly initialized " +
-					"because the projectId or the viewType attribute aren't configured properly." +
-					"Please check the corresponding documentation section";
+			//extract the user provided filters, and render the pie chart
+			extractFilters()
 		}
 	};
 }]);
