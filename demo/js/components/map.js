@@ -67,18 +67,19 @@ angular.module('yds').directive('ydsMap', ['Data', function(Data){
                 zoomControl: (zoomControl === "true")
             });
 
-            //set marker icons
-            var startIcon = L.icon({
-                iconUrl: 'lib/images/marker-icon-start.png',
-                iconSize:   [26, 41],
-                iconAnchor:   [13, 41]
-            });
-
-            var endIcon = L.icon({
-                iconUrl: 'lib/images/marker-icon-end.png',
-                iconSize:   [26, 41],
-                iconAnchor:   [13, 41]
-            });
+            //create the default map pins for the start and the end of route
+            var mapPins = {
+                start : L.icon({
+                    iconUrl: 'lib/images/marker-icon-start.png',
+                    iconSize:   [26, 41],
+                    iconAnchor:   [13, 41]
+                }),
+                end: L.icon({
+                    iconUrl: 'lib/images/marker-icon-end.png',
+                    iconSize:   [26, 41],
+                    iconAnchor:   [13, 41]
+                })
+            };
 
             L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 18,
@@ -90,36 +91,43 @@ angular.module('yds').directive('ydsMap', ['Data', function(Data){
 
             Data.getProjectVis("map", projectId, viewType, lang)
             .then(function (response) {
-                var routePoints = _.findWhere(response.view, {type: "geo-route"});
-                var routeTitle = _.findWhere(response.view, {type: "string-i18n"});
+                //extract the required objects from the view
+                var routePointsView = _.findWhere(response.view, {type: "geo-route"});
+                var routeTitleView = _.findWhere(response.view, {type: "string-i18n"});
 
-                if (!_.isUndefined(routePoints)) {
-                    var projectLayer = L.featureGroup([]);
-                    var routePath = _.rest(routePoints.attribute.split("."), 1).join();
+                if (!_.isUndefined(routePointsView)) {
+                    //create a separate leaflet featureGroup for each route
+                    var routePath = _.rest(routePointsView.attribute.split("."), 1).join(".");
+                    var routeTitlePath = _.rest(routeTitleView.attribute.split("."), 1).join(".");
 
+                    //iterate through the different routes and visualize them on the map
                     _.each(response.data.routes, function(routeObj) {
+                        //create a polyline layer which will contains the points of each route
                         var polyline = L.polyline([]);
+                        //create a featureGroup layer which will contains the polyline and the markers of the route
+                        var projectLayer = L.featureGroup([]);
+                        //find the title and the points of each route based on the provided view
                         var route = Data.deepObjSearch(routeObj, routePath);
+                        var routeTitle = Data.deepObjSearch(routeObj, routeTitlePath);
 
+                        //add the points of each route to the polyline layer
                         _.each(route, function(routePoints){
                             polyline.addLatLng([parseFloat(routePoints.lng), parseFloat(routePoints.lat)]);
                         });
 
-                        var StartMarker = L.marker(
-                            [parseFloat(_.first(route).lng), parseFloat(_.first(route).lat)],{icon: startIcon}
-                        );
+                        //create the start marker of the route and add it to the featureGroup layer
+                        var startMarker = L.marker([parseFloat(_.first(route).lng), parseFloat(_.first(route).lat)],{ icon: mapPins.start });
+                        startMarker.bindPopup(routeTitle, { offset: new L.Point(0, -33) });
+                        projectLayer.addLayer(startMarker);
 
-                        var EndMarker = L.marker(
-                            [parseFloat(_.last(route).lng), parseFloat(_.last(route).lat)],{icon: endIcon}
-                        );
-
-                        projectLayer.addLayer(StartMarker);
-                        projectLayer.addLayer(EndMarker);
+                        //if the route has more than one point, create the start marker of the route and add it to the featureGroup layer
+                        if (route.length!=1) {
+                            var endMarker = L.marker([parseFloat(_.last(route).lng), parseFloat(_.last(route).lat)],{ icon: mapPins.end });
+                            endMarker.bindPopup(routeTitle, { offset: new L.Point(0, -33) });
+                            projectLayer.addLayer(endMarker);
+                        }
+                        
                         projectLayer.addLayer(polyline);
-                        projectLayer.bindPopup(Data.deepObjSearch(response.data, routeTitle.attribute), {
-                            offset: new L.Point(0, -33)
-                        });
-
                         allFeatureGroup.addLayer(projectLayer);
                     });
 
