@@ -273,7 +273,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             }
 
             //if it is not string add number filtering
-            if (gridView[i].type.indexOf("string")==-1 && gridView[i].type.indexOf("url")==-1) {
+            if (gridView[i].type.indexOf("string")==-1 && gridView[i].type.indexOf("url")==-1  && gridView[i].type.indexOf("date")==-1) {
                 columnInfo.filter = 'number';
             }
 
