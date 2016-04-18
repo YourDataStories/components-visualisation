@@ -1,4 +1,4 @@
-angular.module('yds').directive('ydsLineAdvanced', ['$timeout', 'Data', 'Filters', function($timeout, Data, Filters){
+angular.module('yds').directive('ydsLineAdvanced', ['$timeout', '$q', 'Data', 'Filters', function($timeout, $q, Data, Filters){
 	return {
 		restrict: 'E',
 		scope: {
@@ -76,23 +76,43 @@ angular.module('yds').directive('ydsLineAdvanced', ['$timeout', 'Data', 'Filters
 
 
 			/**
-			 * function to get the required data of each different type of combobox
+			 * function show errors on top of the visualization
 			 **/
-			var getComboFilterData = function(name) {
-				//if the data of the specific type of combobox have already been fetched, return
-				if (!_.isUndefined(scope.comboboxData[name]) && scope.comboboxData[name].length>0) {
-					return false;
-				}
+			var showAlert = function(alertMsg, predefined, persistent) {
+				if(!predefined)
+					scope.ydsAlert = alertMsg;
+				else
+					scope.ydsAlert = "The YDS component is not properly initialized " +
+						"because the projectId or the viewType attribute aren't configured properly." +
+						"Please check the corresponding documentation section";
 
-				//if the data of the specific type of combobox doesn't exist, fetch them from the server
-				Data.getComboboxFilters(line.projectId, "combobox." + name , line.lang)
-					.then(function(response) {
-						scope.comboboxData[name] = response.data;
-					}, function(error){
-						console.log("Error retrieving data for yds-line-advanced filters")
-					});
+				if (!persistent)
+					$timeout(function () { scope.ydsAlert = ""; }, 2000);
 			};
 
+
+			/**
+			 * function to get the required data of each different type of combobox
+			 **/
+			var getComboFilterData = function(name, attribute) {
+				var deferred = $q.defer();
+
+				Data.getComboboxFilters(line.projectId, "combobox." + name , attribute, line.lang)
+				.then(function(response) {
+					scope.comboboxData[attribute] = response.data;
+
+					//find the filter entry and assign the default value
+					var filterObj  = _.findWhere(scope.comboboxFilters, {"attribute": attribute});
+					if (!_.isUndefined(filterObj))
+						filterObj.selected =  _.findWhere(response.data, response.default);
+
+					deferred.resolve(response);
+				}, function(error){
+					deferred.reject(error);
+				});
+
+				return deferred.promise;
+			};
 
 			/**
 			 * function to extract the combobox values defined on the element's attributes
@@ -101,6 +121,7 @@ angular.module('yds').directive('ydsLineAdvanced', ['$timeout', 'Data', 'Filters
 				//check if all the required attributes for the rendering of fthe comboboxes are defined
 				if (!_.isUndefined(line.combobox) && !_.isUndefined(line.comboboxLabels) && !_.isUndefined(line.comboboxAttrs)) {
 					//extract and trim their values
+					var filterPromises = [];
 					line.combobox = line.combobox.replace(/ /g, "").split(",");
 					line.comboboxAttrs = line.comboboxAttrs.replace(/ /g, "").split(",");
 					line.comboboxLabels = line.comboboxLabels.split(",");
@@ -110,36 +131,40 @@ angular.module('yds').directive('ydsLineAdvanced', ['$timeout', 'Data', 'Filters
 						line.combobox.length==line.comboboxAttrs.length &&
 						line.comboboxLabels.length==line.comboboxAttrs.length ) {
 
+						//iterate through the user provided comboboxes and fetch their data
 						_.each(line.combobox, function(value, index) {
-							getComboFilterData(value);
-
-							scope.comboboxFilters.push({
+							var newFilter = {
 								selected: "",
 								type: value,
 								label: line.comboboxLabels[index],
 								attribute: line.comboboxAttrs[index]
-							});
+							};
+
+							scope.comboboxFilters.push(newFilter);
+							filterPromises.push(getComboFilterData(newFilter.type, newFilter.attribute));
 						});
 
-						return true;
+						//when the data of all the filters have been returned, create the corresponding visualization
+						$q.all(filterPromises).then(function() {
+							scope.applyComboFilters();
+						}, function(error) {
+							showAlert("", true, true);
+						});
+					} else {
+						showAlert("", true, true);
 					}
-				}
-
-				//if the different attributes doesn't have the same length, show an error message and return
-				scope.ydsAlert = "The YDS component is not properly initialized " +
-					"because the projectId or the viewType attribute aren't configured properly." +
-					"Please check the corresponding documentation sertion";
-				return false;
+				} else
+					showAlert("", true, true);
 			};
 
 
 			/**
 			 * function to render the line chart based on the available filters
 			 **/
-			var visualizeLineChart = function(filters, initializeFlag) {
+			var visualizeLineChart = function(filters) {
 				//if the line chart is being initialized for the first time
 				//set its options and render the chart without data
-				if (initializeFlag) {
+				if (_.isUndefined(line["chart"])) {
 					var options = {
 						chart: { renderTo: line.elementId },
 						rangeSelector : {
@@ -148,7 +173,7 @@ angular.module('yds').directive('ydsLineAdvanced', ['$timeout', 'Data', 'Filters
 						},
 						scrollbar : { enabled: (line.showNavigator === "true") },
 						title : {
-							text : "Please apply one of the available filters",
+							text : "",
 							style: { fontSize: line.titleSize + "px" }
 						},
 						exporting: { enabled: (line.exporting === "true") },
@@ -156,39 +181,31 @@ angular.module('yds').directive('ydsLineAdvanced', ['$timeout', 'Data', 'Filters
 					};
 
 					line["chart"] = new Highcharts.StockChart(options);
-				} else {
-					//if the chart has already been rendered, fetch data from the server and visualize the results
-					Data.getProvectVisAdvanced("line", line.projectId, line.viewType, line.lang, filters)
-						.then(function(response) {
-							//get the title of the chart from the result
-							var titlePath = response.view[0].attribute;
-							var lineTitle = Data.deepObjSearch(response.data, titlePath);
-
-							//set the chart's title
-							line["chart"].setTitle({text: lineTitle});
-
-							//remove the existing line chart series
-							_.each(line["chart"].series, function(item) {
-								item.remove();
-							});
-
-							//add the new series to the line chart
-							line["chart"].addSeries({
-								name : response.data.series,
-								data : response.data.data
-							});
-
-						}, function (error) {
-							if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
-								scope.ydsAlert = "An error was occurred, please try with a different filter";
-							else
-								scope.ydsAlert = error.message;
-
-							$timeout(function () {
-								scope.ydsAlert = "";
-							}, 4000)
-						});
 				}
+
+				//if the chart has already been rendered, fetch data from the server and visualize the results
+				Data.getProjectVisAdvanced("line", line.projectId, line.viewType, line.lang, filters)
+				.then(function(response) {
+					//get the title of the chart from the result
+					var titlePath = response.view[0].attribute;
+					var lineTitle = Data.deepObjSearch(response.data, titlePath);
+
+					//set the chart's title
+					line["chart"].setTitle({text: lineTitle});
+
+					//remove the existing line chart series
+					_.each(line["chart"].series, function(item) {
+						item.remove();
+					});
+
+					//add the new series to the line chart
+					line["chart"].addSeries({
+						name : response.data.series,
+						data : response.data.data
+					});
+				}, function (error) {
+					showAlert(error.message, false, false);
+				});
 			};
 
 
@@ -196,26 +213,21 @@ angular.module('yds').directive('ydsLineAdvanced', ['$timeout', 'Data', 'Filters
 			 * function called when the 'apply filters' btn is clicked
 			 **/
 			scope.applyComboFilters = function() {
-				var valid = false;
 				var appliedFilters = {};
 
 				//iterate through the data of the rendered filters and check which of them are selected
 				_.each(scope.comboboxFilters, function (filter) {
-					if (filter.selected != null && !_.isUndefined(filter.selected.value)) {
+					if (filter.selected != null && !_.isUndefined(filter.selected.value))
 						appliedFilters[filter.attribute] = filter.selected.value;
-						valid = true;
-					}
 				});
 
-				//if none of the filters are selected show an error message
-				if (!valid) {
-					scope.ydsAlert = "Please select at least one filter";
-					$timeout(function () {
-						scope.ydsAlert = "";
-					}, 2000)
-				} else if (_.keys(appliedFilters).length > 0) {
-					//if at least one of the filters is selected update the grid
-					visualizeLineChart(appliedFilters, false);
+				///if at least one of the filters is not selected show an error message
+				if (_.keys(appliedFilters).length != scope.comboboxFilters.length) {
+					var errorMsg = "Please select a value for all the available filters";
+					showAlert(errorMsg, false, false);
+				} else {
+					//if all the filters is selected update the line
+					visualizeLineChart(appliedFilters);
 				}
 			};
 
@@ -232,13 +244,8 @@ angular.module('yds').directive('ydsLineAdvanced', ['$timeout', 'Data', 'Filters
 				});
 			};
 			
-			//initial attempt to render an empty grid, if the filter extraction is successfull
-			if (extractFilters())
-				visualizeLineChart({}, true);
-			else
-				scope.ydsAlert = "The YDS component is not properly initialized " +
-					"because the projectId or the viewType attribute aren't configured properly." +
-					"Please check the corresponding documentation section";
+			//initial attempt to render an empty line, if the filter extraction is successfull
+			extractFilters();
 		}
 	};
 }]);
