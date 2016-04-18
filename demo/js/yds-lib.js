@@ -409,6 +409,9 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             case "grid":
                 visualizationUrl="http://" + YDS_CONSTANTS.API_GRID;
                 break;
+            case "bar":
+                visualizationUrl="http://" + YDS_CONSTANTS.API_BAR;
+                break;
             case "line":
                 visualizationUrl="http://" + YDS_CONSTANTS.API_LINE;
                 break;
