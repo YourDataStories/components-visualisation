@@ -19,8 +19,8 @@ app.constant("YDS_CONSTANTS", {
     "API_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/search.tcl",
     "API_COMBOBOX_FILTER": "platform.yourdatastories.eu/api/json-ld/component/filter.tcl",
     "API_YDS_STATISTICS": "platform.yourdatastories.eu/api/json-ld/component/statistics.tcl",
-    //"SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
-    //"SEARCH_RESULTS_URL_EL": "http://yds-lib.dev/#/search-el",
+   // "SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
+   // "SEARCH_RESULTS_URL_EL": "http://yds-lib.dev/#/search-el",
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
     "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search-el",
     "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
@@ -300,8 +300,8 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                     if(_.isUndefined(value2) || value2==null)
                         value2 = "-1";
 
-                    value1 = parseInt(String(value1).split(" "));
-                    value2 = parseInt(String(value2).split(" "));
+                    value1 = parseFloat(String(value1).split(" ")[0].replace(/,/g, ""));
+                    value2 = parseFloat(String(value2).split(" ")[0].replace(/,/g, ""));
 
                     return value1-value2;
                 }
