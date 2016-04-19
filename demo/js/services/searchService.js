@@ -1,5 +1,6 @@
 app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data', 
 	function ($http, $q, $location, YDS_CONSTANTS, Data) {
+	var i18nLangs = ["en", "el"];
 	var keyword = "";
 	var facetsCallbacks = [];
 	var facetsView= {};
@@ -55,10 +56,19 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 
 							//if it is internationalized
 							if (last3chars == ("." + prefLang)) {
-								//search if the attribute exists without the internationalization
+								//split the attribute in tokens
 								var attributeTokens = view.attribute.split(".");
+								//extract the attribute without the i18n tokens
 								var nonInternationalizedAttr = _.first(attributeTokens, attributeTokens.length-1).join(".");
-								resultRow.value = result [nonInternationalizedAttr];
+								//find the opposite language of the component
+								var alternativeLang = _.first(_.without(i18nLangs, prefLang));
+
+								//assign the value of the opposite language
+								resultRow.value = result [nonInternationalizedAttr + "." + alternativeLang];
+
+								//if no value was acquired from the i18n attributes, try with non-internationalized attribute
+								if (_.isUndefined(resultRow.value) || String(resultRow.value).trim().length==0)
+									resultRow.value = result [nonInternationalizedAttr];
 							}
 						}
 
