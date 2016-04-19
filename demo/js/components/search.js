@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsSearch', ['$window', '$rootScope', '$location', 'YDS_CONSTANTS', 'Search',
-	function ($window, $rootScope, $location, YDS_CONSTANTS, Search) {
+angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location', 'YDS_CONSTANTS', 'Search',
+	function ($window, $timeout, $location, YDS_CONSTANTS, Search) {
 	return {
 		restrict: 'E',
 		scope: {
@@ -43,10 +43,17 @@ angular.module('yds').directive('ydsSearch', ['$window', '$rootScope', '$locatio
 				if (!searchForm.$valid)
 					return false;
 
-				if (scope.lang == "en")
-					$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL + "?q=" + scope.searchKeyword;
-				else if (scope.lang == "el")
-					$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL_EL + "?q=" + scope.searchKeyword;
+				$timeout(function() {
+					//delete the query params
+					delete $location.$$search.q;
+					$location.$$compose();
+
+					//append the query param to the search url
+					if (scope.lang == "en")
+						$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL + "?q=" + scope.searchKeyword;
+					else if (scope.lang == "el")
+						$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL_EL + "?q=" + scope.searchKeyword;
+				}, 0);
 			}
 		}
 	};
