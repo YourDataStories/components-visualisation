@@ -131,8 +131,10 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                     var content = $compile(resultTemplate(templateData))(scope);
                     resultsContainer.append(content);
                 }, function (error) {
+                    //when an error occur, initialize the pagination and clear the results
                     scope.pagination.hide();
-                    console.log('error', error);
+                    scope.pagination.setTotal(0);
+                    resultsContainer[0].innerHTML = "";
                 });
             };
 
