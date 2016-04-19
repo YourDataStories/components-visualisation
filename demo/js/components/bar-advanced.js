@@ -222,6 +222,7 @@ angular.module('yds').directive('ydsBarAdvanced', ['$timeout', '$q', 'Data', 'Fi
 				.then(function(response) {
 					//get the data and the title of the chart from the result
 					var barData = response.data.data;
+					var barCategories = response.data.categories;
 					var titlePath = response.view[0].attribute;
 					var barTitle = Data.deepObjSearch(response.data, titlePath);
 
@@ -232,11 +233,13 @@ angular.module('yds').directive('ydsBarAdvanced', ['$timeout', '$q', 'Data', 'Fi
 					while(bar["chart"].series.length > 0)
 						bar["chart"].series[0].remove(true);
 
-					//add the new series to the bar chart
+					//if there are data to be visualized, add the new series to the bar chart and set the xAxis categories
 					if (barData.length>0){
 						_.each(barData, function(serie){
 							bar["chart"].addSeries(serie);
 						});
+
+						bar["chart"].xAxis[0].setCategories(barCategories);
 					} else {
 						//if no data are available, add default serie to the bar chart
 						bar["chart"].addSeries({
