@@ -155,7 +155,6 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
 
                 Basket.checkIfItemExists(basketConfig)
                 .then(function (response) {
-                    debugger;
                     if(!_.isUndefined(response.status) && response.status=="NOT_EXISTS") {
                         Basket.openModal(basketConfig, basketModalRestrictions)
                     } else {

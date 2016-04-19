@@ -253,6 +253,16 @@ body #main .container:first-child {
 }
 
 /**********************************/
+/********** YDS SEARCH ************/
+/**********************************/
+.yds-advanced-search-btn, .yds-advanced-search-btn:hover { text-decoration: none; }
+.yds-advanced-search-wrapper { display: none; }
+.yds-advanced-search-wrapper.active{ display: inline; }
+.yds-advanced-search-wrapper hr:first-child { margin-top: 2px; }
+.yds-advanced-search-wrapper hr:last-child { margin-bottom: 8px; }
+.yds-advanced-search .yds-advanced-search-input{ padding-left: 0; }
+
+/**********************************/
 /******* SEARCH RESULTS ***********/
 /**********************************/
 .results-counter {
