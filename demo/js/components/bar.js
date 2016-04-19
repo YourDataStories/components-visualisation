@@ -130,12 +130,8 @@ angular.module('yds').directive('ydsBar', ['Data', function(Data){
                         title : { text: titleY },
                         labels: { enabled: (showLabelsY === "true") }
                     },
-                    legend: {
-                        enabled: (showLegend === "true")
-                    },
-                    exporting: {
-                        enabled: (exporting === "true")
-                    },
+                    legend: { enabled: (showLegend === "true") },
+                    exporting: { enabled: (exporting === "true") },
                     tooltip: {
                         headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
                         pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +

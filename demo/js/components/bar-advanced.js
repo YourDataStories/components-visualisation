@@ -208,7 +208,7 @@ angular.module('yds').directive('ydsBarAdvanced', ['$timeout', '$q', 'Data', 'Fi
 						},
 						plotOptions: {
 							column: {
-								pointPadding: 0.2,
+								pointPadding: 0,
 								borderWidth: 0
 							}
 						}
