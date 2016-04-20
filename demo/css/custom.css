@@ -530,7 +530,9 @@ rzslider .rz-pointer:after {
     line-height: 40px;
 }
 
-
+/*******************************************/
+/***** YDS WORKBENCH CUSTOMIZATION *********/
+/******************************************/
 
 #workbench-basket {
     background-color: #444;
@@ -594,6 +596,10 @@ rzslider .rz-pointer:after {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+}
+.workbench-linechart button:not(:last-child),
+.workbench-barchart button:not(:last-child){
+    margin-left: 10px;
 }
 
 
