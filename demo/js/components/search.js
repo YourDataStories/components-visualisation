@@ -57,9 +57,9 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 				$timeout(function() {
 					//append the query param to the search url
 					if (scope.searchOptions.lang == "en")
-						$location.path(YDS_CONSTANTS.SEARCH_RESULTS_URL).search({q: scope.searchOptions.searchKeyword});
-					else if (scope.searchOptions.lang == "el")
-						$location.path(YDS_CONSTANTS.SEARCH_RESULTS_URL_EL).search({q: scope.searchOptions.searchKeyword});
+						$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL + "?q=" + scope.searchOptions.searchKeyword;
+					else
+						$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL_EL + "?q=" + scope.searchOptions.searchKeyword;
 				});
 			};
 
@@ -105,9 +105,9 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 					$timeout(function() {
 						//append the query param to the search url
 						if (scope.searchOptions.lang == "en")
-							$location.path(YDS_CONSTANTS.SEARCH_RESULTS_URL).search({q: advancedQuery});
-						else if (scope.searchOptions.lang == "el")
-							$location.path(YDS_CONSTANTS.SEARCH_RESULTS_URL_EL).search({q: advancedQuery});
+							$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL + "?q=" + advancedQuery;
+						else
+							$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL_EL + "?q=" + advancedQuery;
 					});
 				}
 			};
