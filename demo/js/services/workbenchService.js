@@ -16,12 +16,12 @@ angular.module('yds').factory('Workbench', [ 'YDS_CONSTANTS', '$q', '$http', 'Da
 				name: "Bar Chart",
 				type: "barchart",
 				visible: false
-			}, {
+			}/*, {
 				src: "img/thumbnails/pie_chart.png",
 				name: "Pie Chart",
 				type: "piechart",
 				visible: false
-			}]
+			}*/]
 		}]
 	};
 
