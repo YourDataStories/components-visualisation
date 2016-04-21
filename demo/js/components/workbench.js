@@ -29,7 +29,6 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 			barChartContainer[0].id = "bar" + Data.createRandomId();
 			pieChartContainer[0].id = "pie" + Data.createRandomId();
 
-
 			scope.workbench = Workbench.init();
 			scope.slidesConfig = Workbench.getSlidesConfig();
 			scope.lineChart = Workbench.initLineChart(lineChartContainer[0].id);
@@ -109,38 +108,27 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 			};
 
 
+			/**
+			 * functions used to show or hide alert messages in workbench
+			 **/
+			var setAlertMsg = function(message, time) {
+				scope.workbench.alert = message;
+
+				if (time>0) {
+					$timeout(function() {
+						scope.workbench.alert = "";
+					}, time);
+				}
+			};
+
+			var hideAlertMessage = function() {
+				scope.workbench.alert = "";
+			};
+
+
 			/**********************************************/
 			/************ LINE CHART FUNCTIONS ************/
 			/**********************************************/
-
-			/**
-			 * filter function applied on the in comboboxes which are used
-			 * for the configuration of the line chart visualization
-			 **/
-			scope.lineChartFilter= function (index) {
-				return function (item) {
-					var attrSelected = false;
-					var axisYConfig = angular.copy(scope.lineChart.axisYConfig);
-
-					//if the filtered attribute is already selected, return it
-					if (axisYConfig[index].selected!=null && axisYConfig[index].selected.attribute == item.attribute)
-						return item;
-
-					//else search if the attribute is selected in one of the other compoboxes
-					axisYConfig.splice(index, 1);
-					if (axisYConfig.length > 0) {
-						var existingCombos = _.where(_.pluck(axisYConfig, 'selected'), {attribute: item.attribute});
-
-						if (existingCombos.length > 0)
-							attrSelected = true;
-					}
-
-					//if the attribute is not selected in none of the comboboxes return it as available
-					if (!attrSelected)
-						return item;
-				};
-
-			};
 
 			/**
 			 * functions used to add or remove comboboxes to/from the line chart configuration
@@ -155,7 +143,6 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 			var createLineChart = function(lineInput) {
 				//remove the existing line chart series
 				if(!_.isUndefined(scope.lineChart.chart.series)) {
-
 					while(scope.lineChart.chart.series.length > 0)
 						scope.lineChart.chart.series[0].remove(true);
 				}
@@ -187,36 +174,6 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 			/**********************************************/
 			/************ BAR CHART FUNCTIONS *************/
 			/**********************************************/
-
-			/**
-			 * filter function applied on the in comboboxes which are used
-			 * for the configuration of the line chart visualization
-			 **/
-			scope.barChartFilter= function (index) {
-				return function (item) {
-					var attrSelected = false;
-					var axisYConfig = angular.copy(scope.barChart.axisYConfig);
-
-					//if the filtered attribute is already selected, return it
-					if (axisYConfig[index].selected!=null && axisYConfig[index].selected.attribute == item.attribute)
-						return item;
-
-					//else search if the attribute is selected in one of the other compoboxes
-					axisYConfig.splice(index, 1);
-					if (axisYConfig.length > 0) {
-						var existingCombos = _.where(_.pluck(axisYConfig, 'selected'), {attribute: item.attribute});
-
-						if (existingCombos.length > 0)
-							attrSelected = true;
-					}
-
-					//if the attribute is not selected in none of the comboboxes return it as available
-					if (!attrSelected)
-						return item;
-				};
-
-			};
-
 
 			/**
 			 * functions used to add or remove comboboxes to/from the bar chart configuration
@@ -307,43 +264,85 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 
 
 			/**
+			 * filter function applied on the in comboboxes which are used
+			 * for the configuration of the line & bar chart visualization
+			 **/
+			scope.lineBarFilterY= function (index, type) {
+				return function (item) {
+					var attrSelected = false;
+					var chartAxisY = scope.$eval(type + '.axisYConfig');
+					var axisYConfig = angular.copy(chartAxisY);
+
+					//if the filtered attribute is already selected, return it
+					if (axisYConfig[index].selected!=null && axisYConfig[index].selected.attribute == item.attribute)
+						return item;
+
+					//else search if the attribute is selected in one of the other compoboxes
+					axisYConfig.splice(index, 1);
+					if (axisYConfig.length > 0) {
+						var existingCombos = _.where(_.pluck(axisYConfig, 'selected'), {attribute: item.attribute});
+
+						if (existingCombos.length > 0)
+							attrSelected = true;
+					}
+
+					//if the attribute is not selected in none of the comboboxes return it as available
+					if (!attrSelected)
+						return item;
+				};
+
+			};
+
+
+			/**
 			 * function called when "Visualise Data" is clicked, which is responsible to fetch the data of the
 			 * selected visualization and call the corresponding chart visualization function
 			 **/
 			scope.createVisualization = function() {
 				switch(scope.workbench.selectedVis) {
 					case "linechart":
-						Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView, scope.lineChart.axisX[0].attribute,
-							scope.lineChart.axisY[0].attribute, scope.basketVars.selBasketIds)
-							.then(function (response) {
-								createLineChart(response);
-							}, function (error) {
-								console.log("error in linechart - getLineBarVis function")
-							});
+						var lineAxisYAttrs = [];
+						_.forEach(scope.lineChart.axisYConfig, function(axis){
+							if (axis.selected!=null && !_.isUndefined(axis.selected) && _.isObject(axis.selected))
+								lineAxisYAttrs.push(axis.selected.attribute);
+						});
+
+						lineAxisYAttrs = lineAxisYAttrs.join(",");
+
+						if (lineAxisYAttrs.length > 0) {
+							Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView, scope.lineChart.axisX[0].attribute,
+								scope.lineChart.axisY[0].attribute, scope.basketVars.selBasketIds)
+								.then(function (response) {
+									createLineChart(response);
+								}, function (error) {
+									console.log("error in linechart - getLineBarVis function")
+								});
+						} else
+							setAlertMsg("Please select a Y axis attribute.", 2000);
 
 						break;
 					case "barchart":
-						var axisYAttrs = [];
+						var barAxisYAttrs = [];
 						_.forEach(scope.barChart.axisYConfig, function(axis){
 							if (axis.selected!=null && !_.isUndefined(axis.selected) && _.isObject(axis.selected))
-								axisYAttrs.push(axis.selected.attribute);
+								barAxisYAttrs.push(axis.selected.attribute);
 						});
 
-						axisYAttrs = axisYAttrs.join(",");
+						barAxisYAttrs = barAxisYAttrs.join(",");
 
-						if (axisYAttrs.length > 0) {
-							Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView, scope.barChart.axisX[0].attribute, axisYAttrs, scope.basketVars.selBasketIds)
+						if (barAxisYAttrs.length > 0) {
+							Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView, scope.barChart.axisX[0].attribute, barAxisYAttrs, scope.basketVars.selBasketIds)
 							.then(function (response) {
 								createBarChart(response);
 							}, function (error) {
 								console.log("error in barchart - getLineBarVis function")
 							});
-						}
+						} else
+							setAlertMsg("Please select a Y axis attribute.", 2000);
 
 						break;
 				}
 			};
-
 
 			var triggerResizeEvt = function() {
 				var evt = $window.document.createEvent('UIEvents');

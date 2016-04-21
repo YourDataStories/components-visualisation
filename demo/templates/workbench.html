@@ -6,7 +6,6 @@
     </div>
     <div class="row">
         <div class="col-xs-3">
-
             <div class="yds-basket-prev-content" id="workbench-basket">
                 <div class="yds-basket-prev-title text-center">
                     <div class="btn-group btn-group-justified">
@@ -43,7 +42,7 @@
         </div>
         <div class="col-xs-4">
             <!-------- Component Selection Carousel -------->
-            <uib-carousel active="slidesConfig.active"  no-wrap="slidesConfig.noWrap">
+            <uib-carousel active="slidesConfig.active" no-wrap="slidesConfig.noWrap">
                 <uib-slide ng-repeat="slide in slidesConfig.slides track by slide.id" index="slide.id">
                     <div class="col-xs-4 slider-img-wrapper"
                          ng-class="slide.images[0].visible ? '' : 'low-opacity'"
@@ -72,6 +71,12 @@
                 </uib-slide>
             </uib-carousel>
             <hr>
+
+            <uib-alert type="danger" ng-if="workbench.alert.length>0" class="col-xs-10 col-xs-offset-1 text-center">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                {{workbench.alert}}
+            </uib-alert>
+
             <!-------- Dropdown for the Availble Views -------->
             <div class="row">
                 <div class="form-group col-md-10 col-md-offset-1">
@@ -87,7 +92,6 @@
             </div>
             <div class="row">
                 <div class="col-md-10 col-md-offset-1 animate-switch-container" ng-switch on="workbench.selectedVis">
-
                     <!-------- View responsible for the Configuration of Line Chart -------->
                     <div class="animate-switch workbench-linechart" ng-switch-when="linechart">
                         <div ng-include="'linechart-config.html'"></div>

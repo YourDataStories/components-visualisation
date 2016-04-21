@@ -40,6 +40,7 @@ angular.module('yds').factory('Workbench', [ 'YDS_CONSTANTS', '$q', '$http', 'Da
 
 			//initialize the configuration options of workbench
 			workbenchConfig = {
+				alert: "",
 				selectedVis: "default",
 				availableViews: [],
 				availableViewsRaw: [],
