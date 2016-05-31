@@ -142,7 +142,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                 var columnDefs = [];
 
                 if (response.success == false || response.view.length==0) {
-                    console.log('an error was occurred');
+                    console.log('an error has occurred');
                     return false;
                 } else {
                     rawData = Data.prepareGridData(response.data, response.view);
@@ -186,7 +186,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
                 }
             }, function(error){
                 if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
-                    scope.ydsAlert = "An error was occurred, please check the configuration of the component";
+                    scope.ydsAlert = "An error has occurred, please check the configuration of the component";
                 else
                     scope.ydsAlert = error.message;
             });

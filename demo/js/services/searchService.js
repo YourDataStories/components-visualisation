@@ -49,6 +49,11 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 						resultRow.type = view.type;
 						resultRow.value = result[view.attribute];
 
+						//if the row should have a url, find it and add it to the row
+						if (!_.isUndefined(view.url)) {
+							resultRow.url = result[view.url];
+						}
+
 						//if the value of a result doesn't exist
 						if (_.isUndefined(resultRow.value) || String(resultRow.value).trim().length==0) {
 							//extract the last 3 characters of the specific attribute of the result

@@ -20,8 +20,8 @@ app.constant("YDS_CONSTANTS", {
     "API_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/search.tcl",
     "API_COMBOBOX_FILTER": "platform.yourdatastories.eu/api/json-ld/component/filter.tcl",
     "API_YDS_STATISTICS": "platform.yourdatastories.eu/api/json-ld/component/statistics.tcl",
-    //"SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
-    //"SEARCH_RESULTS_URL_EL": "http://yds-lib.dev/#/search-el",
+    // "SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
+    // "SEARCH_RESULTS_URL_EL": "http://yds-lib.dev/#/search-el",
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
     "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search-el",
     "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
@@ -330,6 +330,22 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         return gridColumns;
     };
 
+    /**
+     * Function to set the nested attribute of an object to a specified value
+     * @param obj           The object
+     * @param tokenArray    Array of attributes that lead to the attribute we need to change
+     * @param value         The value to give to the attribute
+     * @returns {*}
+     */
+    var setAttr = function (obj, tokenArray, value) {
+        if (tokenArray.length == 1 && value !== undefined) {
+            return obj[tokenArray[0]] = value;
+        } else if (tokenArray.length > 0) {
+            return setAttr(obj[tokenArray[0]], tokenArray.slice(1), value);
+        } else {
+            return obj;
+        }
+    }
 
     dataService.prepareGridData = function(newData, newView) {
         for (var i=0; i<newData.length; i++) {
@@ -338,12 +354,30 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
 
                 //if the data row has this attribute and it is nested..
                 if (_.has(newData[i], attributeTokens[0]) && attributeTokens.length>1) {
-                    newData[i][viewVal.attribute] = dataService.deepObjSearch(newData[i], viewVal.attribute);
+                    var attribute = dataService.deepObjSearch(newData[i], viewVal.attribute);
+
+                    //if it should have a url, make it a link
+                    if (_.has(viewVal, "url")) {
+                        var url = newData[i][viewVal.url];
+                        var linkStr = "<a href=\"" + url + "\" target=\"_blank\">" + attribute + "</a>";
+
+                        // newData[i][viewVal.attribute] = linkStr;
+
+                        // go to the attribute of the object and make it a link there
+                        setAttr(newData[i], attributeTokens, linkStr);
+                    // } else {
+                    //     newData[i][viewVal.attribute] = attribute;   // not used?
+                    }
+                } else if (_.has(viewVal, "url")) {
+                    //if the attribute is not nested but should have a url, make it a link
+                    var attribute = newData[i][viewVal.attribute];
+                    var url = newData[i][viewVal.url];
+                    newData[i][viewVal.attribute] = "<a href=\"" + url + "\" target=\"_blank\">" + attribute + "</a>";
                 }
 
-                if (_.isUndefined(newData[i][viewVal.attribute]) || String(newData[i][viewVal.attribute]).length==0) {
-                    newData[i][viewVal.attribute] = "";
-                }
+                // if (_.isUndefined(newData[i][viewVal.attribute]) || String(newData[i][viewVal.attribute]).length==0) {
+                //     newData[i][viewVal.attribute] = "";
+                // }
             });
         }
 

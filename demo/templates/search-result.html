@@ -25,6 +25,11 @@
                                target="_blank"><span class="glyphicon glyphicon-new-window icon-primary"></span></a>
                         <% } else { %>
                             <%- resultRow.value %>
+
+                            <% if (!_.isUndefined(resultRow.url)) { %>
+                                <a class="btn external-decision-link" href="<%- resultRow.url %>"
+                                   target="_blank"><span class="glyphicon glyphicon-new-window icon-primary"></span></a>
+                            <% } %>
                         <% } %>
                     </p>
                 <% } %>
