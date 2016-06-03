@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location', '$window',
-    function(Data, Search, $location, $window){
+angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
+    function(Data, Search, $location){
         return {
             restrict: 'E',
             scope: {
@@ -18,11 +18,14 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                 var initTabs = function() {
                     // get categories for the tabs
                     Search.getSearchTabs().then(function(response) {
+                        scope.tabs = response.tabs;
+
+                        // find which tab should be selected and make it the active one
                         var tabToSelect = $location.search().tab;
+
                         if (_.isUndefined(tabToSelect)) {
                             tabToSelect = response.firstTab;
                         }
-                        scope.tabs = response.tabs;
 
                         scope.tabs[tabToSelect].active = true;
 
