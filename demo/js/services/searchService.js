@@ -263,6 +263,36 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 		return deferred.promise;
 	};
 
+	/**
+	 * function that gets the tabs for the tabbed search
+	 * from a static url and returns them as an array
+	 */
+	var getSearchTabs = function() {
+		var deferred = $q.defer();
+		$http({
+			method: 'GET',
+			url: YDS_CONSTANTS.TABBED_SEARCH_CATEGORIES_URL,
+			headers: {'Content-Type': 'application/json'}
+		}).success(function(response) {
+			// get tabs from json and create new array with only the tab names (no numbers)
+			var tabs = response["data"]["facet_counts"]["facet_fields"]["type"];
+			var tabsWithoutNumbers = [];
+
+			_.each(tabs, function(tab, index) {
+				// if it's a string, push it to the new array
+				if (!isFinite(String(tab).trim() || NaN)) {
+					tabsWithoutNumbers.push(tab);
+				}
+			});
+
+			deferred.resolve(tabsWithoutNumbers);
+		}).error(function(error) {
+			deferred.reject(error);
+		});
+
+		return deferred.promise;
+	};
+
 	return {
 		setKeyword: function(newKeyword) { keyword = newKeyword },
 		getKeyword: function() { return keyword; },
@@ -272,6 +302,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 		performSearch: performSearch,
 		getResults: function () { return searchResults; },
 		clearResults: function () { searchResults = []; },
+		getSearchTabs: getSearchTabs,
 
 		registerFacetsCallback: function(callback) { facetsCallbacks.push(callback); },
 		getFieldFacets: function() { return fieldFacets; },

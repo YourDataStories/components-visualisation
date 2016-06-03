@@ -1,0 +1,11 @@
+<div class="col-md-12">
+    <uib-tabset active="active">
+        <uib-tab
+                index="$index"
+                ng-repeat="tab in tabs track by $index"
+                heading="{{ tab }}"
+                select="tabChangeHandler($index)">
+            Tab content for tab <strong>{{ tab }}</strong>
+        </uib-tab>
+    </uib-tabset>
+</div>

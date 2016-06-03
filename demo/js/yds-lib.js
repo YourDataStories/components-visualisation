@@ -20,10 +20,16 @@ app.constant("YDS_CONSTANTS", {
     "API_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/search.tcl",
     "API_COMBOBOX_FILTER": "platform.yourdatastories.eu/api/json-ld/component/filter.tcl",
     "API_YDS_STATISTICS": "platform.yourdatastories.eu/api/json-ld/component/statistics.tcl",
-    // "SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
-    // "SEARCH_RESULTS_URL_EL": "http://yds-lib.dev/#/search-el",
-    "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
-    "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search-el",
+
+    "SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
+    "SEARCH_RESULTS_URL_EL": "http://yds-lib.dev/#/search-el",
+    "SEARCH_RESULTS_URL_TABBED": "http://yds-lib.dev/#/search-tabbed",
+    // "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
+    // "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search-el",
+    // "SEARCH_RESULTS_URL_TABBED": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search-tabbed",
+
+    "TABBED_SEARCH_CATEGORIES_URL": "http://platform.yourdatastories.eu/api/json-ld/component/search.tcl?q=*&rows=0",
+
     "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
     "API_EMBED": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/embed/",
     "BASKET_URL": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/basket/"
@@ -206,9 +212,9 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                 "viz_type": visType
             }
         })
-        .success(function (data) {
-            deferred.resolve(data);
-        }).error(function (error) {
+            .success(function (data) {
+                deferred.resolve(data);
+            }).error(function (error) {
             deferred.reject(error);
         });
 
@@ -365,8 +371,8 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
 
                         // go to the attribute of the object and make it a link there
                         setAttr(newData[i], attributeTokens, linkStr);
-                    // } else {
-                    //     newData[i][viewVal.attribute] = attribute;   // not used?
+                        // } else {
+                        //     newData[i][viewVal.attribute] = attribute;   // not used?
                     }
                 } else if (_.has(viewVal, "url")) {
                     //if the attribute is not nested but should have a url, make it a link
@@ -469,7 +475,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             inputParams["start"] = start;
 
         _.extendOwn(inputParams, comboFilters);
-        
+
         switch(type) {
             case "grid":
                 visualizationUrl="http://" + YDS_CONSTANTS.API_GRID;
