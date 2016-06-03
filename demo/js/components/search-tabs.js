@@ -17,8 +17,6 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
 
                 //callback function called after each search query
                 var initTabs = function() {
-                    console.log("initializing tabs!!1");
-
                     // get categories for the tabs
                     Search.getSearchTabs().then(function(response) {
                         scope.tabs = response;
