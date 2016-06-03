@@ -42,8 +42,8 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
             //check if project id or grid type are defined
             if(angular.isUndefined(grid.projectId) || grid.projectId.trim()=="") {
                 scope.ydsAlert = "The YDS component is not properly initialized " +
-                    "because the projectId or the viewType attribute aren't configured properly." +
-                    "Please check the corresponding documentation sertion";
+                    "because the projectId or the viewType attribute aren't configured properly. " +
+                    "Please check the corresponding documentation section";
                 return false;
             }
 

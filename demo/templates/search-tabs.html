@@ -7,6 +7,21 @@
                 active="tab.active"
                 select="tabChangeHandler(tab.name)">
             Tab content for tab <strong>{{ tab.name }}</strong>
+            <!--searchQuery="???"-->
+            <yds-grid-results
+                    view-type="{{tab.name}}"
+                    sorting="true"
+                    lang="en"
+                    filtering="true"
+                    quick-filtering="true"
+                    element-H="300"
+                    col-resize="true"
+                    paging="false"
+                    page-size="5"
+                    add-to-basket="true"
+                    basket-btn-x="400"
+                    basket-btn-y="0">
+            </yds-grid-results>
         </uib-tab>
     </uib-tabset>
 </div>

@@ -351,7 +351,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         } else {
             return obj;
         }
-    }
+    };
 
     dataService.prepareGridData = function(newData, newView) {
         for (var i=0; i<newData.length; i++) {
@@ -367,12 +367,8 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                         var url = newData[i][viewVal.url];
                         var linkStr = "<a href=\"" + url + "\" target=\"_blank\">" + attribute + "</a>";
 
-                        // newData[i][viewVal.attribute] = linkStr;
-
                         // go to the attribute of the object and make it a link there
                         setAttr(newData[i], attributeTokens, linkStr);
-                        // } else {
-                        //     newData[i][viewVal.attribute] = attribute;   // not used?
                     }
                 } else if (_.has(viewVal, "url")) {
                     //if the attribute is not nested but should have a url, make it a link
@@ -380,10 +376,6 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                     var url = newData[i][viewVal.url];
                     newData[i][viewVal.attribute] = "<a href=\"" + url + "\" target=\"_blank\">" + attribute + "</a>";
                 }
-
-                // if (_.isUndefined(newData[i][viewVal.attribute]) || String(newData[i][viewVal.attribute]).length==0) {
-                //     newData[i][viewVal.attribute] = "";
-                // }
             });
         }
 
@@ -397,6 +389,29 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             method: 'GET',
             url: "http://" + YDS_CONSTANTS.API_YDS_STATISTICS,
             headers: {'Content-Type': 'application/json; charset=UTF-8'}
+        }).success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    dataService.getGridResultData = function(query, viewType, lang) {
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: "http://" + YDS_CONSTANTS.API_SEARCH,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            params: {
+                q: query,
+                fq: "{!tag=TYPE}type:" + viewType,
+                lang: lang,
+                rows: 10,
+                start: 0
+            }
         }).success(function (data) {
             deferred.resolve(data);
         }).error(function (error) {
