@@ -40,16 +40,18 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                     if (!scope.initialized) {
                         // initialize tabs
                         initTabs();
-                    } else {
-                        //get the original search term from the url
-                        var keyword = urlParams.q;
-
-                        if (_.isUndefined(keyword) || keyword.trim() == "") {
-                            return false;
-                        }
-
-                        // todo: update all grids in the tabs with the new search query
                     }
+
+                    //get the original search term from the url
+                    var keyword = urlParams.q;
+
+                    if (_.isUndefined(keyword) || keyword.trim() == "") {
+                        return false;
+                    }
+
+                    Search.setKeyword(keyword);
+
+                    // todo: update all grids in the tabs with the new search query
                 });
             }
         };

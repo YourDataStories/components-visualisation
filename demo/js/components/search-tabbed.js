@@ -43,11 +43,10 @@ angular.module('yds').directive('ydsSearchTabbed', ['$window', '$timeout', '$loc
                 }
 
                 $timeout(function() {
-                    //append the query param to the search url
-                    if (scope.searchOptions.lang == "en")
-                        $window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL_TABBED + "?q=" + scope.searchOptions.searchKeyword;
-                    else
-                        $window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL_EL + "?q=" + scope.searchOptions.searchKeyword;
+                    // append the query and current tab params to the search url
+                    var baseUrl = (scope.searchOptions.lang == "en") ? YDS_CONSTANTS.SEARCH_RESULTS_URL_TABBED : YDS_CONSTANTS.SEARCH_RESULTS_URL_EL;
+
+                    $window.location.href = baseUrl + "?q=" + scope.searchOptions.searchKeyword + "&tab=" + $location.search().tab;
                 });
             };
         }
