@@ -7,9 +7,8 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
             },
             templateUrl:'templates/search-tabs.html',
             link: function(scope) {
-                scope.initialized = false;		//flag that indicated when the component is initialized
-
-                scope.tabs = [];
+                scope.initialized = false;	// flag that indicated when the component is initialized
+                scope.tabs = [];            // array with the tab names
 
                 //check if the language attr is defined, else assign default value
                 if(angular.isUndefined(scope.lang) || scope.lang.trim()=="")
@@ -19,14 +18,21 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                 var initTabs = function() {
                     // get categories for the tabs
                     Search.getSearchTabs().then(function(response) {
-                        scope.tabs = response;
-                    });
+                        var tabToSelect = $location.search().tab;
+                        if (_.isUndefined(tabToSelect)) {
+                            tabToSelect = response.firstTab;
+                        }
+                        scope.tabs = response.tabs;
 
-                    scope.initialized = true;
+                        scope.tabs[tabToSelect].active = true;
+
+                        scope.initialized = true;
+                    });
                 };
 
-                scope.tabChangeHandler = function (tabIndex) {
-                    console.log("tab changed to " + tabIndex + " (" + scope.tabs[tabIndex] + ")");
+                scope.tabChangeHandler = function (tabName) {
+                    // change the url parameter to reflect the tab change
+                    $location.search("tab", tabName);
                 };
 
                 //watch location hash change in order to perform search query

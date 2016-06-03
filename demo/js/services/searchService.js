@@ -274,18 +274,31 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 			url: YDS_CONSTANTS.TABBED_SEARCH_CATEGORIES_URL,
 			headers: {'Content-Type': 'application/json'}
 		}).success(function(response) {
+			var data = {};
+
 			// get tabs from json and create new array with only the tab names (no numbers)
 			var tabs = response["data"]["facet_counts"]["facet_fields"]["type"];
-			var tabsWithoutNumbers = [];
+			var tabsWithoutNumbers = {};
 
 			_.each(tabs, function(tab, index) {
 				// if it's a string, push it to the new array
 				if (!isFinite(String(tab).trim() || NaN)) {
-					tabsWithoutNumbers.push(tab);
+					if (_.isUndefined(data.firstTab)) {
+						data.firstTab = tab;
+					}
+
+					var tabObj = {
+						name: tab,
+						active: false
+					};
+
+					tabsWithoutNumbers[tab] = tabObj;
 				}
 			});
 
-			deferred.resolve(tabsWithoutNumbers);
+			data.tabs = tabsWithoutNumbers;
+
+			deferred.resolve(data);
 		}).error(function(error) {
 			deferred.reject(error);
 		});

@@ -3,9 +3,10 @@
         <uib-tab
                 index="$index"
                 ng-repeat="tab in tabs track by $index"
-                heading="{{ tab }}"
-                select="tabChangeHandler($index)">
-            Tab content for tab <strong>{{ tab }}</strong>
+                heading="{{ tab.name }}"
+                active="tab.active"
+                select="tabChangeHandler(tab.name)">
+            Tab content for tab <strong>{{ tab.name }}</strong>
         </uib-tab>
     </uib-tabset>
 </div>
