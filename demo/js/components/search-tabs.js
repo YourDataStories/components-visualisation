@@ -22,9 +22,9 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
 
                         /////// START TEST //////////
                         // scope.tabs = {};
-                        // scope.tabs[response.firstTab] = response.tabs[response.firstTab];
+                        // scope.tabs["Contract"] = response.tabs["Contract"];
                         //
-                        // scope.tabs[response.firstTab].active = true;
+                        // scope.tabs["Contract"].active = true;
                         //
                         // scope.initialized = true;
                         // return;

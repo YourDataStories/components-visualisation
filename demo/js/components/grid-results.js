@@ -139,8 +139,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', function(D
              **/
             Data.getGridResultData(grid.searchQuery, grid.viewType, grid.lang)
                 .then(function(response) {
-
-                    console.log("got data!!");
                     var rawData = [];
                     var columnDefs = [];
 
@@ -163,7 +161,11 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', function(D
                         });
 
                         if (!_.isUndefined(responseView) && !_.isUndefined(responseData)) {
-                            console.log(responseView);
+                            // console.log("View:");
+                            // console.log(responseView);
+                            //
+                            // console.log("Data:");
+                            // console.log(responseData);
 
                             rawData = Data.prepareGridData(responseData, responseView);
                             columnDefs = Data.prepareGridColumns(responseView);
@@ -181,8 +183,8 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', function(D
                     //If paging enabled set the required options to the grid configuration
                     if (grid.paging==="true") {
                         var localDataSource = {
-                            rowCount: parseInt(rawData.length),    // not setting the row count, infinite paging will be used
-                            pageSize: parseInt(pageSize),           // changing to number, as scope keeps it as a string
+                            rowCount: parseInt(rawData.length),     // not setting the row count, infinite paging will be used
+                            pageSize: parseInt(grid.pageSize),      // changing to number, as scope keeps it as a string
                             getRows: function (params) {
                                 var rowsThisPage = rawData.slice(params.startRow, params.endRow);
                                 var lastRow = -1;

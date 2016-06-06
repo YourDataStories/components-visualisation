@@ -409,7 +409,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                 q: query,
                 fq: "{!tag=TYPE}type:" + viewType,
                 lang: lang,
-                rows: 10,
+                rows: 30,
                 start: 0
             }
         }).success(function (data) {
