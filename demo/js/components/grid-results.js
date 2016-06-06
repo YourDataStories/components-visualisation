@@ -149,23 +149,20 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', function(D
                         var responseData = response.data.response.docs;
 
                         // find the correct view to give to prepareGridColumns function
-                        var correctViewName = grid.viewType;    // name of the view to search for
-                        var views = response.view;              // all returned views from the response
-                        var responseView = undefined;           // variable to store the correct view when found
+                        var possibleViews = _.first(responseData).type; // types of the data, to look for their views
+                        var views = response.view;                      // all returned views from the response
+                        var responseView = undefined;                   // variable to store the correct view when found
 
-                        _.each(views, function(view) {
-                            if (!_.isUndefined(view[correctViewName])) {
-                                responseView = view[correctViewName];
-                            }
+                        // look if any of the possible views for the data exist
+                        _.each (possibleViews, function(viewToFind) {
+                            _.each(views, function(view) {
+                                if (!_.isUndefined(view[viewToFind])) {
+                                    responseView = view[viewToFind];
+                                }
+                            });
                         });
 
                         if (!_.isUndefined(responseView) && !_.isUndefined(responseData)) {
-                            // console.log("View:");
-                            // console.log(responseView);
-                            //
-                            // console.log("Data:");
-                            // console.log(responseData);
-
                             rawData = Data.prepareGridData(responseData, responseView);
                             columnDefs = Data.prepareGridColumns(responseView);
                         }

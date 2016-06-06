@@ -21,10 +21,11 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                         scope.tabs = response.tabs;
 
                         /////// START TEST //////////
+                        // var tabToShow = "ExpenseApprovalItem";
                         // scope.tabs = {};
-                        // scope.tabs["Contract"] = response.tabs["Contract"];
+                        // scope.tabs[tabToShow] = response.tabs[tabToShow];
                         //
-                        // scope.tabs["Contract"].active = true;
+                        // scope.tabs[tabToShow].active = true;
                         //
                         // scope.initialized = true;
                         // return;
