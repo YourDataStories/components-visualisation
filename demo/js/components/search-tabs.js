@@ -21,7 +21,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                         scope.tabs = response.tabs;
 
                         /////// START TEST //////////
-                        // var tabToShow = "ExpenseApprovalItem";
+                        // var tabToShow = "AidActivity";
                         // scope.tabs = {};
                         // scope.tabs[tabToShow] = response.tabs[tabToShow];
                         //
@@ -64,8 +64,6 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                     }
 
                     Search.setKeyword(keyword);
-
-                    // todo: update all grids in the tabs with the new search query
                 });
             }
         };

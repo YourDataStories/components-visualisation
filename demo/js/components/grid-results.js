@@ -1,8 +1,7 @@
-angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', function(Data, Filters){
+angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', '$location', function(Data, Filters, Search, $location){
     return {
         restrict: 'E',
         scope: {
-            searchQuery: '@',       // query to search for
             viewType: '@',          // name of the view to use for the grid (also selected tab name in tabbed search)
             lang: '@',              // lang of the visualised data
 
@@ -27,7 +26,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', function(D
             scope.quickFilterValue = "";
             var grid = {
                 elementId: "grid" + Data.createRandomId(),
-                searchQuery: scope.searchQuery,
                 viewType: scope.viewType,
                 lang: scope.lang,
                 sorting: scope.sorting,
@@ -45,11 +43,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', function(D
                     "because the viewType attribute isn't configured properly. " +
                     "Please check the corresponding documentation section";
                 return false;
-            }
-
-            // if query is undefined, search for *
-            if(angular.isUndefined(grid.searchQuery) || grid.searchQuery.trim()=="") {
-                grid.searchQuery = "*";
             }
 
             //check if the language attr is defined, else assign default value
@@ -94,11 +87,10 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', function(D
                 gridWrapper[0].style.height = grid.elementH + 'px';
             }
 
-
             /**
              * function which is being registered to the FilterModified event
              * when a filter is updated, it updates the filter obj of the component by using the Filters Service
-             **/
+             */
             var filterModifiedListener = function() {
                 var gridFilters = {};
 
@@ -113,18 +105,16 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', function(D
                 Filters.addGridFilter(grid.elementId, gridFilters);
             };
 
-
             /**
              * function to handle grid's quick filtering
-             **/
+             */
             scope.applyQuickFilter = function(input) {
                 scope.gridOptions.api.setQuickFilter(input);
             };
 
-
             /**
              * function to be called on destroy of the component
-             **/
+             */
             scope.$on("$destroy", function() {
                 //if the grid filtering is enabled remove the filter event listener
                 if (grid.filtering === "true" || grid.quickFiltering === "true") {
@@ -133,82 +123,105 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', function(D
                 }
             });
 
+            scope.$watch(function () { return Search.getKeyword() }, function () {
+                initGrid();
+            });
+
             /**
-             * get the grid data from the server and create the grid component
-             **/
-            Data.getGridResultData(grid.searchQuery, grid.viewType, grid.lang)
-                .then(function(response) {
-                    var rawData = [];
-                    var columnDefs = [];
+             * Get the grid data from the server and create the grid component
+             */
+            var initGrid = function() {
+                // remove the current grid, if it exists
+                gridContainer[0].innerHTML = "";    //todo: check if it's possible to update the data of the grid
+                scope.ydsAlert = "";
 
-                    if (response.success == false || response.view.length==0) {
-                        console.log('an error has occurred');
-                        return false;
-                    } else {
-                        // find data array to give to prepareGridData function
-                        var responseData = response.data.response.docs;
+                // Get new keyword from search service and search for it (if there is no keyword, show everything)
+                var newKeyword = Search.getKeyword();
 
-                        // find the correct view to give to prepareGridColumns function
-                        var possibleViews = _.first(responseData).type; // types of the data, to look for their views
-                        var views = response.view;                      // all returned views from the response
-                        var responseView = undefined;                   // variable to store the correct view when found
+                if (_.isUndefined(newKeyword) || newKeyword.trim() == "") {
+                    newKeyword = "*";
+                }
 
-                        // look if any of the possible views for the data exist
-                        _.each (possibleViews, function(viewToFind) {
-                            _.each(views, function(view) {
-                                if (!_.isUndefined(view[viewToFind])) {
-                                    responseView = view[viewToFind];
-                                }
-                            });
-                        });
+                Data.getGridResultData(newKeyword, grid.viewType, grid.lang)
+                    .then(function (response) {
+                        // console.log("Initializing grid with query: " + newKeyword);
+                        var rawData = [];
+                        var columnDefs = [];
 
-                        if (!_.isUndefined(responseView) && !_.isUndefined(responseData)) {
-                            rawData = Data.prepareGridData(responseData, responseView);
-                            columnDefs = Data.prepareGridColumns(responseView);
-                        }
-                    }
+                        if (response.success == false || response.view.length == 0) {
+                            console.log('an error has occurred');
+                            return false;
+                        } else {
+                            // find data array to give to prepareGridData function
+                            var responseData = response.data.response.docs;
 
-                    //Define the options of the grid component
-                    scope.gridOptions = {
-                        columnDefs: columnDefs,
-                        enableColResize: (grid.colResize === "true"),
-                        enableSorting: (grid.sorting === "true"),
-                        enableFilter: (grid.filtering === "true")
-                    };
-
-                    //If paging enabled set the required options to the grid configuration
-                    if (grid.paging==="true") {
-                        var localDataSource = {
-                            rowCount: parseInt(rawData.length),     // not setting the row count, infinite paging will be used
-                            pageSize: parseInt(grid.pageSize),      // changing to number, as scope keeps it as a string
-                            getRows: function (params) {
-                                var rowsThisPage = rawData.slice(params.startRow, params.endRow);
-                                var lastRow = -1;
-                                if (rawData.length <= params.endRow) {
-                                    lastRow = rawData.length;
-                                }
-                                params.successCallback(rowsThisPage, lastRow);
+                            if (_.isEmpty(responseData)) {
+                                scope.ydsAlert = "There are no results in this category";
+                                return;
                             }
+
+                            // find the correct view to give to prepareGridColumns function
+                            var possibleViews = _.first(responseData).type; // types of the data, to look for their views
+                            var views = response.view;                      // all returned views from the response
+                            var responseView = undefined;                   // variable to store the correct view when found
+
+                            // look if any of the possible views for the data exist
+                            _.each(possibleViews, function (viewToFind) {
+                                _.each(views, function (view) {
+                                    if (!_.isUndefined(view[viewToFind])) {
+                                        responseView = view[viewToFind];
+                                    }
+                                });
+                            });
+
+                            if (!_.isUndefined(responseView) && !_.isUndefined(responseData)) {
+                                rawData = Data.prepareGridData(responseData, responseView);
+                                columnDefs = Data.prepareGridColumns(responseView);
+                            }
+                        }
+
+                        //Define the options of the grid component
+                        scope.gridOptions = {
+                            columnDefs: columnDefs,
+                            enableColResize: (grid.colResize === "true"),
+                            enableSorting: (grid.sorting === "true"),
+                            enableFilter: (grid.filtering === "true")
                         };
 
-                        scope.gridOptions.datasource = localDataSource;
-                    } else {
-                        scope.gridOptions.rowData = rawData;
-                    }
+                        //If paging enabled set the required options to the grid configuration
+                        if (grid.paging === "true") {
+                            var localDataSource = {
+                                rowCount: parseInt(rawData.length),     // not setting the row count, infinite paging will be used
+                                pageSize: parseInt(grid.pageSize),      // changing to number, as scope keeps it as a string
+                                getRows: function (params) {
+                                    var rowsThisPage = rawData.slice(params.startRow, params.endRow);
+                                    var lastRow = -1;
+                                    if (rawData.length <= params.endRow) {
+                                        lastRow = rawData.length;
+                                    }
+                                    params.successCallback(rowsThisPage, lastRow);
+                                }
+                            };
 
-                    //Create a new Grid Component
-                    new agGrid.Grid(gridContainer[0], scope.gridOptions);
+                            scope.gridOptions.datasource = localDataSource;
+                        } else {
+                            scope.gridOptions.rowData = rawData;
+                        }
 
-                    //If filtering is enabled, register function to watch for filter updates
-                    if (grid.filtering === "true" || grid.quickFiltering === "true") {
-                        scope.gridOptions.api.addEventListener('afterFilterChanged', filterModifiedListener);
-                    }
-                }, function(error){
-                    if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
-                        scope.ydsAlert = "An error has occurred, please check the configuration of the component";
-                    else
-                        scope.ydsAlert = error.message;
-                });
+                        //Create a new Grid Component
+                        new agGrid.Grid(gridContainer[0], scope.gridOptions);
+
+                        //If filtering is enabled, register function to watch for filter updates
+                        if (grid.filtering === "true" || grid.quickFiltering === "true") {
+                            scope.gridOptions.api.addEventListener('afterFilterChanged', filterModifiedListener);
+                        }
+                    }, function (error) {
+                        if (error == null || _.isUndefined(error) || _.isUndefined(error.message))
+                            scope.ydsAlert = "An error has occurred, please check the configuration of the component";
+                        else
+                            scope.ydsAlert = error.message;
+                    });
+            }
         }
     };
 }]);
