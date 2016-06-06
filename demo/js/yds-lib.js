@@ -337,20 +337,28 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
     };
 
     /**
-     * Function to set the nested attribute of an object to a specified value
-     * @param obj           The object
-     * @param tokenArray    Array of attributes that lead to the attribute we need to change
-     * @param value         The value to give to the attribute
-     * @returns {*}
+     * Function to create a nested object and assign a value to it
+     * credit: http://stackoverflow.com/a/11433067
+     * @param base  the object on which to create the hierarchy
+     * @param names an array of strings containing the names of the objects
+     * @param value (optional) if given, will be the last object in the hierarchy
+     * @returns {*} the last object in the hierarchy
      */
-    var setAttr = function (obj, tokenArray, value) {
-        if (tokenArray.length == 1 && value !== undefined) {
-            return obj[tokenArray[0]] = value;
-        } else if (tokenArray.length > 0) {
-            return setAttr(obj[tokenArray[0]], tokenArray.slice(1), value);
-        } else {
-            return obj;
+    var createNestedObject = function( base, names, value ) {
+        // If a value is given, remove the last name and keep it for later:
+        var lastName = arguments.length === 3 ? names.pop() : false;
+
+        // Walk the hierarchy, creating new objects where needed.
+        // If the lastName was removed, then the last object is not set yet:
+        for( var i = 0; i < names.length; i++ ) {
+            base = base[ names[i] ] = base[ names[i] ] || {};
         }
+
+        // If a value was given, set it to the last name:
+        if( lastName ) base = base[ lastName ] = value;
+
+        // Return the last object in the hierarchy:
+        return base;
     };
 
     dataService.prepareGridData = function(newData, newView) {
@@ -359,7 +367,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                 var attributeTokens = viewVal.attribute.split(".");
 
                 //if the data row has this attribute and it is nested..
-                if (_.has(newData[i], attributeTokens[0]) && attributeTokens.length>1) {
+                if (_.has(newData[i], attributeTokens[0]) && attributeTokens.length > 1) {
                     var attribute = dataService.deepObjSearch(newData[i], viewVal.attribute);
 
                     //if it should have a url, make it a link
@@ -368,8 +376,11 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                         var linkStr = "<a href=\"" + url + "\" target=\"_blank\">" + attribute + "</a>";
 
                         // go to the attribute of the object and make it a link there
-                        setAttr(newData[i], attributeTokens, linkStr);
+                        createNestedObject(newData[i], attributeTokens, linkStr);
                     }
+                } else if (attributeTokens.length > 1) {
+                    // if the data row does not have the attribute, create the nested object so ng-grid can find it
+                    createNestedObject(newData[i], attributeTokens, newData[i][viewVal.attribute]);
                 } else if (_.has(viewVal, "url")) {
                     //if the attribute is not nested but should have a url, make it a link
                     var attribute = newData[i][viewVal.attribute];

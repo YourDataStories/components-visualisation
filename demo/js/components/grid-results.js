@@ -133,7 +133,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', function(D
                 }
             });
 
-
             /**
              * get the grid data from the server and create the grid component
              **/

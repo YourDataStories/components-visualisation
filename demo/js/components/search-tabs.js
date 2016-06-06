@@ -28,7 +28,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                         //
                         // scope.initialized = true;
                         // return;
-                        /////// END TEST //////////
+                        //////// END TEST ///////////
 
                         // find which tab should be selected and make it the active one
                         var tabToSelect = $location.search().tab;
