@@ -409,7 +409,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         return deferred.promise;
     };
 
-    dataService.getGridResultData = function(query, viewType, lang) {
+    dataService.getGridResultData = function(query, viewType, start, rows, lang) {
         var deferred = $q.defer();
 
         $http({
@@ -420,8 +420,8 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                 q: query,
                 fq: "{!tag=TYPE}type:" + viewType,
                 lang: lang,
-                rows: 30,
-                start: 0
+                rows: rows,
+                start: start
             }
         }).success(function (data) {
             deferred.resolve(data);

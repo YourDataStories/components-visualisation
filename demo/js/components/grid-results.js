@@ -124,103 +124,110 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
             });
 
             scope.$watch(function () { return Search.getKeyword() }, function () {
-                initGrid();
+                visualizeGrid();
             });
 
             /**
-             * Get the grid data from the server and create the grid component
+             * Finds the first available view for a data type
+             * @param responseData
+             * @param availableViews
+             * @returns {*}
              */
-            var initGrid = function() {
-                // remove the current grid, if it exists
-                gridContainer[0].innerHTML = "";    //todo: check if it's possible to update the data of the grid
-                scope.ydsAlert = "";
+            var findView = function(responseData, availableViews) {
+                var possibleViews = _.first(responseData).type; // types of the data, to look for their views
+                var views = availableViews;                     // all returned views from the response
+                var responseView = undefined;                   // variable to store the correct view when found
 
-                // Get new keyword from search service and search for it (if there is no keyword, show everything)
+                // look if any of the possible views for the data exist
+                _.each(possibleViews, function (viewToFind) {
+                    _.each(views, function (view) {
+                        if (!_.isUndefined(view[viewToFind]) && _.isUndefined(responseView)) {
+                            responseView = view[viewToFind];
+                        }
+                    });
+                });
+
+                return responseView;
+            };
+
+            /**
+             * Gets the current keyword from the search service
+             * @returns {*}
+             */
+            var getKeyword = function() {
                 var newKeyword = Search.getKeyword();
 
                 if (_.isUndefined(newKeyword) || newKeyword.trim() == "") {
                     newKeyword = "*";
                 }
 
-                Data.getGridResultData(newKeyword, grid.viewType, grid.lang)
-                    .then(function (response) {
-                        // console.log("Initializing grid with query: " + newKeyword);
-                        var rawData = [];
-                        var columnDefs = [];
+                return newKeyword;
+            };
 
-                        if (response.success == false || response.view.length == 0) {
-                            console.log('an error has occurred');
-                            return false;
-                        } else {
-                            // find data array to give to prepareGridData function
-                            var responseData = response.data.response.docs;
+            /**
+             * Function to render the grid
+             */
+            var visualizeGrid = function() {
+                var columnDefs = [];
 
-                            if (_.isEmpty(responseData)) {
-                                scope.ydsAlert = "There are no results in this category";
-                                return;
-                            }
+                // if there is no grid, create one before adding data to it
+                if (_.isUndefined(scope.gridOptions)) {
+                    initGrid();
+                }
 
-                            // find the correct view to give to prepareGridColumns function
-                            var possibleViews = _.first(responseData).type; // types of the data, to look for their views
-                            var views = response.view;                      // all returned views from the response
-                            var responseView = undefined;                   // variable to store the correct view when found
+                // add data to the grid from the server
+                var dataSource = {
+                    pageSize: parseInt(grid.pageSize),
+                    getRows: function (params) {
+                        // Get data for this page and search term from the server
+                        Data.getGridResultData(getKeyword(), grid.viewType, params.startRow, grid.pageSize, grid.lang)
+                            .then(function(response) {
+                                // Extract needed variables from server response
+                                var responseData = response.data.response.docs;             // Get actual results
 
-                            // look if any of the possible views for the data exist
-                            _.each(possibleViews, function (viewToFind) {
-                                _.each(views, function (view) {
-                                    if (!_.isUndefined(view[viewToFind])) {
-                                        responseView = view[viewToFind];
-                                    }
-                                });
-                            });
-
-                            if (!_.isUndefined(responseView) && !_.isUndefined(responseData)) {
-                                rawData = Data.prepareGridData(responseData, responseView);
-                                columnDefs = Data.prepareGridColumns(responseView);
-                            }
-                        }
-
-                        //Define the options of the grid component
-                        scope.gridOptions = {
-                            columnDefs: columnDefs,
-                            enableColResize: (grid.colResize === "true"),
-                            enableSorting: (grid.sorting === "true"),
-                            enableFilter: (grid.filtering === "true")
-                        };
-
-                        //If paging enabled set the required options to the grid configuration
-                        if (grid.paging === "true") {
-                            var localDataSource = {
-                                rowCount: parseInt(rawData.length),     // not setting the row count, infinite paging will be used
-                                pageSize: parseInt(grid.pageSize),      // changing to number, as scope keeps it as a string
-                                getRows: function (params) {
-                                    var rowsThisPage = rawData.slice(params.startRow, params.endRow);
-                                    var lastRow = -1;
-                                    if (rawData.length <= params.endRow) {
-                                        lastRow = rawData.length;
-                                    }
-                                    params.successCallback(rowsThisPage, lastRow);
+                                // if there are no results, show empty grid
+                                if (_.isEmpty(responseData)) {
+                                    params.successCallback(responseData, 0);
+                                    return;
                                 }
-                            };
 
-                            scope.gridOptions.datasource = localDataSource;
-                        } else {
-                            scope.gridOptions.rowData = rawData;
-                        }
+                                var responseView = findView(responseData, response.view);   // Find the correct view
+                                var numOfResults = response.data.response.numFound;         // Total results
 
-                        //Create a new Grid Component
-                        new agGrid.Grid(gridContainer[0], scope.gridOptions);
+                                //format the column definitions returned from the API and add them to the grid
+                                columnDefs = Data.prepareGridColumns(responseView);
+                                scope.gridOptions.api.setColumnDefs(columnDefs);
 
-                        //If filtering is enabled, register function to watch for filter updates
-                        if (grid.filtering === "true" || grid.quickFiltering === "true") {
-                            scope.gridOptions.api.addEventListener('afterFilterChanged', filterModifiedListener);
-                        }
-                    }, function (error) {
-                        if (error == null || _.isUndefined(error) || _.isUndefined(error.message))
-                            scope.ydsAlert = "An error has occurred, please check the configuration of the component";
-                        else
-                            scope.ydsAlert = error.message;
-                    });
+                                //format the data returned from the API and add them to the grid
+                                var rowsThisPage = Data.prepareGridData(responseData, responseView);
+                                params.successCallback(rowsThisPage, numOfResults);
+                            }, function(error) {
+                                scope.ydsAlert = error.message;
+                            });
+                    }
+                };
+
+                scope.gridOptions.api.setDatasource(dataSource);
+            };
+
+            /**
+             * Creates an empty grid
+             */
+            var initGrid = function() {
+                var rawData = [];
+                var columnDefs = [];
+
+                //Define the options of the grid component
+                scope.gridOptions = {
+                    columnDefs: columnDefs,
+                    enableColResize: true,
+                    enableSorting: true,
+                    enableFilter: true,
+                    rowModelType: 'pagination'
+                };
+
+                new agGrid.Grid(gridContainer[0], scope.gridOptions);
+                scope.gridOptions.api.setRowData(rawData);
             }
         }
     };
