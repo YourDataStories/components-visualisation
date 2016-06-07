@@ -9,7 +9,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
             filtering: '@',         // enable or disable array filtering, values: true, false
             quickFiltering: '@',    // enable or disable array quick filtering, values: true, false
             colResize: '@',         // enable or disable column resize, values: true, false
-            paging: '@',            // enable or disable the paging feature, values: true, false
             pageSize: '@',          // set the number of rows of each page
             elementH: '@',          // set the height of the component
 
@@ -17,7 +16,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
             basketBtnX: '@',        // x-axis position of the basket button
             basketBtnY: '@'         // y-axis position of the basket button
         },
-        templateUrl:'templates/grid.html',
+        templateUrl:'templates/grid-advanced.html',
         link: function(scope, element, attrs) {
             //reference the dom elements in which the yds-grid is rendered
             var gridWrapper = angular.element(element[0].querySelector('.component-wrapper'));
@@ -32,7 +31,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 filtering: scope.filtering,
                 quickFiltering: scope.quickFiltering,
                 colResize: scope.colResize,
-                paging: scope.paging,
                 pageSize: scope.pageSize,
                 elementH: scope.elementH
             };
@@ -64,10 +62,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
             //check if the colResize attr is defined, else assign default value
             if(angular.isUndefined(grid.colResize) || (grid.colResize!="true" && grid.colResize!="false"))
                 grid.colResize = "false";
-
-            //check if the paging attr is defined, else assign default value
-            if(angular.isUndefined(grid.paging) || (grid.paging!="true" && grid.paging!="false"))
-                grid.paging = "false";
 
             //check if the page size attr is defined, else assign default value
             if(angular.isUndefined(grid.pageSize) || isNaN(grid.pageSize))
@@ -128,6 +122,34 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
             });
 
             /**
+             * Function called when the "Apply" button is clicked
+             */
+            scope.applyComboFilters = function() {
+                var trimmedQFValue = scope.quickFilterValue.trim();
+                if (trimmedQFValue.length>0) {
+                    visualizeGrid(trimmedQFValue);
+                }
+            };
+
+            /**
+             * Clears the quick filter
+             */
+            scope.clearComboFilters = function() {
+                scope.applyQuickFilter("");
+                scope.quickFilterValue = "";
+
+                visualizeGrid();
+            };
+
+            /**
+             * Function to handle quick filtering
+             */
+            scope.applyQuickFilter = function(input) {
+                if (!_.isUndefined(scope.gridOptions.api))
+                    scope.gridOptions.api.setQuickFilter(input);
+            };
+
+            /**
              * Finds the first available view for a data type
              * @param responseData
              * @param availableViews
@@ -167,7 +189,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
             /**
              * Function to render the grid
              */
-            var visualizeGrid = function() {
+            var visualizeGrid = function(quickFilter) {
                 var columnDefs = [];
 
                 // if there is no grid, create one before adding data to it
@@ -179,8 +201,14 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 var dataSource = {
                     pageSize: parseInt(grid.pageSize),
                     getRows: function (params) {
+                        // Get the search keyword, and merge it with the quick filter if it's defined
+                        var keyword = getKeyword();
+                        if (!_.isUndefined(quickFilter)) {
+                            keyword = "(" + keyword + ") AND " + quickFilter;
+                        }
+
                         // Get data for this page and search term from the server
-                        Data.getGridResultData(getKeyword(), grid.viewType, params.startRow, grid.pageSize, grid.lang)
+                        Data.getGridResultData(keyword, grid.viewType, params.startRow, grid.pageSize, grid.lang)
                             .then(function(response) {
                                 // Extract needed variables from server response
                                 var responseData = response.data.response.docs;             // Get actual results
