@@ -39,15 +39,16 @@ angular.module('yds').directive('ydsSearchTabbed', ['$window', '$timeout', '$loc
             scope.search = function (searchForm) {
                 //check if search box is empty
                 if (!searchForm.$valid) {
-                    return false;
+                    $location.search("q", null);
+                    Search.clearKeyword();
+                } else {
+                    $timeout(function() {
+                        // append the query and current tab params to the search url
+                        var baseUrl = (scope.searchOptions.lang == "en") ? YDS_CONSTANTS.SEARCH_RESULTS_URL_TABBED : YDS_CONSTANTS.SEARCH_RESULTS_URL_EL;
+
+                        $window.location.href = baseUrl + "?q=" + scope.searchOptions.searchKeyword + "&tab=" + $location.search().tab;
+                    });
                 }
-
-                $timeout(function() {
-                    // append the query and current tab params to the search url
-                    var baseUrl = (scope.searchOptions.lang == "en") ? YDS_CONSTANTS.SEARCH_RESULTS_URL_TABBED : YDS_CONSTANTS.SEARCH_RESULTS_URL_EL;
-
-                    $window.location.href = baseUrl + "?q=" + scope.searchOptions.searchKeyword + "&tab=" + $location.search().tab;
-                });
             };
         }
     };

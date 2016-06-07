@@ -156,11 +156,11 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
              * @returns {*}
              */
             var findView = function(responseData, availableViews) {
-                var possibleViews = _.first(responseData).type; // types of the data, to look for their views
-                var views = availableViews;                     // all returned views from the response
-                var responseView = undefined;                   // variable to store the correct view when found
+                var possibleViews = _.first(responseData).type; // Types of the data, to look for their views
+                var views = availableViews;                     // All returned views from the response
+                var responseView = undefined;                   // Variable to store the correct view when found
 
-                // look if any of the possible views for the data exist
+                // Check if any of the possible views for the data exist
                 _.each(possibleViews, function (viewToFind) {
                     _.each(views, function (view) {
                         if (!_.isUndefined(view[viewToFind]) && _.isUndefined(responseView)) {
@@ -192,12 +192,12 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
             var visualizeGrid = function(quickFilter) {
                 var columnDefs = [];
 
-                // if there is no grid, create one before adding data to it
+                // If there is no grid, create one before adding data to it
                 if (_.isUndefined(scope.gridOptions)) {
                     initGrid();
                 }
 
-                // add data to the grid from the server
+                // Add data to the grid from the server
                 var dataSource = {
                     pageSize: parseInt(grid.pageSize),
                     getRows: function (params) {
@@ -213,7 +213,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                 // Extract needed variables from server response
                                 var responseData = response.data.response.docs;             // Get actual results
 
-                                // if there are no results, show empty grid
+                                // If there are no results, show empty grid
                                 if (_.isEmpty(responseData)) {
                                     params.successCallback(responseData, 0);
                                     return;
@@ -222,11 +222,11 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                 var responseView = findView(responseData, response.view);   // Find the correct view
                                 var numOfResults = response.data.response.numFound;         // Total results
 
-                                //format the column definitions returned from the API and add them to the grid
+                                // Format the column definitions returned from the API and add them to the grid
                                 columnDefs = Data.prepareGridColumns(responseView);
                                 scope.gridOptions.api.setColumnDefs(columnDefs);
 
-                                //format the data returned from the API and add them to the grid
+                                // Format the data returned from the API and add them to the grid
                                 var rowsThisPage = Data.prepareGridData(responseData, responseView);
                                 params.successCallback(rowsThisPage, numOfResults);
                             }, function(error) {
