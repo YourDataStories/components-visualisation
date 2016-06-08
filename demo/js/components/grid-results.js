@@ -1,4 +1,4 @@
-angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', '$location', function(Data, Filters, Search, $location){
+angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 'YDS_CONSTANTS', function(Data, Filters, Search, YDS_CONSTANTS){
     return {
         restrict: 'E',
         scope: {
@@ -187,11 +187,42 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
             };
 
             /**
+             * Adds 2 columns to the column definitions of a grid in which
+             * the "select" and "add to basket" buttons will be
+             * @param columnDefs    Column definitions array as returned by Data.prepareGridColumns()
+             * @returns {Array.<*>} New column definitions
+             */
+            var addButtonsToColumnDefs = function(columnDefs) {
+                var newColDefs = [
+                    { field: "selectBtn", headerName: "", width: 50, suppressSorting: true, suppressMenu: true }
+                ];
+
+                return newColDefs.concat(columnDefs);
+            };
+
+            /**
+             * Adds "Select" and "Add to basket" buttons to the data
+             * @param rows      Table rows to add buttons to
+             * @returns {Array} Table rows with buttons
+             */
+            var addButtonsToGridData = function(rows) {
+                var newRows = [];
+
+                _.each(rows, function(row) {
+                    var selectBtnUrl = YDS_CONSTANTS.PROJECT_DETAILS_URL + "?id=" + row.id + "&type=" + grid.viewType;
+
+                    row.selectBtn = "<a href='" + selectBtnUrl + "' class='btn btn-xs btn-primary' target='_blank' style='margin-top: -4px'>Select</a>";
+
+                    newRows.push(row);
+                });
+
+                return newRows;
+            };
+
+            /**
              * Function to render the grid
              */
             var visualizeGrid = function(quickFilter) {
-                var columnDefs = [];
-
                 // If there is no grid, create one before adding data to it
                 if (_.isUndefined(scope.gridOptions)) {
                     initGrid();
@@ -222,13 +253,17 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                 var responseView = findView(responseData, response.view);   // Find the correct view
                                 var numOfResults = response.data.response.numFound;         // Total results
 
-                                // Format the column definitions returned from the API and add them to the grid
-                                columnDefs = Data.prepareGridColumns(responseView);
-                                scope.gridOptions.api.setColumnDefs(columnDefs);
+                                // Format the column definitions returned from the API and add 2 extra columns to them
+                                var columnDefs = Data.prepareGridColumns(responseView);
+                                var colDefsWithButtons = addButtonsToColumnDefs(columnDefs);
+
+                                scope.gridOptions.api.setColumnDefs(colDefsWithButtons);
 
                                 // Format the data returned from the API and add them to the grid
                                 var rowsThisPage = Data.prepareGridData(responseData, responseView);
-                                params.successCallback(rowsThisPage, numOfResults);
+                                var rowsWithButtons = addButtonsToGridData(rowsThisPage);
+
+                                params.successCallback(rowsWithButtons, numOfResults);
                             }, function(error) {
                                 scope.ydsAlert = error.message;
                             });

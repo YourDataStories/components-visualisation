@@ -14,7 +14,9 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                 if(angular.isUndefined(scope.lang) || scope.lang.trim()=="")
                     scope.lang = "en";
 
-                //callback function called after each search query
+                /**
+                 * Function to initialize the tabs and make the first one active
+                 */
                 var initTabs = function() {
                     // get categories for the tabs
                     Search.getSearchTabs().then(function(response) {
@@ -44,6 +46,10 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                     });
                 };
 
+                /**
+                 * Changes the url parameters to reflect tab changes
+                 * @param tabName
+                 */
                 scope.tabChangeHandler = function (tabName) {
                     // change the url parameter to reflect the tab change
                     $location.search("tab", tabName);
