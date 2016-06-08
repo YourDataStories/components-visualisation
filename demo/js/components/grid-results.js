@@ -1,4 +1,4 @@
-angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 'YDS_CONSTANTS', function(Data, Filters, Search, YDS_CONSTANTS){
+angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 'Basket', 'YDS_CONSTANTS', function(Data, Filters, Search, Basket, YDS_CONSTANTS){
     return {
         restrict: 'E',
         scope: {
@@ -188,20 +188,21 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
 
             /**
              * Adds 2 columns to the column definitions of a grid in which
-             * the "select" and "add to basket" buttons will be
+             * the "view" and "add to basket" buttons will be
              * @param columnDefs    Column definitions array as returned by Data.prepareGridColumns()
              * @returns {Array.<*>} New column definitions
              */
             var addButtonsToColumnDefs = function(columnDefs) {
                 var newColDefs = [
-                    { field: "selectBtn", headerName: "", width: 50, suppressSorting: true, suppressMenu: true }
+                    { field: "viewBtn", headerName: "", width: 45, suppressSorting: true, suppressMenu: true }
+                    // { field: "basketBtn", headerName: "", width: 60, suppressSorting: true, suppressMenu: true }
                 ];
 
                 return newColDefs.concat(columnDefs);
             };
 
             /**
-             * Adds "Select" and "Add to basket" buttons to the data
+             * Adds "View" and "Add to basket" buttons to the data
              * @param rows      Table rows to add buttons to
              * @returns {Array} Table rows with buttons
              */
@@ -209,14 +210,35 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 var newRows = [];
 
                 _.each(rows, function(row) {
-                    var selectBtnUrl = YDS_CONSTANTS.PROJECT_DETAILS_URL + "?id=" + row.id + "&type=" + grid.viewType;
+                    var viewBtnUrl = YDS_CONSTANTS.PROJECT_DETAILS_URL + "?id=" + row.id + "&type=" + grid.viewType;
 
-                    row.selectBtn = "<a href='" + selectBtnUrl + "' class='btn btn-xs btn-primary' target='_blank' style='margin-top: -4px'>Select</a>";
+                    row.viewBtn = "<a href='" + viewBtnUrl + "' class='btn btn-xs btn-primary' target='_blank' style='margin-top: -4px'>View</a>";
+                    // row.basketBtn = "<a href='" + viewBtnUrl + "' class='btn btn-xs btn-success' target='_blank' style='margin-top: -4px'>Basket</a>";
 
                     newRows.push(row);
                 });
 
                 return newRows;
+            };
+
+            /**
+             * Creates an empty grid
+             */
+            var initGrid = function() {
+                var rawData = [];
+                var columnDefs = [];
+
+                //Define the options of the grid component
+                scope.gridOptions = {
+                    columnDefs: columnDefs,
+                    enableColResize: true,
+                    enableSorting: true,
+                    enableFilter: true,
+                    rowModelType: 'pagination'
+                };
+
+                new agGrid.Grid(gridContainer[0], scope.gridOptions);
+                scope.gridOptions.api.setRowData(rawData);
             };
 
             /**
@@ -272,26 +294,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
 
                 scope.gridOptions.api.setDatasource(dataSource);
             };
-
-            /**
-             * Creates an empty grid
-             */
-            var initGrid = function() {
-                var rawData = [];
-                var columnDefs = [];
-
-                //Define the options of the grid component
-                scope.gridOptions = {
-                    columnDefs: columnDefs,
-                    enableColResize: true,
-                    enableSorting: true,
-                    enableFilter: true,
-                    rowModelType: 'pagination'
-                };
-
-                new agGrid.Grid(gridContainer[0], scope.gridOptions);
-                scope.gridOptions.api.setRowData(rawData);
-            }
         }
     };
 }]);
