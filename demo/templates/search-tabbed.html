@@ -4,6 +4,7 @@
                placeholder="{{placeholder}}"
                ng-model="searchOptions.searchKeyword"
                uib-typeahead="suggestion for suggestion in getSuggestions($viewValue)"
+               typeahead-popup-template-url="templates/search-typeahead-popup.html"
                typeahead-focus-first="false"
                autocomplete="off"
                ng-required="true">
