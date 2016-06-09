@@ -19,7 +19,7 @@ angular.module('yds').directive('ydsSearchTabbed', ['$window', '$timeout', '$loc
 
             // check if max suggestions attribute is defined, else assign default value
             if (_.isUndefined(scope.maxSuggestions) || scope.maxSuggestions.trim() == "") {
-                scope.maxSuggestions = 5;
+                scope.maxSuggestions = 15;
             }
 
             switch(scope.searchOptions.lang) {

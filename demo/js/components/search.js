@@ -4,6 +4,7 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 		restrict: 'E',
 		scope: {
 			lang:'@',
+			maxSuggestions: '@',
 			standalone: '@'
 		},
 		templateUrl: 'templates/search.html',
@@ -30,6 +31,11 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 				default:
 					scope.placeholder = "Search for...";
 					scope.searchBtnText = "Search";
+			}
+
+			// check if max suggestions attribute is defined, else assign default value
+			if (_.isUndefined(scope.maxSuggestions) || scope.maxSuggestions.trim() == "") {
+				scope.maxSuggestions = 15;
 			}
 
 			//check if the standalone attr is defined, else assign default value
@@ -112,6 +118,13 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 				}
 			};
 
+			/**
+			 * Function to get search suggestions from the Search service
+			 * @param val   Input from the search bar
+			 */
+			scope.getSuggestions = function(val) {
+				return Search.getSearchSuggestions(val, scope.lang, scope.maxSuggestions);
+			};
 
 			/**
 			 * function to show/hide the advanced search panel
