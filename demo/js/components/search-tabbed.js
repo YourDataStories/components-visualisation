@@ -3,7 +3,8 @@ angular.module('yds').directive('ydsSearchTabbed', ['$window', '$timeout', '$loc
     return {
         restrict: 'E',
         scope: {
-            lang:'@'
+            lang:'@',
+            maxSuggestions: '@'     // maximum number of suggestions to show
         },
         templateUrl: 'templates/search-tabbed.html',
         link: function (scope) {
@@ -12,9 +13,14 @@ angular.module('yds').directive('ydsSearchTabbed', ['$window', '$timeout', '$loc
                 searchKeyword: ""
             };
 
-            //check if the language attr is defined, else assign default value
+            // check if the language attr is defined, else assign default value
             if(angular.isUndefined(scope.searchOptions.lang) || scope.searchOptions.lang.trim()=="")
                 scope.searchOptions.lang = "en";
+
+            // check if max suggestions attribute is defined, else assign default value
+            if (_.isUndefined(scope.maxSuggestions) || scope.maxSuggestions.trim() == "") {
+                scope.maxSuggestions = 5;
+            }
 
             switch(scope.searchOptions.lang) {
                 case "el":
@@ -34,7 +40,7 @@ angular.module('yds').directive('ydsSearchTabbed', ['$window', '$timeout', '$loc
             });
 
             /**
-             * function fired when the search button is clicked
+             * Function fired when the search button is clicked
              **/
             scope.search = function (searchForm) {
                 //check if search box is empty
@@ -49,6 +55,14 @@ angular.module('yds').directive('ydsSearchTabbed', ['$window', '$timeout', '$loc
                         $window.location.href = baseUrl + "?q=" + scope.searchOptions.searchKeyword + "&tab=" + $location.search().tab;
                     });
                 }
+            };
+
+            /**
+             * Function to get search suggestions from the Search service
+             * @param val   Input from the search bar
+             */
+            scope.getSuggestions = function(val) {
+                return Search.getSearchSuggestions(val, scope.lang, scope.maxSuggestions);
             };
         }
     };

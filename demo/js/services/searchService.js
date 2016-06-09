@@ -264,6 +264,70 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 	};
 
 	/**
+	 * Formats the suggestions as returned from the suggestion API to be an array for bootstrap typeahead.
+	 * @param val				The value for which the suggestions are for
+	 * @param rawSuggestions	Response from the suggestion API
+	 * @param maxSuggestions	Maximum number of suggestions to return
+	 */
+	var formatSuggestions = function(val, rawSuggestions, maxSuggestions) {
+		// Check for success of query
+		if (rawSuggestions.success != true) {
+			return [];
+		}
+
+		// Format suggestions (keep 15 first only)
+		var newSuggestions = [];
+		var dictionaries = rawSuggestions.data.suggest;
+
+		_.each(dictionaries, function(dictionary) {
+			var numOfSuggestions = dictionary[val]["numFound"];
+
+			if (!_.isUndefined(numOfSuggestions) && numOfSuggestions > 0 && newSuggestions.length < maxSuggestions) {
+				var suggestions = dictionary[val].suggestions;
+
+				_.each(suggestions, function(suggestion) {
+					if (newSuggestions.length < maxSuggestions) {
+						newSuggestions.push(suggestion.term);
+					}
+				});
+			}
+		});
+
+		return newSuggestions;
+	};
+
+	/**
+	 * Function to get search suggestions for the given value
+	 * @param val				Input from the search bar
+	 * @param lang				Language of the suggestions
+	 * @param maxSuggestions	Maximum number of suggestions to return
+	 * @returns {a|d|s}
+	 */
+	var getSearchSuggestions = function(val, lang, maxSuggestions) {
+		var deferred = $q.defer();
+
+		var suggestionParams = {
+			q: val,
+			lang: lang
+		};
+
+		$http({
+			method: 'GET',
+			url: "http://" + YDS_CONSTANTS.API_SEARCH_SUGGESTIONS,
+			params: suggestionParams,
+			headers: {'Content-Type': 'application/json'}
+		}).success(function(response) {
+			var formattedSuggestions = formatSuggestions(val, response, maxSuggestions);
+
+			deferred.resolve(formattedSuggestions);
+		}).error(function(error) {
+			deferred.reject(error);
+		});
+
+		return deferred.promise;
+	};
+
+	/**
 	 * function that gets the tabs for the tabbed search
 	 * from a static url and returns them as an array
 	 */
@@ -316,6 +380,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 		getResults: function () { return searchResults; },
 		clearResults: function () { searchResults = []; },
 		getSearchTabs: getSearchTabs,
+		getSearchSuggestions: getSearchSuggestions,
 
 		registerFacetsCallback: function(callback) { facetsCallbacks.push(callback); },
 		getFieldFacets: function() { return fieldFacets; },
