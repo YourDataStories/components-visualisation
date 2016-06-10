@@ -151,18 +151,16 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
 
             /**
              * Finds the first available view for a data type
-             * @param responseData
+             * @param possibleViewNames
              * @param availableViews
              * @returns {*}
              */
-            var findView = function(responseData, availableViews) {
-                var possibleViews = _.first(responseData).type; // Types of the data, to look for their views
-                var views = availableViews;                     // All returned views from the response
-                var responseView = undefined;                   // Variable to store the correct view when found
+            var findView = function(possibleViewNames, availableViews) {
+                var responseView = undefined;
 
                 // Check if any of the possible views for the data exist
-                _.each(possibleViews, function (viewToFind) {
-                    _.each(views, function (view) {
+                _.each(possibleViewNames, function (viewToFind) {
+                    _.each(availableViews, function (view) {
                         if (!_.isUndefined(view[viewToFind]) && _.isUndefined(responseView)) {
                             responseView = view[viewToFind];
                         }
@@ -272,8 +270,13 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                     return;
                                 }
 
-                                var responseView = findView(responseData, response.view);   // Find the correct view
-                                var numOfResults = response.data.response.numFound;         // Total results
+                                // Create array with possible view names (view type of tab should always be preferred)
+                                var resultTypes = _.first(responseData).type;
+                                var possibleViewNames = _.union([grid.viewType], resultTypes);
+
+                                // Find correct view for these results and their number
+                                var responseView = findView(possibleViewNames, response.view);
+                                var numOfResults = response.data.response.numFound;
 
                                 // Format the column definitions returned from the API and add 2 extra columns to them
                                 var columnDefs = Data.prepareGridColumns(responseView);
