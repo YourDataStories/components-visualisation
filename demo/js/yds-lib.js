@@ -345,7 +345,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
      * @param value (optional) if given, will be the last object in the hierarchy
      * @returns {*} the last object in the hierarchy
      */
-    var createNestedObject = function( base, names, value ) {
+    dataService.createNestedObject = function( base, names, value ) {
         // If a value is given, remove the last name and keep it for later:
         var lastName = arguments.length === 3 ? names.pop() : false;
 
@@ -360,6 +360,44 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
 
         // Return the last object in the hierarchy:
         return base;
+    };
+
+
+    /**
+     * Function to find a value in the data even if the attribute name in the view doesn't match exactly
+     * @param result		The result
+     * @param attribute		The name of the attribute to find (from the view)
+     * @param langs         Available languages
+     * @param prefLang		Preferred language
+     * @returns {*}			The value, if found
+     */
+    dataService.findValueInResult = function(result, attribute, langs, prefLang) {
+        var value = result[attribute];
+
+        //if the value of a result doesn't exist
+        if (_.isUndefined(value) || String(value).trim().length==0) {
+            //extract the last 3 characters of the specific attribute of the result
+            var last3chars = attribute.substr(attribute.length-3);
+
+            //if it is internationalized
+            if (last3chars == ("." + prefLang)) {
+                //split the attribute in tokens
+                var attributeTokens = attribute.split(".");
+                //extract the attribute without the i18n tokens
+                var nonInternationalizedAttr = _.first(attributeTokens, attributeTokens.length-1).join(".");
+                //find the opposite language of the component
+                var alternativeLang = _.first(_.without(langs, prefLang));
+
+                //assign the value of the opposite language
+                value = result [nonInternationalizedAttr + "." + alternativeLang];
+
+                //if no value was acquired from the i18n attributes, try with non-internationalized attribute
+                if (_.isUndefined(value) || String(value).trim().length==0)
+                    value = result [nonInternationalizedAttr];
+            }
+        }
+
+        return value;
     };
 
     dataService.prepareGridData = function(newData, newView) {
@@ -377,11 +415,11 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                         var linkStr = "<a href=\"" + url + "\" target=\"_blank\">" + attribute + "</a>";
 
                         // go to the attribute of the object and make it a link there
-                        createNestedObject(newData[i], attributeTokens, linkStr);
+                        dataService.createNestedObject(newData[i], attributeTokens, linkStr);
                     }
                 } else if (attributeTokens.length > 1) {
                     // if the data row does not have the attribute, create the nested object so ng-grid can find it
-                    createNestedObject(newData[i], attributeTokens, newData[i][viewVal.attribute]);
+                    dataService.createNestedObject(newData[i], attributeTokens, newData[i][viewVal.attribute]);
                 } else if (_.has(viewVal, "url")) {
                     //if the attribute is not nested but should have a url, make it a link
                     var attribute = newData[i][viewVal.attribute];

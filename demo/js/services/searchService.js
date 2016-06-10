@@ -47,34 +47,11 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 						var resultRow = {};
 						resultRow.header = view.header;
 						resultRow.type = view.type;
-						resultRow.value = result[view.attribute];
+						resultRow.value = Data.findValueInResult(result, view.attribute, i18nLangs, prefLang);
 
 						//if the row should have a url, find it and add it to the row
 						if (!_.isUndefined(view.url)) {
 							resultRow.url = result[view.url];
-						}
-
-						//if the value of a result doesn't exist
-						if (_.isUndefined(resultRow.value) || String(resultRow.value).trim().length==0) {
-							//extract the last 3 characters of the specific attribute of the result
-							var last3chars = view.attribute.substr(view.attribute.length-3);
-
-							//if it is internationalized
-							if (last3chars == ("." + prefLang)) {
-								//split the attribute in tokens
-								var attributeTokens = view.attribute.split(".");
-								//extract the attribute without the i18n tokens
-								var nonInternationalizedAttr = _.first(attributeTokens, attributeTokens.length-1).join(".");
-								//find the opposite language of the component
-								var alternativeLang = _.first(_.without(i18nLangs, prefLang));
-
-								//assign the value of the opposite language
-								resultRow.value = result [nonInternationalizedAttr + "." + alternativeLang];
-
-								//if no value was acquired from the i18n attributes, try with non-internationalized attribute
-								if (_.isUndefined(resultRow.value) || String(resultRow.value).trim().length==0)
-									resultRow.value = result [nonInternationalizedAttr];
-							}
 						}
 
 						//if the value is not available assign an empty string, 
@@ -381,6 +358,8 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 		clearResults: function () { searchResults = []; },
 		getSearchTabs: getSearchTabs,
 		getSearchSuggestions: getSearchSuggestions,
+
+		geti18nLangs: function() { return i18nLangs },
 
 		registerFacetsCallback: function(callback) { facetsCallbacks.push(callback); },
 		getFieldFacets: function() { return fieldFacets; },

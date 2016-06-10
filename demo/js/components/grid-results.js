@@ -283,6 +283,29 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
 
                                 // Format the data returned from the API and add them to the grid
                                 var rowsThisPage = Data.prepareGridData(responseData, responseView);
+
+                                // Check if any rows have no value for some attribute
+                                _.each(rowsThisPage, function(row, index) {
+                                    // for each column of the table
+                                    _.each(responseView, function(column) {
+                                        var attr = column.attribute;
+
+                                        // if it's undefined, try to find it with similar attribute name
+                                        if (_.isUndefined(row[attr])) {
+                                            var newValue = Data.findValueInResult(row, attr, Search.geti18nLangs(), grid.lang);
+
+                                            if (_.isUndefined(newValue)) {
+                                                newValue = "";
+                                            } else if (_.isArray(newValue)) {
+                                                newValue = newValue.join(", ");
+                                            }
+
+                                            Data.createNestedObject(row, attr.split("."), newValue);
+                                        }
+                                    });
+                                });
+
+                                // Add view button for viewing more info about the result
                                 var rowsWithButtons = addButtonsToGridData(rowsThisPage);
 
                                 params.successCallback(rowsWithButtons, numOfResults);
