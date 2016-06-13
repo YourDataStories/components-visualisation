@@ -288,7 +288,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                 var rowsThisPage = Data.prepareGridData(responseData, responseView);
 
                                 // Check if any rows have no value for some attribute
-                                _.each(rowsThisPage, function(row, index) {
+                                _.each(rowsThisPage, function(row) {
                                     // for each column of the table
                                     _.each(responseView, function(column) {
                                         var attr = column.attribute;

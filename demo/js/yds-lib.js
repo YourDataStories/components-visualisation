@@ -416,6 +416,9 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
 
                         // go to the attribute of the object and make it a link there
                         dataService.createNestedObject(newData[i], attributeTokens, linkStr);
+                    } else if (_.isUndefined(attribute)) {
+                        // if attribute was not found, create the object
+                        dataService.createNestedObject(newData[i], attributeTokens, newData[i][viewVal.attribute]);
                     }
                 } else if (attributeTokens.length > 1) {
                     // if the data row does not have the attribute, create the nested object so ng-grid can find it
