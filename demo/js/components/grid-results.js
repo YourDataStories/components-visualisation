@@ -142,14 +142,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
             };
 
             /**
-             * Function to handle quick filtering
-             */
-            scope.applyQuickFilter = function(input) {
-                if (!_.isUndefined(scope.gridOptions.api))
-                    scope.gridOptions.api.setQuickFilter(input);
-            };
-
-            /**
              * Finds the first available view for a data type
              * @param possibleViewNames
              * @param availableViews

@@ -235,15 +235,6 @@ angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout
 				});
 			};
 
-
-			/**
-			 * function to handle quick filtering
-			 **/
-			scope.applyQuickFilter = function(input) {
-				if (!_.isUndefined(scope.gridOptions.api))
-					scope.gridOptions.api.setQuickFilter(input);
-			};
-
 			//extract the user provided filters, and render the grid
 			extractFilters();
 		}
