@@ -1,4 +1,4 @@
-var app = angular.module('yds', ['ui.bootstrap', 'rzModule', 'ui.checkbox', 'oc.lazyLoad', 'ngTextTruncate']);
+var app = angular.module('yds', ['ui.bootstrap', 'rzModule', 'ui.checkbox', 'oc.lazyLoad', 'angularUtils.directives.dirDisqus', 'ngTextTruncate']);
 
 var host="http://ydsdev.iit.demokritos.gr:8085";
 var geoRouteUrl = host+"/YDSAPI/yds/geo/route";
@@ -22,12 +22,12 @@ app.constant("YDS_CONSTANTS", {
     "API_COMBOBOX_FILTER": "platform.yourdatastories.eu/api/json-ld/component/filter.tcl",
     "API_YDS_STATISTICS": "platform.yourdatastories.eu/api/json-ld/component/statistics.tcl",
 
-    // "SEARCH_RESULTS_URL": "http://yds-lib.dev/#/search",
-    // "SEARCH_RESULTS_URL_EL": "http://yds-lib.dev/#/search-el",
-    // "SEARCH_RESULTS_URL_TABBED": "http://yds-lib.dev/#/search-tabbed",
-    "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search",
-    "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search-el",
-    "SEARCH_RESULTS_URL_TABBED": "http://ydsdev.iit.demokritos.gr/YDSComponents/#/search-tabbed",
+    // "SEARCH_RESULTS_URL": "http://yds-lib.dev/#!/search",
+    // "SEARCH_RESULTS_URL_EL": "http://yds-lib.dev/#!/search-el",
+    // "SEARCH_RESULTS_URL_TABBED": "http://yds-lib.dev/#!/search-tabbed",
+    "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search",
+    "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search-el",
+    "SEARCH_RESULTS_URL_TABBED": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search-tabbed",
 
     "TABBED_SEARCH_CATEGORIES_URL": "http://platform.yourdatastories.eu/api/json-ld/component/search.tcl?q=*&rows=0",
 
