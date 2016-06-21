@@ -118,7 +118,9 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
             });
 
             scope.$watch(function () { return Search.getKeyword() }, function () {
-                visualizeGrid();
+                if (scope.$parent.tabs[grid.viewType].show) {
+                    visualizeGrid();
+                }
             });
 
             /**

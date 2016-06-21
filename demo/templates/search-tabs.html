@@ -1,25 +1,34 @@
-<div class="col-md-12">
-    <uib-tabset active="active">
-        <uib-tab
-                index="$index"
-                ng-repeat="tab in tabs track by $index"
-                heading="{{ tab.name }}"
-                active="tab.active"
-                select="tabChangeHandler(tab.name)">
-
-            <yds-grid-results
-                    view-type="{{tab.name}}"
-                    sorting="true"
-                    lang="en"
-                    filtering="true"
-                    quick-filtering="true"
-                    element-H="400"
-                    col-resize="true"
-                    page-size="100"
-                    add-to-basket="true"
-                    basket-btn-x="400"
-                    basket-btn-y="0">
-            </yds-grid-results>
-        </uib-tab>
-    </uib-tabset>
+<!-- No results message -->
+<div ng-show="showNoResultsMsg" class="bs-callout bs-callout-primary">
+    <h4>{{ translations.noResultsFound }}</h4>
+    {{ translations.noResultsFoundDisclaimer }}
 </div>
+
+<!-- Result tabs -->
+<uib-tabset active="active"
+            ng-show="showTabs">
+    <uib-tab
+            index="$index"
+            ng-repeat="tab in tabs track by $index"
+            ng-if="tab.show"
+            active="tab.active"
+            select="tabChangeHandler(tab.name)">
+        <uib-tab-heading>
+            {{ tab.name }} <span class="label label-primary">{{ tab.amount }}</span>
+        </uib-tab-heading>
+
+        <yds-grid-results
+                view-type="{{tab.name}}"
+                sorting="true"
+                lang="en"
+                filtering="true"
+                quick-filtering="true"
+                element-H="400"
+                col-resize="true"
+                page-size="100"
+                add-to-basket="true"
+                basket-btn-x="400"
+                basket-btn-y="0">
+        </yds-grid-results>
+    </uib-tab>
+</uib-tabset>

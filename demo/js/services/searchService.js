@@ -309,10 +309,18 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 	 * from a static url and returns them as an array
 	 */
 	var getSearchTabs = function() {
+		var query = keyword;
+		var queryWasEmpty = false;
+		if (_.isUndefined(query) || query.trim().length == 0) {
+			query = "*";
+			queryWasEmpty = true;
+		}
+		var requestUrl = "http://" + YDS_CONSTANTS.API_SEARCH + "?q=" + query + "&rows=0";
+
 		var deferred = $q.defer();
 		$http({
 			method: 'GET',
-			url: YDS_CONSTANTS.TABBED_SEARCH_CATEGORIES_URL,
+			url: requestUrl,
 			headers: {'Content-Type': 'application/json'}
 		}).success(function(response) {
 			var data = {};
@@ -328,8 +336,12 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 						data.firstTab = tab;
 					}
 
+					var amount = tabs[index + 1];
+
 					var tabObj = {
 						name: tab,
+						amount: amount,
+						show: (amount > 0 && !queryWasEmpty),
 						active: false
 					};
 
