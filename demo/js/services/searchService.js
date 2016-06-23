@@ -9,7 +9,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 	var rangeFacets = [];
 
 	/**
-	 * function to trigger the callbacks of observers
+	 * Function to trigger the callbacks of observers
 	 **/
 	var notifyObservers = function (observerStack) {
 		angular.forEach(observerStack, function (callback) {
@@ -17,9 +17,8 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 		});
 	};
 
-
 	/**
-	 * function to format the search results returned fromm the search API.
+	 * Function to format the search results returned fromm the search API.
 	 **/
 	var formatResults = function(results, resultsView, resultsViewNames, prefLang) {
 		var formattedResults = [];
@@ -81,7 +80,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 
 
 	/**
-	 * function to format the field facets returned fromm the search API.
+	 * Function to format the field facets returned fromm the search API.
 	 * @param {Array} newFacets, the field facets as returned from Solr
 	 * @param {Array} facetsView, the view of the facets as returned from the search API
 	 **/
@@ -125,7 +124,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 
 
 	/**
-	 * function to format the range facets returned fromm the search API.
+	 * Function to format the range facets returned fromm the search API.
 	 * @param {Array} newFacets, the field facets as returned from Solr
 	 * @param {Array} facetsView, the view of the facets as returned from the search API
 	 **/
@@ -197,7 +196,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 
 
 	/**
-	 * function to format the applied facets located inside the search url
+	 * Function to format the applied facets located inside the search url
 	 * @param {String} newKeyword, the search term
 	 * @param {Integer} pageLimit, the max number of results returned from the API
 	 * @param {Integer} pageNumber, the page number of the results
@@ -305,7 +304,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 	};
 
 	/**
-	 * function that gets the tabs for the tabbed search
+	 * Function that gets the tabs for the tabbed search
 	 * from a static url and returns them as an array
 	 */
 	var getSearchTabs = function() {

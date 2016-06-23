@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location', 'YDS_CONSTANTS', 'Search',
-	function ($window, $timeout, $location, YDS_CONSTANTS, Search) {
+angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location', 'YDS_CONSTANTS', 'Search', 'queryBuilderService',
+	function ($window, $timeout, $location, YDS_CONSTANTS, Search, queryBuilderService) {
 	return {
 		restrict: 'E',
 		scope: {
@@ -13,10 +13,7 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 				lang: scope.lang,
 				standalone: scope.standalone,
 				advancedVisible: false,
-				searchKeyword: "",
-				cpvKeyword: "",
-				importerKeyword: "",
-				exporterKeyword: ""
+				searchKeyword: ""
 			};
 
 			//check if the language attr is defined, else assign default value
@@ -51,10 +48,9 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 				});
 			}
 
-
 			/**
-			 * function fired when the search button is clicked
-			 **/
+			 * Function fired when the search button is clicked
+			 */
 			scope.search = function (searchForm) {
 				//check if search box is empty
 				if (!searchForm.$valid)
@@ -68,7 +64,6 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 						$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL_EL + "?q=" + scope.searchOptions.searchKeyword;
 				});
 			};
-
 
 			/**
 			 * function to extract advanced search terms and format in Solr format
@@ -84,38 +79,45 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 				return params.join(" AND ");
 			};
 
-
 			/**
-			 * function fired when the advanced search button is clicked
-			 **/
-			scope.advancedSearch = function (searchForm) {
-				//get the form's inputs and initialize the required variables
-				var advancedQuery = "";
-				var queryTokens = [];
-				var queryParams = {
-					CPV: searchForm["cpv"].$viewValue.trim(),
-					Importer: searchForm["importer"].$viewValue.trim(),
-					Exporter: searchForm["exporter"].$viewValue.trim()
-				};
+			 * Function fired when the advanced search button is clicked
+			 */
+			scope.advancedSearch = function () {
+				var rules = queryBuilderService.getRules();
 
-				//iterate through the advanced query's params and format them
-				_.each(queryParams, function(value, key) {
-					if (value.length > 0)
-						queryTokens.push(extractAdvQueryParams(value, key));
-				});
-
-				//if the user has provided input for at least one advanced search param, refresh the query params
-				if (queryTokens.length>0) {
-					advancedQuery = queryTokens.join(" AND ");
-
-					$timeout(function() {
-						//append the query param to the search url
-						if (scope.searchOptions.lang == "en")
-							$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL + "?q=" + advancedQuery;
-						else
-							$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL_EL + "?q=" + advancedQuery;
-					});
+				if (!_.isEmpty(rules)) {
+					console.log(rules);
+				} else {
+					console.error("No rules defined!");
 				}
+
+				//get the form's inputs and initialize the required variables
+				// var advancedQuery = "";
+				// var queryTokens = [];
+				// var queryParams = {
+				// 	CPV: searchForm["cpv"].$viewValue.trim(),
+				// 	Importer: searchForm["importer"].$viewValue.trim(),
+				// 	Exporter: searchForm["exporter"].$viewValue.trim()
+				// };
+                //
+				// //iterate through the advanced query's params and format them
+				// _.each(queryParams, function(value, key) {
+				// 	if (value.length > 0)
+				// 		queryTokens.push(extractAdvQueryParams(value, key));
+				// });
+                //
+				// //if the user has provided input for at least one advanced search param, refresh the query params
+				// if (queryTokens.length>0) {
+				// 	advancedQuery = queryTokens.join(" AND ");
+                //
+				// 	$timeout(function() {
+				// 		//append the query param to the search url
+				// 		if (scope.searchOptions.lang == "en")
+				// 			$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL + "?q=" + advancedQuery;
+				// 		else
+				// 			$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL_EL + "?q=" + advancedQuery;
+				// 	});
+				// }
 			};
 
 			/**
@@ -133,7 +135,7 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 				$timeout(function(){
 					scope.searchOptions.advancedVisible = !scope.searchOptions.advancedVisible;
 				})
-			}
+			};
 		}
 	};
 }]);

@@ -23,6 +23,7 @@
 </div>
 <div class="yds-advanced-search-wrapper" ng-class="searchOptions.advancedVisible ? 'active' : ''">
     <hr>
+    <!--
     <form novalidate name="advanceSearchForm"
           class="form-horizontal yds-advanced-search"
           ng-if="searchOptions.advancedVisible"
@@ -55,6 +56,11 @@
         </div>
         <button type="submit" class="btn btn-default pull-right">Advanced Search</button>
     </form>
+    -->
+
+    <!--Query Builder-->
+    <query-builder lang="{{lang}}" max-suggestions="10"></query-builder>
+    <button ng-click="advancedSearch()" type="submit" class="btn btn-default pull-right">Advanced Search</button>
     <div style="clear: both"></div>
     <hr>
 </div>
