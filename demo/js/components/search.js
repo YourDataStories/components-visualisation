@@ -16,6 +16,8 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 				searchKeyword: ""
 			};
 
+			scope.validationError = false;		// When true, query builder validation error will show on page
+
 			//check if the language attr is defined, else assign default value
 			if(angular.isUndefined(scope.searchOptions.lang) || scope.searchOptions.lang.trim()=="")
 				scope.searchOptions.lang = "en";
@@ -86,9 +88,10 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 				var rules = queryBuilderService.getRules();
 
 				if (!_.isEmpty(rules)) {
+					scope.validationError = false;
 					console.log(rules);
 				} else {
-					console.error("No rules defined!");
+					scope.validationError = true;
 				}
 
 				//get the form's inputs and initialize the required variables
