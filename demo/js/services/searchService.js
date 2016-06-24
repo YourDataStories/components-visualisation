@@ -251,18 +251,21 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 			return [];
 		}
 
-		// Format suggestions (keep 15 first only)
+		// Initialize suggestions array and get dictionaries from the API's response
 		var newSuggestions = [];
 		var dictionaries = rawSuggestions.data.suggest;
 
+		// Check all returned dictionaries for suggestions
 		_.each(dictionaries, function(dictionary) {
 			if (_.has(dictionary, val)) {
 				var numOfSuggestions = dictionary[val]["numFound"];
 
+				// If there are suggestions in this dictionary and the specified value, add them to the list
 				if (!_.isUndefined(numOfSuggestions) && numOfSuggestions > 0 && newSuggestions.length < maxSuggestions) {
 					var suggestions = dictionary[val].suggestions;
 
 					_.each(suggestions, function(suggestion) {
+						// Only add more suggestions if the maxSuggestions limit has not been reached
 						if (newSuggestions.length < maxSuggestions) {
 							newSuggestions.push(suggestion.term);
 						}
@@ -284,17 +287,20 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 	var getSearchSuggestions = function(val, lang, maxSuggestions) {
 		var deferred = $q.defer();
 
+		// Set required request parameters
 		var suggestionParams = {
 			q: val,
 			lang: lang
 		};
 
+		// Request suggestions from the API
 		$http({
 			method: 'GET',
 			url: "http://" + YDS_CONSTANTS.API_SEARCH_SUGGESTIONS,
 			params: suggestionParams,
 			headers: {'Content-Type': 'application/json'}
 		}).success(function(response) {
+			// Format the returned suggestions and resolve the promise
 			var formattedSuggestions = formatSuggestions(val, response, maxSuggestions);
 
 			deferred.resolve(formattedSuggestions);
@@ -306,19 +312,23 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 	};
 
 	/**
-	 * Function that gets the tabs for the tabbed search
-	 * from a static url and returns them as an array
+	 * Function to get the tabs for tabbed search and return them as an array
 	 */
 	var getSearchTabs = function() {
+		// Get the current search keyword
 		var query = keyword;
+
+		// If keyword is empty, returns all available tabs but show none of them
 		var queryWasEmpty = false;
 		if (_.isUndefined(query) || query.trim().length == 0) {
 			query = "*";
 			queryWasEmpty = true;
 		}
-		var requestUrl = "http://" + YDS_CONSTANTS.API_SEARCH + "?q=" + query + "&rows=0";
 
+		var requestUrl = "http://" + YDS_CONSTANTS.API_SEARCH + "?q=" + query + "&rows=0";
 		var deferred = $q.defer();
+
+		// Get tabs from the server
 		$http({
 			method: 'GET',
 			url: requestUrl,
@@ -326,19 +336,22 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 		}).success(function(response) {
 			var data = {};
 
-			// get tabs from json and create new array with only the tab names (no numbers)
+			// Get tabs from json and create new object to put the formatted tabs in
 			var tabs = response["data"]["facet_counts"]["facet_fields"]["type"];
-			var tabsWithoutNumbers = {};
+			var formattedTabs = {};
 
 			_.each(tabs, function(tab, index) {
-				// if it's a string, push it to the new array
+				// If it's a string, push it to the new array
 				if (!isFinite(String(tab).trim() || NaN)) {
+					// If this is the first returned tab, remember that in order for it to be selected on the page
 					if (_.isUndefined(data.firstTab)) {
 						data.firstTab = tab;
 					}
 
+					// Get amount of results in this tab (next array value in the json data)
 					var amount = tabs[index + 1];
 
+					// Create tab object and add it to the array of tabs
 					var tabObj = {
 						name: tab,
 						amount: amount,
@@ -346,11 +359,12 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 						active: false
 					};
 
-					tabsWithoutNumbers[tab] = tabObj;
+					formattedTabs[tab] = tabObj;
 				}
 			});
 
-			data.tabs = tabsWithoutNumbers;
+			// Add formatted tabs to the data and resolve promise
+			data.tabs = formattedTabs;
 
 			deferred.resolve(data);
 		}).error(function(error) {

@@ -53,7 +53,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Sea
                         "afterUpdateRuleOperator.queryBuilder afterUpdateGroupCondition.queryBuilder ", function (e) {
                         queryBuilderService.setRules(builder.queryBuilder('getRules'));
                     }).on('validationError.queryBuilder', function(e, rule, error, value) {
-                        // Don't display validation error
+                        // Don't display QueryBuilder's validation errors
                         e.preventDefault();
                     });
                 });
@@ -163,7 +163,6 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Sea
                  * @param val   Input from the search bar
                  */
                 scope.getSuggestions = function(val) {
-                    //todo: enter "Textile Fabrics; Coated With Gum Or Amylaceous Substances, Of A Kind Used For The Outer Covers Of Books Or The Like" and enter spaces for error
                     return Search.getSearchSuggestions(val, scope.lang, scope.maxSuggestions);
                 };
 
