@@ -217,20 +217,15 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
              * Creates an empty grid
              */
             var initGrid = function() {
-                var rawData = [];
-                var columnDefs = [];
-
-                //Define the options of the grid component
+                //Define the initial options of the grid component
                 scope.gridOptions = {
-                    columnDefs: columnDefs,
+                    columnDefs: [],
                     enableColResize: true,
-                    enableSorting: true,
                     enableFilter: true,
-                    rowModelType: 'pagination'
+                    virtualPaging: true
                 };
 
                 new agGrid.Grid(gridContainer[0], scope.gridOptions);
-                scope.gridOptions.api.setRowData(rawData);
             };
 
             /**
@@ -244,6 +239,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
 
                 // Add data to the grid from the server
                 var dataSource = {
+                    maxPagesInCache: 10,
                     pageSize: parseInt(grid.pageSize),
                     getRows: function (params) {
                         // Get the search keyword, and merge it with the quick filter if it's defined
