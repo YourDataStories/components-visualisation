@@ -256,16 +256,18 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 		var dictionaries = rawSuggestions.data.suggest;
 
 		_.each(dictionaries, function(dictionary) {
-			var numOfSuggestions = dictionary[val]["numFound"];
+			if (_.has(dictionary, val)) {
+				var numOfSuggestions = dictionary[val]["numFound"];
 
-			if (!_.isUndefined(numOfSuggestions) && numOfSuggestions > 0 && newSuggestions.length < maxSuggestions) {
-				var suggestions = dictionary[val].suggestions;
+				if (!_.isUndefined(numOfSuggestions) && numOfSuggestions > 0 && newSuggestions.length < maxSuggestions) {
+					var suggestions = dictionary[val].suggestions;
 
-				_.each(suggestions, function(suggestion) {
-					if (newSuggestions.length < maxSuggestions) {
-						newSuggestions.push(suggestion.term);
-					}
-				});
+					_.each(suggestions, function(suggestion) {
+						if (newSuggestions.length < maxSuggestions) {
+							newSuggestions.push(suggestion.term);
+						}
+					});
+				}
 			}
 		});
 
