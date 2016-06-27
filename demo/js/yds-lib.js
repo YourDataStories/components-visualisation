@@ -401,32 +401,28 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
     dataService.prepareGridData = function(newData, newView) {
         for (var i=0; i<newData.length; i++) {
             _.each(newView, function(viewVal) {
-                var attributeTokens = viewVal.attribute.split(".");
-
-                //if the data row has this attribute and it is nested..
-                if (_.has(newData[i], attributeTokens[0]) && attributeTokens.length > 1) {
-                    var attribute = dataService.deepObjSearch(newData[i], viewVal.attribute);
-
-                    //if it should have a url, make it a link
-                    if (_.has(viewVal, "url")) {
-                        var url = newData[i][viewVal.url];
-                        var linkStr = "<a href=\"" + url + "\" target=\"_blank\">" + attribute + "</a>";
-
-                        // go to the attribute of the object and make it a link there
-                        dataService.createNestedObject(newData[i], attributeTokens, linkStr);
-                    } else if (_.isUndefined(attribute)) {
-                        // if attribute was not found, create the object
-                        dataService.createNestedObject(newData[i], attributeTokens, newData[i][viewVal.attribute]);
-                    }
-                } else if (attributeTokens.length > 1) {
-                    // if the data row does not have the attribute, create the nested object so ng-grid can find it
-                    dataService.createNestedObject(newData[i], attributeTokens, newData[i][viewVal.attribute]);
-                } else if (_.has(viewVal, "url")) {
-                    //if the attribute is not nested but should have a url, make it a link
-                    var attribute = newData[i][viewVal.attribute];
-                    var url = newData[i][viewVal.url];
-                    newData[i][viewVal.attribute] = "<a href=\"" + url + "\" target=\"_blank\">" + attribute + "</a>";
+                // Find value of attribute
+                var attribute = newData[i][viewVal.attribute];
+                if (_.isUndefined(attribute) || (_.isString(attribute) && attribute.trim().length == 0)) {
+                    // If the attribute is empty, maybe it is a nested attribute, so try deep object search
+                    attribute = dataService.deepObjSearch(newData[i], viewVal.attribute);
                 }
+
+                // If the column should have a url, make the attribute a link
+                if (_.has(viewVal, "url")) {
+                    // Find the url
+                    var url = newData[i][viewVal.url];
+                    if (_.isUndefined(url) || (_.isString(url) && url.trim().length == 0)) {
+                        // If the url is empty, maybe it is a nested attribute, so try deep object search
+                        url = dataService.deepObjSearch(newData[i], viewVal.url);
+                    }
+
+                    // Make attribute link to the url
+                    attribute = "<a href=\"" + url + "\" target=\"_blank\">" + attribute + "</a>";
+                }
+
+                // Add the new attribute to the data so ag grid can find it
+                dataService.createNestedObject(newData[i], viewVal.attribute.split("."), attribute);
             });
         }
 

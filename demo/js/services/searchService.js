@@ -342,7 +342,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 
 			_.each(tabs, function(tab, index) {
 				// If it's a string, push it to the new array
-				if (!isFinite(String(tab).trim() || NaN)) {
+				if (_.isString(tab)) {
 					// If this is the first returned tab, remember that in order for it to be selected on the page
 					if (_.isUndefined(data.firstTab)) {
 						data.firstTab = tab;

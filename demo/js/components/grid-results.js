@@ -214,27 +214,19 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
             };
 
             /**
-             * Creates an empty grid
-             */
-            var initGrid = function() {
-                //Define the initial options of the grid component
-                scope.gridOptions = {
-                    columnDefs: [],
-                    enableColResize: true,
-                    enableFilter: true,
-                    virtualPaging: true
-                };
-
-                new agGrid.Grid(gridContainer[0], scope.gridOptions);
-            };
-
-            /**
              * Function to render the grid
              */
             var visualizeGrid = function(quickFilter) {
-                // If there is no grid, create one before adding data to it
+                // If the grid is being rendered for the first time, create an empty grid
                 if (_.isUndefined(scope.gridOptions)) {
-                    initGrid();
+                    // Define the options of the grid component
+                    scope.gridOptions = {
+                        columnDefs: [],
+                        enableColResize: true,
+                        virtualPaging: true
+                    };
+
+                    new agGrid.Grid(gridContainer[0], scope.gridOptions);
                 }
 
                 // Add data to the grid from the server
