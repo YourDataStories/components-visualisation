@@ -408,6 +408,21 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                     attribute = dataService.deepObjSearch(newData[i], viewVal.attribute);
                 }
 
+                // If the column type is year or date, format it accordingly
+                if (viewVal.type == "year") {
+                    attribute = new Date(attribute).getFullYear();  // just year number
+                } else if (viewVal.type == "date" && !_.isUndefined(attribute) && attribute.indexOf("/") == -1) {
+                    // Format date to DD/MM/YYYY format (if it contains "/" it was already formatted)
+                    var date = new Date(attribute);
+
+                    var dd = date.getDate();
+                    var mm = date.getMonth() + 1;
+                    var yyyy = date.getFullYear();
+
+                    // Change attribute to the formatted string, adding zeroes if the month or day is less than 10
+                    attribute = ((dd < 10) ? "0" : "") + dd + "/" + ((mm < 10) ? "0" : "") + mm + "/" + yyyy;
+                }
+
                 // If the column should have a url, make the attribute a link
                 if (_.has(viewVal, "url")) {
                     // Find the url
