@@ -398,29 +398,87 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         return value;
     };
 
+    /**
+     * Formats a number, for example 14726.51 -> 14,726.51
+     * (credit: http://stackoverflow.com/a/20545587)
+     * @param n     The number to format
+     * @param dp    Number of decimal places the formatted number should have
+     * @returns {string}
+     */
+    var formatThousandsWithRounding = function(n, dp){
+        var w = n.toFixed(dp), k = w|0, b = n < 0 ? 1 : 0,
+            u = Math.abs(w-k), d = (''+u.toFixed(dp)).substr(2, dp),
+            s = ''+k, i = s.length, r = '';
+        while ( (i-=3) > b ) { r = ',' + s.substr(i, 3) + r; }
+        return s.substr(0, i + 3) + r + (d ? '.'+d: '');
+    };
+
+    /**
+     * Formats an ISO-8601 date string to "DD/MM/YYYY" format
+     * @param dateToFormat  ISO-8601 date string
+     * @returns {string}    "DD/MM/YYYY" formatted date
+     */
+    var formatDateToDDMMYYYY = function(dateToFormat) {
+        var date = new Date(dateToFormat);
+
+        var dd = date.getDate();
+        var mm = date.getMonth() + 1;
+        var yyyy = date.getFullYear();
+
+        // Return the formatted string, adding zeroes if the month or day is less than 10
+        return ((dd < 10) ? "0" : "") + dd + "/" + ((mm < 10) ? "0" : "") + mm + "/" + yyyy;
+    };
+
     dataService.prepareGridData = function(newData, newView) {
-        for (var i=0; i<newData.length; i++) {
+        for (var i = 0; i < newData.length; i++) {
             _.each(newView, function(viewVal) {
                 // Find value of attribute
-                var attribute = newData[i][viewVal.attribute];
-                if (_.isUndefined(attribute) || (_.isString(attribute) && attribute.trim().length == 0)) {
+                var attrValue = newData[i][viewVal.attribute];
+                var attributeTokens = viewVal.attribute.split(".");
+                if (_.isUndefined(attrValue) || (_.isString(attrValue) && attrValue.trim().length == 0)) {
                     // If the attribute is empty, maybe it is a nested attribute, so try deep object search
-                    attribute = dataService.deepObjSearch(newData[i], viewVal.attribute);
+                    attrValue = dataService.deepObjSearch(newData[i], viewVal.attribute);
                 }
 
-                // If the column type is year or date, format it accordingly
+                // If the column type is year, date or amount of money, format it accordingly
                 if (viewVal.type == "year") {
-                    attribute = new Date(attribute).getFullYear();  // just year number
-                } else if (viewVal.type == "date" && !_.isUndefined(attribute) && attribute.indexOf("/") == -1) {
+                    attrValue = new Date(attrValue).getFullYear();
+                } else if (viewVal.type == "date" && !_.isUndefined(attrValue) && attrValue.indexOf("/") == -1) {
                     // Format date to DD/MM/YYYY format (if it contains "/" it was already formatted)
-                    var date = new Date(attribute);
+                    attrValue = formatDateToDDMMYYYY(attrValue);
+                } else if (viewVal.type == "amount" && !_.isUndefined(attrValue)) {
+                    // Make attribute a string so we can do more checks
+                    var attrStr =  attrValue.toString().trim();
 
-                    var dd = date.getDate();
-                    var mm = date.getMonth() + 1;
-                    var yyyy = date.getFullYear();
+                    // Format the amount only if it's not empty, and doesn't contain dollar or euro sign
+                    if (attrStr.length > 0 && attrStr.indexOf("$") == -1 && attrStr.indexOf("€") == -1) {
+                        attrValue = formatThousandsWithRounding(attrValue, 2);
 
-                    // Change attribute to the formatted string, adding zeroes if the month or day is less than 10
-                    attribute = ((dd < 10) ? "0" : "") + dd + "/" + ((mm < 10) ? "0" : "") + mm + "/" + yyyy;
+                        // Try to find and add currency symbol
+                        var lastTokenLength = _.last(attributeTokens).length;
+                        var attrLength = viewVal.attribute.length;
+                        
+                        // Create string which is the attribute to look at for currency notation
+                        // (currently: newVal.attribute without last part + "hasCurrency.notation")
+                        var currNotAttr = viewVal.attribute.substr(0, attrLength - lastTokenLength) + "hasCurrency.notation";
+
+                        // If currency is USD or EUR add their symbols, otherwise add the notation as it is in the data
+                        var currNotation = _.first(newData[i][currNotAttr]);
+                        if (!_.isUndefined(currNotation)) {
+                            switch(currNotation) {
+                                case "USD":
+                                    attrValue = "$" + attrValue;
+                                    break;
+                                case "EUR":
+                                    attrValue += " €";
+                                    break;
+                                default:
+                                    attrValue += " " + currNotation;
+                            }
+                        }
+                    }
+
+
                 }
 
                 // If the column should have a url, make the attribute a link
@@ -433,11 +491,11 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                     }
 
                     // Make attribute link to the url
-                    attribute = "<a href=\"" + url + "\" target=\"_blank\">" + attribute + "</a>";
+                    attrValue = "<a href=\"" + url + "\" target=\"_blank\">" + attrValue + "</a>";
                 }
 
                 // Add the new attribute to the data so ag grid can find it
-                dataService.createNestedObject(newData[i], viewVal.attribute.split("."), attribute);
+                dataService.createNestedObject(newData[i], attributeTokens, attrValue);
             });
         }
 
