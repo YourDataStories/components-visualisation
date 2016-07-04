@@ -21,6 +21,7 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 					var elementId = "hybrid" + Data.createRandomId();
 					hybridContainer[0].id = elementId;
 
+					// Recover saved object from embed code and visualise it
 					Data.recoverEmbedCode(embedCode)
 					.then (function (response) {
 						visualiseProject(response.embedding.project_id, response.embedding.type)
@@ -30,7 +31,7 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 					});
 
 					/**
-					 * Formats the server's response according to which chart should be shown
+					 * Formats the server's response according to the chart type
 					 * @param viewType	Chart type (pie, line, map etc.)
                      * @param response	Server's response
                      * @returns {{}}	Formatted response
@@ -56,6 +57,10 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 							case "pie":
 								// Get series name
 								newData.series = responseData.series;
+								break;
+							case "bar":
+								// Get categories
+								newData.categories = responseData.categories;
 								break;
 							default:
 								console.error("Unknown chart type!");
@@ -108,16 +113,18 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 
 					//function to create a bar visualisation using data from the server
 					var barVisualisation = function (response) {
+						var formattedData = formatResponseData("bar", response);
+
 						var options = {
 							chart: {
 								type: 'column',
 								renderTo: elementId
 							},
 							title: {
-								text: response.title
+								text: formattedData.title
 							},
 							xAxis: {
-								categories: response.categories,
+								categories: formattedData.categories,
 								crosshair: true
 							},
 							tooltip: {
@@ -134,7 +141,7 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 									borderWidth: 0
 								}
 							},
-							series: response.data,
+							series: formattedData.data,
 							exporting: {
 								enabled: false
 							}
