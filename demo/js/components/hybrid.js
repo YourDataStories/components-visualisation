@@ -106,9 +106,37 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 						var chart = new Highcharts.Chart(options);
 					};
 
+					/**
+					 * Function to format the server's response so the line visualization can be created easily
+					 * @param response	Server's response
+                     * @returns {{}}	Formatted response
+                     */
+					var formatLineData = function(response) {
+						var newData = {};					// Object to put formatted data in
+						var responseData = response.data;	// Data from the response
+
+						// Get graph data
+						newData.data = responseData.data;
+
+						// Get series name
+						newData.series = responseData.series;
+
+						// Get view and find title from view
+						var titleView = _.first(response.view);
+
+						newData.title = responseData[titleView.attribute];
+						if (_.isUndefined(newData.title)) {
+							newData.title = Data.deepObjSearch(responseData, titleView.attribute);
+						}
+
+						// Return formatted data
+						return newData;
+					};
 
 					//function to create a line visualisation using data from the server
 					var lineVisualisation = function (response) {
+						var formattedData = formatLineData(response);
+
 						var options = {
 							chart: {
 								renderTo: elementId
@@ -118,11 +146,11 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 							},
 
 							title: {
-								text: response.title
+								text: formattedData.title
 							},
 							series: [{
-								name: response.series,
-								data: response.data,
+								name: formattedData.series,
+								data: formattedData.data,
 								tooltip: {
 									valueDecimals: 2
 								}
@@ -158,7 +186,6 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 						map.fitBounds(polyline.getBounds());
 					};
 
-
 					//function responsible for the visualisation of a project depending on the project id and the vis_type
 					var visualiseProject = function (projectId, vizType) {
 						vizType = vizType.toLowerCase();
@@ -166,7 +193,7 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 						if (vizType == "pie") {
 							Data.getProjectVis(vizType, projectId, "default", "en")
 							.then(function (response) {
-								pieVisualisation (response);
+								pieVisualisation(response);
 							}, function (error) {
 								console.log('error', error);
 							});
