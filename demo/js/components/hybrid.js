@@ -164,28 +164,28 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 						vizType = vizType.toLowerCase();
 
 						if (vizType == "pie") {
-							Data.projectVisualization(projectId, vizType)
+							Data.getProjectVis(vizType, projectId, "default", "en")
 							.then(function (response) {
 								pieVisualisation (response);
 							}, function (error) {
 								console.log('error', error);
 							});
 						} else if (vizType == "bar") {
-							Data.projectVisualization(projectId, vizType)
+							Data.getProjectVis(vizType, projectId, "default", "en")
 							.then(function (response) {
 								barVisualisation(response);
 							}, function (error) {
 								console.log('error', error);
 							});
 						} else if (vizType == "line") {
-							Data.projectVisualization(projectId, vizType)
+							Data.getProjectVis(vizType, projectId, "default", "en")
 							.then(function (response) {
 								lineVisualisation(response);
 							}, function (error) {
 								console.log('error', error);
 							});
 						} else if (vizType == "map") {
-							Data.projectVisualization(projectId, vizType)
+							Data.getProjectVis(vizType, projectId, "default", "en")
 							.then(function (response) {
 								mapVisualisation(response);
 							}, function (error) {
