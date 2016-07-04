@@ -10,14 +10,8 @@ angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', function($compi
 			var visualisationType = "";
 			var defaultVisTypes = ["pie", "line", "bar", "map"];
 
-			//if projectId or viewType attr is undefined, stop the execution of the directive
-			if (angular.isUndefined(projectId) || angular.isUndefined(viewType)) {
-				scope.embeddable = false;
-				return false;
-			}
-
-			//check if the element has id, accepted: "pie-container, line-container, bar-container, map-container"
-			if (!angular.isUndefined(elementClass) && elementClass!="") {
+			//check if the element has one of the accepted IDs: "pie-container", "line-container", "bar-container", "map-container"
+			if (!angular.isUndefined(elementClass) && elementClass != "") {
 				var visTypeFound = false;
 
 				for (var i=0; i<defaultVisTypes.length; i++) {				//check if the main element is a valid yds container
@@ -35,8 +29,15 @@ angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', function($compi
 					console.error('The embed extension cannot be applied on the selected element');
 					return false;
 				}
-			} else
+			} else {
 				return false;
+			}
+
+			//if projectId or viewType attr is undefined, stop the execution of the directive
+			if (angular.isUndefined(projectId) || (angular.isUndefined(viewType) && visualisationType != "map")) {
+				scope.embeddable = false;
+				return false;
+			}
 
 			//check if the user has enabled the embedding of the selected element
 			var embeddable = scope.embeddable;
