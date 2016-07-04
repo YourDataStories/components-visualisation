@@ -40,15 +40,18 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 						var newData = {};					// Object to put formatted data in
 						var responseData = response.data;	// Data from the response
 
-						// Get graph data
-						newData.data = responseData.data;
+						// If chart is not a map, get some data that is common for all of them
+						if (viewType != "map") {
+							// Get graph data
+							newData.data = responseData.data;
 
-						// Get view and find title from view
-						var titleView = _.first(response.view);
+							// Get view and find title from view
+							var titleView = _.first(response.view);
 
-						newData.title = responseData[titleView.attribute];
-						if (_.isUndefined(newData.title)) {
-							newData.title = Data.deepObjSearch(responseData, titleView.attribute);
+							newData.title = responseData[titleView.attribute];
+							if (_.isUndefined(newData.title)) {
+								newData.title = Data.deepObjSearch(responseData, titleView.attribute);
+							}
 						}
 
 						// Get remaining fields (depending on the view type)
@@ -61,6 +64,10 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 							case "bar":
 								// Get categories
 								newData.categories = responseData.categories;
+								break;
+							case "map":
+								// Get route
+								newData.route = _.first(responseData.routes).asWKT;
 								break;
 							default:
 								console.error("Unknown chart type!");
@@ -182,6 +189,8 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 
 					//function to create a map visualisation using data from the server
 					var mapVisualisation = function (response) {
+						var formattedData = formatResponseData("map", response);
+
 						var map = L.map(elementId, {
 							center: [35.52, 23.80],
 							zoom: 5
@@ -193,7 +202,7 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 						}).addTo(map);
 
 						var polyline = L.polyline([]).addTo(map);
-						var route = angular.copy(response.route);
+						var route = angular.copy(formattedData.route);
 						for (var i=0; i<route.length; i++){
 							polyline.addLatLng([parseFloat(route[i].lng),parseFloat(route[i].lat)]);
 						}
