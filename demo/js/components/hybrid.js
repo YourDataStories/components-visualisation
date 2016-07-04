@@ -29,18 +29,56 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 						console.log('error during Data.recoverEmbedCode:', error);
 					});
 
+					/**
+					 * Formats the server's response according to which chart should be shown
+					 * @param viewType	Chart type (pie, line, map etc.)
+                     * @param response	Server's response
+                     * @returns {{}}	Formatted response
+                     */
+					var formatResponseData = function(viewType, response) {
+						var newData = {};					// Object to put formatted data in
+						var responseData = response.data;	// Data from the response
+
+						// Get graph data
+						newData.data = responseData.data;
+
+						// Get view and find title from view
+						var titleView = _.first(response.view);
+
+						newData.title = responseData[titleView.attribute];
+						if (_.isUndefined(newData.title)) {
+							newData.title = Data.deepObjSearch(responseData, titleView.attribute);
+						}
+
+						// Get remaining fields (depending on the view type)
+						switch(viewType) {
+							case "line":
+							case "pie":
+								// Get series name
+								newData.series = responseData.series;
+								break;
+							default:
+								console.error("Unknown chart type!");
+						}
+
+						// Return formatted data
+						return newData;
+					};
+
 					//function to create a pie visualisation using data from the server
 					var pieVisualisation = function (response) {
+						var formattedData = formatResponseData("pie", response);
+
 						var options = {
 							chart: {
 								plotBackgroundColor: null,
 								plotBorderWidth: null,
 								plotShadow: false,
 								type: 'pie',
-								renderTo: 'hybrid-container'
+								renderTo: elementId
 							},
 							title: {
-								text: response.title
+								text: formattedData.title
 							},
 							tooltip: {
 								pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -56,9 +94,9 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 								}
 							},
 							series: [{
-								name: response.series,
+								name: formattedData.series,
 								colorByPoint: true,
-								data: response.data
+								data: formattedData.data
 							}],
 							exporting: {
 								enabled: false
@@ -67,7 +105,6 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 
 						var chart = new Highcharts.Chart(options);
 					};
-
 
 					//function to create a bar visualisation using data from the server
 					var barVisualisation = function (response) {
@@ -106,36 +143,9 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 						var chart = new Highcharts.Chart(options);
 					};
 
-					/**
-					 * Function to format the server's response so the line visualization can be created easily
-					 * @param response	Server's response
-                     * @returns {{}}	Formatted response
-                     */
-					var formatLineData = function(response) {
-						var newData = {};					// Object to put formatted data in
-						var responseData = response.data;	// Data from the response
-
-						// Get graph data
-						newData.data = responseData.data;
-
-						// Get series name
-						newData.series = responseData.series;
-
-						// Get view and find title from view
-						var titleView = _.first(response.view);
-
-						newData.title = responseData[titleView.attribute];
-						if (_.isUndefined(newData.title)) {
-							newData.title = Data.deepObjSearch(responseData, titleView.attribute);
-						}
-
-						// Return formatted data
-						return newData;
-					};
-
 					//function to create a line visualisation using data from the server
 					var lineVisualisation = function (response) {
-						var formattedData = formatLineData(response);
+						var formattedData = formatResponseData("line", response);
 
 						var options = {
 							chart: {
@@ -162,7 +172,6 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 
 						var chart = new Highcharts.StockChart(options);
 					};
-
 
 					//function to create a map visualisation using data from the server
 					var mapVisualisation = function (response) {

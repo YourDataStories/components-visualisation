@@ -11,7 +11,7 @@ angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', function($compi
 			var defaultVisTypes = ["pie", "line", "bar", "map"];
 
 			//if projectId or viewType attr is undefined, stop the execution of the directive
-			if (angular.isUndefined(projectId)|| angular.isUndefined(viewType)) {
+			if (angular.isUndefined(projectId) || angular.isUndefined(viewType)) {
 				scope.embeddable = false;
 				return false;
 			}
