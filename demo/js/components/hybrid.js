@@ -24,7 +24,7 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 					// Recover saved object from embed code and visualise it
 					Data.recoverEmbedCode(embedCode)
 					.then (function (response) {
-						visualiseProject(response.embedding.project_id, response.embedding.type)
+						visualiseProject(response.embedding.project_id, response.embedding.type, response.embedding.view_type)
 					}, function (error) {
 						scope.ydsAlert = error.message;
 						console.log('error during Data.recoverEmbedCode:', error);
@@ -211,26 +211,26 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 						map.fitBounds(polyline.getBounds());
 					};
 
-					//function responsible for the visualisation of a project depending on the project id and the vis_type
-					var visualiseProject = function (projectId, vizType) {
+					//function responsible for the visualisation of a project
+					var visualiseProject = function (projectId, vizType, viewType) {
 						vizType = vizType.toLowerCase();
 
 						if (vizType == "pie") {
-							Data.getProjectVis(vizType, projectId, "default", "en")
+							Data.getProjectVis(vizType, projectId, viewType, "en")
 							.then(function (response) {
 								pieVisualisation(response);
 							}, function (error) {
 								console.log('error', error);
 							});
 						} else if (vizType == "bar") {
-							Data.getProjectVis(vizType, projectId, "default", "en")
+							Data.getProjectVis(vizType, projectId, viewType, "en")
 							.then(function (response) {
 								barVisualisation(response);
 							}, function (error) {
 								console.log('error', error);
 							});
 						} else if (vizType == "line") {
-							Data.getProjectVis(vizType, projectId, "default", "en")
+							Data.getProjectVis(vizType, projectId, viewType, "en")
 							.then(function (response) {
 								lineVisualisation(response);
 							}, function (error) {

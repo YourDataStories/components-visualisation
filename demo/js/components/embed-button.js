@@ -65,7 +65,7 @@ angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', function($compi
 					scope.popover = {
 						content: '',
 						templateUrl: 'templates/embed-popover.html',
-						title: 'Embed URL'
+						title: 'Embed Code'
 					};
 
 					var embedBtnTemplate = '<button type="button"' +
