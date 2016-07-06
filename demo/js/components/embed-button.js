@@ -102,11 +102,11 @@ angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', function($compi
 						facet_values: []
 					}];
 
-					Data.requestEmbedCode(projectId, facets, visualisationType)
+					Data.requestEmbedCode(projectId, facets, visualisationType, viewType)
 					.then(function (response) {
 						embedCode = response.generated_hash;
 						scope.popover.content = '<iframe src="' +
-								'http://ydsdev.iit.demokritos.gr/YDSComponents/#/embed/'+ embedCode +
+								'http://ydsdev.iit.demokritos.gr/YDSComponents/#!/embed/'+ embedCode +
 								'" style="width:600px; height:300px">' +
 								'<p>Your browser does not support iframes.</p>' +
 								'</iframe>';

@@ -192,7 +192,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         return deferred.promise;
     };
 
-    dataService.requestEmbedCode = function(projectId, facets, visType) {
+    dataService.requestEmbedCode = function(projectId, facets, visType, viewType) {
         var deferred = $q.defer();
 
         $http({
@@ -208,7 +208,8 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             data: {
                 "project_id": projectId,
                 "facets": JSON.stringify(facets),
-                "viz_type": visType
+                "viz_type": visType,
+                "view_type": viewType
             }
         })
             .success(function (data) {

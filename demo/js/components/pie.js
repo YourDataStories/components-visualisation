@@ -3,7 +3,7 @@ angular.module('yds').directive('ydsPie', ['Data', function(Data){
         restrict: 'E',
         scope: {
             projectId: '@',     //id of the project that the data belong
-            viewType: '@',     //name of the array that contains the visualised data
+            viewType: '@',      //name of the array that contains the visualised data
             lang: '@',          //lang of the visualised data
 
             showLegend: '@',    //enable or disable the chart's legend
