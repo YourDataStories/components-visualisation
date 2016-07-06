@@ -15,11 +15,13 @@ public class Embedding {
     private Object project_id;
     private ComponentType type;
     private Collection<YDSFacet> facets;
+    private Object view_type;
 
-    public Embedding(Object project_id, ComponentType type, Collection<YDSFacet> facets) {
+    public Embedding(Object project_id, ComponentType type, Collection<YDSFacet> facets, Object view_type) {
         this.project_id = project_id;
         this.type = type;
         this.facets = facets;
+        this.view_type = view_type;
     }
 
     public Embedding() {
@@ -36,10 +38,12 @@ public class Embedding {
         Object pid;
         ComponentType t;
         Collection<YDSFacet> fets;
+        Object vt;
         pid = dbo.get("project_id");
         t = ComponentType.valueOf(((String) dbo.get("type")).toUpperCase());
         fets = extractFacets((List<DBObject>) dbo.get("facets"));
-        return new Embedding(pid, t, fets);
+        vt = dbo.get("view_type");
+        return new Embedding(pid, t, fets, vt);
     }
 
     public String toJSON() {

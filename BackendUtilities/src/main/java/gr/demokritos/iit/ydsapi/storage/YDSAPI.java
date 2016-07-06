@@ -25,7 +25,7 @@ public interface YDSAPI {
 
     Embedding getEmbedding(Object embedding_id) throws Exception;
 
-    Object saveEmbedding(Object project_id, ComponentType type, Collection<YDSFacet> facets);
+    Object saveEmbedding(Object project_id, ComponentType type, Collection<YDSFacet> facets, Object view_type);
 
     /**
      *

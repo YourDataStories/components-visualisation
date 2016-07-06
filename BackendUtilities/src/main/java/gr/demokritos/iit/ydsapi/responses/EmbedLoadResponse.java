@@ -14,9 +14,9 @@ public class EmbedLoadResponse extends BaseResponse implements IResponse {
 
     private Embedding embedding;
 
-    public EmbedLoadResponse(Collection<YDSFacet> facets, Object project_id, ComponentType type, Status status, String message) {
+    public EmbedLoadResponse(Collection<YDSFacet> facets, Object project_id, ComponentType type, Object view_type, Status status, String message) {
         super(status, message);
-        this.embedding = new Embedding(project_id, type, facets);
+        this.embedding = new Embedding(project_id, type, facets, view_type);
     }
 
     public EmbedLoadResponse(Embedding embedding) {
