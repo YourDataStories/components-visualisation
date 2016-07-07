@@ -24,7 +24,6 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 					// Recover saved object from embed code and visualise it
 					Data.recoverEmbedCode(embedCode)
 					.then (function (response) {
-						console.log("LANG!!!       " + response.embedding.lang);
 						visualiseProject(response.embedding.project_id, response.embedding.type,
 							response.embedding.view_type, response.embedding.lang);
 					}, function (error) {
