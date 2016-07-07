@@ -9,7 +9,6 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
             link: function(scope) {
                 scope.initialized = false;	    // flag that indicated when the component is initialized
                 scope.tabs = {};                // Object with tab information
-                scope.showTabs = false;         // Indicates if the tabs should be shown
                 scope.showNoResultsMsg = false; // Indicates if the no results message should be shown
                 scope.translations = Translations.getAll(scope.lang);   // Translations used for no results message
 
@@ -21,56 +20,62 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                     scope.lang = "en";
 
                 /**
-                 * Function to initialize the tabs and make the first one active
+                 * Initializes the tabs and makes the first one active
                  */
                 var initTabs = function() {
-                    // get categories for the tabs
-                    Search.getSearchTabs().then(function(response) {
-                        scope.tabs = response.tabs;
+                    Search.getSearchTabs(scope.lang).then(function(response) {
+                        // Get tabs from the response
+                        var tabs = response.tabs;
 
-                        if (Search.getKeyword().trim().length > 0) {
-                            updateTabs();
-                        }
+                        // Set all the tabs to inactive so the first one isn't activated by default
+                        _.each(tabs, function(tab) {
+                            tab.active = false;
+                        });
+
+                        // Set the tabs variable
+                        scope.tabs = tabs;
+
+                        // Update tab result counts and select the appropriate one
+                        updateTabs();
 
                         scope.initialized = true;
                     });
                 };
 
+                /**
+                 * Updates the amounts shown on each tab and selects the appropriate one depending on url parameters
+                 */
                 var updateTabs = function() {
-                    Search.getSearchTabs().then(function(response) {
+                    Search.getTabResultCounts().then(function(response) {
                         var newTabs = response.tabs;
 
-                        scope.showTabs = (_.keys(newTabs).length > 0);
-                        scope.showNoResultsMsg = !scope.showTabs;
-
                         // update amounts of tabs
-                        if (scope.showTabs) {
-                            _.each(scope.tabs, function(tab) {
-                                if (_.has(newTabs, tab.name)) {
-                                    tab.amount = newTabs[tab.name].amount;
-                                    tab.show = true;
-                                } else {
-                                    // the tab has 0 amount, set it to not show
-                                    tab.amount = 0;
-                                    tab.show = false;
-                                }
-
-                                tab.active = false;
-                            });
-
-                            // make the correct tab selected
-                            var prevSelTab = $location.search().tab;
-
-                            if (!_.isUndefined(prevSelTab) && scope.tabs[prevSelTab].show) {
-                                scope.tabs[prevSelTab].active = true;
+                        _.each(scope.tabs, function(tab) {
+                            if (_.has(newTabs, tab.concept)) {
+                                // update the tab's amount to the new one
+                                tab.amount = newTabs[tab.concept].amount;
                             } else {
-                                scope.tabs[response.firstTab].active = true;
+                                // set tab's amount to 0
+                                tab.amount = 0;
                             }
-                        } else {
-                            // no results, remove tab from url
-                            $location.search("tab", null);
-                        }
+                        });
 
+                        // make the correct tab selected
+                        var prevSelTab = $location.search().tab;
+
+                        if (!_.isUndefined(prevSelTab)) {
+                            // find and select the previously selected tab
+                            _.each(scope.tabs, function(tab) {
+                                if (tab.label == prevSelTab) {
+                                    tab.active = true;
+                                }
+                            });
+                        } else {
+                            // select first tab
+                            var tabToSel = _.first(scope.tabs);
+                            tabToSel.active = true;
+                            prevTab = tabToSel.label;
+                        }
                     });
                 };
 
@@ -83,42 +88,29 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                     $location.search("tab", tabName);
                 };
 
+                /**
+                 * Runs when the url parameters change and acts depending on which one changed
+                 */
                 var urlChangeHandler = function() {
-                    // find what changed
+                    // Get url parameters to see if the tab or the query changed
                     var urlParams = $location.search();
 
                     if (urlParams.q != prevQ) {
+                        // The query changed
                         prevQ = urlParams.q;
 
-                        if (!scope.initialized) {
-                            // initialize tabs
-                            initTabs();
-                        }
-
-                        //get the original search term from the url
+                        // Get the search term from the url and set it as search keyword
                         var keyword = $location.search().q;
-
-                        if (_.isUndefined(keyword) || keyword.trim() == "") {
-                            // hide tabs and no results message
-                            _.each(scope.tabs, function(tab) {
-                                tab.show = false;
-                            });
-
-                            scope.showNoResultsMsg = false;
-                            scope.showTabs = false;
-
-                            // remove tab url parameter
-                            $location.search("tab", null);
-
-                            return false;
-                        }
-
                         Search.setKeyword(keyword);
 
-                        if (scope.initialized) {
-                            updateTabs();
+                        // Initialize or update the tabs
+                        if (!scope.initialized) {
+                            initTabs();             // initialize the tabs
+                        } else {
+                            updateTabs();           // update the tabs
                         }
                     } else if (urlParams.tab != prevTab) {
+                        // The tab changed
                         prevTab = urlParams.tab;
                     }
                 };
@@ -134,4 +126,5 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                 scope.$on("$locationChangeSuccess", urlChangeHandler);
             }
         };
-    }]);
+    }
+]);

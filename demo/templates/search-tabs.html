@@ -5,20 +5,18 @@
 </div>
 
 <!-- Result tabs -->
-<uib-tabset active="active"
-            ng-show="showTabs">
+<uib-tabset active="active">
     <uib-tab
             index="$index"
             ng-repeat="tab in tabs track by $index"
-            ng-if="tab.show"
             active="tab.active"
-            select="tabChangeHandler(tab.name)">
+            select="tabChangeHandler(tab.label)">
         <uib-tab-heading>
-            {{ tab.name }} <span class="label label-primary">{{ tab.amount }}</span>
+            {{ tab.label }} <span class="label label-primary">{{ tab.amount }}</span>
         </uib-tab-heading>
 
         <yds-grid-results
-                view-type="{{tab.name}}"
+                view-type="{{tab.concept}}"
                 sorting="true"
                 lang="en"
                 filtering="true"
