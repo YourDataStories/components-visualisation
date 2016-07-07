@@ -101,8 +101,9 @@ angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', function($compi
 						facet_type : "",
 						facet_values: []
 					}];
+					var lang = (scope.lang || "en");	// if scope.lang is undefined, use English
 
-					Data.requestEmbedCode(projectId, facets, visualisationType, viewType)
+					Data.requestEmbedCode(projectId, facets, visualisationType, viewType, lang)
 					.then(function (response) {
 						embedCode = response.generated_hash;
 						scope.popover.content = '<iframe src="' +
