@@ -9,7 +9,6 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
             link: function(scope) {
                 scope.initialized = false;	    // flag that indicated when the component is initialized
                 scope.tabs = {};                // Object with tab information
-                scope.showNoResultsMsg = false; // Indicates if the no results message should be shown
                 scope.translations = Translations.getAll(scope.lang);   // Translations used for no results message
 
                 var prevQ = "";                 // Keeps previous search query value

@@ -17,10 +17,11 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
             basketBtnY: '@'         // y-axis position of the basket button
         },
         templateUrl:'templates/grid-advanced.html',
-        link: function(scope, element, attrs) {
+        link: function(scope, element) {
             //reference the dom elements in which the yds-grid is rendered
             var gridWrapper = angular.element(element[0].querySelector('.component-wrapper'));
             var gridContainer = angular.element(element[0].querySelector('.grid-container'));
+
             //set the variables which will be used for the creation of the grid
             scope.quickFilterValue = "";
             var grid = {

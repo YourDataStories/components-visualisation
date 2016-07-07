@@ -6,7 +6,7 @@ angular.module('yds').directive('ydsSearchTabbed', ['$window', '$timeout', '$loc
             lang:'@',
             maxSuggestions: '@'     // maximum number of suggestions to show
         },
-        templateUrl: 'templates/search-tabbed.html',
+        templateUrl: 'templates/search.html',
         link: function (scope) {
             scope.searchOptions = {
                 lang: scope.lang,
@@ -34,7 +34,7 @@ angular.module('yds').directive('ydsSearchTabbed', ['$window', '$timeout', '$loc
 
             scope.$watch(function () {
                 return Search.getKeyword();
-            }, function (newValue, oldValue) {
+            }, function (newValue) {
                 if(!angular.isUndefined(newValue) && newValue!=scope.searchOptions.searchKeyword)
                     scope.searchOptions.searchKeyword = angular.copy(newValue);
             });
