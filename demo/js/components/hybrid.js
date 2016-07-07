@@ -24,7 +24,9 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 					// Recover saved object from embed code and visualise it
 					Data.recoverEmbedCode(embedCode)
 					.then (function (response) {
-						visualiseProject(response.embedding.project_id, response.embedding.type, response.embedding.view_type)
+						console.log("LANG!!!       " + response.embedding.lang);
+						visualiseProject(response.embedding.project_id, response.embedding.type,
+							response.embedding.view_type, response.embedding.lang);
 					}, function (error) {
 						scope.ydsAlert = error.message;
 						console.log('error during Data.recoverEmbedCode:', error);
@@ -212,32 +214,32 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 					};
 
 					//function responsible for the visualisation of a project
-					var visualiseProject = function (projectId, vizType, viewType) {
+					var visualiseProject = function (projectId, vizType, viewType, lang) {
 						vizType = vizType.toLowerCase();
 
 						if (vizType == "pie") {
-							Data.getProjectVis(vizType, projectId, viewType, "en")
+							Data.getProjectVis(vizType, projectId, viewType, lang)
 							.then(function (response) {
 								pieVisualisation(response);
 							}, function (error) {
 								console.log('error', error);
 							});
 						} else if (vizType == "bar") {
-							Data.getProjectVis(vizType, projectId, viewType, "en")
+							Data.getProjectVis(vizType, projectId, viewType, lang)
 							.then(function (response) {
 								barVisualisation(response);
 							}, function (error) {
 								console.log('error', error);
 							});
 						} else if (vizType == "line") {
-							Data.getProjectVis(vizType, projectId, viewType, "en")
+							Data.getProjectVis(vizType, projectId, viewType, lang)
 							.then(function (response) {
 								lineVisualisation(response);
 							}, function (error) {
 								console.log('error', error);
 							});
 						} else if (vizType == "map") {
-							Data.getProjectVis(vizType, projectId, "default", "en")
+							Data.getProjectVis(vizType, projectId, "default", lang)
 							.then(function (response) {
 								mapVisualisation(response);
 							}, function (error) {
