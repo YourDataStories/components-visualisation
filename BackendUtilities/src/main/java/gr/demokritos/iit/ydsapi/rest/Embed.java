@@ -35,7 +35,8 @@ public class Embed {
             @FormParam("project_id") String project_id,
             @FormParam("facets") String facets,
             @FormParam("viz_type") String viz_type,
-            @FormParam("view_type") String view_type
+            @FormParam("view_type") String view_type,
+            @FormParam("lang") String lang
     ) {
         EmbedSaveResponse res = new EmbedSaveResponse();
         YDSAPI api = MongoAPIImpl.getInstance();
@@ -43,7 +44,7 @@ public class Embed {
             ComponentType t = ComponentType.valueOf(viz_type.toUpperCase());
             Collection<YDSFacet> ydsfacets = new Gson().fromJson(facets, List.class);
             if (ydsfacets != null) {
-                Object generated_hash = api.saveEmbedding(project_id, t, ydsfacets, view_type);
+                Object generated_hash = api.saveEmbedding(project_id, t, ydsfacets, view_type, lang);
                 res.setGenerated_hash(generated_hash);
                 res.setStatus(BaseResponse.Status.OK);
             } else {
@@ -77,6 +78,7 @@ public class Embed {
             elr = new EmbedLoadResponse(el);
         } catch (Exception ex) {
             elr = new EmbedLoadResponse(
+                    null,
                     null,
                     null,
                     null,

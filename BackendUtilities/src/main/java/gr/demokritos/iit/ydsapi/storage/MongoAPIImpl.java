@@ -102,9 +102,9 @@ public class MongoAPIImpl implements YDSAPI {
     }
 
     @Override
-    public Object saveEmbedding(Object project_id, ComponentType type, Collection<YDSFacet> facets, Object view_type) {
+    public Object saveEmbedding(Object project_id, ComponentType type, Collection<YDSFacet> facets, Object view_type, Object lang) {
         DBCollection col = db.getCollection(COL_EMBEDDINGS);
-        Embedding emb = new Embedding(project_id, type, facets, view_type);
+        Embedding emb = new Embedding(project_id, type, facets, view_type, lang);
         String json_emb = emb.toJSON();
         int emb_hashcode = json_emb.hashCode();
         DBObject storable = (DBObject) JSON.parse(json_emb);
