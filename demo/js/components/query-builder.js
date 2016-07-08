@@ -1,14 +1,16 @@
-angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Search', 'queryBuilderService',
-    function ($compile, $ocLazyLoad, Search, queryBuilderService) {
+angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Data', 'Search', 'queryBuilderService',
+    function ($compile, $ocLazyLoad, Data, Search, queryBuilderService) {
         return {
             restrict: 'E',
             scope: {
                 lang:'@',
                 maxSuggestions: '@'
             },
-            template: '<div id="builder"></div>',
+            template: '<div id="builder{{randomId}}"></div>',
             link: function (scope) {
                 scope.qbInputs = {};		// Keeps the QueryBuilder's typeahead ng models
+                scope.randomId = Data.createRandomId();
+                scope.builderId = "builder" + scope.randomId;
 
                 // Lazy load jQuery QueryBuilder and add it to the page
                 $ocLazyLoad.load({
@@ -20,7 +22,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Sea
                     cache: true,
                     serie: true
                 }).then(function () {
-                    var builder = $('#builder');
+                    var builder = $("#" + scope.builderId);
 
                     // Create builder
                     builder.queryBuilder({
@@ -152,7 +154,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Sea
                  */
                 scope.typeaheadSelectHandler = function(ruleId, selectedItem) {
                     // Get root model
-                    var rootModel = $('#builder').queryBuilder('getModel');
+                    var rootModel = $("#" + scope.builderId).queryBuilder('getModel');
 
                     // Set rule's value in the model
                     setRule(rootModel, ruleId, selectedItem);
