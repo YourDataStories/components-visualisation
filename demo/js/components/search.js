@@ -82,6 +82,14 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 			};
 
 			/**
+			 * Function to get search suggestions from the Search service
+			 * @param val   Input from the search bar
+			 */
+			scope.getSuggestions = function(val) {
+				return Search.getSearchSuggestions(val, scope.lang, scope.maxSuggestions);
+			};
+
+			/**
 			 * Function fired when the advanced search button is clicked
 			 */
 			scope.advancedSearch = function () {
@@ -124,20 +132,12 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 			};
 
 			/**
-			 * Function to get search suggestions from the Search service
-			 * @param val   Input from the search bar
+			 * Shows or hides the advanced search panel
 			 */
-			scope.getSuggestions = function(val) {
-				return Search.getSearchSuggestions(val, scope.lang, scope.maxSuggestions);
-			};
-
-			/**
-			 * function to show/hide the advanced search panel
-			 **/
 			scope.toggleAdvancedSearch = function() {
 				$timeout(function(){
 					scope.searchOptions.advancedVisible = !scope.searchOptions.advancedVisible;
-				})
+				});
 			};
 		}
 	};
