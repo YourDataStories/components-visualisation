@@ -83,7 +83,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                  * @param tabName
                  */
                 scope.tabChangeHandler = function (tabName) {
-                    // change the url parameter to reflect the tab change
+                    // Change the url parameter to reflect the tab change
                     $location.search("tab", tabName);
                 };
 
@@ -111,6 +111,10 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                     } else if (urlParams.tab != prevTab) {
                         // The tab changed
                         prevTab = urlParams.tab;
+
+                        // Reset the search keyword and remove it from URL parameters
+                        Search.clearKeyword();
+                        $location.search("q", null);
                     }
                 };
 
