@@ -5,7 +5,8 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 		scope: {
 			lang:'@',
 			maxSuggestions: '@',
-			standalone: '@'
+			standalone: '@',
+			tabbed: '@'
 		},
 		templateUrl: 'templates/search.html',
 		link: function (scope) {
@@ -17,6 +18,11 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 			};
 
 			scope.validationError = false;		// When true, query builder validation error will show on page
+
+			// check if the search is tabbed or not, and use the correct url for requests (it defaults to not tabbed)
+			if (_.isUndefined(scope.tabbed) || (scope.tabbed != "true" && scope.tabbed != "false")) {
+				scope.tabbed = "false";
+			}
 
 			//check if the language attr is defined, else assign default value
 			if(angular.isUndefined(scope.searchOptions.lang) || scope.searchOptions.lang.trim()=="")
@@ -54,35 +60,51 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 			 * Function fired when the search button is clicked
 			 */
 			scope.search = function (searchForm) {
-				//check if search box is empty
-				if (!searchForm.$valid)
-					return false;
+				if (scope.tabbed == "true") {
+					//check if search box is empty
+					if (!searchForm.$valid) {
+						$location.search("q", null);
+						Search.clearKeyword();
+					} else {
+						$timeout(function() {
+							// append the query and current tab params to the search url
+							var baseUrl = (scope.searchOptions.lang == "en") ? YDS_CONSTANTS.SEARCH_RESULTS_URL_TABBED : YDS_CONSTANTS.SEARCH_RESULTS_URL_EL;
+							var tabParam = (_.isUndefined($location.search().tab)) ? "" : "&tab=" + $location.search().tab;
 
-				$timeout(function() {
-					//append the query param to the search url
-					if (scope.searchOptions.lang == "en")
-						$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL + "?q=" + scope.searchOptions.searchKeyword;
-					else
-						$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL_EL + "?q=" + scope.searchOptions.searchKeyword;
-				});
+							$window.location.href = baseUrl + "?q=" + scope.searchOptions.searchKeyword + tabParam;
+						});
+					}
+				} else {
+					//check if search box is empty
+					if (!searchForm.$valid)
+						return false;
+
+					$timeout(function() {
+						//append the query param to the search url
+						if (scope.searchOptions.lang == "en")
+							$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL + "?q=" + scope.searchOptions.searchKeyword;
+						else
+							$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL_EL + "?q=" + scope.searchOptions.searchKeyword;
+					});
+				}
 			};
 
+			// /**
+			//  * function to extract advanced search terms and format in Solr format
+			//  **/
+			// var extractAdvQueryParams = function (query, type) {
+			// 	var params = [];
+			// 	var tokens = query.split(" ");
+            //
+			// 	_.each(tokens, function(token){
+			// 		params.push(type + ":" + token)
+			// 	});
+            //
+			// 	return params.join(" AND ");
+			// };
+
 			/**
-			 * function to extract advanced search terms and format in Solr format
-			 **/
-			var extractAdvQueryParams = function (query, type) {
-				var params = [];
-				var tokens = query.split(" ");
-
-				_.each(tokens, function(token){
-					params.push(type + ":" + token)
-				});
-
-				return params.join(" AND ");
-			};
-
-			/**
-			 * Function to get search suggestions from the Search service
+			 * Gets search suggestions from the Search service
 			 * @param val   Input from the search bar
 			 */
 			scope.getSuggestions = function(val) {
