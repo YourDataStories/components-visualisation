@@ -119,10 +119,9 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     }
                 });
 
-                scope.$watch(function () { return $location.search().tab }, function (tabLabel) {
-                    //todo: check if tab is active to size columns
+                scope.$watch(function () { return $location.search().tab }, function (tabConcept) {
                     // If grid options are ready, size columns to fit
-                    if (!_.isUndefined(scope.gridOptions) && _.has(scope.gridOptions, "api")) {
+                    if (!_.isUndefined(scope.gridOptions) && _.has(scope.gridOptions, "api") && scope.viewType == tabConcept) {
                         scope.gridOptions.api.sizeColumnsToFit();
                     }
                 });
@@ -292,8 +291,9 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                     params.successCallback(rowsWithButtons, numOfResults);
 
                                     // Call sizeColumnsToFit (for the visible grid when page loads)
-                                    //todo: check if tab is active to size columns
-                                    scope.gridOptions.api.sizeColumnsToFit();
+                                    if (scope.viewType == $location.search().tab) {
+                                        scope.gridOptions.api.sizeColumnsToFit();
+                                    }
                                 }, function(error) {
                                     scope.ydsAlert = error.message;
                                 });
