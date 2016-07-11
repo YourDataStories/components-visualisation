@@ -16,6 +16,11 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Dat
                 // Create unique ID for this query builder
                 scope.builderId = "builder" + Data.createRandomId();
 
+                // Only load QueryBuilder if a concept is specified
+                if (_.isUndefined(scope.concept) || scope.concept.trim().length == 0) {
+                    return;
+                }
+
                 // Lazy load jQuery QueryBuilder and add it to the page
                 $ocLazyLoad.load({
                     files: [

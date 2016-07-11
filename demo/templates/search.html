@@ -13,34 +13,32 @@
         </span>
     </div>
 </form>
-<div ng-if="tabbed == 'true'">
-    <div class="row" ng-if="searchOptions.standalone=='false'">
-        <div class="col-xs-12 text-right">
-            <a type="button"
-                    ng-click="toggleAdvancedSearch()"
-                    class="btn btn-link yds-advanced-search-btn">
-                {{searchOptions.advancedVisible ? "Hide Advanced Search" : "Show Advanced Search"}}</a>
-        </div>
+<div class="row" ng-if="searchOptions.standalone=='false' && tabbed == 'true'">
+    <div class="col-xs-12 text-right">
+        <a type="button"
+                ng-click="toggleAdvancedSearch()"
+                class="btn btn-link yds-advanced-search-btn">
+            {{searchOptions.advancedVisible ? "Hide Advanced Search" : "Show Advanced Search"}}</a>
     </div>
-    <div class="yds-advanced-search-wrapper" ng-class="searchOptions.advancedVisible ? 'active' : ''">
-        <hr>
-        <!--Query Builder Error-->
-        <div ng-if="validationError" class="alert alert-danger" role="alert">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span class="sr-only">Validation Error:</span>
-            Please check that you have filled every query builder field!
-        </div>
-
-        <!--Query Builder-->
-        <query-builder
-                builder-id="builderId"
-                lang="{{lang}}"
-                concept="{{concept}}"
-                max-suggestions="10">
-        </query-builder>
-
-        <button ng-click="advancedSearch()" class="btn btn-default pull-right">Advanced Search</button>
-        <div style="clear: both"></div>
-        <hr>
+</div>
+<div class="yds-advanced-search-wrapper" ng-class="searchOptions.advancedVisible ? 'active' : ''">
+    <hr>
+    <!--Query Builder Error-->
+    <div ng-if="validationError" class="alert alert-danger" role="alert">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Validation Error:</span>
+        Please check that you have filled every query builder field!
     </div>
+
+    <!--Query Builder-->
+    <query-builder
+            builder-id="builderId"
+            lang="{{lang}}"
+            concept="{{concept}}"
+            max-suggestions="10">
+    </query-builder>
+
+    <button ng-click="advancedSearch()" class="btn btn-default pull-right">Advanced Search</button>
+    <div style="clear: both"></div>
+    <hr>
 </div>
