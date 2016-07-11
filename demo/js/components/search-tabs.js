@@ -48,7 +48,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                     Search.getTabResultCounts().then(function(response) {
                         var newTabs = response.tabs;
 
-                        // update amounts of tabs
+                        // Update amounts of tabs
                         _.each(scope.tabs, function(tab) {
                             if (_.has(newTabs, tab.concept)) {
                                 // update the tab's amount to the new one
@@ -59,18 +59,18 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                             }
                         });
 
-                        // make the correct tab selected
+                        // Make the correct tab selected
                         var prevSelTab = $location.search().tab;
 
                         if (!_.isUndefined(prevSelTab)) {
-                            // find and select the previously selected tab
+                            // Find and select the previously selected tab
                             _.each(scope.tabs, function(tab) {
                                 if (tab.label == prevSelTab) {
                                     tab.active = true;
                                 }
                             });
                         } else {
-                            // select first tab
+                            // Select first tab
                             var tabToSel = _.first(scope.tabs);
                             tabToSel.active = true;
                             prevTab = tabToSel.label;
