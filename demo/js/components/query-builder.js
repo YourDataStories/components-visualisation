@@ -1,22 +1,20 @@
-angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Search', 'queryBuilderService',
-    function ($compile, $ocLazyLoad, Search, queryBuilderService) {
+angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Data', 'Search', 'queryBuilderService',
+    function ($compile, $ocLazyLoad, Data, Search, queryBuilderService) {
         return {
             restrict: 'E',
             scope: {
-                lang:'@',
-                maxSuggestions: '@',
-                concept: '@',
-                builderId: '@'
+                lang:'@',               // Language of the query builder
+                maxSuggestions: '@',    // Max suggestions to show in typeahead popups
+                concept: '@',           // Concept to get filters for
+                builderId: '='          // Builder ID. '=' so it binds to the parent scope & search component can see it
             },
             templateUrl: 'templates/query-builder.html',
             link: function (scope) {
                 scope.qbInputs = {};		// Keeps the QueryBuilder's typeahead ng models
-                scope.noFilters = false;
+                scope.noFilters = false;    // If there are no filters, show it on the page
 
-                if (_.isUndefined(scope.builderId) || scope.builderId.trim().length == 0) {
-                    console.error("QueryBuilder needs an ID");
-                    return;
-                }
+                // Create unique ID for this query builder
+                scope.builderId = "builder" + Data.createRandomId();
 
                 // Lazy load jQuery QueryBuilder and add it to the page
                 $ocLazyLoad.load({
