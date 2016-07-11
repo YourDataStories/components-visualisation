@@ -65,7 +65,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                         if (!_.isUndefined(prevSelTab)) {
                             // Find and select the previously selected tab
                             _.each(scope.tabs, function(tab) {
-                                if (tab.label == prevSelTab) {
+                                if (tab.concept == prevSelTab) {
                                     tab.active = true;
                                 }
                             });
@@ -73,7 +73,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                             // Select first tab
                             var tabToSel = _.first(scope.tabs);
                             tabToSel.active = true;
-                            prevTab = tabToSel.label;
+                            prevTab = tabToSel.concept;
                         }
                     });
                 };

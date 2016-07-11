@@ -4,7 +4,7 @@
             index="$index"
             ng-repeat="tab in tabs track by $index"
             active="tab.active"
-            select="tabChangeHandler(tab.label)">
+            select="tabChangeHandler(tab.concept)">
         <uib-tab-heading>
             {{ tab.label }} <span class="label label-primary">{{ tab.amount }}</span>
         </uib-tab-heading>
