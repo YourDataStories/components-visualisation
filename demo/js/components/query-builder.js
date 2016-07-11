@@ -17,9 +17,11 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Dat
                 // Lazy load jQuery QueryBuilder and add it to the page
                 $ocLazyLoad.load({
                     files: [
-                        "https://code.jquery.com/jquery-2.2.4.min.js",
-                        "css/query-builder.default.min.css",
-                        "lib/query-builder.standalone.min.js"
+                        "css/query-builder.default.min.css",                // QueryBuilder's CSS
+                        "css/bootstrap-datepicker3.min.css",                // Bootstrap Datepicker's CSS
+                        "https://code.jquery.com/jquery-2.2.4.min.js",      // jQuery 2.x (needed for QB)
+                        "lib/query-builder.standalone.min.js",              // QueryBuilder JavaScript
+                        "lib/bootstrap-datepicker.min.js"                   // Bootstrap Datepicker's JavaScript
                     ],
                     cache: true,
                     serie: true
@@ -75,9 +77,9 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Dat
 
                         // Create filter object
                         var filter = {
-                            id: obj.id.replace(/\W/g, ''),          // keep only alphanumeric id characters
+                            id: obj.id,
                             label: label,
-                            type: obj.type                          // todo: add date time plugin
+                            type: obj.type
                         };
 
                         // If filter is string, add typeahead to it
@@ -100,8 +102,19 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Dat
                             filter.valueSetter = function(rule, value) {
                                 scope.qbInputs[rule.id] = value;
                             };
-                        }
+                        } else if (obj.type == "datetime") {
+                            // Make filter's type "date" instead of "datetime"
+                            filter.type = "date";
 
+                            // Add Datepicker plugin
+                            filter.plugin = "datepicker";
+                            filter.plugin_config = {
+                                format: 'dd/mm/yyyy',
+                                todayBtn: 'linked',
+                                todayHighlight: true,
+                                autoclose: true
+                            };
+                        }
 
                         // Return the filter
                         return filter;
