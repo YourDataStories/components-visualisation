@@ -73,15 +73,38 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Dat
                             label = obj["label"][otherLang];
                         }
 
+                        // Create filter object
+                        var filter = {
+                            id: obj.id.replace(/\W/g, ''),          // keep only alphanumeric id characters
+                            label: label,
+                            type: obj.type                          // todo: add date time plugin
+                        };
+
                         // If filter is string, add typeahead to it
-                        //todo
+                        if (obj.type == "string") {
+                            filter.input = function(rule, name) {
+                                // Return html of text input element with typeahead
+                                return $compile('<input type="text" class="form-control" name="typeahead"\
+                                    placeholder="Type here..." ng-model="qbInputs.' + rule.id + '" \
+                                    typeahead-popup-template-url="templates/search-typeahead-popup-small.html"\
+                                    uib-typeahead="suggestion for suggestion in getSuggestions($viewValue)" \
+                                    typeahead-focus-first="false" autocomplete="off" \
+                                    typeahead-on-select="typeaheadSelectHandler(\'' + rule.id + '\', $item)" \
+                                    typeahead-append-to-body="true">')( scope );
+                            };
+
+                            filter.valueGetter = function(rule) {
+                                return scope.qbInputs[rule.id];
+                            };
+
+                            filter.valueSetter = function(rule, value) {
+                                scope.qbInputs[rule.id] = value;
+                            };
+                        }
+
 
                         // Return the filter
-                        return {
-                            id: obj["id"].replace(/\W/g, ''),
-                            label: label,
-                            type: obj["type"]                           //todo: add date time plugin
-                        };
+                        return filter;
                     });
 
                     return newFilters;
