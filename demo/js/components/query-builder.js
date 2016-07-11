@@ -1,18 +1,22 @@
-angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Data', 'Search', 'queryBuilderService',
-    function ($compile, $ocLazyLoad, Data, Search, queryBuilderService) {
+angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Search', 'queryBuilderService',
+    function ($compile, $ocLazyLoad, Search, queryBuilderService) {
         return {
             restrict: 'E',
             scope: {
                 lang:'@',
                 maxSuggestions: '@',
-                concept: '@'
+                concept: '@',
+                builderId: '@'
             },
             templateUrl: 'templates/query-builder.html',
             link: function (scope) {
                 scope.qbInputs = {};		// Keeps the QueryBuilder's typeahead ng models
-                scope.randomId = Data.createRandomId();
-                scope.builderId = "builder" + scope.randomId;
                 scope.noFilters = false;
+
+                if (_.isUndefined(scope.builderId) || scope.builderId.trim().length == 0) {
+                    console.error("QueryBuilder needs an ID");
+                    return;
+                }
 
                 // Lazy load jQuery QueryBuilder and add it to the page
                 $ocLazyLoad.load({
@@ -46,14 +50,15 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Dat
                                 builder.on("afterDeleteGroup.queryBuilder afterUpdateRuleFilter.queryBuilder " +
                                     "afterAddRule.queryBuilder afterDeleteRule.queryBuilder afterUpdateRuleValue.queryBuilder " +
                                     "afterUpdateRuleOperator.queryBuilder afterUpdateGroupCondition.queryBuilder ", function (e) {
-                                    queryBuilderService.setRules(builder.queryBuilder('getRules'));
-                                }).on('validationError.queryBuilder', function (e, rule, error, value) {
+                                    queryBuilderService.setRules(scope.builderId, builder.queryBuilder('getRules'));
+                                }).on('validationError.queryBuilder', function (e) {
                                     // Don't display QueryBuilder's validation errors
                                     e.preventDefault();
                                 });
                             } else {
                                 // Show information box saying there are no filters
                                 scope.noFilters = true;
+                                queryBuilderService.setNoFilters(scope.builderId, true);
                             }
                         });
                 });
@@ -82,7 +87,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Dat
                             type: obj.type
                         };
 
-                        // If filter is string, add typeahead to it
+                        // If filter is string add typeahead, if it's date add Datepicker plugin
                         if (obj.type == "string") {
                             filter.input = function(rule, name) {
                                 // Return html of text input element with typeahead

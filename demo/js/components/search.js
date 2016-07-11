@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location', 'YDS_CONSTANTS', 'Search', 'queryBuilderService',
-	function ($window, $timeout, $location, YDS_CONSTANTS, Search, queryBuilderService) {
+angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location', 'YDS_CONSTANTS', 'Data', 'Search', 'queryBuilderService',
+	function ($window, $timeout, $location, YDS_CONSTANTS, Data, Search, queryBuilderService) {
 	return {
 		restrict: 'E',
 		scope: {
@@ -18,7 +18,8 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 				searchKeyword: ""
 			};
 
-			scope.validationError = false;		// When true, query builder validation error will show on page
+			scope.validationError = false;							// When true, QueryBuilder validation error is shown
+			scope.builderId = "builder" + Data.createRandomId();	// Generate id for this search box's QueryBuilder
 
 			// check if the search is tabbed or not, and use the correct url for requests (it defaults to not tabbed)
 			if (_.isUndefined(scope.tabbed) || (scope.tabbed != "true" && scope.tabbed != "false")) {
@@ -45,7 +46,7 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 			}
 
 			//check if the standalone attr is defined, else assign default value
-			if(angular.isUndefined(scope.searchOptions.standalone) || (scope.searchOptions.standalone!="true" && scope.searchOptions.standalone!="false"))
+			if(angular.isUndefined(scope.searchOptions.standalone) || (scope.searchOptions.standalone != "true" && scope.searchOptions.standalone != "false"))
 				scope.searchOptions.standalone = "false";
 
 			if (scope.searchOptions.standalone !== "true") {
@@ -116,7 +117,12 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 			 * Function fired when the advanced search button is clicked
 			 */
 			scope.advancedSearch = function () {
-				var rules = queryBuilderService.getRules();
+				if (queryBuilderService.hasNoFilters(scope.builderId)) {
+					console.error("No filters available for this builder!");
+					return;
+				}
+
+				var rules = queryBuilderService.getRules(scope.builderId);
 
 				if (!_.isEmpty(rules)) {
 					scope.validationError = false;
