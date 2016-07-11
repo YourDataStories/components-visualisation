@@ -3,10 +3,11 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 	return {
 		restrict: 'E',
 		scope: {
-			lang:'@',
-			maxSuggestions: '@',
-			standalone: '@',
-			tabbed: '@'
+			lang:'@',				// language of component
+			maxSuggestions: '@',	// maximum suggestions to show in typeahead popup
+			standalone: '@',		// if search component is standalone
+			tabbed: '@',			// if search component is used in tabbed search (so it needs to use different URL)
+			concept: '@'			// concept, used by advanced search for getting query builder rules
 		},
 		templateUrl: 'templates/search.html',
 		link: function (scope) {

@@ -12,7 +12,12 @@
         <!-- Search bar -->
         <div class="row">
             <div class="col-md-offset-3 col-md-6">
-                <yds-search lang="en" max-suggestions="15" tabbed="true"></yds-search>
+                <yds-search
+                        lang="en"
+                        max-suggestions="15"
+                        tabbed="true"
+                        concept="{{tab.concept}}">
+                </yds-search>
             </div>
         </div>
 

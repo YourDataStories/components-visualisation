@@ -4,13 +4,15 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Dat
             restrict: 'E',
             scope: {
                 lang:'@',
-                maxSuggestions: '@'
+                maxSuggestions: '@',
+                concept: '@'
             },
-            template: '<div id="builder{{randomId}}"></div>',
+            templateUrl: 'templates/query-builder.html',
             link: function (scope) {
                 scope.qbInputs = {};		// Keeps the QueryBuilder's typeahead ng models
                 scope.randomId = Data.createRandomId();
                 scope.builderId = "builder" + scope.randomId;
+                scope.noFilters = false;
 
                 // Lazy load jQuery QueryBuilder and add it to the page
                 $ocLazyLoad.load({
@@ -24,106 +26,65 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Dat
                 }).then(function () {
                     var builder = $("#" + scope.builderId);
 
-                    // Create builder
-                    builder.queryBuilder({
-                        filters: getQueryBuilderFilters(),
-                        rules: {
-                            condition: 'AND',
-                            rules: [{
-                                id: 'typeahead',
-                                operator: 'begins_with',
-                                value: ''
-                            }, {
-                                condition: 'OR',
-                                rules: [{
-                                    id: 'category',
-                                    operator: 'equal',
-                                    value: 2
-                                }, {
-                                    id: 'typeahead',
-                                    operator: 'equal',
-                                    value: ''
-                                }]
-                            }]
-                        }
-                    });
+                    // Get filters for query builder
+                    Search.getQueryBuilderFilters(scope.concept)
+                        .then(function(filters) {
+                            // Format filters in the format QueryBuilder expects
+                            var formattedFilters = formatFilters(filters);
 
-                    // Watch for all changes in the builder, and update the rules in QueryBuilderService
-                    // (https://github.com/mistic100/jQuery-QueryBuilder/issues/195)
-                    builder.on("afterDeleteGroup.queryBuilder afterUpdateRuleFilter.queryBuilder " +
-                        "afterAddRule.queryBuilder afterDeleteRule.queryBuilder afterUpdateRuleValue.queryBuilder " +
-                        "afterUpdateRuleOperator.queryBuilder afterUpdateGroupCondition.queryBuilder ", function (e) {
-                        queryBuilderService.setRules(builder.queryBuilder('getRules'));
-                    }).on('validationError.queryBuilder', function(e, rule, error, value) {
-                        // Don't display QueryBuilder's validation errors
-                        e.preventDefault();
-                    });
+                            // If there are filters, create builder
+                            if (!_.isEmpty(formattedFilters)) {
+                                // Create empty builder (no rules)
+                                builder.queryBuilder({
+                                    filters: formattedFilters
+                                });
+
+                                // Watch for all changes in the builder, and update the rules in QueryBuilderService
+                                // (https://github.com/mistic100/jQuery-QueryBuilder/issues/195)
+                                builder.on("afterDeleteGroup.queryBuilder afterUpdateRuleFilter.queryBuilder " +
+                                    "afterAddRule.queryBuilder afterDeleteRule.queryBuilder afterUpdateRuleValue.queryBuilder " +
+                                    "afterUpdateRuleOperator.queryBuilder afterUpdateGroupCondition.queryBuilder ", function (e) {
+                                    queryBuilderService.setRules(builder.queryBuilder('getRules'));
+                                }).on('validationError.queryBuilder', function (e, rule, error, value) {
+                                    // Don't display QueryBuilder's validation errors
+                                    e.preventDefault();
+                                });
+                            } else {
+                                // Show information box saying there are no filters
+                                scope.noFilters = true;
+                            }
+                        });
                 });
 
                 /**
-                 * Returns an array of the query builder filters
-                 * todo: take them from API
-                 * @returns {*[]}
+                 * Changes the filters array as returned from the server, to add typeahead in string fields
+                 * and get the correct labels depending on the language of the component
+                 * @param filters       Filters as returned from the server
+                 * @returns {Array}     Formatted filters
                  */
-                var getQueryBuilderFilters = function() {
-                    return [{
-                        id: 'name',
-                        label: 'Name',
-                        type: 'string'
-                    }, {
-                        id: 'category',
-                        label: 'Category',
-                        type: 'integer',
-                        input: 'select',
-                        values: {
-                            1: 'Books',
-                            2: 'Movies',
-                            3: 'Music',
-                            4: 'Tools',
-                            5: 'Goodies',
-                            6: 'Clothes'
-                        },
-                        operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null']
-                    }, {
-                        id: 'in_stock',
-                        label: 'In stock',
-                        type: 'integer',
-                        input: 'radio',
-                        values: {
-                            1: 'Yes',
-                            0: 'No'
-                        },
-                        operators: ['equal']
-                    }, {
-                        id: 'price',
-                        label: 'Price',
-                        type: 'double',
-                        validation: {
-                            min: 0,
-                            step: 0.01
-                        }
-                    }, {
-                        id: 'typeahead',
-                        label: 'Typeahead',
-                        type: 'string',
-                        input: function(rule, name) {
-                            // Return html of text input element with typeahead
-                            return $compile('<input type="text" class="form-control" name="typeahead"\
-									placeholder="Type here..." ng-model="qbInputs.' + rule.id + '" \
-									typeahead-popup-template-url="templates/search-typeahead-popup-small.html"\
-									uib-typeahead="suggestion for suggestion in getSuggestions($viewValue)" \
-									typeahead-focus-first="false" autocomplete="off" \
-									typeahead-on-select="typeaheadSelectHandler(\'' + rule.id + '\', $item)" \
-									typeahead-append-to-body="true">')( scope );
+                var formatFilters = function(filters) {
+                    var availLangs = Search.geti18nLangs();
 
-                        },
-                        valueGetter: function(rule) {
-                            return scope.qbInputs[rule.id];
-                        },
-                        valueSetter: function(rule, value) {
-                            scope.qbInputs[rule.id] = value;
+                    var newFilters = filters.map(function(obj) {
+                        // Find the label the filter should have depending on language
+                        var label = obj["label"][scope.lang];
+                        if (_.isUndefined(label)) {
+                            var otherLang = _.first(_.without(availLangs, scope.lang));
+                            label = obj["label"][otherLang];
                         }
-                    }];
+
+                        // If filter is string, add typeahead to it
+                        //todo
+
+                        // Return the filter
+                        return {
+                            id: obj["id"].replace(/\W/g, ''),
+                            label: label,
+                            type: obj["type"]                           //todo: add date time plugin
+                        };
+                    });
+
+                    return newFilters;
                 };
 
                 /**
@@ -170,4 +131,5 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Dat
 
             }
         };
-    }]);
+    }
+]);

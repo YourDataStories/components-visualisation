@@ -321,7 +321,10 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 
 			$http({
 				method: "GET",
-				url: "http://" + YDS_CONSTANTS.API_SEARCH_TABS + "?lang=" + lang,
+				url: "http://" + YDS_CONSTANTS.API_SEARCH_TABS,
+				params: {
+					lang: lang
+				},
 				headers: {'Content-Type': 'application/json'}
 			}).success(function(response) {
 				deferred.resolve(response.data);
@@ -348,13 +351,16 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 				queryWasEmpty = true;
 			}
 
-			var requestUrl = "http://" + YDS_CONSTANTS.API_SEARCH + "?q=" + query + "&rows=0";
 			var deferred = $q.defer();
 
 			// Get tabs from the server
 			$http({
 				method: 'GET',
-				url: requestUrl,
+				url: "http://" + YDS_CONSTANTS.API_SEARCH,
+				params: {
+					q: query,
+					rows: 0
+				},
 				headers: {'Content-Type': 'application/json'}
 			}).success(function(response) {
 				var data = {};
@@ -392,6 +398,31 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 			return deferred.promise;
 		};
 
+		/**
+		 * Gets the filters for the query builder, for a specific concept.
+		 * @param concept
+         * @returns {*}
+         */
+		var getQueryBuilderFilters = function(concept) {
+			// Get filters from server
+			var deferred = $q.defer();
+
+			$http({
+				method: "GET",
+				url: "http://" + YDS_CONSTANTS.API_ADVANCED_SEARCH_RULES + "?id=http://linkedeconomy.org/ontology%23" + concept,
+				params: {
+					// id: "http://linkedeconomy.org/ontology%23" + concept
+				},
+				headers: {'Content-Type': 'application/json'}
+			}).success(function(response) {
+				deferred.resolve(response.data.filters);
+			}).error(function(error) {
+				deferred.reject(error);
+			});
+
+			return deferred.promise;
+		};
+
 		return {
 			setKeyword: function(newKeyword) { keyword = newKeyword },
 			getKeyword: function() { return keyword; },
@@ -404,6 +435,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 			getTabResultCounts: getTabResultCounts,
 			getSearchTabs: getSearchTabs,
 			getSearchSuggestions: getSearchSuggestions,
+			getQueryBuilderFilters: getQueryBuilderFilters,
 
 			geti18nLangs: function() { return i18nLangs },
 
