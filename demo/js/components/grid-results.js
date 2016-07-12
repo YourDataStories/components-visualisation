@@ -135,8 +135,10 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                  */
                 scope.applyComboFilters = function() {
                     var trimmedQFValue = scope.quickFilterValue.trim();
-                    if (trimmedQFValue.length>0) {
+                    if (trimmedQFValue.length > 0) {
                         visualizeGrid(trimmedQFValue);
+                    } else {
+                        scope.clearComboFilters();
                     }
                 };
 
