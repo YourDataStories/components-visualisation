@@ -409,9 +409,9 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 
 			$http({
 				method: "GET",
-				url: "http://" + YDS_CONSTANTS.API_ADVANCED_SEARCH_RULES + "?id=http://linkedeconomy.org/ontology%23" + concept,
+				url: "http://" + YDS_CONSTANTS.API_ADVANCED_SEARCH_RULES,
 				params: {
-					// id: "http://linkedeconomy.org/ontology%23" + concept
+					id: decodeURIComponent("http://linkedeconomy.org/ontology%23" + concept)
 				},
 				headers: {'Content-Type': 'application/json'}
 			}).success(function(response) {
