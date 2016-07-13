@@ -545,6 +545,42 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         return deferred.promise;
     };
 
+    /**
+     * Gets the results for an advanced search
+     * @param query     Search query
+     * @param rules     Query Builder rules
+     * @param viewType  Concept (eg. TradeActivity, AidActivity...)
+     * @param start     Starting row
+     * @param rows      Result rows to fetch
+     * @param lang      Language of results
+     * @returns {d|a|s}
+     */
+    dataService.getGridResultDataAdvanced = function(query, rules, viewType, start, rows, lang) {
+        var deferred = $q.defer();
+
+        var searchParameters = {
+            q: query,
+            rules: rules,
+            fq: "{!tag=TYPE}type:" + viewType,
+            lang: lang,
+            rows: rows,
+            start: start
+        };
+
+        $http({
+            method: "POST",
+            url: "http://" + YDS_CONSTANTS.API_ADVANCED_SEARCH,
+            data: searchParameters,
+            headers: {'Content-Type': 'application/json'}
+        }).then(function successCallback(response) {
+            deferred.resolve(response);
+        }, function errorCallback(error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
     dataService.getProjectVis = function(type, resourceId, viewType, lang) {
         var deferred = $q.defer();
         var visualizationUrl = "";

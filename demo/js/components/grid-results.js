@@ -249,68 +249,79 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                 keyword = "(" + keyword + ") AND " + quickFilter;
                             }
 
-                            // Get data for this page and search term from the server
-                            Data.getGridResultData(keyword, grid.viewType, params.startRow, grid.pageSize, grid.lang)
-                                .then(function(response) {
-                                    // Extract needed variables from server response
-                                    var responseData = response.data.response.docs;             // Get actual results
+                            // If there are advanced search rules, get them and perform advanced search
+                            var rules = $location.search().rules;
+                            if (!_.isUndefined(rules)) {
+                                rules = JSON.parse(decodeURIComponent(rules));
 
-                                    // If there are no results, show empty grid
-                                    if (_.isEmpty(responseData)) {
-                                        params.successCallback(responseData, 0);
-                                        return;
-                                    }
-
-                                    // Create array with possible view names (view type of tab should always be preferred)
-                                    var resultTypes = _.first(responseData).type;
-                                    var possibleViewNames = _.union([grid.viewType], resultTypes);
-
-                                    // Find correct view for these results and their number
-                                    var responseView = findView(possibleViewNames, response.view);
-                                    var numOfResults = response.data.response.numFound;
-
-                                    // Format the column definitions returned from the API and add 2 extra columns to them
-                                    var columnDefs = Data.prepareGridColumns(responseView);
-                                    var colDefsWithButtons = addButtonsToColumnDefs(columnDefs);
-
-                                    scope.gridOptions.api.setColumnDefs(colDefsWithButtons);
-
-                                    // Format the data returned from the API and add them to the grid
-                                    var rowsThisPage = Data.prepareGridData(responseData, responseView);
-
-                                    // Check if any rows have no value for some attribute
-                                    _.each(rowsThisPage, function(row) {
-                                        // for each column of the table
-                                        _.each(responseView, function(column) {
-                                            var attr = column.attribute;
-
-                                            // if it's undefined, try to find it with similar attribute name
-                                            if (_.isUndefined(row[attr])) {
-                                                var newValue = Data.findValueInResult(row, attr, Search.geti18nLangs(), grid.lang);
-
-                                                if (_.isUndefined(newValue)) {
-                                                    newValue = "";
-                                                } else if (_.isArray(newValue)) {
-                                                    newValue = newValue.join(", ");
-                                                }
-
-                                                Data.createNestedObject(row, attr.split("."), newValue);
-                                            }
-                                        });
+                                Data.getGridResultDataAdvanced(keyword, rules, grid.viewType, params.startRow, grid.pageSize, grid.lang)
+                                    .then(function(response) {
+                                        console.log(response);
                                     });
+                            } else {
+                                // Get data for this page and search term from the server
+                                Data.getGridResultData(keyword, grid.viewType, params.startRow, grid.pageSize, grid.lang)
+                                    .then(function(response) {
+                                        // Extract needed variables from server response
+                                        var responseData = response.data.response.docs;             // Get actual results
 
-                                    // Add view button for viewing more info about the result
-                                    var rowsWithButtons = addButtonsToGridData(rowsThisPage);
+                                        // If there are no results, show empty grid
+                                        if (_.isEmpty(responseData)) {
+                                            params.successCallback(responseData, 0);
+                                            return;
+                                        }
 
-                                    params.successCallback(rowsWithButtons, numOfResults);
+                                        // Create array with possible view names (view type of tab should always be preferred)
+                                        var resultTypes = _.first(responseData).type;
+                                        var possibleViewNames = _.union([grid.viewType], resultTypes);
 
-                                    // Call sizeColumnsToFit (for the visible grid when page loads)
-                                    if (scope.viewType == $location.search().tab) {
-                                        scope.gridOptions.api.sizeColumnsToFit();
-                                    }
-                                }, function(error) {
-                                    scope.ydsAlert = error.message;
-                                });
+                                        // Find correct view for these results and their number
+                                        var responseView = findView(possibleViewNames, response.view);
+                                        var numOfResults = response.data.response.numFound;
+
+                                        // Format the column definitions returned from the API and add 2 extra columns to them
+                                        var columnDefs = Data.prepareGridColumns(responseView);
+                                        var colDefsWithButtons = addButtonsToColumnDefs(columnDefs);
+
+                                        scope.gridOptions.api.setColumnDefs(colDefsWithButtons);
+
+                                        // Format the data returned from the API and add them to the grid
+                                        var rowsThisPage = Data.prepareGridData(responseData, responseView);
+
+                                        // Check if any rows have no value for some attribute
+                                        _.each(rowsThisPage, function(row) {
+                                            // for each column of the table
+                                            _.each(responseView, function(column) {
+                                                var attr = column.attribute;
+
+                                                // if it's undefined, try to find it with similar attribute name
+                                                if (_.isUndefined(row[attr])) {
+                                                    var newValue = Data.findValueInResult(row, attr, Search.geti18nLangs(), grid.lang);
+
+                                                    if (_.isUndefined(newValue)) {
+                                                        newValue = "";
+                                                    } else if (_.isArray(newValue)) {
+                                                        newValue = newValue.join(", ");
+                                                    }
+
+                                                    Data.createNestedObject(row, attr.split("."), newValue);
+                                                }
+                                            });
+                                        });
+
+                                        // Add view button for viewing more info about the result
+                                        var rowsWithButtons = addButtonsToGridData(rowsThisPage);
+
+                                        params.successCallback(rowsWithButtons, numOfResults);
+
+                                        // Call sizeColumnsToFit (for the visible grid when page loads)
+                                        if (scope.viewType == $location.search().tab) {
+                                            scope.gridOptions.api.sizeColumnsToFit();
+                                        }
+                                    }, function(error) {
+                                        scope.ydsAlert = error.message;
+                                    });
+                            }
                         }
                     };
 
