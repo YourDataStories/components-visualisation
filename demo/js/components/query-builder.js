@@ -1,5 +1,5 @@
-angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Data', 'Search', 'queryBuilderService',
-    function ($compile, $ocLazyLoad, Data, Search, queryBuilderService) {
+angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$location', 'Data', 'Search', 'queryBuilderService',
+    function ($compile, $ocLazyLoad, $location, Data, Search, queryBuilderService) {
         return {
             restrict: 'E',
             scope: {
@@ -41,11 +41,26 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', 'Dat
                             // Format filters in the format QueryBuilder expects
                             var formattedFilters = formatFilters(filters);
 
+                            // Get URL parameters needed to check if we should initialize the builder with rules
+                            var curTab = $location.search().tab;        // Get current tab from URL
+                            var rulesStr = $location.search().rules;    // Get rules from URL
+                            var rules = undefined;
+
+                            // If the builder is in the active tab and there are rules, initialize the builder with them
+                            if (!_.isUndefined(curTab) && !_.isUndefined(rulesStr) && scope.concept == curTab) {
+                                rules = JSON.parse(decodeURIComponent(rulesStr));
+
+                                queryBuilderService.setRules(scope.builderId, rules);
+
+                                // todo: since this is an advanced search, make advanced search panel visible
+                            }
+
                             // If there are filters, create builder
                             if (!_.isEmpty(formattedFilters)) {
                                 // Create empty builder (no rules)
                                 builder.queryBuilder({
-                                    filters: formattedFilters
+                                    filters: formattedFilters,
+                                    rules: rules
                                 });
 
                                 // Watch for all changes in the builder, and update the rules in QueryBuilderService

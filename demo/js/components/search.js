@@ -105,7 +105,7 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 					if (!_.isEmpty(rules)) {
 						scope.validationError = false;
 
-						// Get results from advanced search API
+						// Add all search parameters to the URL so advanced search is performed by the active grid
 						$timeout(function() {
 							var keyword = scope.searchOptions.searchKeyword;
 							if (_.isUndefined(keyword) || keyword.trim().length == 0) {
