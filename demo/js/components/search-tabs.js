@@ -97,9 +97,10 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                     if (urlParams.q != prevQ) {
                         // The query changed
                         prevQ = urlParams.q;
+                        prevTab = urlParams.tab;
 
                         // Get the search term from the url and set it as search keyword
-                        var keyword = $location.search().q;
+                        var keyword = urlParams.q;
                         Search.setKeyword(keyword);
 
                         // Initialize or update the tabs
@@ -115,6 +116,9 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                         // Reset the search keyword and remove it from URL parameters
                         Search.clearKeyword();
                         $location.search("q", null);
+
+                        // Remove query builder rules from URL parameters (if there are any)
+                        $location.search("rules", null);
                     }
                 };
 

@@ -65,6 +65,7 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 						//check if search box is empty
 						if (!searchForm.$valid) {
 							$location.search("q", null);
+							$location.search("rules", null);
 							Search.clearKeyword();
 						} else {
 							$timeout(function() {
@@ -90,28 +91,6 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 					}
 				};
 
-				// /**
-				//  * function to extract advanced search terms and format in Solr format
-				//  **/
-				// var extractAdvQueryParams = function (query, type) {
-				// 	var params = [];
-				// 	var tokens = query.split(" ");
-				//
-				// 	_.each(tokens, function(token){
-				// 		params.push(type + ":" + token)
-				// 	});
-				//
-				// 	return params.join(" AND ");
-				// };
-
-				/**
-				 * Gets search suggestions from the Search service
-				 * @param val   Input from the search bar
-				 */
-				scope.getSuggestions = function(val) {
-					return Search.getSearchSuggestions(val, scope.lang, scope.maxSuggestions);
-				};
-
 				/**
 				 * Function fired when the advanced search button is clicked
 				 */
@@ -125,38 +104,33 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 
 					if (!_.isEmpty(rules)) {
 						scope.validationError = false;
-						console.log(rules);
+
+						// Get results from advanced search API
+						$timeout(function() {
+							var keyword = scope.searchOptions.searchKeyword;
+							if (_.isUndefined(keyword) || keyword.trim().length == 0) {
+								keyword = "*";
+							}
+
+							// append the query, current tab params and query builder rules to the search url
+							var baseUrl = (scope.searchOptions.lang == "en") ? YDS_CONSTANTS.SEARCH_RESULTS_URL_TABBED : YDS_CONSTANTS.SEARCH_RESULTS_URL_EL;
+							var queryParam = "?q=" + keyword;
+							var tabParam = (_.isUndefined($location.search().tab)) ? "" : "&tab=" + $location.search().tab;
+							var rulesParam = "&rules=" + encodeURIComponent(JSON.stringify(rules));
+
+							$window.location.href = baseUrl + queryParam + tabParam + rulesParam;
+						});
 					} else {
 						scope.validationError = true;
 					}
+				};
 
-					//get the form's inputs and initialize the required variables
-					// var advancedQuery = "";
-					// var queryTokens = [];
-					// var queryParams = {
-					// 	CPV: searchForm["cpv"].$viewValue.trim(),
-					// 	Importer: searchForm["importer"].$viewValue.trim(),
-					// 	Exporter: searchForm["exporter"].$viewValue.trim()
-					// };
-					//
-					// //iterate through the advanced query's params and format them
-					// _.each(queryParams, function(value, key) {
-					// 	if (value.length > 0)
-					// 		queryTokens.push(extractAdvQueryParams(value, key));
-					// });
-					//
-					// //if the user has provided input for at least one advanced search param, refresh the query params
-					// if (queryTokens.length>0) {
-					// 	advancedQuery = queryTokens.join(" AND ");
-					//
-					// 	$timeout(function() {
-					// 		//append the query param to the search url
-					// 		if (scope.searchOptions.lang == "en")
-					// 			$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL + "?q=" + advancedQuery;
-					// 		else
-					// 			$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL_EL + "?q=" + advancedQuery;
-					// 	});
-					// }
+				/**
+				 * Gets search suggestions from the Search service
+				 * @param val   Input from the search bar
+				 */
+				scope.getSuggestions = function(val) {
+					return Search.getSearchSuggestions(val, scope.lang, scope.maxSuggestions);
 				};
 
 				/**

@@ -23,6 +23,8 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 var gridWrapper = angular.element(element[0].querySelector('.component-wrapper'));
                 var gridContainer = angular.element(element[0].querySelector('.grid-container'));
 
+                var prevTab =   "";     // Keeps the previous tab to check if the tab has changed
+
                 //set the variables which will be used for the creation of the grid
                 scope.quickFilterValue = "";
                 var grid = {
@@ -119,15 +121,25 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     }
                 });
 
-                scope.$watch(function () { return $location.search().tab }, function (tabConcept) {
-                    // If grid options are ready, size columns to fit
-                    if (!_.isUndefined(scope.gridOptions) && _.has(scope.gridOptions, "api") && scope.viewType == tabConcept) {
-                        scope.gridOptions.api.sizeColumnsToFit();
-                    }
-                });
+                /**
+                 * Checks if any URL parameters change and acts accordingly
+                 */
+                scope.$watch(function () { return JSON.stringify($location.search()) + getKeyword(); }, function () {
+                    var urlParams = $location.search();
 
-                scope.$watch(function () { return getKeyword(); }, function () {
-                    visualizeGrid();
+                    // Only look for changes if this grid is in the active tab
+                    if (urlParams.tab == scope.viewType) {
+                        // If the tab changed and grid options are ready, size columns to fit
+                        if (urlParams.tab != prevTab && !_.isUndefined(scope.gridOptions) && _.has(scope.gridOptions, "api")) {
+                            scope.gridOptions.api.sizeColumnsToFit();
+                        }
+
+                        // Update prevTab variable to the new tab
+                        prevTab = urlParams.tab;
+
+                        // Visualize the grid
+                        visualizeGrid();
+                    }
                 });
 
                 /**

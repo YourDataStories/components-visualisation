@@ -19,10 +19,11 @@ app.constant("YDS_CONSTANTS", {
     "API_INTERACTIVE_LINE": "platform.yourdatastories.eu/api/json-ld/component/linechart.tcl/interactive",
     "API_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/search.tcl",
     "API_SEARCH_SUGGESTIONS": "platform.yourdatastories.eu/api/json-ld/component/suggest.tcl",
+    "API_SEARCH_TABS": "platform.yourdatastories.eu/api/json-ld/model/searchtabs.tcl",
+    "API_ADVANCED_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/searchadvanced.tcl",
+    "API_ADVANCED_SEARCH_RULES": "platform.yourdatastories.eu/api/json-ld/model/advancedsearchrules.tcl",
     "API_COMBOBOX_FILTER": "platform.yourdatastories.eu/api/json-ld/component/filter.tcl",
     "API_YDS_STATISTICS": "platform.yourdatastories.eu/api/json-ld/component/statistics.tcl",
-    "API_SEARCH_TABS": "platform.yourdatastories.eu/api/json-ld/model/searchtabs.tcl",
-    "API_ADVANCED_SEARCH_RULES": "platform.yourdatastories.eu/api/json-ld/model/advancedsearchrules.tcl",
 
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search",
     "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search-el",
