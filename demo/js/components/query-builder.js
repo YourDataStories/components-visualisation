@@ -48,7 +48,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
 
                             // If the builder is in the active tab and there are rules, initialize the builder with them
                             if (!_.isUndefined(curTab) && !_.isUndefined(rulesStr) && scope.concept == curTab) {
-                                rules = JSON.parse(decodeURIComponent(rulesStr));
+                                rules = JSURL.parse(rulesStr);
 
                                 queryBuilderService.setRules(scope.builderId, rules);
 

@@ -252,7 +252,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                             // If there are advanced search rules, get them and perform advanced search
                             var rules = $location.search().rules;
                             if (!_.isUndefined(rules)) {
-                                rules = JSON.parse(decodeURIComponent(rules));
+                                rules = JSURL.parse(rules);
 
                                 Data.getGridResultDataAdvanced(keyword, rules, grid.viewType, params.startRow, grid.pageSize, grid.lang)
                                     .then(function(response) {

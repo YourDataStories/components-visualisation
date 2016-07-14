@@ -116,7 +116,7 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 							var baseUrl = (scope.searchOptions.lang == "en") ? YDS_CONSTANTS.SEARCH_RESULTS_URL_TABBED : YDS_CONSTANTS.SEARCH_RESULTS_URL_EL;
 							var queryParam = "?q=" + keyword;
 							var tabParam = (_.isUndefined($location.search().tab)) ? "" : "&tab=" + $location.search().tab;
-							var rulesParam = "&rules=" + encodeURIComponent(JSON.stringify(rules));
+							var rulesParam = "&rules=" + JSURL.stringify(rules);
 
 							$window.location.href = baseUrl + queryParam + tabParam + rulesParam;
 						});
