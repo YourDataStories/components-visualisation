@@ -35,32 +35,28 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                 }).then(function () {
                     var builder = $("#" + scope.builderId);
 
-                    // Get filters for query builder
+                    // Get filters for query builder from API
                     Search.getQueryBuilderFilters(scope.concept)
                         .then(function(filters) {
-                            // Format filters in the format QueryBuilder expects
+                            // Format filters in the format that QueryBuilder expects
                             var formattedFilters = formatFilters(filters);
-
-                            // Get URL parameters needed to check if we should initialize the builder with rules
-                            var curTab = $location.search().tab;        // Get current tab from URL
-                            var rulesStr = $location.search().rules;    // Get rules from URL
-                            var rules = undefined;
-
-                            // If the builder is in the active tab and there are rules, initialize the builder with them
-                            if (!_.isUndefined(curTab) && !_.isUndefined(rulesStr) && scope.concept == curTab) {
-                                rules = JSURL.parse(rulesStr);
-
-                                queryBuilderService.setRules(scope.builderId, rules);
-
-                                // todo: since this is an advanced search, make advanced search panel visible
-                            }
 
                             // If there are filters, create builder
                             if (!_.isEmpty(formattedFilters)) {
-                                // Create empty builder (no rules)
+                                // If the builder is in the active tab and there are rules, give them to the builder
+                                var curTab = $location.search().tab;
+                                var rulesStr = $location.search().rules;
+
+                                if (!_.isUndefined(curTab) && !_.isUndefined(rulesStr) && scope.concept == curTab) {
+                                    var rules = JSURL.parse(rulesStr);
+
+                                    queryBuilderService.setRules(scope.builderId, rules);
+                                }
+
+                                // Create the builder
                                 builder.queryBuilder({
                                     filters: formattedFilters,
-                                    rules: rules
+                                    rules: rules                // If this wasn't defined, the builder will start empty
                                 });
 
                                 // Watch for all changes in the builder, and update the rules in QueryBuilderService
@@ -82,8 +78,8 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                 });
 
                 /**
-                 * Changes the filters array as returned from the server, to add typeahead in string fields
-                 * and get the correct labels depending on the language of the component
+                 * Changes the filters array as returned from the server in order to add typeahead in string fields,
+                 * datepicker in date fields and get the correct labels depending on the language of the component
                  * @param filters       Filters as returned from the server
                  * @returns {Array}     Formatted filters
                  */
