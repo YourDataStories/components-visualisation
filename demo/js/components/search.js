@@ -18,6 +18,11 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 					searchKeyword: ""
 				};
 
+				// Make advanced search visible if rules are defined in the URL
+				if (!_.isUndefined($location.search().rules) && scope.concept == $location.search().tab) {
+					scope.searchOptions.advancedVisible = true;
+				}
+
 				scope.validationError = false;						// When true, QueryBuilder validation error is shown
 
 				// Check if the search is tabbed or not and use the correct url for requests (it defaults to not tabbed)
@@ -77,12 +82,12 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 							});
 						}
 					} else {
-						//check if search box is empty
+						// Check if search box is empty
 						if (!searchForm.$valid)
 							return false;
 
 						$timeout(function() {
-							//append the query param to the search url
+							// Append the query param to the search url
 							if (scope.searchOptions.lang == "en")
 								$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL + "?q=" + scope.searchOptions.searchKeyword;
 							else
