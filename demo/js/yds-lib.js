@@ -573,7 +573,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             data: searchParameters,
             headers: {'Content-Type': 'application/json'}
         }).then(function successCallback(response) {
-            deferred.resolve(response);
+            deferred.resolve(response.data);
         }, function errorCallback(error) {
             deferred.reject(error);
         });

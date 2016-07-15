@@ -116,7 +116,10 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 scope.$on("$destroy", function() {
                     //if the grid filtering is enabled remove the filter event listener
                     if (grid.filtering === "true" || grid.quickFiltering === "true") {
-                        scope.gridOptions.api.removeEventListener('afterFilterChanged', filterModifiedListener);
+                        if (!_.isUndefined(scope.gridOptions) && _.has(scope.gridOptions, "api")) {
+                            scope.gridOptions.api.removeEventListener('afterFilterChanged', filterModifiedListener);
+                        }
+
                         Filters.remove(grid.elementId);
                     }
                 });
