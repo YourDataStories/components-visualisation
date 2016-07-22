@@ -20,7 +20,7 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
             embedBtnY: '@',     //y-axis position of the embed button
             popoverPos: '@'     //the side of the embed button from which the embed information window will appear
         },
-        templateUrl: 'templates/line.html',
+        templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/line.html',
         link: function (scope, element, attrs) {
             var lineContainer = angular.element(element[0].querySelector('.line-container'));
 

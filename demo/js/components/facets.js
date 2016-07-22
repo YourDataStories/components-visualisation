@@ -5,7 +5,7 @@ angular.module('yds').directive('ydsFacets', ['Data', 'Search', '$location', '$w
 		scope: {
 			lang : '@'
 		},
-		templateUrl:'templates/facets.html',
+		templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/facets.html',
 		link: function(scope) {
 			scope.initialized = false;		//flag that indicated when the component is initialized
 			scope.fieldFacets = [];			//array which contains the field facets which are shown to the user

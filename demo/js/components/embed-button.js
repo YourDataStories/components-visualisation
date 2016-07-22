@@ -64,7 +64,7 @@ angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', function($compi
 					scope.popoverOpen = false;    //flag that indicates if the embed tooltip is shown
 					scope.popover = {
 						content: '',
-						templateUrl: 'templates/embed-popover.html',
+						templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/embed-popover.html',
 						title: 'Embed Code'
 					};
 

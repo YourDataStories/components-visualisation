@@ -6,7 +6,7 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
             lang:'@',
             userId:'@'
         },
-        templateUrl:'templates/results.html',
+        templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/results.html',
         link: function(scope, element, attrs) {
             var resultsContainer = angular.element(element[0].querySelector('.results-content'));
             var compiledTemplates = {};
@@ -62,7 +62,7 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                 scope.translations = Translations.getAll(scope.lang);
 
                 $ocLazyLoad.load ({
-                    files: ['templates/search-result.html'],
+                    files: [((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/search-result.html'],
                     cache: true
                 }).then(function() {
                     compiledTemplates = {

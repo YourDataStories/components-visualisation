@@ -18,7 +18,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', function(Data, Fi
             basketBtnX: '@',        //x-axis position of the basket button
             basketBtnY: '@'         //y-axis position of the basket button
         },
-        templateUrl:'templates/grid.html',
+        templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/grid.html',
         link: function(scope, element, attrs) {
             //reference the dom elements in which the yds-grid is rendered
             var gridWrapper = angular.element(element[0].querySelector('.component-wrapper'));

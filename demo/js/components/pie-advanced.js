@@ -15,7 +15,7 @@ angular.module('yds').directive('ydsPieAdvanced', ['$timeout', '$q', 'Data', fun
 			comboboxLabels: '@',	//set the labels that will be used for each combobox
 			comboboxAttrs: '@'		//set the parameter each combobox will sent to the the server
 		},
-		templateUrl: 'templates/pie-advanced.html',
+		templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/pie-advanced.html',
 		link: function (scope, element, attrs) {
 			//reference the dom element in which the yds-pie-advanced is rendered
 			var pieContainer = angular.element(element[0].querySelector('.pie-container'));

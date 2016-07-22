@@ -4,7 +4,7 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
         scope: {
             projectId: '@'
         },
-        templateUrl:'templates/geo-editing.html',
+        templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/geo-editing.html',
         link: function(scope, elem, attrs) {
             scope.annotationType="line";
             scope.routeService=false;

@@ -6,7 +6,7 @@ angular.module('yds').directive('ydsInfo', ['Data', 'Translations', '$sce', func
             viewType: '@',      //type of the info object
             lang: '@'           //lang of the visualised data
         },
-        templateUrl:'templates/info.html',
+        templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/info.html',
         link: function(scope) {
             var projectId = scope.projectId;
             var viewType = scope.viewType;

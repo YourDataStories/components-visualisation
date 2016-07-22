@@ -18,7 +18,7 @@ angular.module('yds').directive('ydsMap', ['Data', function(Data){
             embedBtnY: '@',     //y-axis position of the embed button
             popoverPos: '@'     //the side of the embed button from which the embed information window will appear
         },
-        templateUrl: 'templates/map.html',
+        templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/map.html',
         link: function(scope, element) {
             var mapContainer = angular.element(element[0].querySelector('.map-container'));
 

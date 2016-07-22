@@ -9,7 +9,7 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 				tabbed: '@',			// if search component is used in tabbed search (so it needs to use different URL)
 				concept: '@'			// concept, used by advanced search for getting query builder rules
 			},
-			templateUrl: 'templates/search.html',
+			templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/search.html',
 			link: function (scope) {
 				scope.searchOptions = {
 					lang: scope.lang,

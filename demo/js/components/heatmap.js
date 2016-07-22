@@ -8,7 +8,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 			exporting: '@',     //enable or disable the export of the chart
 			elementH: '@'		//set the height of the component
 		},
-		templateUrl: 'templates/heatmap.html',
+		templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/heatmap.html',
 		link: function (scope, elem, attrs) {
 			var projectId = scope.projectId;
 			var viewType = scope.viewType;

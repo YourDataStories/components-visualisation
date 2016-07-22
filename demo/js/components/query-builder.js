@@ -8,7 +8,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                 concept: '@',           // Concept to get filters for
                 builderId: '='          // Builder ID. '=' so it binds to the parent scope & search component can see it
             },
-            templateUrl: 'templates/query-builder.html',
+            templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/query-builder.html',
             link: function (scope) {
                 scope.qbInputs = {};		// Keeps the QueryBuilder's typeahead ng models
                 scope.noFilters = false;    // If there are no filters, show it on the page

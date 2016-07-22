@@ -6,7 +6,7 @@ angular.module('yds').directive('ydsBasketPreview', ['Data' , '$compile', '$time
 			userId:'@'
 		},
 		replace: true,
-		templateUrl:'templates/basket-preview.html',
+		templateUrl:((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/basket-preview.html',
 		link: function(scope, element) {
 			scope.basketType = "Dataset";
 			scope.results = [];
