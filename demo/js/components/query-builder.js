@@ -21,14 +21,15 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                     return;
                 }
 
+		var drupalpath = ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'');
                 // Lazy load jQuery QueryBuilder and add it to the page
                 $ocLazyLoad.load({
                     files: [
-                        "css/query-builder.default.min.css",                // QueryBuilder's CSS
-                        "css/bootstrap-datepicker3.min.css",                // Bootstrap Datepicker's CSS
+                        drupalpath + "css/query-builder.default.min.css",                // QueryBuilder's CSS
+                        drupalpath + "css/bootstrap-datepicker3.min.css",                // Bootstrap Datepicker's CSS
                         "https://code.jquery.com/jquery-2.2.4.min.js",      // jQuery 2.x (needed for QB)
-                        "lib/query-builder.standalone.min.js",              // QueryBuilder JavaScript
-                        "lib/bootstrap-datepicker.min.js"                   // Bootstrap Datepicker's JavaScript
+                        drupalpath + "lib/query-builder.standalone.min.js",              // QueryBuilder JavaScript
+                        drupalpath + "lib/bootstrap-datepicker.min.js"                   // Bootstrap Datepicker's JavaScript
                     ],
                     cache: true,
                     serie: true
@@ -107,7 +108,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                                 // Return html of text input element with typeahead
                                 return $compile('<input type="text" class="form-control" name="typeahead"\
                                     placeholder="Type here..." ng-model="qbInputs.' + rule.id + '" \
-                                    typeahead-popup-template-url="templates/search-typeahead-popup-small.html"\
+                                    typeahead-popup-template-url="' + drupalpath + 'templates/search-typeahead-popup-small.html"\
                                     uib-typeahead="suggestion for suggestion in getSuggestions($viewValue)" \
                                     typeahead-focus-first="false" autocomplete="off" \
                                     typeahead-on-select="typeaheadSelectHandler(\'' + rule.id + '\', $item)" \
