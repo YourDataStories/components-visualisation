@@ -28,7 +28,7 @@ function (YDS_CONSTANTS, $q, $http, $uibModal) {
 			modalInstance = $uibModal.open({
 				animation: false,
 				controller: 'BasketModalCtrl',
-				templateUrl: 'templates/basket-modal.html',
+				templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/basket-modal.html',
 				size: 'md',
 				resolve: {
 					basketInput: function () {

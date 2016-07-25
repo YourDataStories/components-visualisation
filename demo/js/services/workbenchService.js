@@ -7,17 +7,17 @@ angular.module('yds').factory('Workbench', [ 'YDS_CONSTANTS', '$q', '$http', 'Da
 		slides: [{
 			id:0,
 			images : [ {
-				src: "img/thumbnails/line_chart.png",
+				src: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + "img/thumbnails/line_chart.png",
 				name: "Line Chart",
 				type: "linechart",
 				visible: false
 			}, {
-				src: "img/thumbnails/bar_chart.png",
+				src: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + "img/thumbnails/bar_chart.png",
 				name: "Bar Chart",
 				type: "barchart",
 				visible: false
 			}, {
-				src: "img/thumbnails/pie_chart.png",
+				src: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + "img/thumbnails/pie_chart.png",
 				name: "Pie Chart",
 				type: "piechart",
 				visible: false
