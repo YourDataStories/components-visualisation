@@ -571,7 +571,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             method: "POST",
             url: "http://" + YDS_CONSTANTS.API_ADVANCED_SEARCH,
             data: searchParameters,
-            headers: {'Content-Type': 'application/json'}
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function successCallback(response) {
             deferred.resolve(response.data);
         }, function errorCallback(error) {
