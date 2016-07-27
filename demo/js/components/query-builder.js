@@ -31,7 +31,8 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                         drupalpath + "css/bootstrap-datepicker3.min.css",           // Bootstrap Datepicker's CSS
                         "https://code.jquery.com/jquery-2.2.4.min.js",              // jQuery 2.x (needed for QB)
                         drupalpath + "lib/query-builder.standalone.min.js",         // QueryBuilder JavaScript
-                        drupalpath + "lib/bootstrap-datepicker.min.js"              // Bootstrap Datepicker's JavaScript
+                        drupalpath + "lib/bootstrap-datepicker.min.js",             // Bootstrap Datepicker's JavaScript
+                        drupalpath + "lib/bootstrap-popover.min.js"                 // Bootstrap JS (only Popover)
                     ],
                     cache: true,
                     serie: true
@@ -58,8 +59,9 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
 
                                 // Create the builder
                                 builder.queryBuilder({
-                                    filters: formattedFilters,
-                                    rules: rules                // If this wasn't defined, the builder will start empty
+                                    plugins: ['filter-description'],    // Filter Description plugin
+                                    filters: formattedFilters,          // Filters, formatted for Query Builder
+                                    rules: rules                        // If undefined, the builder will start empty
                                 });
 
                                 // Watch for all changes in the builder, and update the rules in QueryBuilderService
@@ -90,18 +92,25 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                     var availLangs = Search.geti18nLangs();
 
                     var newFilters = filters.map(function(obj) {
-                        // Find the label the filter should have depending on language
+                        // Find the label and description the filter should have depending on language
+                        var otherLang = _.first(_.without(availLangs, scope.lang));         // Alternative language
+
                         var label = obj["label"][scope.lang];
                         if (_.isUndefined(label)) {
-                            var otherLang = _.first(_.without(availLangs, scope.lang));
                             label = obj["label"][otherLang];
+                        }
+
+                        var description = obj["description"][scope.lang];
+                        if (_.isUndefined(description)) {
+                            label = obj["description"][otherLang];
                         }
 
                         // Create filter object
                         var filter = {
                             id: obj.id,
                             label: label,
-                            type: obj.type
+                            type: obj.type,
+                            description: description
                         };
 
                         // If filter is string add typeahead, if it's date add Datepicker plugin
