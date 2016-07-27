@@ -74,6 +74,11 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                                     // Don't display QueryBuilder's validation errors
                                     e.preventDefault();
                                 });
+
+                                // Fix for Bootstrap Popover from http://stackoverflow.com/a/34766224
+                                $('body').off('hidden.bs.popover').on('hidden.bs.popover', function (e) {
+                                    $(e.target).data("bs.popover").inState.click = false;
+                                });
                             } else {
                                 // Show information box saying there are no filters
                                 scope.noFilters = true;
