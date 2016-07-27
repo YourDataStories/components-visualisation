@@ -7,7 +7,8 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 				maxSuggestions: '@',	// maximum suggestions to show in typeahead popup
 				standalone: '@',		// if search component is standalone
 				tabbed: '@',			// if search component is used in tabbed search (so it needs to use different URL)
-				concept: '@'			// concept, used by advanced search for getting query builder rules
+				concept: '@',			// concept of search, used by advanced search for getting query builder rules
+				conceptId: '@'			// concept id, used by advanced search for getting query builder rules
 			},
 			templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/search.html',
 			link: function (scope) {

@@ -6,6 +6,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                 lang:'@',               // Language of the query builder
                 maxSuggestions: '@',    // Max suggestions to show in typeahead popups
                 concept: '@',           // Concept to get filters for
+                conceptId: '@',         // ID of concept for making requests to API
                 builderId: '='          // Builder ID. '=' so it binds to the parent scope & search component can see it
             },
             templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/query-builder.html',
@@ -16,20 +17,21 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                 // Create unique ID for this query builder
                 scope.builderId = "builder" + Data.createRandomId();
 
-                // Only load QueryBuilder if a concept is specified
-                if (_.isUndefined(scope.concept) || scope.concept.trim().length == 0) {
+                // Only load QueryBuilder if a concept and concept ID are specified
+                if (_.isUndefined(scope.conceptId) || scope.conceptId.trim().length == 0 || _.isUndefined(scope.concept) || scope.concept.trim().length == 0) {
                     return;
                 }
 
-		var drupalpath = ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'');
-                // Lazy load jQuery QueryBuilder and add it to the page
+		        // Lazy load jQuery QueryBuilder and add it to the page
+                var drupalpath = ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'');
+
                 $ocLazyLoad.load({
                     files: [
-                        drupalpath + "css/query-builder.default.min.css",                // QueryBuilder's CSS
-                        drupalpath + "css/bootstrap-datepicker3.min.css",                // Bootstrap Datepicker's CSS
-                        "https://code.jquery.com/jquery-2.2.4.min.js",      // jQuery 2.x (needed for QB)
-                        drupalpath + "lib/query-builder.standalone.min.js",              // QueryBuilder JavaScript
-                        drupalpath + "lib/bootstrap-datepicker.min.js"                   // Bootstrap Datepicker's JavaScript
+                        drupalpath + "css/query-builder.default.min.css",           // QueryBuilder's CSS
+                        drupalpath + "css/bootstrap-datepicker3.min.css",           // Bootstrap Datepicker's CSS
+                        "https://code.jquery.com/jquery-2.2.4.min.js",              // jQuery 2.x (needed for QB)
+                        drupalpath + "lib/query-builder.standalone.min.js",         // QueryBuilder JavaScript
+                        drupalpath + "lib/bootstrap-datepicker.min.js"              // Bootstrap Datepicker's JavaScript
                     ],
                     cache: true,
                     serie: true
@@ -37,7 +39,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                     var builder = $("#" + scope.builderId);
 
                     // Get filters for query builder from API
-                    Search.getQueryBuilderFilters(scope.concept)
+                    Search.getQueryBuilderFilters(scope.conceptId)
                         .then(function(filters) {
                             // Format filters in the format that QueryBuilder expects
                             var formattedFilters = formatFilters(filters);

@@ -403,7 +403,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 		 * @param concept
          * @returns {*}
          */
-		var getQueryBuilderFilters = function(concept) {
+		var getQueryBuilderFilters = function(id) {
 			// Get filters from server
 			var deferred = $q.defer();
 
@@ -411,7 +411,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 				method: "GET",
 				url: "http://" + YDS_CONSTANTS.API_ADVANCED_SEARCH_RULES,
 				params: {
-					id: "http://linkedeconomy.org/ontology#" + concept
+					id: id
 				},
 				headers: {'Content-Type': 'application/json'}
 			}).success(function(response) {
