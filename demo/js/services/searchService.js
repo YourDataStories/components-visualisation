@@ -78,9 +78,8 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 			return formattedResults;
 		};
 
-
 		/**
-		 * Formats the field facets returned fromm the search API.
+		 * Formats the field facets returned from the search API.
 		 * @param {Array} newFacets, the field facets as returned from Solr
 		 * @param {Array} facetsView, the view of the facets as returned from the search API
 		 */
@@ -122,9 +121,8 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 			return formattedFacets;
 		};
 
-
 		/**
-		 * Formats the range facets returned fromm the search API.
+		 * Formats the range facets returned from the search API.
 		 * @param {Array} newFacets, the field facets as returned from Solr
 		 * @param {Array} facetsView, the view of the facets as returned from the search API
 		 **/
@@ -194,7 +192,6 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 			return formattedFacets;
 		};
 
-
 		/**
 		 * Formats the applied facets located inside the search url
 		 * @param {String} newKeyword, the search term
@@ -262,7 +259,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 
 					// If there are suggestions in this dictionary and the specified value, add them to the list
 					if (!_.isUndefined(numOfSuggestions) && numOfSuggestions > 0 && newSuggestions.length < maxSuggestions) {
-						var suggestions = dictionary[val].suggestions;
+						var suggestions = dictionary[val]["suggestions"];
 
 						_.each(suggestions, function(suggestion) {
 							// Only add more suggestions if the maxSuggestions limit has not been reached
@@ -295,7 +292,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 
 			// Request suggestions from the API
 			$http({
-				method: 'GET',
+				method: "GET",
 				url: "http://" + YDS_CONSTANTS.API_SEARCH_SUGGESTIONS,
 				params: suggestionParams,
 				headers: {'Content-Type': 'application/json'}
@@ -336,71 +333,81 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 		};
 
 		/**
+		 * Gets info from the server's response about how many results are in each tab of tabbed search
+		 * and adds them into an object that the search tabs component uses
+		 * @param response			The server's response (from search API)
+         * @returns {{}}
+         */
+		var formatTabs = function(response) {
+			// Get tabs from json and create new object to put the result counts in
+			var tabResultCounts = {};
+			var tabs = response.data.facet_counts.facet_fields.type;
+
+			_.each(tabs, function(tab, index) {
+				// If it's a string add the tab's amount to the object
+				if (_.isString(tab)) {
+					// The amount of results in this tab is the next array value of the json data
+					tabResultCounts[tab] = tabs[index + 1];
+				}
+			});
+
+			return tabResultCounts;
+		};
+
+		/**
 		 * Gets the available tabs for the current (tabbed) search query and returns
 		 * their result counts so the number can be shown on the page for each tab
 		 * @returns {d|s|a}
 		 */
-		var getTabResultCounts = function() {
-			// Get the current search keyword
-			var query = keyword;
-
-			// If keyword is empty, returns all available tabs but show none of them
-			var queryWasEmpty = false;
-			if (_.isUndefined(query) || query.trim().length == 0) {
-				query = "*";
-				queryWasEmpty = true;
-			}
-
+		var getTabResultCounts = function(rules) {
 			var deferred = $q.defer();
 
-			// Get tabs from the server
-			$http({
-				method: 'GET',
-				url: "http://" + YDS_CONSTANTS.API_SEARCH,
-				params: {
-					q: query,
-					rows: 0
-				},
-				headers: {'Content-Type': 'application/json'}
-			}).success(function(response) {
-				var data = {};
+			// Get the current search keyword (if empty, get total results in each tab)
+			var query = keyword;
+			if (_.isUndefined(query) || query.trim().length == 0) {
+				query = "*";
+			}
 
-				// Get tabs from json and create new object to put the formatted tabs in
-				var tabs = response.data.facet_counts.facet_fields.type;
-				var formattedTabs = {};
-
-				_.each(tabs, function(tab, index) {
-					// If it's a string, push it to the new array
-					if (_.isString(tab)) {
-						// Get amount of results in this tab (next array value in the json data)
-						var amount = tabs[index + 1];
-
-						// Create tab object and add it to the array of tabs
-						var tabObj = {
-							name: tab,
-							amount: amount,
-							show: (amount > 0 && !queryWasEmpty),
-							active: false
-						};
-
-						formattedTabs[tab] = tabObj;
-					}
+			// Get tabs from the server, using the appropriate API for normal or advanced search
+			if (_.isUndefined(rules)) {
+				// Rules do not exist, use normal search API to get tab result counts
+				$http({
+					method: "GET",
+					url: "http://" + YDS_CONSTANTS.API_SEARCH,
+					params: {
+						q: query,
+						rows: 0
+					},
+					headers: {'Content-Type': 'application/json'}
+				}).success(function (response) {
+					deferred.resolve(formatTabs(response));
+				}).error(function (error) {
+					deferred.reject(error);
 				});
-
-				// Add formatted tabs to the data and resolve promise
-				data.tabs = formattedTabs;
-
-				deferred.resolve(data);
-			}).error(function(error) {
-				deferred.reject(error);
-			});
+			} else {
+				// Rules exist, use advanced search API to get tab result counts
+				$http({
+					method: "POST",
+					url: "http://" + YDS_CONSTANTS.API_ADVANCED_SEARCH,
+					data: {
+						q: query,
+						rules: rules,
+						rows: 0
+					},
+					headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+				}).success(function(response) {
+					deferred.resolve(formatTabs(response));
+				}).error(function(error) {
+					deferred.reject(error);
+				});
+			}
 
 			return deferred.promise;
 		};
 
 		/**
 		 * Gets the filters for the query builder, for a specific concept.
-		 * @param concept
+		 * @param id        ID of concept
          * @returns {*}
          */
 		var getQueryBuilderFilters = function(id) {

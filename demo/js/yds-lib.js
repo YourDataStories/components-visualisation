@@ -522,6 +522,15 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         return deferred.promise;
     };
 
+    /**
+     * Gets the results for a tabbed search
+     * @param query     Search query
+     * @param viewType  Concept (eg. TradeActivity, AidActivity...)
+     * @param start     Starting row
+     * @param rows      Result rows to fetch
+     * @param lang      Language of results
+     * @returns {d|a|s}
+     */
     dataService.getGridResultData = function(query, viewType, start, rows, lang) {
         var deferred = $q.defer();
 
@@ -546,7 +555,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
     };
 
     /**
-     * Gets the results for an advanced search
+     * Gets the results for an advanced tabbed search
      * @param query     Search query
      * @param rules     Query Builder rules
      * @param viewType  Concept (eg. TradeActivity, AidActivity...)

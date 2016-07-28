@@ -12,6 +12,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                 scope.translations = Translations.getAll(scope.lang);   // Translations used for no results message
 
                 var prevQ = "";                 // Keeps previous search query value
+                var prevRules = "";             // Keeps previous advanced search rules
                 var prevTab = "";               // Keeps previous tab name value
 
                 // check if the language attr is defined, else assign default value
@@ -34,47 +35,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                         // Set the tabs variable
                         scope.tabs = tabs;
 
-                        // Update tab result counts and select the appropriate one
-                        updateTabs();
-
                         scope.initialized = true;
-                    });
-                };
-
-                /**
-                 * Updates the amounts shown on each tab and selects the appropriate one depending on url parameters
-                 */
-                var updateTabs = function() {
-                    Search.getTabResultCounts().then(function(response) {
-                        var newTabs = response.tabs;
-
-                        // Update amounts of tabs
-                        _.each(scope.tabs, function(tab) {
-                            if (_.has(newTabs, tab.concept)) {
-                                // update the tab's amount to the new one
-                                tab.amount = newTabs[tab.concept].amount;
-                            } else {
-                                // set tab's amount to 0
-                                tab.amount = 0;
-                            }
-                        });
-
-                        // Make the correct tab selected
-                        var prevSelTab = $location.search().tab;
-
-                        if (!_.isUndefined(prevSelTab)) {
-                            // Find and select the previously selected tab
-                            _.each(scope.tabs, function(tab) {
-                                if (tab.concept == prevSelTab) {
-                                    tab.active = true;
-                                }
-                            });
-                        } else {
-                            // Select first tab
-                            var tabToSel = _.first(scope.tabs);
-                            tabToSel.active = true;
-                            prevTab = tabToSel.concept;
-                        }
                     });
                 };
 
@@ -91,24 +52,60 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                  * Runs when the url parameters change and acts depending on which one changed
                  */
                 var urlChangeHandler = function() {
-                    // Get url parameters to see if the tab or the query changed
+                    // Get url parameters to see if the tab or the query/rules changed
                     var urlParams = $location.search();
 
-                    if (urlParams.q != prevQ) {
-                        // The query changed
+                    if (urlParams.q != prevQ || urlParams.rules != prevRules) {
+                        // The query or rules changed, need to update tab result counts
                         prevQ = urlParams.q;
+                        prevRules = urlParams.rules;
                         prevTab = urlParams.tab;
 
-                        // Get the search term from the url and set it as search keyword
+                        // Get the search term from url params and set it as search keyword
                         var keyword = urlParams.q;
                         Search.setKeyword(keyword);
 
-                        // Initialize or update the tabs
-                        if (!scope.initialized) {
-                            initTabs();             // initialize the tabs
-                        } else {
-                            updateTabs();           // update the tabs
+                        // Get the advanced search rules from url params to use for getting tab result counts
+                        var rules = $location.search().rules;
+                        if (!_.isUndefined(rules)) {
+                            rules = JSURL.parse(rules);
                         }
+
+                        // Initialize tabs if needed
+                        if (!scope.initialized) {
+                            initTabs();
+                        }
+
+                        // Update result counts of tabs
+                        Search.getTabResultCounts(rules).then(function(tabResultCounts) {
+                            // Update amounts of tabs
+                            _.each(scope.tabs, function(tab) {
+                                if (_.has(tabResultCounts, tab.concept)) {
+                                    // update the tab's amount to the new one
+                                    tab.amount = tabResultCounts[tab.concept];
+                                } else {
+                                    // set tab's amount to 0
+                                    tab.amount = 0;
+                                }
+                            });
+
+                            // Make the correct tab selected
+                            var prevSelTab = $location.search().tab;
+
+                            if (!_.isUndefined(prevSelTab)) {
+                                // Find and select the previously selected tab
+                                _.each(scope.tabs, function(tab) {
+                                    if (tab.concept == prevSelTab) {
+                                        tab.active = true;
+                                    }
+                                });
+                            } else {
+                                // Select first tab
+                                var tabToSel = _.first(scope.tabs);
+                                tabToSel.active = true;
+                                prevTab = tabToSel.concept;
+                            }
+                        });
                     } else if (urlParams.tab != prevTab) {
                         // The tab changed
                         prevTab = urlParams.tab;
