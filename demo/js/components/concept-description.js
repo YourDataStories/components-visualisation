@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsConceptDescription', ['Search', 'Data', 'Translations',
-    function (Search, Data, Translations) {
+angular.module('yds').directive('ydsConceptDescription', ['Search', 'Data',
+    function (Search, Data) {
         return {
             restrict: 'E',
             scope: {
