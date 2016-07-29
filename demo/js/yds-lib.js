@@ -24,6 +24,7 @@ app.constant("YDS_CONSTANTS", {
     "API_ADVANCED_SEARCH_RULES": "platform.yourdatastories.eu/api/json-ld/model/advancedsearchrules.tcl",
     "API_COMBOBOX_FILTER": "platform.yourdatastories.eu/api/json-ld/component/filter.tcl",
     "API_YDS_STATISTICS": "platform.yourdatastories.eu/api/json-ld/component/statistics.tcl",
+    "API_HUMAN_READABLE_DESCRIPTION": "platform.yourdatastories.eu/api/json-ld/model/human_readable_description.tcl",
 
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search",
     "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search-el",
@@ -512,6 +513,32 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         $http({
             method: 'GET',
             url: "http://" + YDS_CONSTANTS.API_YDS_STATISTICS,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'}
+        }).success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    /**
+     * Returns a human readable description for a specific context
+     * @param conceptId     ID of concept to get description for
+     * @param lang          Language of the description
+     * @returns {d|s|a}
+     */
+    dataService.getConceptDescription = function(conceptId, lang) {
+        var deferred = $q.defer();
+
+        $http({
+            method: "GET",
+            url: "http://" + YDS_CONSTANTS.API_HUMAN_READABLE_DESCRIPTION,
+            params: {
+                id: conceptId,
+                lang: lang
+            },
             headers: {'Content-Type': 'application/json; charset=UTF-8'}
         }).success(function (data) {
             deferred.resolve(data);

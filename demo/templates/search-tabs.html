@@ -9,6 +9,12 @@
             {{ tab.label }} <span class="label label-primary">{{ tab.amount }}</span>
         </uib-tab-heading>
 
+        <!-- Description of concept -->
+        <yds-concept-description
+            concept-id="{{tab.id}}"
+            lang="{{lang}}">
+        </yds-concept-description>
+
         <!-- Search bar -->
         <div class="row">
             <div style="padding-top: 20px" class="col-md-12">
@@ -26,7 +32,7 @@
         <yds-grid-results
                 view-type="{{tab.concept}}"
                 sorting="true"
-                lang="en"
+                lang="{{lang}}"
                 filtering="true"
                 quick-filtering="true"
                 element-H="400"
