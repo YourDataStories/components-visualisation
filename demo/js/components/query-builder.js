@@ -46,7 +46,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                     Search.getQueryBuilderFilters(scope.conceptId)
                         .then(function(filters) {
                             // Format filters in the format that QueryBuilder expects
-                            var formattedFilters = formatFilters(filters);
+                            var formattedFilters = formatFiltersForQueryBuilder(filters);
 
                             // If there are filters, create builder
                             if (!_.isEmpty(formattedFilters)) {
@@ -65,12 +65,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                                     plugins: {
                                         "filter-description": null,
                                         "selectivity-plugin": {
-                                            filters: formattedFilters.map(function(filter) {
-                                                return {
-                                                    id: filter.id,
-                                                    text: filter.label
-                                                };
-                                            })
+                                            filters: formatFiltersForSelectivity(formattedFilters)
                                         }
                                     },
                                     filters: formattedFilters,          // Filters, formatted for Query Builder
@@ -106,7 +101,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                  * @param filters       Filters as returned from the server
                  * @returns {Array}     Formatted filters
                  */
-                var formatFilters = function(filters) {
+                var formatFiltersForQueryBuilder = function(filters) {
                     var availLangs = Search.geti18nLangs();
 
                     var newFilters = filters.map(function(obj) {
@@ -170,6 +165,86 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                     });
 
                     return newFilters;
+                };
+
+                /**
+                 * Finds a specific filter item in a list of items
+                 * @param items     List of items
+                 * @param itemId    ID of item to find
+                 * @returns {*}     Found item, or null if not found
+                 */
+                var findItem = function(items, itemId) {
+                    var foundItem = null;
+
+                    _.each(items, function(item) {
+                        if (item.id == itemId) {
+                            foundItem = item;
+                        }
+                    });
+
+                    return foundItem;
+                };
+
+                /**
+                 * Recursive function to add a filter item to an items list for Selectivity
+                 * @param items     Items list
+                 * @param item      Item to add to the list
+                 * @param level     Shows how many submenus in we currently are in. When you call this, give 0
+                 */
+                var addItem = function(items, item, level) {
+                    var idTokens = item.id.split("|");
+                    var labelTokens = item.label.split("|");
+
+                    if (idTokens.length == 1) {
+                        items.push({
+                            id: item.id,
+                            text: item.label
+                        });
+                    } else {
+                        var insideItem = findItem(items, idTokens[level]);
+
+                        if (_.isNull(insideItem)) {
+                            if (level < idTokens.length - 1) {
+                                // Item should be a submenu
+                                var newItem = {
+                                    id: idTokens[level],
+                                    text: labelTokens[level],
+                                    submenu: { items: [] }
+                                };
+                            } else {
+                                // Item is not a submenu, it's a choice
+                                var newItem = {
+                                    id: item.id,
+                                    // text: "* " + labelTokens[level],
+                                    text: labelTokens[level],
+                                    wholeText: item.label
+                                };
+                            }
+
+                            items.push(newItem);
+                            insideItem = newItem;
+                        }
+
+                        // If item is a submenu, add the item to that
+                        if (level < idTokens.length - 1) {
+                            addItem(insideItem.submenu.items, item, level + 1)
+                        }
+                    }
+                };
+
+                /**
+                 * Formats the query builder's filters into Selectivity format with submenus
+                 * @param filters       Filters, formatted for query builder
+                 * @returns {Array}     Filters, formatted for selectivity
+                 */
+                var formatFiltersForSelectivity = function(filters) {
+                    var selectivityFilters = [];
+
+                    _.each(filters, function(filter) {
+                        addItem(selectivityFilters, filter, 0);
+                    });
+
+                    return selectivityFilters;
                 };
 
                 /**

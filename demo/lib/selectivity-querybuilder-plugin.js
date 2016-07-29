@@ -28,7 +28,7 @@ $.fn.queryBuilder.define('selectivity-plugin', function(options) {
         });
 
         // Change selectivity div size
-        $(selectivityDiv).width('400px');
+        $(selectivityDiv).width('250px');
 
         // Hide query builder's select box
         $(ruleFilter).hide();
