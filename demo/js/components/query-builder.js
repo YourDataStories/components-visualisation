@@ -32,6 +32,9 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                         "https://code.jquery.com/jquery-2.2.4.min.js",              // jQuery 2.x (needed for QB)
                         drupalpath + "lib/query-builder.standalone.min.js",         // QueryBuilder JavaScript
                         drupalpath + "lib/bootstrap-datepicker.min.js",             // Bootstrap Datepicker's JavaScript
+                        drupalpath + "css/selectivity-full.min.css",                // Selectivity CSS
+                        drupalpath + "lib/selectivity-full.min.js",                 // Selectivity JavaScript
+                        drupalpath + "lib/selectivity-querybuilder-plugin.js",      // Selectivity QueryBuilder plugin
                         drupalpath + "lib/bootstrap-popover.min.js"                 // Bootstrap JS (only Popover)
                     ],
                     cache: true,
@@ -59,7 +62,17 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
 
                                 // Create the builder
                                 builder.queryBuilder({
-                                    plugins: ['filter-description'],    // Filter Description plugin
+                                    plugins: {
+                                        "filter-description": null,
+                                        "selectivity-plugin": {
+                                            filters: formattedFilters.map(function(filter) {
+                                                return {
+                                                    id: filter.id,
+                                                    text: filter.label
+                                                };
+                                            })
+                                        }
+                                    },
                                     filters: formattedFilters,          // Filters, formatted for Query Builder
                                     rules: rules                        // If undefined, the builder will start empty
                                 });
