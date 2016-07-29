@@ -36,7 +36,19 @@ $.fn.queryBuilder.define('selectivity-plugin', function(options) {
         // Listen for selection change
         $(selectivityDiv).on("change", function(e) {
             // Make the value that the user selected in Selectivity, the selected one in QueryBuilder's select
-            $(ruleFilter).val(e.value).change();
+            var selectedFilterId = e.value;
+            $(ruleFilter).val(selectedFilterId).change();
+
+            // Find the label of the filter with the id e.value
+            var wholeLabel = "";
+            _.each(options.plainFilters, function(filter) {
+                if (filter.id == selectedFilterId) {
+                    wholeLabel = filter.text.replace(/\|/g, " ");   // Replace | with space
+                }
+            });
+
+            // Change the text of the span inside Selectivity to show the whole label of the filter
+            $(_.first($(selectivityDiv).find('span'))).text(wholeLabel);    // gets the first span inside the div and changes its text
         });
     });
 
@@ -55,8 +67,14 @@ $.fn.queryBuilder.define('selectivity-plugin', function(options) {
 
         // Because we set triggerChange to false, we need to manually tell selectivity to render the selected option
         $(selectivityDiv).selectivity("rerenderSelection");
+
+        // Set the Selectivity div to show the entire rule label
+        var wholeLabel = rule.filter.label.replace(/\|/g, " ");
+
+        $(_.first($(selectivityDiv).find('span'))).text(wholeLabel);
     });
 }, {
     // default options
-    filters: {}
+    filters: {},
+    plainFilters: {}
 });

@@ -65,7 +65,13 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                                     plugins: {
                                         "filter-description": null,
                                         "selectivity-plugin": {
-                                            filters: formatFiltersForSelectivity(formattedFilters)
+                                            filters: formatFiltersForSelectivity(formattedFilters),
+                                            plainFilters: formattedFilters.map(function(filter) {
+                                                return {
+                                                    id: filter.id,
+                                                    text: filter.label
+                                                }
+                                            })
                                         }
                                     },
                                     filters: formattedFilters,          // Filters, formatted for Query Builder
