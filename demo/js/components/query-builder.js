@@ -221,13 +221,17 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                             text: item.label[scope.lang]
                         });
                     } else {
-                        var insideItem = findItem(items, idTokens[level]);
+                        // Create ID that the item should have if it's a submenu
+                        var id = idTokens.slice().splice(0, level + 1).join("|");
+                        
+                        // Check if the submenu exists
+                        var insideItem = findItem(items, id);
 
                         if (_.isNull(insideItem)) {
                             if (level < idTokens.length - 1) {
                                 // Item should be a submenu
                                 var newItem = {
-                                    id: idTokens[level],
+                                    id: id,
                                     text: labelTokens[level],
                                     submenu: { items: [] }
                                 };
@@ -235,7 +239,6 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                                 // Item is not a submenu, it's a choice
                                 var newItem = {
                                     id: item.id,
-                                    // text: "* " + labelTokens[level],
                                     text: labelTokens[level],
                                     wholeText: item.label[scope.lang]
                                 };
