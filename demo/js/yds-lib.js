@@ -19,6 +19,7 @@ app.constant("YDS_CONSTANTS", {
     "API_INTERACTIVE_LINE": "platform.yourdatastories.eu/api/json-ld/component/linechart.tcl/interactive",
     "API_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/search.tcl",
     "API_SEARCH_SUGGESTIONS": "platform.yourdatastories.eu/api/json-ld/component/suggest.tcl",
+    "API_FILTER_SUGGESTIONS": "platform.yourdatastories.eu/api/json-ld/component/suggest_field.tcl",
     "API_SEARCH_TABS": "platform.yourdatastories.eu/api/json-ld/model/searchtabs.tcl",
     "API_ADVANCED_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/searchadvanced.tcl",
     "API_ADVANCED_SEARCH_RULES": "platform.yourdatastories.eu/api/json-ld/model/advancedsearchrules.tcl",

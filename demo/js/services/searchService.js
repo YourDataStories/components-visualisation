@@ -275,25 +275,27 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 		};
 
 		/**
-		 * Gets search suggestions for the given value
+		 * Gets search/input suggestions for search, or an Advanced Search filter if filterId is defined
 		 * @param val				Input from the search bar
 		 * @param lang				Language of the suggestions
 		 * @param maxSuggestions	Maximum number of suggestions to return
+		 * @param filterId			Filter to get suggestions for
 		 * @returns {a|d|s}
 		 */
-		var getSearchSuggestions = function(val, lang, maxSuggestions) {
+		var getSuggestions = function(val, lang, maxSuggestions, filterId) {
 			var deferred = $q.defer();
 
 			// Set required request parameters
 			var suggestionParams = {
 				q: val,
+				filter_id: filterId,
 				lang: lang
 			};
 
 			// Request suggestions from the API
 			$http({
 				method: "GET",
-				url: "http://" + YDS_CONSTANTS.API_SEARCH_SUGGESTIONS,
+				url: "http://" + (_.isUndefined(filterId) ? YDS_CONSTANTS.API_SEARCH_SUGGESTIONS : YDS_CONSTANTS.API_FILTER_SUGGESTIONS),
 				params: suggestionParams,
 				headers: {'Content-Type': 'application/json'}
 			}).success(function(response) {
@@ -441,7 +443,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 			clearResults: function () { searchResults = []; },
 			getTabResultCounts: getTabResultCounts,
 			getSearchTabs: getSearchTabs,
-			getSearchSuggestions: getSearchSuggestions,
+			getSuggestions: getSuggestions,
 			getQueryBuilderFilters: getQueryBuilderFilters,
 
 			geti18nLangs: function() { return i18nLangs },

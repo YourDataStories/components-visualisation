@@ -136,7 +136,7 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 				 * @param val   Input from the search bar
 				 */
 				scope.getSuggestions = function(val) {
-					return Search.getSearchSuggestions(val, scope.lang, scope.maxSuggestions);
+					return Search.getSuggestions(val, scope.lang, scope.maxSuggestions);
 				};
 
 				/**

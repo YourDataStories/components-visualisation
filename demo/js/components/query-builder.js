@@ -137,7 +137,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                                 return $compile('<input type="text" class="form-control" name="typeahead"\
                                     placeholder="Type here..." ng-model="qbInputs.' + rule.id + '" \
                                     typeahead-popup-template-url="' + drupalpath + 'templates/search-typeahead-popup-small.html"\
-                                    uib-typeahead="suggestion for suggestion in getSuggestions($viewValue)" \
+                                    uib-typeahead="suggestion for suggestion in getFilterSuggestions($viewValue, \'' + filter.id + '\')" \
                                     typeahead-focus-first="false" autocomplete="off" \
                                     typeahead-on-select="typeaheadSelectHandler(\'' + rule.id + '\', $item)" \
                                     typeahead-append-to-body="true">')( scope );
@@ -303,10 +303,11 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
 
                 /**
                  * Function to get search suggestions from the Search service
-                 * @param val   Input from the search bar
+                 * @param val       Input from the search bar
+                 * @param filterId  ID of the filter
                  */
-                scope.getSuggestions = function(val) {
-                    return Search.getSearchSuggestions(val, scope.lang, scope.maxSuggestions);
+                scope.getFilterSuggestions = function(val, filterId) {
+                    return Search.getSuggestions(val, scope.lang, scope.maxSuggestions, filterId);
                 };
 
             }
