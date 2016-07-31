@@ -32,6 +32,8 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                         "https://code.jquery.com/jquery-2.2.4.min.js",              // jQuery 2.x (needed for QB)
                         drupalpath + "lib/query-builder.standalone.min.js",         // QueryBuilder JavaScript
                         drupalpath + "lib/bootstrap-datepicker.min.js",             // Bootstrap Datepicker's JavaScript
+                        drupalpath + "css/bootstrap-slider.min.css",                // Bootstrap Slider CSS
+                        drupalpath + "lib/bootstrap-slider.min.js",                 // Bootstrap Slider JavaScript
                         drupalpath + "css/selectivity-full.min.css",                // Selectivity CSS
                         drupalpath + "lib/selectivity-full.min.js",                 // Selectivity JavaScript
                         drupalpath + "lib/selectivity-querybuilder-plugin.js",      // Selectivity QueryBuilder plugin
@@ -129,7 +131,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                         filter.description = description;
 
                         // If filter is string add typeahead, if it's date add Datepicker plugin
-                        if (obj.type == "string") {
+                        if (filter.type == "string") {
                             filter.input = function(rule, name) {
                                 // Return html of text input element with typeahead
                                 return $compile('<input type="text" class="form-control" name="typeahead"\
@@ -148,7 +150,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                             filter.valueSetter = function(rule, value) {
                                 scope.qbInputs[rule.id] = value;
                             };
-                        } else if (obj.type == "datetime") {
+                        } else if (filter.type == "datetime") {
                             // Make filter's type "date" instead of "datetime"
                             filter.type = "date";
 
@@ -159,6 +161,22 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                                 todayBtn: 'linked',
                                 todayHighlight: true,
                                 autoclose: true
+                            };
+                        } else if (_.has(filter, "plugin") && filter.plugin == "slider") {
+                            // Add setter and getter for the slider
+                            filter.valueSetter = function(rule, value) {
+                                if (rule.operator.nb_inputs == 1) value = [value];
+                                rule.$el.find('.rule-value-container input').each(function(i) {
+                                    $(this).slider('setValue', value[i] || 0);
+                                });
+                            };
+
+                            filter.valueGetter = function(rule) {
+                                var value = [];
+                                rule.$el.find('.rule-value-container input').each(function() {
+                                    value.push($(this).slider('getValue'));
+                                });
+                                return rule.operator.nb_inputs == 1 ? value[0] : value;
                             };
                         }
 
