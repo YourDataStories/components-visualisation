@@ -69,13 +69,15 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                                             plainFilters: formattedFilters.map(function(filter) {
                                                 return {
                                                     id: filter.id,
-                                                    text: filter.label
+                                                    text: filter.label[scope.lang]
                                                 }
-                                            })
+                                            }),
+                                            lang: scope.lang
                                         }
                                     },
                                     filters: formattedFilters,          // Filters, formatted for Query Builder
-                                    rules: rules                        // If undefined, the builder will start empty
+                                    rules: rules,                       // If undefined, the builder will start empty
+                                    lang_code: scope.lang               // Language of the builder
                                 });
 
                                 // Watch for all changes in the builder, and update the rules in QueryBuilderService
@@ -111,26 +113,20 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                     var availLangs = Search.geti18nLangs();
 
                     var newFilters = filters.map(function(obj) {
-                        // Find the label and description the filter should have depending on language
-                        var otherLang = _.first(_.without(availLangs, scope.lang));         // Alternative language
+                        var filter = obj;
 
-                        var label = obj["label"][scope.lang];
-                        if (_.isUndefined(label)) {
-                            label = obj["label"][otherLang];
-                        }
-
+                        // Manually use the localized description because filter-description plugin does not support
+                        // localization
                         var description = obj["description"][scope.lang];
-                        if (_.isUndefined(description)) {
-                            label = obj["description"][otherLang];
+
+                        if (_.isUndefined(description) || description.trim().length == 0) {
+                            // If description does not exist for the prefered language, try the alternate one
+                            var altLang = _.first(_.without(availLangs, scope.lang));
+
+                            description = obj["description"][altLang];
                         }
 
-                        // Create filter object
-                        var filter = {
-                            id: obj.id,
-                            label: label,
-                            type: obj.type,
-                            description: description
-                        };
+                        filter.description = description;
 
                         // If filter is string add typeahead, if it's date add Datepicker plugin
                         if (obj.type == "string") {
@@ -199,12 +195,12 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                  */
                 var addItem = function(items, item, level) {
                     var idTokens = item.id.split("|");
-                    var labelTokens = item.label.split("|");
+                    var labelTokens = item.label[scope.lang].split("|");
 
                     if (idTokens.length == 1) {
                         items.push({
                             id: item.id,
-                            text: item.label
+                            text: item.label[scope.lang]
                         });
                     } else {
                         var insideItem = findItem(items, idTokens[level]);
@@ -223,7 +219,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                                     id: item.id,
                                     // text: "* " + labelTokens[level],
                                     text: labelTokens[level],
-                                    wholeText: item.label
+                                    wholeText: item.label[scope.lang]
                                 };
                             }
 

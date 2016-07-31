@@ -69,12 +69,13 @@ $.fn.queryBuilder.define('selectivity-plugin', function(options) {
         $(selectivityDiv).selectivity("rerenderSelection");
 
         // Set the Selectivity div to show the entire rule label
-        var wholeLabel = rule.filter.label.replace(/\|/g, " ");
+        var wholeLabel = rule.filter.label[options.lang].replace(/\|/g, " ");
 
         $(_.first($(selectivityDiv).find('span'))).text(wholeLabel);
     });
 }, {
     // default options
     filters: {},
-    plainFilters: {}
+    plainFilters: {},
+    lang: "en"
 });
