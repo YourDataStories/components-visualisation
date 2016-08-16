@@ -36,7 +36,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                         drupalpath + "lib/bootstrap-slider.min.js",                 // Bootstrap Slider JavaScript
                         drupalpath + "css/selectivity-full.min.css",                // Selectivity CSS
                         drupalpath + "lib/selectivity-full.min.js",                 // Selectivity JavaScript
-                        drupalpath + "lib/selectivity-querybuilder-plugin.js",      // Selectivity QueryBuilder plugin
+                        drupalpath + "lib/querybuilder-selectivity-plugin.js",      // Selectivity QueryBuilder plugin
                         drupalpath + "lib/bootstrap-popover.min.js"                 // Bootstrap JS (only Popover)
                     ],
                     cache: true,

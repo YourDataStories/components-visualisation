@@ -1,5 +1,5 @@
 /*!
- * jQuery QueryBuilder Combotree Plugin
+ * jQuery QueryBuilder Selectivity plugin for filter selection
  */
 
 /**
