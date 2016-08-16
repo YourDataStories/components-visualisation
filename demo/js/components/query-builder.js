@@ -27,17 +27,25 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
 
                 $ocLazyLoad.load({
                     files: [
-                        drupalpath + "css/query-builder.default.min.css",           // QueryBuilder's CSS
-                        drupalpath + "css/bootstrap-datepicker3.min.css",           // Bootstrap Datepicker's CSS
                         "https://code.jquery.com/jquery-2.2.4.min.js",              // jQuery 2.x (needed for QB)
+                        drupalpath + "lib/bootstrap-popover.min.js",                // Bootstrap JS (only Popover, for filter description)
+                        drupalpath + "css/query-builder.default.min.css",           // QueryBuilder's CSS
                         drupalpath + "lib/query-builder.standalone.min.js",         // QueryBuilder JavaScript
+
+                        drupalpath + "css/bootstrap-datepicker3.min.css",           // Bootstrap Datepicker's CSS
                         drupalpath + "lib/bootstrap-datepicker.min.js",             // Bootstrap Datepicker's JavaScript
+
                         drupalpath + "css/bootstrap-slider.min.css",                // Bootstrap Slider CSS
                         drupalpath + "lib/bootstrap-slider.min.js",                 // Bootstrap Slider JavaScript
+
                         drupalpath + "css/selectivity-full.min.css",                // Selectivity CSS
                         drupalpath + "lib/selectivity-full.min.js",                 // Selectivity JavaScript
                         drupalpath + "lib/querybuilder-selectivity-plugin.js",      // Selectivity QueryBuilder plugin
-                        drupalpath + "lib/bootstrap-popover.min.js"                 // Bootstrap JS (only Popover)
+
+                        drupalpath + "css/flags.css",                               // Flags CSS from flag-sprites.com
+                        drupalpath + "css/selectize.bootstrap3.css",                // Selectize Bootstrap 3 theme
+                        drupalpath + "lib/selectize.min.js",                        // Selectize javaScript
+                        drupalpath + "lib/yds-country-selector.js"                  // Country selection jQuery plugin
                     ],
                     cache: true,
                     serie: true
@@ -131,7 +139,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                         filter.description = description;
 
                         // If filter is string add typeahead, if it's date add Datepicker plugin
-                        if (filter.type == "string") {
+                        if (filter.type == "string" && !_.has(filter, "plugin")) {
                             filter.input = function(rule, name) {
                                 // Return html of text input element with typeahead
                                 return $compile('<input type="text" class="form-control" name="typeahead"\
