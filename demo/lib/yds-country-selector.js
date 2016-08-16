@@ -269,10 +269,10 @@
                 persist: false,
                 render: {
                     item: function(item, escape) {
-                        return "<div><img src='../img/blank.gif' class='flag flag-" + escape(item.code) + "' alt='flag' />&nbsp;" + escape(item.name) + "</div>";
+                        return "<div><img src='img/blank.gif' class='flag flag-" + escape(item.code) + "' alt='flag' />&nbsp;" + escape(item.name) + "</div>";
                     },
                     option: function(item, escape) {
-                        return "<div><img src='../img/blank.gif' class='flag flag-" + escape(item.code) + "' alt='flag' />&nbsp;" + escape(item.name) + "</div>";
+                        return "<div><img src='img/blank.gif' class='flag flag-" + escape(item.code) + "' alt='flag' />&nbsp;" + escape(item.name) + "</div>";
                     }
                 }
             });
