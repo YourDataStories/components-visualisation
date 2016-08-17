@@ -2,7 +2,14 @@
  * jQuery plugin for changing a text input to a country selector
  */
 (function($){
-    $.fn.yds_country_selector = function() {
+    $.fn.yds_country_selector = function(options) {
+        // Set default settings
+        var settings = $.extend({
+            width: 300,
+            placeholder: "Select country..."
+        }, options);
+
+        // Array with country codes and names
         var countries = [
             { code: "AF", name: "Afghanistan" },
             { code: "AL", name: "Albania" },
@@ -253,7 +260,7 @@
             var textInput = this;
 
             // Create new div for selectize and add it after text field
-            var newInput = $("<div style='width: 300px'></div>");
+            var newInput = $("<div style='width: " + settings.width + "px'></div>");
             $(textInput).after(newInput);
 
             // Initialize Selectize with country flags
@@ -261,10 +268,9 @@
                 maxItems: 1,
                 labelField: 'name',
                 valueField: 'code',
-                plugins: ['remove_button'],
                 searchField: ['name', 'code'],
                 options: countries,
-                placeholder: "Select country...",
+                placeholder: settings.placeholder,
                 preload: true,
                 persist: false,
                 render: {
