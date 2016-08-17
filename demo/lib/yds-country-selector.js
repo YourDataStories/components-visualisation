@@ -280,6 +280,9 @@
             // Fetch Selectize instance
             var selectize = $select[0].selectize;
 
+            // Add display:block to Selectize's div so it is centered vertically
+            $(selectize.$control[0]).css("display", "block");
+
             // Hide text input from view
             $(textInput).hide();
 
