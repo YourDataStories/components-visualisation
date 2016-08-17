@@ -1,4 +1,4 @@
-<div class="component-wrapper">
+<div class="component-wrapper flex">
     <uib-alert type="danger" ng-if="ydsAlert.length>0">
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
         {{ydsAlert}}
@@ -27,5 +27,5 @@
         </div>
         <div style="clear: both"></div>
     </div>
-    <div style="height: 100%;" class="ag-fresh grid-container" yds-basket-btn></div>
+    <div style="min-height: {{elementH}}px" class="flex ag-fresh grid-container" yds-basket-btn></div>
 </div>

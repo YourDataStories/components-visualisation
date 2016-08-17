@@ -1,5 +1,5 @@
 <!-- Result tabs -->
-<uib-tabset active="active">
+<uib-tabset active="active" class="flex">
     <uib-tab
             index="$index"
             ng-repeat="tab in tabs track by $index"
@@ -30,6 +30,7 @@
 
         <!-- Results grid -->
         <yds-grid-results
+                class="flex"
                 view-type="{{tab.concept}}"
                 sorting="true"
                 lang="{{lang}}"
