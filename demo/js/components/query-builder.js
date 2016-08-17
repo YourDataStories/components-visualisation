@@ -45,7 +45,8 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                         drupalpath + "css/flags.css",                               // Flags CSS from flag-sprites.com
                         drupalpath + "css/selectize.bootstrap3.css",                // Selectize Bootstrap 3 theme
                         drupalpath + "lib/selectize.min.js",                        // Selectize javaScript
-                        drupalpath + "lib/yds-country-selector.js"                  // Country selection jQuery plugin
+                        drupalpath + "lib/yds-country-selector.js",                 // Country selection jQuery plugin
+                        drupalpath + "lib/yds-currency-selector.js"                 // Currency selection jQuery plugin
                     ],
                     cache: true,
                     serie: true
