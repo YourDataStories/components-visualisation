@@ -105,7 +105,7 @@ body #main .container:first-child {
    (only for browsers that are not IE or Safari < 6) */
 @media screen {
     @media (min-width: 0px) {
-        html, body {
+        html {
             display: flex;
             flex-direction: column;
         }
@@ -118,6 +118,11 @@ body #main .container:first-child {
 
         .footer {
             position: relative;
+        }
+
+        /* Fix for Bootstrap Datepicker's "Today" button becoming small */
+        th.today {
+            display: table-cell !important;
         }
     }
 }
