@@ -25,7 +25,6 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
             //    console.log('an error occurred', error);
             //});
 
-
             //function to check if an object is empty
             scope.isEmpty = function (obj) {
                 for (var i in obj) if (obj.hasOwnProperty(i)) return false;
@@ -82,8 +81,6 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
                 }
             };
 
-
-
             scope.geoObj = {
                 startPoint: {},
                 viaPoints: [],
@@ -122,8 +119,7 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
                     scope.geoObj.viaPoints = angular.copy(viaPoints);
                     scope.geoObj.endPoint = angular.copy(endPoint);
                 },0);
-            }
-
+            };
 
             var setStartPoint = function(e){
                 scope.geoObj.startPoint=e.latlng;
@@ -331,7 +327,7 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
             };
 
             //function to clear all layers and markers arrays from the map
-            scope.saveAnotation = function(){
+            scope.saveAnnotation = function(){
                 //function to retrieved saved route from server
                 //console.log("projectId:", JSON.stringify(scope.projectId))
                 //console.log("geoObj:", JSON.stringify(scope.geoObj))
@@ -348,8 +344,8 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
                 if (pointType == 0 ) {                  // if user delete the startPoint
                     scope.geoObj.startPoint = {};
 
-                    if (!scope.isEmpty(scope.geoObj.endPoint)) {      //if route has other points
-                        if (scope.geoObj.viaPoints.length > 0)        //if route has via points, assign the first via point as route startPoint
+                    if (!scope.isEmpty(scope.geoObj.endPoint)) {        //if route has other points
+                        if (scope.geoObj.viaPoints.length > 0)          //if route has via points, assign the first via point as route startPoint
                             scope.geoObj.startPoint = angular.copy(scope.geoObj.viaPoints.shift());
                         else {                                          //if route hasn't points, assign the route endPoint as startPoint
                             scope.geoObj.startPoint = angular.copy(scope.geoObj.endPoint);
@@ -360,7 +356,7 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
                     var pointIndex = _.findIndex(scope.geoObj.viaPoints, pointObj);
                     scope.geoObj.viaPoints.splice(pointIndex, 1);
                 } else {                                // if user delete the endPoint
-                    scope.geoObj.endPoint = {};       // empty the route endPoint
+                    scope.geoObj.endPoint = {};         // empty the route endPoint
 
                     if (!scope.isEmpty(scope.geoObj.startPoint)) {      //if route has other points
                         if (scope.geoObj.viaPoints.length > 0)          //if route has via points, assign the last one as route endpoint
@@ -370,7 +366,7 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
 
                 var totalMarkers = countMapMarkers();
 
-                if (totalMarkers == 1)                 //if only marker on the map, delete the route layer
+                if (totalMarkers == 1)                  //if only marker on the map, delete the route layer
                     scope.clearMap(false, true);
                 else                                    //if more than one marker on the map, redraw markers-layers
                     visualiseRoute(); //call route service

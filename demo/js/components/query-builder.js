@@ -46,7 +46,8 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                         drupalpath + "css/selectize.bootstrap3.css",                // Selectize Bootstrap 3 theme
                         drupalpath + "lib/selectize.min.js",                        // Selectize javaScript
                         drupalpath + "lib/yds-country-selector.js",                 // Country selection jQuery plugin
-                        drupalpath + "lib/yds-currency-selector.js"                 // Currency selection jQuery plugin
+                        drupalpath + "lib/yds-currency-selector.js",                // Currency selection jQuery plugin
+                        drupalpath + "lib/yds-map-selector.js"                      // Map point selection jQuery plugin
                     ],
                     cache: true,
                     serie: true
@@ -160,9 +161,6 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                                 scope.qbInputs[rule.id] = value;
                             };
                         } else if (filter.type == "datetime") {
-                            // Make filter's type "date" instead of "datetime"
-                            filter.type = "date";
-
                             // Add Datepicker plugin
                             filter.plugin = "datepicker";
                             filter.plugin_config = {
@@ -187,6 +185,12 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                                 });
                                 return rule.operator.nb_inputs == 1 ? value[0] : value;
                             };
+                        } else if (_.has(filter, "plugin") && filter.plugin == "yds_map_selector") {
+                            // Give the scope and $compile to the plugin so it can add geoediting component
+                            filter.plugin_config = {
+                                scope: scope,
+                                $compile: $compile
+                            }
                         }
 
                         // Return the filter
