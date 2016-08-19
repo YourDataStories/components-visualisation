@@ -2,12 +2,17 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
     return {
         restrict: 'E',
         scope: {
-            projectId: '@'
+            projectId: '@',     // Project ID
+            embedded: '@'       // If the component is embedded then it will not send the annotation to the API
         },
         templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/geo-editing.html',
         link: function(scope, elem, attrs) {
             scope.annotationType="line";
             scope.routeService=false;
+
+            if (_.isUndefined(scope.embedded) || (scope.embedded != "true" && scope.embedded != "false")) {
+                scope.embedded = "false";
+            }
 
             //function to retrieved saved route from server
             //Data.getGeoObj(scope.projectId).then(function(response){ debugger;
@@ -195,10 +200,10 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
                 }
 
                 endLayerMarker.clearLayers();                       //Clear endLayerMarker
-                if(!scope.isEmpty(scope.geoObj.endPoint)){
+                if(!scope.isEmpty(scope.geoObj.endPoint)) {
                     var newEndMarker = L.marker(
                         scope.geoObj.endPoint,
-                        {icon: endIcon, draggable: true}
+                        { icon: endIcon, draggable: true }
                     );
 
                     newEndMarker.on('dragend', function(e) {
@@ -212,7 +217,7 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
                 }
 
                 viaLayerMarker.clearLayers();                       //Clear viaLayerMarker
-                for(var i=0; i<scope.geoObj.viaPoints.length; i++){
+                for(var i=0; i < scope.geoObj.viaPoints.length; i++) {
                     var newViaMarker = L.marker(
                         scope.geoObj.viaPoints[i],
                         {icon: viaIcon, draggable: true, viaPointId: i}
@@ -233,7 +238,6 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
 
             //function to call openRouteService and visualise the route on map
             var drawRoute = function () {
-
                     var routeObj = scope.geoObj.route;
                     var polyline = L.polyline([], {color: 'red'});      //create polyline object
 
@@ -326,17 +330,23 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
                 }
             };
 
-            //function to clear all layers and markers arrays from the map
+            //function to save annotation to server
             scope.saveAnnotation = function(){
-                //function to retrieved saved route from server
                 //console.log("projectId:", JSON.stringify(scope.projectId))
                 //console.log("geoObj:", JSON.stringify(scope.geoObj))
-                scope.annotationResult=JSON.stringify(scope.geoObj);
-                Data.saveGeoObj(scope.projectId,scope.geoObj).then(function(response){
-                    console.log("Object saved");
-                }, function(error) {
-                    console.log('an error occurred', error);
-                });
+                scope.annotationResult = JSON.stringify(scope.geoObj);
+
+                if (scope.embedded != "true") {
+                    // Save object to server
+                    Data.saveGeoObj(scope.projectId,scope.geoObj).then(function(response){
+                        console.log("Object saved");
+                    }, function(error) {
+                        console.log('An error occurred', error);
+                    });
+                } else {
+                    console.log("Not saving route");
+                }
+
             };
 
             //function to remove a point from the route
