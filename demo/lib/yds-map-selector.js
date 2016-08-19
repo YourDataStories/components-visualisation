@@ -16,7 +16,7 @@
 
             // Create (and compile) button to open map selector using Angular Bootstrap Popover
             var newInput = settings.$compile("  <button uib-popover-template='\"templates/yds-map-selector-template.html\"' \
-                                                    popover-placement='right' \
+                                                    popover-placement='bottom' \
                                                     popover-title='Create route' \
                                                     popover-trigger='click' \
                                                     type='button' \

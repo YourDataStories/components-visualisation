@@ -8,6 +8,12 @@ and open the template in the editor.
     Author     : Giotis Panagiotis <giotis.p@gmail.com>
 */
 
+/* yds-map-selector popover width */
+div.ng-isolate-scope.bottom.fade.popover.in {
+    max-width: 768px;
+    width: 768px;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
