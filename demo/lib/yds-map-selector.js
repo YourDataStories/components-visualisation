@@ -8,24 +8,25 @@
             placeholder: "Select point..."
         }, options);
 
-        // Apply currency selector
+        // Function that will be used to set the rule input text field's text
+        settings.scope.setRuleInput = function(input, msg) {
+            $(input).val(msg).change();
+        };
+
+        // Apply map selector
         return this.each(function() {
-            // Get text input field
-            var textInput = this;
-            // var inputName = $(textInput).attr("name");
+            // Set the variables in QueryBuilder's scope
+            settings.scope.textField = this;
+            //todo: support multiple map selectors
 
             // Create (and compile) button to open map selector using Angular Bootstrap Popover
-            var newInput = settings.$compile("  <button uib-popover-template='\"templates/yds-map-selector-template.html\"' \
-                                                    popover-placement='bottom' \
-                                                    popover-title='Create route' \
-                                                    popover-trigger='click' \
-                                                    type='button' \
-                                                    class='btn btn-default'>Map Selector \
-                                                </button>"
-            )(settings.scope);
+            var popoverBtn = settings.$compile("<button uib-popover-template='\"templates/yds-map-selector-template.html\"' \
+                                                    popover-placement='bottom' popover-trigger='click' \
+                                                    popover-title='Create route' type='button' \
+                                                    class='btn btn-default'>Map Selector</button>")(settings.scope);
 
             // Add the button after the text input
-            $(textInput).after(newInput);
+            $(this).after(popoverBtn);
         });
     };
 }(jQuery));

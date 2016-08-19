@@ -332,8 +332,6 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
 
             //function to save annotation to server
             scope.saveAnnotation = function(){
-                //console.log("projectId:", JSON.stringify(scope.projectId))
-                //console.log("geoObj:", JSON.stringify(scope.geoObj))
                 scope.annotationResult = JSON.stringify(scope.geoObj);
 
                 if (scope.embedded != "true") {
@@ -343,8 +341,10 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
                     }, function(error) {
                         console.log('An error occurred', error);
                     });
-                } else {
-                    console.log("Not saving route");
+                } else if (!_.isUndefined(scope.$parent.textField) && !_.isUndefined(scope.$parent.setRuleInput)) {
+                    // The geo editing component is inside query builder, call the function to set the rule input
+                    // (has to be done this way because the component is added with the yds-map-selector jQuery plugin)
+                    scope.$parent.setRuleInput(scope.$parent.textField, scope.annotationResult);
                 }
 
             };
