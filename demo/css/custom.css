@@ -14,6 +14,11 @@ div.ng-isolate-scope.bottom.fade.popover.in {
     width: 768px;
 }
 
+.map-selector-inside {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
