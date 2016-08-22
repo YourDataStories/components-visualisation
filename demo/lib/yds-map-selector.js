@@ -5,7 +5,8 @@
     $.fn.yds_map_selector = function(options) {
         // Set default settings
         var settings = $.extend({
-            popoverTitle: "Select point"
+            popoverTitle: "Select point",
+            zoomLevel: 10
         }, options);
 
         // Apply map selector
@@ -79,7 +80,7 @@
                             callback: setPoint
                         }
                     ]
-                }).setView([35.52,23.80], 10);
+                }).setView([35.52,23.80], settings.zoomLevel);
 
                 // Set OSM as map layer
                 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -89,8 +90,12 @@
                 // If there is a point in the text field, add it to the map
                 if ($(textInput).val().trim().length > 0) {
                     var coords = JSON.parse($(textInput).val());
+                    var coordsArray = [coords.lat, coords.lng];
 
-                    marker = addPointToMap([coords.lat, coords.lng]);
+                    marker = addPointToMap(coordsArray);
+
+                    // Center map around the marker
+                    map.setView(coordsArray, settings.zoomLevel);
                 }
             });
         });
