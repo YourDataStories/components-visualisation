@@ -3,7 +3,7 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
         restrict: 'E',
         scope: {
             projectId: '@',     //id of the project that the data belong
-            viewType: '@',     //name of the array that contains the visualised data
+            viewType: '@',      //name of the array that contains the visualised data
             lang: '@',          //lang of the visualised data
 
             showNavigator: '@', //enable or disable line chart's navigation
@@ -13,7 +13,7 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
 
             addToBasket: '@',   //enable or disable "add to basket" functionality, values: true, false
             basketBtnX: '@',    //x-axis position of the basket button
-            basketBtnY: '@',    //y-axis position of the basket butto
+            basketBtnY: '@',    //y-axis position of the basket button
 
             embeddable: '@',    //enable or disable the embedding of the component
             embedBtnX: '@',     //x-axis position of the embed button

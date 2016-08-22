@@ -8,7 +8,7 @@ angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', function($compi
 			var elementClass = attrs.class;
 			var embedCode ="";
 			var visualisationType = "";
-			var defaultVisTypes = ["pie", "line", "bar", "map"];
+			var defaultVisTypes = ["pie", "line", "scatter", "bar", "map"];
 
 			//check if the element has one of the accepted IDs: "pie-container", "line-container", "bar-container", "map-container"
 			if (!angular.isUndefined(elementClass) && elementClass != "") {

@@ -635,6 +635,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             case "pie":
                 visualizationUrl="http://" + YDS_CONSTANTS.API_PIE;
                 break;
+            case "scatter":
             case "line":
                 visualizationUrl="http://" + YDS_CONSTANTS.API_LINE;
                 break;
