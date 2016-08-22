@@ -24,7 +24,8 @@ $.fn.queryBuilder.define('selectivity-plugin', function(options) {
         // Add selectivity to the div
         $(selectivityDiv).selectivity({
             items: options.filters,
-            placeholder: "No filter selected"
+            placeholder: "No filter selected",
+            showSearchInputInDropdown: false
         });
 
         // Change selectivity div size
