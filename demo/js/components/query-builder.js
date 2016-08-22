@@ -185,12 +185,6 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                                 });
                                 return rule.operator.nb_inputs == 1 ? value[0] : value;
                             };
-                        } else if (_.has(filter, "plugin") && filter.plugin == "yds_map_selector") {
-                            // Give the scope and $compile to the plugin so it can add geoediting component
-                            filter.plugin_config = {
-                                scope: scope,
-                                $compile: $compile
-                            }
                         }
 
                         // Return the filter

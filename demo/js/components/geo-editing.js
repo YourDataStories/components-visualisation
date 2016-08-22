@@ -2,17 +2,12 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
     return {
         restrict: 'E',
         scope: {
-            projectId: '@',     // Project ID
-            embedded: '@'       // If the component is embedded then it will not send the annotation to the API
+            projectId: '@'
         },
         templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/geo-editing.html',
         link: function(scope, elem, attrs) {
             scope.annotationType="line";
             scope.routeService=false;
-
-            if (_.isUndefined(scope.embedded) || (scope.embedded != "true" && scope.embedded != "false")) {
-                scope.embedded = "false";
-            }
 
             //function to retrieved saved route from server
             //Data.getGeoObj(scope.projectId).then(function(response){ debugger;
@@ -334,19 +329,12 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
             scope.saveAnnotation = function(){
                 scope.annotationResult = JSON.stringify(scope.geoObj);
 
-                if (scope.embedded != "true") {
-                    // Save object to server
-                    Data.saveGeoObj(scope.projectId,scope.geoObj).then(function(response){
-                        console.log("Object saved");
-                    }, function(error) {
-                        console.log('An error occurred', error);
-                    });
-                } else if (!_.isUndefined(scope.$parent.textField) && !_.isUndefined(scope.$parent.setRuleInput)) {
-                    // The geo editing component is inside query builder, call the function to set the rule input
-                    // (has to be done this way because the component is added with the yds-map-selector jQuery plugin)
-                    scope.$parent.setRuleInput(scope.$parent.textField, scope.annotationResult);
-                }
-
+                // Save object to server
+                Data.saveGeoObj(scope.projectId,scope.geoObj).then(function(response){
+                    console.log("Object saved");
+                }, function(error) {
+                    console.log('An error occurred', error);
+                });
             };
 
             //function to remove a point from the route
