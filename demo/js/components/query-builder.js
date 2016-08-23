@@ -160,15 +160,6 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                             filter.valueSetter = function(rule, value) {
                                 scope.qbInputs[rule.id] = value;
                             };
-                        } else if (filter.type == "datetime") {
-                            // Add Datepicker plugin
-                            filter.plugin = "datepicker";
-                            filter.plugin_config = {
-                                format: 'dd/mm/yyyy',
-                                todayBtn: 'linked',
-                                todayHighlight: true,
-                                autoclose: true
-                            };
                         } else if (_.has(filter, "plugin") && filter.plugin == "slider") {
                             // Add setter and getter for the slider
                             filter.valueSetter = function(rule, value) {
