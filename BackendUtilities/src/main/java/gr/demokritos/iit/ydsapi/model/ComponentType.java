@@ -10,7 +10,7 @@ import java.util.Set;
  */
 public enum ComponentType {
 
-    LINE("line"), PIE("pie"), BAR("bar"), MAP("map"), GRID("grid"), RESULT("result"), RESULTSET("resultset");
+    LINE("line"), SCATTER("scatter"), PIE("pie"), BAR("bar"), MAP("map"), GRID("grid"), RESULT("result"), RESULTSET("resultset");
     private final String type;
 
     private ComponentType(String type) {
@@ -24,6 +24,7 @@ public enum ComponentType {
 
     static {
         ACCEPTED.add(LINE.getDecl());
+        ACCEPTED.add(SCATTER.getDecl());
         ACCEPTED.add(PIE.getDecl());
         ACCEPTED.add(BAR.getDecl());
         ACCEPTED.add(MAP.getDecl());
