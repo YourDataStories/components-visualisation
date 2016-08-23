@@ -12,6 +12,7 @@ app.constant("YDS_CONSTANTS", {
     "API_HEATMAP": "platform.yourdatastories.eu/api/json-ld/component/heatmap.tcl",
     "API_INFO": "platform.yourdatastories.eu/api/json-ld/component/info.tcl",
     "API_LINE": "platform.yourdatastories.eu/api/json-ld/component/linechart.tcl",
+    "API_SCATTER": "platform.yourdatastories.eu/api/json-ld/component/scatterchart.tcl",
     "API_MAP": "platform.yourdatastories.eu/api/json-ld/component/map.tcl",
     "API_PIE": "platform.yourdatastories.eu/api/json-ld/component/piechart.tcl",
     "API_PLOT_INFO": "platform.yourdatastories.eu/api/json-ld/component/plotinfo.tcl",
@@ -636,6 +637,8 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                 visualizationUrl="http://" + YDS_CONSTANTS.API_PIE;
                 break;
             case "scatter":
+                visualizationUrl="http://" + YDS_CONSTANTS.API_SCATTER;
+                break;
             case "line":
                 visualizationUrl="http://" + YDS_CONSTANTS.API_LINE;
                 break;

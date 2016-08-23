@@ -77,7 +77,21 @@ angular.module('yds').directive('ydsScatter', ['Data', 'Filters', function(Data,
                     var scatterTitleAttr = _.first(response.view).attribute;
                     var scatterTitle = Data.deepObjSearch(response.data, scatterTitleAttr);
 
-                    //check if the component is properly rendered
+                    // Default Highcharts axis type is linear
+                    var xAxisType = "linear";
+                    var yAxisType = "linear";
+
+                    // Find x and y axis types
+                    var view = response.view;
+                    for (var i = 0; i < view.length; i++) {
+                        if (view[i].header == "xAxis") {
+                            xAxisType = view[i].type;
+                        } else if (view[i].header == "yAxis") {
+                            yAxisType = view[i].type;
+                        }
+                    }
+
+                    // Check if the component is properly rendered
                     if (_.isUndefined(scatterData) || !_.isArray(scatterData) || _.isUndefined(scatterSeries) || _.isUndefined(scatterTitle)) {
                         scope.ydsAlert = "The YDS component is not properly configured." +
                             "Please check the corresponding documentation section";
@@ -107,10 +121,13 @@ angular.module('yds').directive('ydsScatter', ['Data', 'Filters', function(Data,
                             tooltip: {
                                 valueDecimals: 2
                             }
-                        }]//,
-                        // xAxis: {
-                        //     type: 'datetime'
-                        // }
+                        }],
+                        xAxis: {
+                            type: xAxisType
+                        },
+                        yAxis: {
+                            type: yAxisType
+                        }
                     };
 
                     new Highcharts.Chart(options);
