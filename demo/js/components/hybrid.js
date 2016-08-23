@@ -59,6 +59,17 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 						switch(viewType) {
 							case "line":
 							case "scatter":
+								// Get type of axis x and y
+								newData.xAxisType = "linear";
+								newData.yAxisType = "linear";
+
+								for (var i = 0; i < response.view.length; i++) {
+									if (response.view[i].header == "xAxis") {
+										newData.xAxisType = response.view[i].type;
+									} else if (response.view[i].header == "yAxis") {
+										newData.yAxisType = response.view[i].type;
+									}
+								}
 							case "pie":
 								// Get series name
 								newData.series = responseData.series;
@@ -213,6 +224,12 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 							}],
 							exporting: {
 								enabled: false
+							},
+							xAxis: {
+								type: formattedData.xAxisType
+							},
+							yAxis: {
+								type: formattedData.yAxisType
 							}
 						};
 
