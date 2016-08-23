@@ -127,6 +127,10 @@ angular.module('yds').directive('ydsScatter', ['Data', 'Filters', function(Data,
                         },
                         yAxis: {
                             type: yAxisType
+                        },
+                        tooltip: {
+                            headerFormat: '{point.x:%A, %b %e, %H:%M}<br>',
+                            pointFormat: '<b>{series.name}</b>: {point.y}'
                         }
                     };
 

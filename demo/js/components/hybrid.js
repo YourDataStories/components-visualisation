@@ -230,6 +230,10 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 							},
 							yAxis: {
 								type: formattedData.yAxisType
+							},
+							tooltip: {
+								headerFormat: '{point.x:%A, %b %e, %H:%M}<br>',
+								pointFormat: '<b>{series.name}</b>: {point.y}'
 							}
 						};
 
