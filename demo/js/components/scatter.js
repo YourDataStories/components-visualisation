@@ -88,14 +88,9 @@ angular.module('yds').directive('ydsScatter', ['Data', 'Filters', function(Data,
                         chart: {
                             renderTo: elementId,
                             type: "scatter"
-                            // events: {
-                            //     load: function(e) {
-                            //         Filters.addScatterFilter(elementId, e.target);
-                            //     }
-                            // }
                         },
-                        title : {
-                            text : scatterTitle,
+                        title: {
+                            text: scatterTitle,
                             style: {
                                 fontSize: titleSize + "px"
                             }
@@ -106,23 +101,17 @@ angular.module('yds').directive('ydsScatter', ['Data', 'Filters', function(Data,
                         navigator: {
                             enabled: (showNavigator === "true")
                         },
-                        series : [{
-                            name : scatterSeries,
-                            data : scatterData,
+                        series: [{
+                            name: scatterSeries,
+                            data: scatterData,
                             tooltip: {
                                 valueDecimals: 2
                             }
-                        }],
-                        // xAxis:{
-                        //     events: {
-                        //         afterSetExtremes: function (e) {
-                        //             Filters.addScatterFilter(elementId, e.target.chart);
-                        //         }
-                        //     }
+                        }]//,
+                        // xAxis: {
+                        //     type: 'datetime'
                         // }
                     };
-
-                    console.log(scatterSeries);
 
                     new Highcharts.Chart(options);
                 }, function (error) {
