@@ -1,4 +1,4 @@
-angular.module('yds').directive('ydsScatter', ['Data', 'Filters', function(Data, Filters){
+angular.module('yds').directive('ydsScatter', ['Data', 'Filters', function(Data, Filters) {
     return {
         restrict: 'E',
         scope: {
@@ -6,8 +6,8 @@ angular.module('yds').directive('ydsScatter', ['Data', 'Filters', function(Data,
             viewType: '@',      //name of the array that contains the visualised data
             lang: '@',          //lang of the visualised data
 
-            showNavigator: '@', //enable or disable scatter chart's navigation
-            exporting: '@',     //enable or disable the export of the chart
+            showNavigator: '@', //enable or disable scatter plot's navigation
+            exporting: '@',     //enable or disable the export of the plot
             elementH: '@',      //set the height of the component
             titleSize: '@',     //the size of the chart's main title
 
@@ -24,7 +24,7 @@ angular.module('yds').directive('ydsScatter', ['Data', 'Filters', function(Data,
         link: function (scope, element, attrs) {
             var scatterContainer = angular.element(element[0].querySelector('.scatter-container'));
 
-            //create a random id for the element that will render the chart
+            //create a random id for the element that will render the plot
             var elementId = "scatter" + Data.createRandomId();
             scatterContainer[0].id = elementId;
 
@@ -67,7 +67,7 @@ angular.module('yds').directive('ydsScatter', ['Data', 'Filters', function(Data,
             if(angular.isUndefined(titleSize) || isNaN(titleSize))
                 titleSize = 18;
 
-            //set the height of the chart
+            //set the height of the plot
             scatterContainer[0].style.height = elementH + 'px';
 
             Data.getProjectVis("scatter", projectId, viewType, lang)

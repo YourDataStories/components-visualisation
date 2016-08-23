@@ -58,6 +58,7 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 						// Get remaining fields (depending on the view type)
 						switch(viewType) {
 							case "line":
+							case "scatter":
 							case "pie":
 								// Get series name
 								newData.series = responseData.series;
@@ -188,6 +189,36 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 						var chart = new Highcharts.StockChart(options);
 					};
 
+					//function to create a scatter visualisation using data from the server
+					var scatterVisualisation = function (response) {
+						var formattedData = formatResponseData("scatter", response);
+
+						var options = {
+							chart: {
+								renderTo: elementId,
+								type: "scatter"
+							},
+							rangeSelector: {
+								selected: 1
+							},
+							title: {
+								text: formattedData.title
+							},
+							series: [{
+								name: formattedData.series,
+								data: formattedData.data,
+								tooltip: {
+									valueDecimals: 2
+								}
+							}],
+							exporting: {
+								enabled: false
+							}
+						};
+
+						var chart = new Highcharts.Chart(options);
+					};
+
 					//function to create a map visualisation using data from the server
 					var mapVisualisation = function (response) {
 						var formattedData = formatResponseData("map", response);
@@ -216,35 +247,30 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 					var visualiseProject = function (projectId, vizType, viewType, lang) {
 						vizType = vizType.toLowerCase();
 
-						if (vizType == "pie") {
-							Data.getProjectVis(vizType, projectId, viewType, lang)
-							.then(function (response) {
-								pieVisualisation(response);
-							}, function (error) {
-								console.log('error', error);
-							});
-						} else if (vizType == "bar") {
-							Data.getProjectVis(vizType, projectId, viewType, lang)
-							.then(function (response) {
-								barVisualisation(response);
-							}, function (error) {
-								console.log('error', error);
-							});
-						} else if (vizType == "line") {
-							Data.getProjectVis(vizType, projectId, viewType, lang)
-							.then(function (response) {
-								lineVisualisation(response);
-							}, function (error) {
-								console.log('error', error);
-							});
-						} else if (vizType == "map") {
-							Data.getProjectVis(vizType, projectId, "default", lang)
-							.then(function (response) {
-								mapVisualisation(response);
-							}, function (error) {
-								console.log('error', error);
-							});
+						if (vizType == "map") {
+							viewType = "default";
 						}
+
+						Data.getProjectVis(vizType, projectId, viewType, lang)
+							.then(function (response) {
+								switch(vizType) {
+									case "pie":
+										pieVisualisation(response);
+										break;
+									case "bar":
+										barVisualisation(response);
+										break;
+									case "line":
+										lineVisualisation(response);
+										break;
+									case "scatter":
+										scatterVisualisation(response);
+										break;
+									case "map":
+										mapVisualisation(response);
+										break;
+								}
+							});
 					};
 				}
 			}
