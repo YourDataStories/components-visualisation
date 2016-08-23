@@ -126,7 +126,10 @@ angular.module('yds').directive('ydsScatter', ['Data', 'Filters', function(Data,
                             type: xAxisType
                         },
                         yAxis: {
-                            type: yAxisType
+                            type: yAxisType,
+                            title: {
+                                enabled: false
+                            }
                         }
                     };
 
