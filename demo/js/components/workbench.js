@@ -318,7 +318,7 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 						});
 
                         // Get needed X axis properties to send
-                        var selAxisX = scope.lineChart.axisX[0];
+                        var selAxisX = scope.lineChart.selectedAxisX;
                         var axisXAttrs = {
                             attribute: selAxisX.attribute,
                             field_id: selAxisX.field_id,
@@ -356,7 +356,7 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 						});
 
                         // Get needed X axis properties to send
-                        var selAxisX = scope.barChart.axisX[0];
+                        var selAxisX = scope.barChart.selectedAxisX;
                         var axisXAttrs = {
                             attribute: selAxisX.attribute,
                             field_id: selAxisX.field_id,
