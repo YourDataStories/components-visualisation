@@ -293,6 +293,19 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 
 			};
 
+			/**
+			 * Function that gets an axis object with all the attributes of the axis, and returns only the ones needed
+			 * by the API
+			 * @param axis
+			 * @returns {{attribute: *, field_id: *, function: *}}
+			 */
+			var neededAxisProperties = function(axis) {
+				return {
+					attribute: axis.attribute,
+					field_id: axis.field_id,
+					function: axis.function
+				};
+			};
 
 			/**
 			 * function called when "Visualise Data" is clicked, which is responsible to fetch the data of the
@@ -305,29 +318,15 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 						var lineAxisYAttrs = [];
 						_.forEach(scope.lineChart.axisYConfig, function(axis){
 							if (axis.selected!=null && !_.isUndefined(axis.selected) && _.isObject(axis.selected))
-								lineAxisYAttrs.push(axis.selected);
-						});
-
-						// Keep only needed properties of selected y axis attributes
-						lineAxisYAttrs = lineAxisYAttrs.map(function(item) {
-							return {
-								attribute: item.attribute,
-								field_id: item.field_id,
-								function: item.function
-							}
+								lineAxisYAttrs.push(neededAxisProperties(axis.selected));
 						});
 
                         // Get needed X axis properties to send
-                        var selAxisX = scope.lineChart.selectedAxisX;
-                        var axisXAttrs = {
-                            attribute: selAxisX.attribute,
-                            field_id: selAxisX.field_id,
-                            function: selAxisX.function
-                        };
+                        var lineAxisXAttrs = neededAxisProperties(scope.lineChart.selectedAxisX);
 
 						if (lineAxisYAttrs.length > 0) {
-							Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView, axisXAttrs,
-                                lineAxisYAttrs[0], scope.basketVars.selBasketIds)
+							Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView,
+								lineAxisXAttrs, lineAxisYAttrs[0], scope.basketVars.selBasketIds)
 								.then(function (response) {
 									createLineChart(response);
 								}, function (error) {
@@ -342,34 +341,21 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 						var barAxisYAttrs = [];
 						_.forEach(scope.barChart.axisYConfig, function(axis){
 							if (axis.selected!=null && !_.isUndefined(axis.selected) && _.isObject(axis.selected)) {
-								barAxisYAttrs.push(axis.selected);
+								barAxisYAttrs.push(neededAxisProperties(axis.selected));
 							}
 						});
 
-						// Keep only needed properties of selected y axis attributes
-						barAxisYAttrs = barAxisYAttrs.map(function(item) {
-							return {
-								attribute: item.attribute,
-								field_id: item.field_id,
-								function: item.function
-							}
-						});
-
-                        // Get needed X axis properties to send
-                        var selAxisX = scope.barChart.selectedAxisX;
-                        var axisXAttrs = {
-                            attribute: selAxisX.attribute,
-                            field_id: selAxisX.field_id,
-                            function: selAxisX.function
-                        };
+						// Get needed X axis properties to send
+                        var barAxisXAttrs = neededAxisProperties(scope.barChart.selectedAxisX);
 
 						if (barAxisYAttrs.length > 0) {
-							Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView, axisXAttrs, barAxisYAttrs, scope.basketVars.selBasketIds)
-							.then(function (response) {
-								createBarChart(response);
-							}, function (error) {
-								console.log("error in barchart - getLineBarVis function")
-							});
+							Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView,
+								barAxisXAttrs, barAxisYAttrs, scope.basketVars.selBasketIds)
+								.then(function (response) {
+									createBarChart(response);
+								}, function (error) {
+									console.log("error in barchart - getLineBarVis function")
+								});
 						} else
 							setAlertMsg("Please select a Y axis attribute.", 2000);
 
