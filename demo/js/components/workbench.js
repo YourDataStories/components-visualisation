@@ -293,18 +293,19 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 
 			};
 
-			/**
-			 * Function that gets an axis object with all the attributes of the axis, and returns only the ones needed
-			 * by the API
-			 * @param axis
-			 * @returns {{attribute: *, field_id: *, function: *}}
-			 */
+            /**
+             * Function that gets an axis object with all the attributes of the axis, and returns only the ones needed
+             * by the API
+             * @param axis
+             * @returns {{attribute: *, field_id: *, function: *, label: *, type: *}}
+             */
 			var neededAxisProperties = function(axis) {
 				return {
 					attribute: axis.attribute,
 					field_id: axis.field_id,
 					function: axis.function,
-					label: axis.label
+					label: axis.label,
+					type: axis.type
 				};
 			};
 
