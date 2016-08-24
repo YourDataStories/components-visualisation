@@ -326,7 +326,7 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 
 						if (lineAxisYAttrs.length > 0) {
 							Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView,
-								lineAxisXAttrs, lineAxisYAttrs[0], scope.basketVars.selBasketIds)
+								lineAxisXAttrs, lineAxisYAttrs[0], scope.basketVars.selBasketIds, scope.lang)
 								.then(function (response) {
 									createLineChart(response);
 								}, function (error) {
@@ -350,7 +350,7 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 
 						if (barAxisYAttrs.length > 0) {
 							Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView,
-								barAxisXAttrs, barAxisYAttrs, scope.basketVars.selBasketIds)
+								barAxisXAttrs, barAxisYAttrs, scope.basketVars.selBasketIds, scope.lang)
 								.then(function (response) {
 									createBarChart(response);
 								}, function (error) {

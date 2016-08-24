@@ -115,7 +115,7 @@ angular.module('yds').factory('Workbench', [ 'YDS_CONSTANTS', '$q', '$http', 'Da
 		},
 		getSlidesConfig : function() { return slidesConfig; },
 		checkVisAvailability: function (slideId, visType) { return _.findWhere(slidesConfig.slides[slideId].images, {type: visType}).visible; },
-		getLineBarVis: function(visType, viewType, xAxis, yAxis, basketIds) {
+		getLineBarVis: function(visType, viewType, xAxis, yAxis, basketIds, lang) {
 			var visUrl = "";
 			var deferred = $q.defer();
 
@@ -133,6 +133,7 @@ angular.module('yds').factory('Workbench', [ 'YDS_CONSTANTS', '$q', '$http', 'Da
 				url: visUrl,
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 				data: {
+					lang: lang,
 					type: viewType,
 					basket_ids: basketIds,
 					axis_x: xAxis,
