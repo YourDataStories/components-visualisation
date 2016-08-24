@@ -149,7 +149,7 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 
 				//get the data and the title of the chart
 				scope.lineChart.data = lineInput.data.data;
-				scope.lineChart.title = Data.deepObjSearch(lineInput.data, lineInput.view[0].attribute + "." + scope.lang)
+				scope.lineChart.title = Data.deepObjSearch(lineInput.data, lineInput.view[0].attribute + "." + scope.lang);
 
 				//if the line chart is visualized for the first time, create it
 				if (!Workbench.getLineChartStatus()) {
@@ -301,17 +301,33 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 			scope.createVisualization = function() {
 				switch(scope.workbench.selectedVis) {
 					case "linechart":
+						// Gather selected y axis attributes
 						var lineAxisYAttrs = [];
 						_.forEach(scope.lineChart.axisYConfig, function(axis){
 							if (axis.selected!=null && !_.isUndefined(axis.selected) && _.isObject(axis.selected))
-								lineAxisYAttrs.push(axis.selected.attribute);
+								lineAxisYAttrs.push(axis.selected);
 						});
 
-						lineAxisYAttrs = lineAxisYAttrs.join(",");
+						// Keep only needed properties of selected y axis attributes
+						lineAxisYAttrs = lineAxisYAttrs.map(function(item) {
+							return {
+								attribute: item.attribute,
+								field_id: item.field_id,
+								function: item.function
+							}
+						});
+
+                        // Get needed X axis properties to send
+                        var selAxisX = scope.lineChart.axisX[0];
+                        var axisXAttrs = {
+                            attribute: selAxisX.attribute,
+                            field_id: selAxisX.field_id,
+                            function: selAxisX.function
+                        };
 
 						if (lineAxisYAttrs.length > 0) {
-							Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView, scope.lineChart.axisX[0].attribute,
-								scope.lineChart.axisY[0].attribute, scope.basketVars.selBasketIds)
+							Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView, axisXAttrs,
+                                lineAxisYAttrs[0], scope.basketVars.selBasketIds)
 								.then(function (response) {
 									createLineChart(response);
 								}, function (error) {
@@ -322,16 +338,33 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 
 						break;
 					case "barchart":
+						// Gather selected y axis attributes
 						var barAxisYAttrs = [];
 						_.forEach(scope.barChart.axisYConfig, function(axis){
-							if (axis.selected!=null && !_.isUndefined(axis.selected) && _.isObject(axis.selected))
-								barAxisYAttrs.push(axis.selected.attribute);
+							if (axis.selected!=null && !_.isUndefined(axis.selected) && _.isObject(axis.selected)) {
+								barAxisYAttrs.push(axis.selected);
+							}
 						});
 
-						barAxisYAttrs = barAxisYAttrs.join(",");
+						// Keep only needed properties of selected y axis attributes
+						barAxisYAttrs = barAxisYAttrs.map(function(item) {
+							return {
+								attribute: item.attribute,
+								field_id: item.field_id,
+								function: item.function
+							}
+						});
+
+                        // Get needed X axis properties to send
+                        var selAxisX = scope.barChart.axisX[0];
+                        var axisXAttrs = {
+                            attribute: selAxisX.attribute,
+                            field_id: selAxisX.field_id,
+                            function: selAxisX.function
+                        };
 
 						if (barAxisYAttrs.length > 0) {
-							Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView, scope.barChart.axisX[0].attribute, barAxisYAttrs, scope.basketVars.selBasketIds)
+							Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView, axisXAttrs, barAxisYAttrs, scope.basketVars.selBasketIds)
 							.then(function (response) {
 								createBarChart(response);
 							}, function (error) {

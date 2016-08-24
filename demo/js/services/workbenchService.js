@@ -130,9 +130,14 @@ angular.module('yds').factory('Workbench', [ 'YDS_CONSTANTS', '$q', '$http', 'Da
 
 			$http({
 				method: 'POST',
-				url: visUrl + "?type=" + viewType + "&axis-x=" + xAxis + "&axis-y=" + yAxis,
+				url: visUrl,
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-				data: Data.transform(JSON.stringify(basketIds))
+				data: {
+					type: viewType,
+					basket_ids: basketIds,
+					axis_x: xAxis,
+					axis_y: yAxis
+				}
 			}).success(function (data) {
 				deferred.resolve(data);
 			}).error(function (error) {
