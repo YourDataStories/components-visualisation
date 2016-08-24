@@ -303,7 +303,8 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 				return {
 					attribute: axis.attribute,
 					field_id: axis.field_id,
-					function: axis.function
+					function: axis.function,
+					label: axis.label
 				};
 			};
 
