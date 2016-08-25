@@ -118,5 +118,10 @@
             <div class="vis-area vis-area-grid" ng-show="workbench.selectedVis=='grid'"></div>
             <div class="vis-area vis-area-default" ng-show="workbench.selectedVis=='default'"></div>
         </div>
+
+        <!-------- Text area for showing sparql query -------->
+        <div class="col-xs-offset-7 col-xs-5" style="margin-top: 10px;">
+            <textarea style="width: 100%" rows="10" ng-model="sparqlResult"></textarea>
+        </div>
     </div>
 </div>

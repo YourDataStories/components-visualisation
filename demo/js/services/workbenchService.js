@@ -115,7 +115,7 @@ angular.module('yds').factory('Workbench', [ 'YDS_CONSTANTS', '$q', '$http', 'Da
 		},
 		getSlidesConfig : function() { return slidesConfig; },
 		checkVisAvailability: function (slideId, visType) { return _.findWhere(slidesConfig.slides[slideId].images, {type: visType}).visible; },
-		getLineBarVis: function(visType, viewType, xAxis, yAxis, basketIds, lang) {
+		getLineBarVis: function(visType, viewType, xAxis, yAxis, basketIds, lang, sparql) {
 			var visUrl = "";
 			var deferred = $q.defer();
 
@@ -126,6 +126,11 @@ angular.module('yds').factory('Workbench', [ 'YDS_CONSTANTS', '$q', '$http', 'Da
 				case "barchart":
 					visUrl = "http://" + YDS_CONSTANTS.API_INTERACTIVE_BAR;
 					break;
+			}
+
+			// If sparql parameter is true add parameter to the URL
+			if (sparql == true) {
+				visUrl += "?sparql=1";
 			}
 
 			$http({

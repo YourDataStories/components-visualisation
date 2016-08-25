@@ -323,12 +323,23 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
                         var lineAxisXAttrs = neededAxisProperties(scope.lineChart.selectedAxisX);
 
 						if (lineAxisYAttrs.length > 0) {
+							// Make call to service to get sparql query
 							Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView,
-								lineAxisXAttrs, lineAxisYAttrs, scope.basketVars.selBasketIds, scope.lang)
-								.then(function (response) {
-									createLineChart(response);
-								}, function (error) {
-									console.log("error in linechart - getLineBarVis function");
+								lineAxisXAttrs, lineAxisYAttrs, scope.basketVars.selBasketIds, scope.lang, true)
+								.then(function(response) {
+									// Show sparql query in page
+									scope.sparqlResult = response.data;
+
+									// Do normal call to service to make the chart
+									Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView,
+										lineAxisXAttrs, lineAxisYAttrs, scope.basketVars.selBasketIds, scope.lang)
+										.then(function (response) {
+											createLineChart(response);
+										}, function (error) {
+											console.log("error in linechart - getLineBarVis function");
+										});
+								}, function(error) {
+									console.log("error in linechart sparql call - getLineBarVis function");
 								});
 						} else
 							setAlertMsg("Please select a Y axis attribute.", 2000);
@@ -347,12 +358,23 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
                         var barAxisXAttrs = neededAxisProperties(scope.barChart.selectedAxisX);
 
 						if (barAxisYAttrs.length > 0) {
+							// Make call to service to get sparql query
 							Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView,
-								barAxisXAttrs, barAxisYAttrs, scope.basketVars.selBasketIds, scope.lang)
-								.then(function (response) {
-									createBarChart(response);
-								}, function (error) {
-									console.log("error in barchart - getLineBarVis function");
+								barAxisXAttrs, barAxisYAttrs, scope.basketVars.selBasketIds, scope.lang, true)
+								.then(function(response) {
+									// Show sparql query in page
+									scope.sparqlResult = response.data;
+
+									// Do normal call to service to make the chart
+									Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView,
+										barAxisXAttrs, barAxisYAttrs, scope.basketVars.selBasketIds, scope.lang)
+										.then(function (response) {
+											createBarChart(response);
+										}, function (error) {
+											console.log("error in barchart - getLineBarVis function");
+										});
+								}, function(error) {
+									console.log("error in barchart sparql call - getLineBarVis function");
 								});
 						} else
 							setAlertMsg("Please select a Y axis attribute.", 2000);
