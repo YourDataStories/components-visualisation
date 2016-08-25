@@ -328,11 +328,11 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 
 						if (lineAxisYAttrs.length > 0) {
 							Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView,
-								lineAxisXAttrs, lineAxisYAttrs[0], scope.basketVars.selBasketIds, scope.lang)
+								lineAxisXAttrs, lineAxisYAttrs, scope.basketVars.selBasketIds, scope.lang)
 								.then(function (response) {
 									createLineChart(response);
 								}, function (error) {
-									console.log("error in linechart - getLineBarVis function")
+									console.log("error in linechart - getLineBarVis function");
 								});
 						} else
 							setAlertMsg("Please select a Y axis attribute.", 2000);
@@ -356,7 +356,7 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 								.then(function (response) {
 									createBarChart(response);
 								}, function (error) {
-									console.log("error in barchart - getLineBarVis function")
+									console.log("error in barchart - getLineBarVis function");
 								});
 						} else
 							setAlertMsg("Please select a Y axis attribute.", 2000);
