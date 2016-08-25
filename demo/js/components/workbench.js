@@ -148,8 +148,8 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 				}
 
 				//get the data and the title of the chart
-				scope.lineChart.data = lineInput.data.data;
-				scope.lineChart.title = Data.deepObjSearch(lineInput.data, lineInput.view[0].attribute + "." + scope.lang);
+				scope.lineChart.series = lineInput.data.series;
+				scope.lineChart.title = Data.deepObjSearch(lineInput.data, lineInput.view[0].attribute);
 
 				//if the line chart is visualized for the first time, create it
 				if (!Workbench.getLineChartStatus()) {
@@ -159,12 +159,9 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 
 				//set the title of the line chart and add its series
 				scope.lineChart.chart.setTitle({ text: scope.lineChart.title });
-				scope.lineChart.chart.addSeries({
-					name : scope.lineChart.series,
-					data : scope.lineChart.data,
-					tooltip: {
-						valueDecimals: 2
-					}
+
+				_.each(scope.lineChart.series, function(series) {
+					scope.lineChart.chart.addSeries(series);
 				});
 
 				scope.lineChart.chart.redraw();
