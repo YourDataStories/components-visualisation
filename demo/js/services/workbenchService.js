@@ -172,7 +172,7 @@ angular.module('yds').factory('Workbench', [ 'YDS_CONSTANTS', '$q', '$http', 'Da
 			// if there is an empty combobox or the number of comboboxes is equals with number
 			// of the line axis, stop the excecution of the function
 			if ( nonSelectedCombo.length>0 ||
-				lineChartConfig.axisYConfig.length>2 ||
+				lineChartConfig.axisYConfig.length>5 ||
 				lineChartConfig.axisYConfig.length == lineChartConfig.axisY.length ) {
 
 				return false;
@@ -198,7 +198,7 @@ angular.module('yds').factory('Workbench', [ 'YDS_CONSTANTS', '$q', '$http', 'Da
 			// if there is an empty combobox or the number of comboboxes is equals with number
 			// of the line axis, stop the excecution of the function
 			if ( nonSelectedCombo.length>0 ||
-				barChartConfig.axisYConfig.length>2 ||
+				barChartConfig.axisYConfig.length>5 ||
 				barChartConfig.axisYConfig.length == barChartConfig.axisY.length ) {
 
 				return false;
