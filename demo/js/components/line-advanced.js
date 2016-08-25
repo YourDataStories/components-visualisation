@@ -164,7 +164,7 @@ angular.module('yds').directive('ydsLineAdvanced', ['$timeout', '$q', 'Data', 'F
 			var visualizeLineChart = function(filters) {
 				//if the line chart is being initialized for the first time
 				//set its options and render the chart without data
-				if (_.isUndefined(line["chart"])) {
+				if (_.isUndefined(line.chart)) {
 					var options = {
 						chart: { renderTo: line.elementId },
 						rangeSelector : {
@@ -180,27 +180,49 @@ angular.module('yds').directive('ydsLineAdvanced', ['$timeout', '$q', 'Data', 'F
 						navigator: { enabled: (line.showNavigator === "true") }
 					};
 
-					line["chart"] = new Highcharts.StockChart(options);
+					line.chart = new Highcharts.StockChart(options);
 				}
 
 				//if the chart has already been rendered, fetch data from the server and visualize the results
 				Data.getProjectVisAdvanced("line", line.projectId, line.viewType, line.lang, filters)
 				.then(function(response) {
-					//get the title of the chart from the result
-					var titlePath = response.view[0].attribute;
-					var lineTitle = Data.deepObjSearch(response.data, titlePath);
+					// Find and set chart title
+					for (var i = 0; i < response.view.length; i++) {
+						if (response.view[i].header == "Title") {
+							var lineTitleAttr = response.view[i].attribute;						// Get title attribute
+							var lineTitle = Data.deepObjSearch(response.data, lineTitleAttr);	// Find chart title
 
-					//set the chart's title
-					line["chart"].setTitle({text: lineTitle});
+							line.chart.setTitle({text: lineTitle});								// Set chart title
+							break;
+						}
+					}
 
-					//remove the existing line chart series
-					while(line["chart"].series.length > 0)
-						line["chart"].series[0].remove(true);
+					// Remove the existing line chart series
+					while(line.chart.series.length > 0)
+						line.chart.series[0].remove(true);
 
-					//add the new series to the line chart
-					line["chart"].addSeries({
-						name : response.data.series,
-						data : response.data.data
+					// Add the new series to the line chart
+					var series = response.data.series;
+
+					_.each(series, function(s) {
+						line.chart.addSeries(s);
+					});
+
+					// Update the chart's x and y axes
+					_.each(response.view, function(view) {
+						if (view.header == "xAxis") {
+							// Update type for x axis
+							line.chart.xAxis[0].update({
+								type: view.type
+							});
+						} else if (view.header == "yAxis") {
+							// Update type for all y axes
+							_.each(line.chart.yAxis, function(axis) {
+								axis.update({
+									type: view.type
+								});
+							});
+						}
 					});
 				}, function (error) {
 					showAlert(error.message, false, false);
