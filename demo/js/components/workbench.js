@@ -22,16 +22,19 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 				scope.lang = "en";
 
 			var lineChartContainer = angular.element(element[0].querySelector('.vis-area-line'));
+			var scatterChartContainer = angular.element(element[0].querySelector('.vis-area-scatter'));
 			var barChartContainer = angular.element(element[0].querySelector('.vis-area-bar'));
 			var pieChartContainer = angular.element(element[0].querySelector('.vis-area-pie'));
 
 			lineChartContainer[0].id = "line" + Data.createRandomId();
+			scatterChartContainer[0].id = "scatter" + Data.createRandomId();
 			barChartContainer[0].id = "bar" + Data.createRandomId();
 			pieChartContainer[0].id = "pie" + Data.createRandomId();
 
 			scope.workbench = Workbench.init();
 			scope.slidesConfig = Workbench.getSlidesConfig();
 			scope.lineChart = Workbench.initLineChart(lineChartContainer[0].id);
+			scope.scatterChart = Workbench.initScatterChart(scatterChartContainer[0].id);
 			scope.barChart = Workbench.initBarChart(barChartContainer[0].id);
 
 			scope.basketVars = {
@@ -167,6 +170,45 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 				scope.lineChart.chart.redraw();
 			};
 
+            /**********************************************/
+            /************ SCATTER CHART FUNCTIONS *********/
+            /**********************************************/
+
+            /**
+             * functions used to add or remove comboboxes to/from the scatter chart configuration
+             **/
+            scope.addScatterAxisY = Workbench.addScatterAxisY;
+            scope.removeScatterAxisY = Workbench.removeScatterAxisY;
+
+            /**
+             * function used to create the scatter chart visualization based on the supplied configuration
+             **/
+            var createScatterChart = function(scatterInput) {
+                //remove the existing scatter chart series
+                if(!_.isUndefined(scope.scatterChart.chart.series)) {
+                    while(scope.scatterChart.chart.series.length > 0)
+                        scope.scatterChart.chart.series[0].remove(true);
+                }
+
+                //get the data and the title of the chart
+                scope.scatterChart.series = scatterInput.data.series;
+                scope.scatterChart.title = Data.deepObjSearch(scatterInput.data, scatterInput.view[0].attribute);
+
+                //if the scatter chart is visualized for the first time, create it
+                if (!Workbench.getScatterChartStatus()) {
+                    scope.scatterChart.chart = new Highcharts.Chart(scope.scatterChart.options);
+                    scope.scatterChart.initialized = true;
+                }
+
+                //set the title of the scatter chart and add its series
+                scope.scatterChart.chart.setTitle({ text: scope.scatterChart.title });
+
+                _.each(scope.scatterChart.series, function(series) {
+                    scope.scatterChart.chart.addSeries(series);
+                });
+
+                scope.scatterChart.chart.redraw();
+            };
 
 			/**********************************************/
 			/************ BAR CHART FUNCTIONS *************/
@@ -194,14 +236,14 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 				scope.barChart.categories = barInput.data.categories;
 				scope.barChart.title = Data.deepObjSearch(barInput.data, barInput.view[0].attribute);
 
-				//if the line chart is visualized for the first time, create it
+				//if the bar chart is visualized for the first time, create it
 				if (!Workbench.getBarChartStatus()) {
 					scope.barChart.chart = new Highcharts.Chart(scope.barChart.options);
 					scope.barChart.initialized = true;
 				}
 
-				//set the title of the line chart and add its series
-				scope.barChart.chart.setTitle({ text: scope.lineChart.title });
+				//set the title of the bar chart and add its series
+				scope.barChart.chart.setTitle({ text: scope.barChart.title });
 				scope.barChart.chart.xAxis[0].setCategories(scope.barChart.categories);
 				_.each(scope.barChart.data, function(serie){
 					scope.barChart.chart.addSeries(serie);
@@ -234,10 +276,27 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 								scope.lineChart.axisYConfig = [{
 									selected: "",
 									options: scope.lineChart.axisY
-								}]
+								}];
 							}
 
 							break;
+                        case "scatterchart":
+                            var scatterchartInput = _.findWhere(scope.workbench.selectedViewObj.values, {component: type});
+
+                            if (!_.isUndefined(scatterchartInput)) {
+                                scope.scatterChart.axisX = scatterchartInput["axis-x"];
+                                scope.scatterChart.axisY = scatterchartInput["axis-y"];
+
+                                if(scope.scatterChart.axisX.length==1)
+                                    scope.scatterChart.selectedAxisX = scope.scatterChart.axisX[0];
+
+                                scope.scatterChart.axisYConfig = [{
+                                    selected: "",
+                                    options: scope.scatterChart.axisY
+                                }];
+                            }
+
+                            break;
 						case "barchart":
 							var barchartInput = _.findWhere(scope.workbench.selectedViewObj.values, {component: type});
 
@@ -345,6 +404,40 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 							setAlertMsg("Please select a Y axis attribute.", 2000);
 
 						break;
+                    case "scatterchart":
+                        // Gather selected y axis attributes
+                        var scatterAxisYAttrs = [];
+                        _.forEach(scope.scatterChart.axisYConfig, function(axis){
+                            if (axis.selected!=null && !_.isUndefined(axis.selected) && _.isObject(axis.selected))
+                                scatterAxisYAttrs.push(neededAxisProperties(axis.selected));
+                        });
+
+                        // Get needed X axis properties to send
+                        var scatterAxisXAttrs = neededAxisProperties(scope.scatterChart.selectedAxisX);
+
+                        if (scatterAxisYAttrs.length > 0) {
+                            // Make call to service to get sparql query
+                            Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView,
+                                scatterAxisXAttrs, scatterAxisYAttrs, scope.basketVars.selBasketIds, scope.lang, true)
+                                .then(function(response) {
+                                    // Show sparql query in page
+                                    scope.sparqlResult = response.data;
+
+                                    // Do normal call to service to make the chart
+                                    Workbench.getLineBarVis(scope.workbench.selectedVis, scope.workbench.selectedView,
+                                        scatterAxisXAttrs, scatterAxisYAttrs, scope.basketVars.selBasketIds, scope.lang)
+                                        .then(function (response) {
+                                            createScatterChart(response);
+                                        }, function (error) {
+                                            console.log("error in scatterchart - getLineBarVis function");
+                                        });
+                                }, function(error) {
+                                    console.log("error in scatterchart sparql call - getLineBarVis function");
+                                });
+                        } else
+                            setAlertMsg("Please select a Y axis attribute.", 2000);
+
+                        break;
 					case "barchart":
 						// Gather selected y axis attributes
 						var barAxisYAttrs = [];
@@ -394,6 +487,7 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 			var loadTemplates = function(){
 				$ocLazyLoad.load ({
 					files: ['templates/workbench/linechart-config.html',
+                            'templates/workbench/scatterchart-config.html',
 							'templates/workbench/barchart-config.html'],
 					cache: true
 				});

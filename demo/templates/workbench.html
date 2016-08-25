@@ -97,6 +97,11 @@
                         <div ng-include="'linechart-config.html'"></div>
                     </div>
 
+                    <!-------- View responsible for the Configuration of Scatter Chart -------->
+                    <div class="animate-switch workbench-scatterchart" ng-switch-when="scatterchart">
+                        <div ng-include="'scatterchart-config.html'"></div>
+                    </div>
+
                     <!-------- View responsible for the Configuration of Bar Chart -------->
                     <div class="animate-switch workbench-barchart" ng-switch-when="barchart">
                         <div ng-include="'barchart-config.html'"></div>
@@ -113,6 +118,7 @@
         </div>
         <div class="col-xs-5 vis-area-wrapper">
             <div class="vis-area vis-area-line" ng-show="workbench.selectedVis=='linechart'"></div>
+            <div class="vis-area vis-area-scatter" ng-show="workbench.selectedVis=='scatterchart'"></div>
             <div class="vis-area vis-area-bar" ng-show="workbench.selectedVis=='barchart'"></div>
             <div class="vis-area vis-area-pie" ng-show="workbench.selectedVis=='piechart'"></div>
             <div class="vis-area vis-area-grid" ng-show="workbench.selectedVis=='grid'"></div>
