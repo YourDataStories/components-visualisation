@@ -1,4 +1,4 @@
-angular.module('yds').directive('ydsScatter', ['Data', 'Filters', function(Data, Filters) {
+angular.module('yds').directive('ydsScatter', ['Data', function(Data) {
     return {
         restrict: 'E',
         scope: {
@@ -72,10 +72,19 @@ angular.module('yds').directive('ydsScatter', ['Data', 'Filters', function(Data,
 
             Data.getProjectVis("scatter", projectId, viewType, lang)
                 .then(function (response) {
-                    var scatterData = response.data.data;
-                    var scatterSeries = response.data.series;
-                    var scatterTitleAttr = _.first(response.view).attribute;
-                    var scatterTitle = Data.deepObjSearch(response.data, scatterTitleAttr);
+                    var chartSeries = response.data.series;
+                    var chartTitle = "";
+
+                    // Find title view in order to search for chart title
+                    for (var i = 0; i < response.view.length; i++) {
+                        if (response.view[i].header == "Title") {
+                            var scatterTitleAttr = response.view[i].attribute;
+
+                            // Find chart title with deep object search
+                            chartTitle = Data.deepObjSearch(response.data, scatterTitleAttr);
+                            break;
+                        }
+                    }
 
                     // Default Highcharts axis type is linear
                     var xAxisType = "linear";
@@ -92,7 +101,7 @@ angular.module('yds').directive('ydsScatter', ['Data', 'Filters', function(Data,
                     }
 
                     // Check if the component is properly rendered
-                    if (_.isUndefined(scatterData) || !_.isArray(scatterData) || _.isUndefined(scatterSeries) || _.isUndefined(scatterTitle)) {
+                    if (_.isUndefined(chartSeries) || !_.isArray(chartSeries) || _.isUndefined(chartTitle)) {
                         scope.ydsAlert = "The YDS component is not properly configured." +
                             "Please check the corresponding documentation section";
                         return false;
@@ -104,7 +113,7 @@ angular.module('yds').directive('ydsScatter', ['Data', 'Filters', function(Data,
                             type: "scatter"
                         },
                         title: {
-                            text: scatterTitle,
+                            text: chartTitle,
                             style: {
                                 fontSize: titleSize + "px"
                             }
@@ -115,13 +124,7 @@ angular.module('yds').directive('ydsScatter', ['Data', 'Filters', function(Data,
                         navigator: {
                             enabled: (showNavigator === "true")
                         },
-                        series: [{
-                            name: scatterSeries,
-                            data: scatterData,
-                            tooltip: {
-                                valueDecimals: 2
-                            }
-                        }],
+                        series: chartSeries,
                         xAxis: {
                             type: xAxisType
                         },
