@@ -290,7 +290,6 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 					if (!attrSelected)
 						return item;
 				};
-
 			};
 
             /**
@@ -378,8 +377,6 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 					files: ['templates/workbench/linechart-config.html',
 							'templates/workbench/barchart-config.html'],
 					cache: true
-				}).then(function(response) {
-					console.log("Templates properly loaded:", response);
 				});
 			};
 

@@ -72,13 +72,22 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
 
             Data.getProjectVis("line", projectId, viewType, lang)
             .then(function (response) {
-                var lineData = response.data.data;
-                var lineSeries = response.data.series;
-                var lineTitleAttr = _.first(response.view).attribute;
-                var lineTitle = Data.deepObjSearch(response.data, lineTitleAttr);
+                var chartSeries = response.data.series;
+                var chartTitle = "";
 
-                //check if the component is properly rendered
-                if (_.isUndefined(lineData) || !_.isArray(lineData) || _.isUndefined(lineSeries) || _.isUndefined(lineTitle)) {
+                // Find title view in order to search for chart title
+                for (var i = 0; i < response.view.length; i++) {
+                    if (response.view[i].header == "Title") {
+                        var lineTitleAttr = response.view[i].attribute;
+
+                        // Find chart title with deep object search
+                        chartTitle = Data.deepObjSearch(response.data, lineTitleAttr);
+                        break;
+                    }
+                }
+
+                // Check if the component is properly rendered
+                if (_.isUndefined(chartSeries) || !_.isArray(chartSeries) || _.isUndefined(chartTitle)) {
                     scope.ydsAlert = "The YDS component is not properly configured." +
                         "Please check the corresponding documentation section";
                     return false;
@@ -101,7 +110,7 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
                         enabled: (showNavigator === "true")
                     },
                     title : {
-                        text : lineTitle,
+                        text : chartTitle,
                         style: {
                             fontSize: titleSize + "px"
                         }
@@ -112,13 +121,7 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
                     navigator: {
                         enabled: (showNavigator === "true")
                     },
-                    series : [{
-                        name : lineSeries,
-                        data : lineData,
-                        tooltip: {
-                            valueDecimals: 2
-                        }
-                    }],
+                    series : chartSeries,
                     xAxis:{
                         events: {
                             afterSetExtremes: function (e) {
