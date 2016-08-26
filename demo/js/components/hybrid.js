@@ -44,7 +44,11 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 						// If chart is not a map, get some data that is common for all of them
 						if (viewType != "map") {
 							// Get graph data
-							newData.data = responseData.data;
+                            if (viewType == "bar" || viewType == "pie") {
+                                newData.series = responseData.data;
+                            } else {
+                                newData.series = responseData.series;
+                            }
 
 							// Get view and find title from view
 							var titleView = _.first(response.view);
@@ -70,9 +74,11 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 										newData.yAxisType = response.view[i].type;
 									}
 								}
+
+								break;
 							case "pie":
-								// Get series name
-								newData.series = responseData.series;
+								// Get series title
+								newData.seriesTitle = responseData.series;
 								break;
 							case "bar":
 								// Get categories
@@ -92,9 +98,9 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 
 					//function to create a pie visualisation using data from the server
 					var pieVisualisation = function (response) {
-						var formattedData = formatResponseData("pie", response);
+                        var formattedData = formatResponseData("pie", response);
 
-						var options = {
+                        var options = {
 							chart: {
 								plotBackgroundColor: null,
 								plotBorderWidth: null,
@@ -106,7 +112,7 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 								text: formattedData.title
 							},
 							tooltip: {
-								pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+								pointFormat: '({point.y}) <b>{point.percentage:.1f}%</b>'
 							},
 							plotOptions: {
 								pie: {
@@ -119,10 +125,10 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 								}
 							},
 							series: [{
-								name: formattedData.series,
+							    name: formattedData.seriesTitle,
 								colorByPoint: true,
-								data: formattedData.data
-							}],
+							    data: formattedData.series
+                            }],
 							exporting: {
 								enabled: false
 							}
@@ -133,9 +139,9 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 
 					//function to create a bar visualisation using data from the server
 					var barVisualisation = function (response) {
-						var formattedData = formatResponseData("bar", response);
+                        var formattedData = formatResponseData("bar", response);
 
-						var options = {
+                        var options = {
 							chart: {
 								type: 'column',
 								renderTo: elementId
@@ -161,7 +167,7 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 									borderWidth: 0
 								}
 							},
-							series: formattedData.data,
+							series: formattedData.series,
 							exporting: {
 								enabled: false
 							}
@@ -174,7 +180,7 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 					var lineVisualisation = function (response) {
 						var formattedData = formatResponseData("line", response);
 
-						var options = {
+                        var options = {
 							chart: {
 								renderTo: elementId
 							},
@@ -185,13 +191,7 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 							title: {
 								text: formattedData.title
 							},
-							series: [{
-								name: formattedData.series,
-								data: formattedData.data,
-								tooltip: {
-									valueDecimals: 2
-								}
-							}],
+							series: formattedData.series,
 							exporting: {
 								enabled: false
 							}
@@ -215,13 +215,7 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 							title: {
 								text: formattedData.title
 							},
-							series: [{
-								name: formattedData.series,
-								data: formattedData.data,
-								tooltip: {
-									valueDecimals: 2
-								}
-							}],
+							series: formattedData.series,
 							exporting: {
 								enabled: false
 							},
@@ -229,7 +223,10 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 								type: formattedData.xAxisType
 							},
 							yAxis: {
-								type: formattedData.yAxisType
+								type: formattedData.yAxisType,
+                                title: {
+								    enabled: false
+                                }
 							}
 						};
 
