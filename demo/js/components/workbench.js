@@ -207,7 +207,27 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
                     scope.scatterChart.chart.addSeries(series);
                 });
 
-                scope.scatterChart.chart.redraw();
+				// Get axis info from input and add it to the chart
+				_.each(scatterInput.view, function(view) {
+					if (view.header == "xAxis") {
+						// Update type for x axis
+						scope.scatterChart.chart.xAxis[0].update({
+							type: view.type
+						});
+					} else if (view.header == "yAxis") {
+						// Update type for all y axes
+						_.each(scope.scatterChart.chart.yAxis, function(axis) {
+							axis.update({
+								type: view.type,
+								title: {
+									enabled: false
+								}
+							});
+						});
+					}
+				});
+
+				scope.scatterChart.chart.redraw();
             };
 
 			/**********************************************/
