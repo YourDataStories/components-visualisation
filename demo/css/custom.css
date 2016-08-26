@@ -628,8 +628,9 @@ rzslider .rz-pointer:after {
     background-size: cover;
 }
 .workbench-linechart button:not(:last-child),
-.workbench-barchart button:not(:last-child){
-    margin-left: 10px;
+.workbench-barchart button:not(:last-child),
+.workbench-scatterchart button:not(:last-child){
+    margin-left: 5px;
 }
 .unselectable {
     /* This is used to make chart labels unselectable */
