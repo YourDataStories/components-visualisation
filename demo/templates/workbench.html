@@ -68,6 +68,14 @@
                             <p>{{slide.images[2].name}}</p>
                         </div>
                     </div>
+                    <div class="col-xs-4 slider-img-wrapper"
+                         ng-class="slide.images[3].visible ? '' : 'low-opacity'"
+                         ng-if="slide.images[3].src!=undefined" ng-click="selectVisualisation(slide.id, slide.images[3].type)">
+                        <img ng-src="{{slide.images[3].src}}" ng-class="workbench.selectedVis==slide.images[3].type?'active':''">
+                        <div class="carousel-caption">
+                            <p>{{slide.images[3].name}}</p>
+                        </div>
+                    </div>
                 </uib-slide>
             </uib-carousel>
             <hr>

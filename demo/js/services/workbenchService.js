@@ -16,13 +16,13 @@ angular.module('yds').factory('Workbench', [ 'YDS_CONSTANTS', '$q', '$http', 'Da
 				name: "Bar Chart",
 				type: "barchart",
 				visible: false
-			// }, {
-			// 	src: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + "img/thumbnails/pie_chart.png",
-			// 	name: "Pie Chart",
-			// 	type: "piechart",
-			// 	visible: false
 			}, {
-				src: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + "img/thumbnails/line_chart.png",
+				src: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + "img/thumbnails/pie_chart.png",
+				name: "Pie Chart",
+				type: "piechart",
+				visible: false
+			}, {
+				src: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + "img/thumbnails/scatter_chart.png",
 				name: "Scatter Chart",
 				type: "scatterchart",
 				visible: false
