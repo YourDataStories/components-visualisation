@@ -9,6 +9,9 @@
             placeholder: "Select country..."
         }, options);
 
+        // Drupal path for blank.gif image
+        var drupalPath = ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath  +'/' :'');
+
         // Array with country codes and names
         var countries = [
             { code: "AF", name: "Afghanistan" },
@@ -275,10 +278,10 @@
                 persist: false,
                 render: {
                     item: function(item, escape) {
-                        return "<div><img src='img/blank.gif' class='flag flag-" + escape(item.code) + "' alt='flag' />&nbsp;" + escape(item.name) + "</div>";
+                        return "<div><img src='" + drupalPath + "img/blank.gif' class='flag flag-" + escape(item.code) + "' alt='flag' />&nbsp;" + escape(item.name) + "</div>";
                     },
                     option: function(item, escape) {
-                        return "<div><img src='img/blank.gif' class='flag flag-" + escape(item.code) + "' alt='flag' />&nbsp;" + escape(item.name) + "</div>";
+                        return "<div><img src='" + drupalPath + "img/blank.gif' class='flag flag-" + escape(item.code) + "' alt='flag' />&nbsp;" + escape(item.name) + "</div>";
                     }
                 }
             });

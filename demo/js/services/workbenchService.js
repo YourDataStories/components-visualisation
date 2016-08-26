@@ -1,26 +1,28 @@
 angular.module('yds').factory('Workbench', [ 'YDS_CONSTANTS', '$q', '$http', 'Data',
 	function (YDS_CONSTANTS, $q, $http, Data) {
 
+	var drupalPath = ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath  +'/' :'');
+
 	var slidesConfig = {
 		noWrap: false,
 		active: 0,
 		slides: [{
 			images : [ {
-				src: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + "img/thumbnails/line_chart.png",
+				src: drupalPath + "img/thumbnails/line_chart.png",
 				name: "Line Chart",
 				type: "linechart"
 			}, {
-				src: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + "img/thumbnails/bar_chart.png",
+				src: drupalPath + "img/thumbnails/bar_chart.png",
 				name: "Bar Chart",
 				type: "barchart"
 			}, {
-				src: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + "img/thumbnails/scatter_chart.png",
+				src: drupalPath + "img/thumbnails/scatter_chart.png",
 				name: "Scatter Chart",
 				type: "scatterchart"
 			}]
 		}, {
 			images : [{
-				src: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + "img/thumbnails/pie_chart.png",
+				src: drupalPath + "img/thumbnails/pie_chart.png",
 				name: "Pie Chart",
 				type: "piechart"
 			}]
