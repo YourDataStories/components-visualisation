@@ -8,30 +8,27 @@ angular.module('yds').factory('Workbench', [ 'YDS_CONSTANTS', '$q', '$http', 'Da
 			images : [ {
 				src: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + "img/thumbnails/line_chart.png",
 				name: "Line Chart",
-				type: "linechart",
-				visible: false
+				type: "linechart"
 			}, {
 				src: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + "img/thumbnails/bar_chart.png",
 				name: "Bar Chart",
-				type: "barchart",
-				visible: false
+				type: "barchart"
 			}, {
 				src: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + "img/thumbnails/scatter_chart.png",
 				name: "Scatter Chart",
-				type: "scatterchart",
-				visible: false
+				type: "scatterchart"
 			}]
 		}, {
 			images : [{
 				src: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + "img/thumbnails/pie_chart.png",
 				name: "Pie Chart",
-				type: "piechart",
-				visible: false
+				type: "piechart"
 			}]
 		}]
 	};
 
 	var workbenchConfig = {};
+	var baseChartConfig = {};
 	var lineChartConfig = {};
 	var scatterChartConfig = {};
 	var barChartConfig = {};
@@ -55,14 +52,23 @@ angular.module('yds').factory('Workbench', [ 'YDS_CONSTANTS', '$q', '$http', 'Da
 				selectedViewObj: {}
 			};
 
+			// Initialize the base configuration object for all charts
+			baseChartConfig = {
+				initialized: false,
+				data: [],
+				chart: {},
+				options: {},
+				selectedAxisX: "",
+				axisX: [],
+				axisY: [],
+				axisYConfig: []
+			};
+
 			return workbenchConfig;
 		},
 		initLineChart: function (elementId) {
 			//initialize the configuration options of the line chart component
-			lineChartConfig = {
-				initialized: false,
-				data: [],
-				chart: {},
+			_.extend(lineChartConfig, baseChartConfig, {
 				options: {
 					chart: { renderTo: elementId },
 					rangeSelector : { enabled: false },
@@ -71,21 +77,14 @@ angular.module('yds').factory('Workbench', [ 'YDS_CONSTANTS', '$q', '$http', 'Da
 					exporting: { enabled: true },
 					navigator: { enabled: false },
 					series : []
-				},
-				selectedAxisX: "",
-				axisX: [],
-				axisY: [],
-				axisYConfig: []
-			};
+				}
+			});
 
 			return lineChartConfig;
 		},
 		initScatterChart: function (elementId) {
 			//initialize the configuration options of the scatter chart component
-			scatterChartConfig = {
-				initialized: false,
-				data: [],
-				chart: {},
+			_.extend(scatterChartConfig, baseChartConfig, {
 				options: {
 					chart: {
 						renderTo: elementId,
@@ -98,26 +97,15 @@ angular.module('yds').factory('Workbench', [ 'YDS_CONSTANTS', '$q', '$http', 'Da
 					exporting: { enabled: true },
 					navigator: { enabled: false },
 					series : []
-				},
-				selectedAxisX: "",
-				axisX: [],
-				axisY: [],
-				axisYConfig: []
-			};
+				}
+			});
 
 			return scatterChartConfig;
 		},
 		initBarChart: function(elementId) {
 			//initialize the configuration options of the bar chart component
-			barChartConfig = {
-				initialized: false,
-				data: [],
+			_.extend(barChartConfig, baseChartConfig, {
 				categories: [],
-				chart: {},
-				selectedAxisX: "",
-				axisX: [],
-				axisY: [],
-				axisYConfig: [],
 				options: {
 					chart: {
 						type: 'column',
@@ -143,7 +131,7 @@ angular.module('yds').factory('Workbench', [ 'YDS_CONSTANTS', '$q', '$http', 'Da
 					},
 					series: []
 				}
-			};
+			});
 
 			return barChartConfig;
 		},
