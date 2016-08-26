@@ -235,8 +235,8 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 
 						if (formattedData.xAxisType == "datetime") {
 							options.tooltip = {
-								headerFormat: '{point.x:%A, %b %e, %H:%M}<br>',
-								pointFormat: '{series.name}: <b>{point.y}</b>'
+								headerFormat: '<span style="font-size: 10px">{point.x:%A, %b %e, %H:%M}</span><br />',
+								pointFormat: '<span style="color:{point.color}">●</span> {series.name}: <b>{point.y}</b>'
 							};
 						}
 
