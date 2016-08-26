@@ -355,7 +355,7 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 			 * filter function applied on the in comboboxes which are used
 			 * for the configuration of the line & bar chart visualization
 			 **/
-			scope.lineBarFilterY= function (index, type) {
+			scope.yAxisComboboxFilter= function (index, type) {
 				return function (item) {
 					var attrSelected = false;
 					var chartAxisY = scope.$eval(type + '.axisYConfig');

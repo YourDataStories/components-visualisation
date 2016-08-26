@@ -13,7 +13,7 @@
         <div class="form-group" style="margin-right:100px">
             <select class="form-control pull-left"
                     ng-model="axisY.selected"
-                    ng-options="item as item.label for item in axisY.options|filter:scatterBarFilterY($index, 'scatterChart')">
+                    ng-options="item as item.label for item in axisY.options|filter:yAxisComboboxFilter($index, 'scatterChart')">
                 <option value="">Choose...</option>
             </select>
         </div>
