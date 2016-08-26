@@ -214,6 +214,18 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 						scope.scatterChart.chart.xAxis[0].update({
 							type: view.type
 						});
+
+                        // If x axis is datetime, add custom tooltip
+                        if (view.type == "datetime") {
+							_.each(scope.scatterChart.chart.series, function(series) {
+								series.update({
+									tooltip: {
+										headerFormat: '<span style="font-size: 10px">{point.x:%A, %b %e, %H:%M}</span><br />',
+										pointFormat: '<span style="color:{point.color}">●</span> {series.name}: <b>{point.y}</b>'
+									}
+								});
+							});
+						}
 					} else if (view.header == "yAxis") {
 						// Update type for all y axes
 						_.each(scope.scatterChart.chart.yAxis, function(axis) {
