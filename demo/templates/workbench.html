@@ -43,41 +43,20 @@
         <div class="col-xs-4">
             <!-------- Component Selection Carousel -------->
             <uib-carousel active="slidesConfig.active" no-wrap="slidesConfig.noWrap">
-                <uib-slide ng-repeat="slide in slidesConfig.slides track by slide.id" index="slide.id">
-                    <div class="col-xs-4 slider-img-wrapper"
-                         ng-class="slide.images[0].visible ? '' : 'low-opacity'"
-                         ng-if="slide.images[0].src!=undefined" ng-click="selectVisualisation(slide.id, slide.images[0].type)">
-                        <img ng-src="{{slide.images[0].src}}" ng-class="workbench.selectedVis==slide.images[0].type?'active':''">
-                        <div class="carousel-caption" >
-                            <p>{{slide.images[0].name}}</p>
-                        </div>
-                    </div>
-                    <div class="col-xs-4 slider-img-wrapper"
-                         ng-class="slide.images[1].visible ? '' : 'low-opacity'"
-                         ng-if="slide.images[1].src!=undefined" ng-click="selectVisualisation(slide.id, slide.images[1].type)">
-                        <img ng-src="{{slide.images[1].src}}" ng-class="workbench.selectedVis==slide.images[1].type?'active':''">
+                <!-- Slides of carousel -->
+                <uib-slide ng-repeat="slide in slidesConfig.slides track by $index" ng-init="slideIndex = $index">
+                    <!-- Images of slide -->
+                    <div ng-repeat="image in slide.images track by $index" class="col-xs-4 slider-img-wrapper"
+                         ng-class="image.visible ? '' : 'low-opacity'"
+                         ng-if="image.src!=undefined" ng-click="selectVisualisation(slideIndex, image.type)">
+                        <img ng-src="{{image.src}}" ng-class="workbench.selectedVis==image.type?'active':''">
                         <div class="carousel-caption">
-                            <p>{{slide.images[1].name}}</p>
-                        </div>
-                    </div>
-                    <div class="col-xs-4 slider-img-wrapper"
-                         ng-class="slide.images[2].visible ? '' : 'low-opacity'"
-                         ng-if="slide.images[2].src!=undefined" ng-click="selectVisualisation(slide.id, slide.images[2].type)">
-                        <img ng-src="{{slide.images[2].src}}" ng-class="workbench.selectedVis==slide.images[2].type?'active':''">
-                        <div class="carousel-caption">
-                            <p>{{slide.images[2].name}}</p>
-                        </div>
-                    </div>
-                    <div class="col-xs-4 slider-img-wrapper"
-                         ng-class="slide.images[3].visible ? '' : 'low-opacity'"
-                         ng-if="slide.images[3].src!=undefined" ng-click="selectVisualisation(slide.id, slide.images[3].type)">
-                        <img ng-src="{{slide.images[3].src}}" ng-class="workbench.selectedVis==slide.images[3].type?'active':''">
-                        <div class="carousel-caption">
-                            <p>{{slide.images[3].name}}</p>
+                            <p class="unselectable">{{image.name}}</p>
                         </div>
                     </div>
                 </uib-slide>
             </uib-carousel>
+
             <hr>
 
             <uib-alert type="danger" ng-if="workbench.alert.length>0" class="col-xs-10 col-xs-offset-1 text-center">
