@@ -3,28 +3,21 @@ package gr.demokritos.iit.ydsapi.rest;
 import gr.demokritos.iit.ydsapi.model.BasketItem;
 import gr.demokritos.iit.ydsapi.model.BasketItem.BasketType;
 import gr.demokritos.iit.ydsapi.model.ComponentType;
-import static gr.demokritos.iit.ydsapi.model.ComponentType.RESULTSET;
-import gr.demokritos.iit.ydsapi.responses.BaseResponse;
+import gr.demokritos.iit.ydsapi.model.UserChart;
+import gr.demokritos.iit.ydsapi.model.YDSFacet;
+import gr.demokritos.iit.ydsapi.responses.*;
 import gr.demokritos.iit.ydsapi.responses.BaseResponse.Status;
-import gr.demokritos.iit.ydsapi.responses.BasketItemLoadResponse;
-import gr.demokritos.iit.ydsapi.responses.BasketListLoadResponse;
-import gr.demokritos.iit.ydsapi.responses.BasketSaveResponse;
-import gr.demokritos.iit.ydsapi.responses.RetrieveLoadResponse;
 import gr.demokritos.iit.ydsapi.retrieve.BasketDatatestRetrieve;
 import gr.demokritos.iit.ydsapi.storage.MongoAPIImpl;
 import gr.demokritos.iit.ydsapi.storage.YDSAPI;
-import java.util.List;
-import java.util.logging.Logger;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  *
@@ -100,6 +93,55 @@ public class Basket {
                         ? Response.Status.OK
                         : Response.Status.INTERNAL_SERVER_ERROR
         ).entity(blr.toJSON()).build();
+    }
+
+    @Path("getUserCharts")
+    @GET
+    public Response getUserCharts(
+            @QueryParam("user_id") String user_id
+    ) {
+        YDSAPI api = MongoAPIImpl.getInstance();
+        UserChartsLoadResponse uclr;
+        List<UserChart> userCharts = new ArrayList<>();
+
+        try {
+            // Get basket visualizations
+            List<BasketItem> basketItems = api.getBasketItems(user_id, BasketType.VISUALISATION);
+
+            // For each visualization, get an embed code
+            for (BasketItem item : basketItems) {
+                // Get embed code
+                Object embeddingId = api.saveEmbedding(
+                        item.getComponentParentUUID(),
+                        ComponentType.valueOf(item.getComponentType().toUpperCase()),
+                        new ArrayList<YDSFacet>(),
+                        item.getContentType(),
+                        item.getLang());
+
+                // Create user chart item and add it to list
+                userCharts.add(new UserChart(
+                        item.getBasketItemID().toString(),
+                        item.getComponentParentUUID(),
+                        item.getTitle(),
+                        "",             // description
+                        "",             // thumbnail url
+                        embeddingId));
+            }
+
+            uclr = new UserChartsLoadResponse(userCharts);
+        } catch (Exception ex) {
+            uclr = new UserChartsLoadResponse(
+                    null,
+                    Status.ERROR,
+                    ex.getMessage() != null ? ex.getMessage() : ex.toString()
+            );
+        }
+
+        return Response.status(
+                uclr.getStatus() == Status.OK || uclr.getStatus() == Status.NOT_EXISTS
+                        ? Response.Status.OK
+                        : Response.Status.INTERNAL_SERVER_ERROR
+        ).entity(uclr.toJSON()).build();
     }
 
     @Path("retrieve/{user_id}/{basket_item_id}")
