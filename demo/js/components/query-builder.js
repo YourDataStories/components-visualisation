@@ -27,7 +27,6 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
 
                 $ocLazyLoad.load({
                     files: [
-                        "https://code.jquery.com/jquery-2.2.4.min.js",              // jQuery 2.x (needed for QB)
                         drupalpath + "lib/bootstrap-popover.min.js",                // Bootstrap JS (only Popover, for filter description)
                         drupalpath + "css/query-builder.default.min.css",           // QueryBuilder's CSS
                         drupalpath + "lib/query-builder.standalone.min.js",         // QueryBuilder JavaScript
