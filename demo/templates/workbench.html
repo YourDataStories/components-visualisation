@@ -94,6 +94,11 @@
                         <div ng-include="'barchart-config.html'"></div>
                     </div>
 
+                    <!-------- View responsible for the Configuration of Pie Chart -------->
+                    <div class="animate-switch workbench-piechart" ng-switch-when="piechart">
+                        <div ng-include="'piechart-config.html'"></div>
+                    </div>
+
                     <!-------- View responsible for the Configuration of Grid Chart -------->
                     <div class="animate-switch" ng-switch-when="grid">
                         <div ng-include="'grid-config.html'"></div>

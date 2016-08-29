@@ -105,7 +105,7 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 						_.each(slideView.images, function(slide){
 							slide.visible = false;
 						});
-					})
+					});
 
 				}
 			};
@@ -346,6 +346,14 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 							}
 							
 							break;
+						case "piechart":
+							var piechartInput = _.findWhere(scope.workbench.selectedViewObj.values, {component: type});
+
+							if (!_.isUndefined(piechartInput)) {
+
+							}
+
+							break;
 					}
 				}
 			};
@@ -484,7 +492,8 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 				$ocLazyLoad.load ({
 					files: ['templates/workbench/linechart-config.html',
                             'templates/workbench/scatterchart-config.html',
-							'templates/workbench/barchart-config.html'],
+							'templates/workbench/barchart-config.html',
+							'templates/workbench/piechart-config.html'],
 					cache: true
 				});
 			};
