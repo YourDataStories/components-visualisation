@@ -2,20 +2,21 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 	return {
 		restrict: 'E',
 		scope: {
-			projectId: '@',     // ID of the project that the data belong
-			viewType: '@',      // Name of the array that contains the visualised data
-			lang: '@',			// Lang of the visualised data
-            colorAxis: '@',     // Enable or disable colored axis of chart
-            legend: '@',        // Enable or disable chart legend
-            legendVAlign: '@',  // Vertical alignment of the chart legend (top, middle, bottom)
-            legendHAlign: '@',  // Horizontal alignment of the chart legend (left, center, right)
-            legendLayout: '@',  // Layout of the chart legend (vertical, horizontal)
-			yearSelection: '@',	// Enable selection of years with a slider
-			minYear: '@',		// Minimum year to show in year slider
-			maxYear: '@',		// Maximum year to show in year slider
-			defaultYear: '@',	// Default year to select when the component is initialized
-			exporting: '@',     // Enable or disable the export of the chart
-			elementH: '@'		// Set the height of the component
+			projectId: '@',         // ID of the project that the data belong
+			viewType: '@',          // Name of the array that contains the visualised data
+			lang: '@',			    // Lang of the visualised data
+            colorAxis: '@',         // Enable or disable colored axis of chart
+            legend: '@',            // Enable or disable chart legend
+            legendVAlign: '@',      // Vertical alignment of the chart legend (top, middle, bottom)
+            legendHAlign: '@',      // Horizontal alignment of the chart legend (left, center, right)
+            legendLayout: '@',      // Layout of the chart legend (vertical, horizontal)
+			yearSelection: '@',	    // Enable selection of years with a slider
+			minYear: '@',		    // Minimum year to show in year slider
+			maxYear: '@',		    // Maximum year to show in year slider
+			defaultYear: '@',	    // Default year to select when the component is initialized
+            countrySelection: '@',  // Allow selecting countries on the map
+			exporting: '@',         // Enable or disable the export of the chart
+			elementH: '@'		    // Set the height of the component
 		},
 		templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/heatmap.html',
 		link: function (scope, elem, attrs) {
@@ -31,6 +32,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 			var minYear = parseInt(scope.minYear);
 			var maxYear = parseInt(scope.maxYear);
 			var defaultYear = parseInt(scope.defaultYear);
+            var countrySelection = scope.countrySelection;
 			var exporting = scope.exporting;
 			var elementH = scope.elementH;
 
@@ -91,6 +93,10 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 			//check if defaultYear attr is defined, else assign default value
 			if (_.isUndefined(defaultYear) || _.isNaN(defaultYear))
 				defaultYear = minYear + (maxYear-minYear)/2;	// default value is middle of the range
+
+            //check if countrySelection attr is defined, else assign default value
+            if (_.isUndefined(countrySelection) || countrySelection.trim()=="")
+                countrySelection = "false";
 
 			//check if the exporting attr is defined, else assign default value
 			if(angular.isUndefined(exporting) || (exporting!="true" && exporting!="false"))
@@ -165,7 +171,21 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 			var visualizeHeatmap = function(response) {
 				// Initialize heatmap if it's not initialized
 				if (!heatmapOptions.initialized) {
+					// Create empty heatmap
 					scope.heatmap = new Highcharts.Map(heatmapOptions);
+
+					// Handle point selection
+					Highcharts.wrap(Highcharts.Point.prototype, 'select', function (proceed) {
+						proceed.apply(this, Array.prototype.slice.call(arguments, 1));
+
+						// Get selected points
+						var points = scope.heatmap.getSelectedPoints().map(function(p) {
+							// Keep only code and value of point
+							return p.options;
+						});
+
+						console.log(points);
+					});
 
 					heatmapOptions.initialized = true;
 				} else if (!_.isEmpty(scope.heatmap.series)) {
@@ -173,27 +193,44 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 					scope.heatmap.series[0].remove();
 				}
 
-				// Add new series with the data
-				scope.heatmap.addSeries({
-					name: 'Country',
-					mapData: Highcharts.maps['custom/world'],
-					data: response.data,
-					mapZoom: 2,
-					joinBy: ['iso-a2', 'code'],
-					dataLabels: {
-						enabled: true,
-						color: '#FFFFFF',
-						formatter: function () {
-							if (this.point.value) {
-								return this.point.name;
-							}
+				// Create new series object
+				var newSeries = {
+                    name: 'Country',
+                    mapData: Highcharts.maps['custom/world'],
+                    data: response.data,
+                    mapZoom: 2,
+                    joinBy: ['iso-a2', 'code'],
+                    dataLabels: {
+                        enabled: true,
+                        color: '#FFFFFF',
+                        formatter: function () {
+                            if (this.point.value) {
+                                return this.point.name;
+                            }
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '',
+                        pointFormat: '{point.name}'
+                    }
+                };
+
+                // Allow selecting countries
+                if (countrySelection == "true") {
+                    newSeries.allowPointSelect = true;
+                    newSeries.cursor = "pointer";
+
+					newSeries.states = {
+						select: {
+							color: '#a4edba',
+							borderColor: 'black',
+							dashStyle: 'shortdot'
 						}
-					},
-					tooltip: {
-						headerFormat: '',
-						pointFormat: '{point.name}'
-					}
-				});
+					};
+                }
+
+				// Add new series to the heatmap
+				scope.heatmap.addSeries(newSeries);
 			};
 
 			/**
