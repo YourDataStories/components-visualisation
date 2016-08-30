@@ -96,19 +96,19 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
 
             //set marker icons
             var startIcon = L.icon({
-                iconUrl: 'lib/images/marker-icon-start.png',
+                iconUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'lib/images/marker-icon-start.png',
                 iconSize:   [26, 41],
                 iconAnchor:   [13, 41]
             });
 
             var endIcon = L.icon({
-                iconUrl: 'lib/images/marker-icon-end.png',
+                iconUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'lib/images/marker-icon-end.png',
                 iconSize:   [26, 41],
                 iconAnchor:   [13, 41]
             });
 
             var viaIcon = L.icon({
-                iconUrl: 'lib/images/marker-icon-via.png',
+                iconUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'lib/images/marker-icon-via.png',
                 iconSize:   [26, 41],
                 iconAnchor:   [13, 41]
             });

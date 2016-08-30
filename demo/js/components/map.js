@@ -63,19 +63,19 @@ angular.module('yds').directive('ydsMap', ['Data', function(Data){
             /***************************************/
             var map = L.map(elementId, {
                 center: [37.9833333,23.7333333],
-                zoom: 4,
+                zoom: 5,
                 zoomControl: (zoomControl === "true")
             });
 
             //create the default map pins for the start and the end of route
             var mapPins = {
                 start : L.icon({
-                    iconUrl: 'lib/images/marker-icon-start.png',
+                    iconUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'lib/images/marker-icon-start.png',
                     iconSize:   [26, 41],
                     iconAnchor:   [13, 41]
                 }),
                 end: L.icon({
-                    iconUrl: 'lib/images/marker-icon-end.png',
+                    iconUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'lib/images/marker-icon-end.png',
                     iconSize:   [26, 41],
                     iconAnchor:   [13, 41]
                 })
