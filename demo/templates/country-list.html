@@ -1,0 +1,8 @@
+<div ng-if="countries.length > 0">
+    <h3>Countries:</h3>
+    <ul>
+        <li ng-repeat="country in countries">
+            {{country.name}} ({{country.value}})
+        </li>
+    </ul>
+</div>

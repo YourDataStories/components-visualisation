@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'countrySelectionService',
-	function (Data, $ocLazyLoad, countrySelectionService) {
+angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySelectionService',
+	function (Data, $ocLazyLoad, CountrySelectionService) {
 		return {
 			restrict: 'E',
 			scope: {
@@ -189,7 +189,8 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'countrySe
 								};
 							});
 
-							countrySelectionService.setCountries(points);
+							// Give new selected countries to the service
+							CountrySelectionService.setCountries(points);
 						});
 
 						heatmapOptions.initialized = true;
