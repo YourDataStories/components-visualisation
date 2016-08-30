@@ -6,6 +6,10 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 			viewType: '@',      //name of the array that contains the visualised data
 			lang: '@',			//lang of the visualised data
             colorAxis: '@',     //enable or disable colored axis of chart
+            legend: '@',        //enable or disable chart legend
+            legendVAlign: '@',  //vertical alignment of the chart legend (top, middle, bottom)
+            legendHAlign: '@',  //horizontal alignment of the chart legend (left, center, right)
+            legendLayout: '@',  //layout of the chart legend (vertical, horizontal)
 			exporting: '@',     //enable or disable the export of the chart
 			elementH: '@'		//set the height of the component
 		},
@@ -15,6 +19,10 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 			var viewType = scope.viewType;
 			var lang = scope.lang;
             var colorAxis = scope.colorAxis;
+            var legend = scope.legend;
+            var legendVAlign = scope.legendVAlign;
+            var legendHAlign = scope.legendHAlign;
+            var legendLayout = scope.legendLayout;
 			var exporting = scope.exporting;
 			var elementH = scope.elementH;
 
@@ -43,6 +51,22 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
             //check if colorAxis attr is defined, else assign default value
             if (_.isUndefined(colorAxis) || colorAxis.trim()=="")
                 colorAxis = "false";
+
+            //check if legend attr is defined, else assign default value
+            if (_.isUndefined(legend) || legend.trim()=="")
+                legend = "false";
+
+            //check if legendVAlign attr is defined, else assign default value
+            if (_.isUndefined(legendVAlign) || legendVAlign.trim()=="")
+                legendVAlign = "top";
+
+            //check if legendVAlign attr is defined, else assign default value
+            if (_.isUndefined(legendHAlign) || legendHAlign.trim()=="")
+                legendHAlign = "center";
+
+            //check if legendLayout attr is defined, else assign default value
+            if (_.isUndefined(legendLayout) || legendLayout.trim()=="")
+                legendLayout = "horizontal";
 
 			//check if the exporting attr is defined, else assign default value
 			if(angular.isUndefined(exporting) || (exporting!="true" && exporting!="false"))
@@ -114,6 +138,18 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
                                 [1, '#000022']
                             ]
                         };
+                    }
+
+                    // Add chart legend
+                    if (legend == "true") {
+                        heatmapOptions.legend = {
+                            layout: legendLayout,
+                            borderWidth: 0,
+                            backgroundColor: 'rgba(255,255,255,0.85)',
+                            floating: true,
+                            verticalAlign: legendVAlign,
+                            align: legendHAlign
+                        }
                     }
 
 					new Highcharts.Map(heatmapOptions);
