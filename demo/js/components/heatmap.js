@@ -5,6 +5,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 			projectId: '@',     //id of the project that the data belong
 			viewType: '@',      //name of the array that contains the visualised data
 			lang: '@',			//lang of the visualised data
+            colorAxis: '@',     //enable or disable colored axis of chart
 			exporting: '@',     //enable or disable the export of the chart
 			elementH: '@'		//set the height of the component
 		},
@@ -13,6 +14,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 			var projectId = scope.projectId;
 			var viewType = scope.viewType;
 			var lang = scope.lang;
+            var colorAxis = scope.colorAxis;
 			var exporting = scope.exporting;
 			var elementH = scope.elementH;
 
@@ -25,8 +27,8 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 			//check if project id or grid type are defined
 			if(angular.isUndefined(projectId) || projectId.trim()=="") {
 				scope.ydsAlert = "The YDS component is not properly initialized " +
-					"because the projectId or the viewType attribute aren't configured properly." +
-					"Please check the corresponding documentation sertion";
+					"because the projectId attribute isn't configured properly." +
+					"Please check the corresponding documentation section";
 				return false;
 			}
 
@@ -37,6 +39,10 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 			//check if the language attr is defined, else assign default value
 			if(angular.isUndefined(lang) || lang.trim()=="")
 				lang = "en";
+
+            //check if colorAxis attr is defined, else assign default value
+            if (_.isUndefined(colorAxis) || colorAxis.trim()=="")
+                colorAxis = "false";
 
 			//check if the exporting attr is defined, else assign default value
 			if(angular.isUndefined(exporting) || (exporting!="true" && exporting!="false"))
@@ -73,7 +79,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 						},
 						legend: { enabled: false },
 						exporting: { enabled: (exporting === "true") },
-						series : [{
+						series: [{
 							name: 'Country',
 							mapData: Highcharts.maps['custom/world'],
 							data: response.data,
@@ -94,6 +100,21 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 							}
 						}]
 					};
+
+					// Add color axis
+					if (colorAxis == "true") {
+                        heatmapOptions.colorAxis = {
+                            min: 1,
+                            type: 'linear',
+                            minColor: '#EEEEFF',
+                            maxColor: '#000022',
+                            stops: [
+                                [0, '#EFEFFF'],
+                                [0.5, '#4444FF'],
+                                [1, '#000022']
+                            ]
+                        };
+                    }
 
 					new Highcharts.Map(heatmapOptions);
 				}, function(error){
