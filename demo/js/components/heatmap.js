@@ -2,16 +2,20 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 	return {
 		restrict: 'E',
 		scope: {
-			projectId: '@',     //id of the project that the data belong
-			viewType: '@',      //name of the array that contains the visualised data
-			lang: '@',			//lang of the visualised data
-            colorAxis: '@',     //enable or disable colored axis of chart
-            legend: '@',        //enable or disable chart legend
-            legendVAlign: '@',  //vertical alignment of the chart legend (top, middle, bottom)
-            legendHAlign: '@',  //horizontal alignment of the chart legend (left, center, right)
-            legendLayout: '@',  //layout of the chart legend (vertical, horizontal)
-			exporting: '@',     //enable or disable the export of the chart
-			elementH: '@'		//set the height of the component
+			projectId: '@',     // ID of the project that the data belong
+			viewType: '@',      // Name of the array that contains the visualised data
+			lang: '@',			// Lang of the visualised data
+            colorAxis: '@',     // Enable or disable colored axis of chart
+            legend: '@',        // Enable or disable chart legend
+            legendVAlign: '@',  // Vertical alignment of the chart legend (top, middle, bottom)
+            legendHAlign: '@',  // Horizontal alignment of the chart legend (left, center, right)
+            legendLayout: '@',  // Layout of the chart legend (vertical, horizontal)
+			yearSelection: '@',	// Enable selection of years with a slider
+			minYear: '@',		// Minimum year to show in year slider
+			maxYear: '@',		// Maximum year to show in year slider
+			defaultYear: '@',	// Default year to select when the component is initialized
+			exporting: '@',     // Enable or disable the export of the chart
+			elementH: '@'		// Set the height of the component
 		},
 		templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/heatmap.html',
 		link: function (scope, elem, attrs) {
@@ -23,6 +27,10 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
             var legendVAlign = scope.legendVAlign;
             var legendHAlign = scope.legendHAlign;
             var legendLayout = scope.legendLayout;
+			var yearSelection = scope.yearSelection;
+			var minYear = parseInt(scope.minYear);
+			var maxYear = parseInt(scope.maxYear);
+			var defaultYear = parseInt(scope.defaultYear);
 			var exporting = scope.exporting;
 			var elementH = scope.elementH;
 
@@ -68,6 +76,22 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
             if (_.isUndefined(legendLayout) || legendLayout.trim()=="")
                 legendLayout = "horizontal";
 
+			//check if yearSelection attr is defined, else assign default value
+			if (_.isUndefined(yearSelection) || yearSelection.trim()=="")
+				yearSelection = "false";
+
+			//check if minYear attr is defined, else assign default value
+			if (_.isUndefined(minYear) || _.isNaN(minYear))
+				minYear = 1970;
+
+			//check if maxYear attr is defined, else assign default value
+			if (_.isUndefined(maxYear) || _.isNaN(maxYear))
+				maxYear = 2050;
+
+			//check if defaultYear attr is defined, else assign default value
+			if (_.isUndefined(defaultYear) || _.isNaN(defaultYear))
+				defaultYear = minYear + (maxYear-minYear)/2;	// default value is middle of the range
+
 			//check if the exporting attr is defined, else assign default value
 			if(angular.isUndefined(exporting) || (exporting!="true" && exporting!="false"))
 				exporting = "true";
@@ -76,8 +100,56 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 			if(angular.isUndefined(elementH) || isNaN(elementH))
 				elementH = 300;
 
+			// Setup base heatmap options
+			var heatmapOptions = {
+				initialized: false,
+				chart : {
+					renderTo: elementId,
+					borderWidth : 1
+				},
+				title : { text : '' },
+				mapNavigation: {
+					enabled: true,
+					buttonOptions: {
+						style: {display: 'none'}
+					}
+				},
+				legend: { enabled: false },
+				exporting: { enabled: (exporting === "true") },
+				series: []
+			};
+
+			// Add color axis to heatmap options
+			if (colorAxis == "true") {
+				heatmapOptions.colorAxis = {
+					min: 1,
+					type: 'linear',
+					minColor: '#EEEEFF',
+					maxColor: '#000022',
+					stops: [
+						[0, '#EFEFFF'],
+						[0.5, '#4444FF'],
+						[1, '#000022']
+					]
+				};
+			}
+
+			// Add chart legend to heatmap options
+			if (legend == "true") {
+				heatmapOptions.legend = {
+					layout: legendLayout,
+					borderWidth: 0,
+					backgroundColor: 'rgba(255,255,255,0.85)',
+					floating: true,
+					verticalAlign: legendVAlign,
+					align: legendHAlign
+				}
+			}
+
 			//set the height of the chart
 			heatmapContainer[0].style.height = elementH + 'px';
+
+			// Load map data from highcharts and create the heatmap
 			$ocLazyLoad.load ({
 				files: ['https://code.highcharts.com/mapdata/custom/world.js'],
 				cache: true
@@ -85,80 +157,83 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', function (
 				createHeatmap();
 			});
 
-			//function to fetch data and render the heatmap component
-			var createHeatmap = function() {
-				Data.getProjectVis("heatmap", projectId, viewType, lang)
-				.then(function(response) {
-					var heatmapOptions = {
-						chart : {
-							renderTo: elementId,
-							borderWidth : 1
-						},
-						title : { text : '' },
-						mapNavigation: { 
-							enabled: true,
-							buttonOptions: {
-								style: {display: 'none'}
+			/**
+			 * Creates the heatmap on the page if it doesn't exist, or updates it
+			 * with the new data if it is initialized already
+			 * @param response	Server response from heatmap API
+			 */
+			var visualizeHeatmap = function(response) {
+				// Initialize heatmap if it's not initialized
+				if (!heatmapOptions.initialized) {
+					scope.heatmap = new Highcharts.Map(heatmapOptions);
+
+					heatmapOptions.initialized = true;
+				} else if (!_.isEmpty(scope.heatmap.series)) {
+					// If heatmap has a series, remove it
+					scope.heatmap.series[0].remove();
+				}
+
+				// Add new series with the data
+				scope.heatmap.addSeries({
+					name: 'Country',
+					mapData: Highcharts.maps['custom/world'],
+					data: response.data,
+					mapZoom: 2,
+					joinBy: ['iso-a2', 'code'],
+					dataLabels: {
+						enabled: true,
+						color: '#FFFFFF',
+						formatter: function () {
+							if (this.point.value) {
+								return this.point.name;
 							}
-						},
-						legend: { enabled: false },
-						exporting: { enabled: (exporting === "true") },
-						series: [{
-							name: 'Country',
-							mapData: Highcharts.maps['custom/world'],
-							data: response.data,
-							mapZoom: 2,
-							joinBy: ['iso-a2', 'code'],
-							dataLabels: {
-								enabled: true,
-								color: '#FFFFFF',
-								formatter: function () {
-									if (this.point.value) {
-										return this.point.name;
-									}
-								}
-							},
-							tooltip: {
-								headerFormat: '',
-								pointFormat: '{point.name}'
-							}
-						}]
-					};
-
-					// Add color axis
-					if (colorAxis == "true") {
-                        heatmapOptions.colorAxis = {
-                            min: 1,
-                            type: 'linear',
-                            minColor: '#EEEEFF',
-                            maxColor: '#000022',
-                            stops: [
-                                [0, '#EFEFFF'],
-                                [0.5, '#4444FF'],
-                                [1, '#000022']
-                            ]
-                        };
-                    }
-
-                    // Add chart legend
-                    if (legend == "true") {
-                        heatmapOptions.legend = {
-                            layout: legendLayout,
-                            borderWidth: 0,
-                            backgroundColor: 'rgba(255,255,255,0.85)',
-                            floating: true,
-                            verticalAlign: legendVAlign,
-                            align: legendHAlign
-                        }
-                    }
-
-					new Highcharts.Map(heatmapOptions);
-				}, function(error){
-					if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
-						scope.ydsAlert = "An error was occurred, please check the configuration of the component";
-					else
-						scope.ydsAlert = error.message;
+						}
+					},
+					tooltip: {
+						headerFormat: '',
+						pointFormat: '{point.name}'
+					}
 				});
+			};
+
+			/**
+			 * Shows an error to the user (for when heatmap API returns error)
+			 * @param error
+			 */
+			var createHeatmapError = function(error) {
+				if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
+					scope.ydsAlert = "An error has occurred, please check the configuration of the component";
+				else
+					scope.ydsAlert = error.message;
+			};
+
+			/**
+			 * Fetch data using the appropriate service and call the function to
+			 * render the heatmap component
+			 */
+			var createHeatmap = function() {
+				if (yearSelection == "true") {
+					// Call advanced heatmap service (which takes year parameter)
+					Data.getHeatmapVisAdvanced(projectId, viewType, scope.yearSlider.value, lang)
+						.then(visualizeHeatmap, createHeatmapError);
+				} else {
+					// Call basic heatmap service
+					Data.getProjectVis("heatmap", projectId, viewType, lang)
+						.then(visualizeHeatmap, createHeatmapError);
+				}
+			};
+
+			// Set year slider options
+			if (yearSelection == "true") {
+				scope.yearSlider = {
+					value: defaultYear,
+					options: {
+						floor: minYear,
+						ceil: maxYear,
+						step: 1,
+						onEnd: createHeatmap
+					}
+				};
 			}
 		}
 	}

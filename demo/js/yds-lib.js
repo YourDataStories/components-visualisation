@@ -677,6 +677,37 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         return deferred.promise;
     };
 
+    /**
+     * Gets heatmap component data when year selection is needed
+     * @param resourceId
+     * @param viewType
+     * @param year
+     * @param lang
+     * @returns {d.promise|promise|*|d|s|a}
+     */
+    dataService.getHeatmapVisAdvanced = function(resourceId, viewType, year, lang) {
+        var deferred = $q.defer();
+
+        $http({
+            method: 'GET',
+            url: "http://" + YDS_CONSTANTS.API_HEATMAP,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            params: {
+                id: resourceId,
+                type: viewType,
+                lang: lang,
+                year: year,
+                context: 0
+            }
+        }).success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
     dataService.getProjectVisAdvanced = function(type, resourceId, viewType, lang, comboFilters, start) {
         var deferred = $q.defer();
         var visualizationUrl = "";
