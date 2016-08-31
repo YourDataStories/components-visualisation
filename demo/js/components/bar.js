@@ -205,7 +205,7 @@ angular.module('yds').directive('ydsBar', ['Data', 'CountrySelectionService', fu
             if (useCountriesService == "true") {
                 // Create chart with data from country service
                 var selectedCountryData = getCountrySelectionServiceData();
-                if (!_.isEmpty(selectedCountryData.data.data)) {
+                if (!_.isEmpty(selectedCountryData.data.categories)) {
                     visualizeBar(selectedCountryData);
                 }
 
