@@ -118,6 +118,7 @@ angular.module('yds').directive('ydsPie', ['Data', 'CountrySelectionService', fu
                     plotOptions: {
                         pie: {
                             allowPointSelect: true,
+                            showInLegend: (showLegend === "true"),
                             cursor: 'pointer',
                             dataLabels: {
                                 enabled: true,
