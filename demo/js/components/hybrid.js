@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '$timeout',
-	function(Data, $http, $stateParams, $timeout){
+angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '$location',
+	function(Data, $http, $stateParams, $location){
 	return {
 		restrict: 'E',
 		scope: {},
@@ -30,6 +30,28 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 						scope.ydsAlert = error.message;
 						console.log('error during Data.recoverEmbedCode:', error);
 					});
+
+					/**
+					 * Function that takes a chart options object and if the URL has a titlesize parameter
+					 * sets the size of the chart's title to the specified one
+					 * @param options
+					 */
+					var setupTitleSize = function(options) {
+						// Check URL for title size parameter to add the size to baseOptions
+						var urlParams = $location.search();
+
+						if (_.has(urlParams, "titlesize")) {
+							if (urlParams.titlesize == 0) {
+								// titlesize is set to 0, disable title completely
+								options.title.text = null;
+							} else {
+								// Set the custom title size
+								options.title.style = {
+									fontSize: urlParams.titlesize
+								};
+							}
+						}
+					};
 
 					/**
 					 * Formats the server's response according to the chart type
@@ -134,6 +156,8 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 							}
 						};
 
+						setupTitleSize(options);
+
 						var chart = new Highcharts.Chart(options);
 					};
 
@@ -141,7 +165,7 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 					var barVisualisation = function (response) {
                         var formattedData = formatResponseData("bar", response);
 
-                        var options = {
+						var options = {
 							chart: {
 								type: 'column',
 								renderTo: elementId
@@ -173,6 +197,8 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 							}
 						};
 
+						setupTitleSize(options);
+
 						var chart = new Highcharts.Chart(options);
 					};
 
@@ -180,14 +206,13 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 					var lineVisualisation = function (response) {
 						var formattedData = formatResponseData("line", response);
 
-                        var options = {
+						var options = {
 							chart: {
 								renderTo: elementId
 							},
 							rangeSelector: {
 								selected: 1
 							},
-
 							title: {
 								text: formattedData.title
 							},
@@ -196,6 +221,8 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 								enabled: false
 							}
 						};
+
+						setupTitleSize(options);
 
 						var chart = new Highcharts.StockChart(options);
 					};
@@ -236,6 +263,8 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 								pointFormat: '<span style="color:{point.color}">●</span> {series.name}: <b>{point.y}</b>'
 							};
 						}
+
+						setupTitleSize(options);
 
 						var chart = new Highcharts.Chart(options);
 					};
