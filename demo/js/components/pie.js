@@ -40,7 +40,7 @@ angular.module('yds').directive('ydsPie', ['Data', 'CountrySelectionService', fu
             var titleSize = scope.titleSize;
 
             //check if the projectId is defined, else stop the process
-            if (useCountriesService != "true" && (angular.isUndefined(projectId) || projectId.trim()=="")) {
+            if (useCountriesService != "true" && (_.isUndefined(projectId) || projectId.trim()=="")) {
                 scope.ydsAlert = "The YDS component is not properly configured. " +
                     "Please check the corresponding documentation section";
                 return false;
@@ -175,7 +175,7 @@ angular.module('yds').directive('ydsPie', ['Data', 'CountrySelectionService', fu
                     data: {
                         data: data,
                         series: "",
-                        title: ""
+                        title: null
                     },
                     view: [{
                         attribute: "title"
@@ -187,7 +187,7 @@ angular.module('yds').directive('ydsPie', ['Data', 'CountrySelectionService', fu
                 // Create chart with data from country service
                 var selectedCountryData = getCountrySelectionServiceData();
                 if (!_.isEmpty(selectedCountryData.data.data)) {
-                    visualizePie();
+                    visualizePie(selectedCountryData);
                 }
 
                 // Subscribe to be notified of country selection changes to update chart

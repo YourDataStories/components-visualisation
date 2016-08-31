@@ -1,10 +1,12 @@
-angular.module('yds').directive('ydsBar', ['Data', function(Data){
+angular.module('yds').directive('ydsBar', ['Data', 'CountrySelectionService', function(Data, CountrySelectionService){
     return {
         restrict: 'E',
         scope: {
             projectId: '@',     //id of the project that the data belong
             viewType: '@',     //name of the array that contains the visualised data
             lang: '@',          //lang of the visualised data
+
+            useCountriesService: '@',  // if true will use selected countries service to load data instead of API
 
             titleX: '@',        //the text of the X-axis title
             titleY: '@',        //the text of the Y-axis title
@@ -35,6 +37,7 @@ angular.module('yds').directive('ydsBar', ['Data', function(Data){
             var projectId = scope.projectId;
             var viewType = scope.viewType;
             var lang = scope.lang;
+            var useCountriesService = scope.useCountriesService;
             var titleX = scope.titleX;
             var titleY = scope.titleY;
             var showLabelsX = scope.showLabelsX;
@@ -45,9 +48,9 @@ angular.module('yds').directive('ydsBar', ['Data', function(Data){
             var titleSize = scope.titleSize;
 
             //check if the projectId and the viewType attr is defined, else stop the process
-            if (angular.isUndefined(projectId) || projectId.trim()=="") {
-                scope.ydsAlert = "The YDS component is not properly configured." +
-                    "Please check the corresponding documentation section";
+            if (useCountriesService != "true" && (_.isUndefined(projectId) || projectId.trim()=="")) {
+                scope.ydsAlert = "The YDS component is not properly configured. " +
+                    "Please check the corresponding documentation section.";
                 return false;
             }
 
@@ -56,56 +59,60 @@ angular.module('yds').directive('ydsBar', ['Data', function(Data){
                 viewType = "default";
 
             //check if the language attr is defined, else assign default value
-            if(angular.isUndefined(lang) || lang.trim()=="")
+            if(_.isUndefined(lang) || lang.trim()=="")
                 lang = "en";
 
+            //check if the useCountriesService attr is defined, else assign default value
+            if (_.isUndefined(useCountriesService) || useCountriesService.trim()=="")
+                useCountriesService = "false";
+
             //check if the x-axis title attr is defined, else assign the default value
-            if(angular.isUndefined(titleX) || titleX.length==0)
+            if(_.isUndefined(titleX) || titleX.length==0)
                 titleX = "";
 
             //check if the y-axis title attr is defined, else assign the default value
-            if(angular.isUndefined(titleY) || titleY.length==0)
+            if(_.isUndefined(titleY) || titleY.length==0)
                 titleY = "";
 
             //check if the x-axis showLabels attr is defined, else assign default value
-            if(angular.isUndefined(showLabelsX) || (showLabelsX!="true" && showLabelsX!="false"))
+            if(_.isUndefined(showLabelsX) || (showLabelsX!="true" && showLabelsX!="false"))
                 showLabelsX = "true";
 
             //check if the y-axis showLabels attr is defined, else assign default value
-            if(angular.isUndefined(showLabelsY) || (showLabelsY!="true" && showLabelsY!="false"))
+            if(_.isUndefined(showLabelsY) || (showLabelsY!="true" && showLabelsY!="false"))
                 showLabelsY = "true";
 
             //check if the showLegend attr is defined, else assign default value
-            if(angular.isUndefined(showLegend) || (showLegend!="true" && showLegend!="false"))
+            if(_.isUndefined(showLegend) || (showLegend!="true" && showLegend!="false"))
                 showLegend = "true";
 
             //check if the exporting attr is defined, else assign default value
-            if(angular.isUndefined(exporting) || (exporting!="true" && exporting!="false"))
+            if(_.isUndefined(exporting) || (exporting!="true" && exporting!="false"))
                 exporting = "true";
 
             //check if the component's height attr is defined, else assign default value
-            if(angular.isUndefined(elementH) || isNaN(elementH))
-                elementH = 200 ;
+            if(_.isUndefined(elementH) || _.isNaN(elementH))
+                elementH = 200;
 
             //check if the component's title size attr is defined, else assign default value
-            if(angular.isUndefined(titleSize) || isNaN(titleSize))
-                titleSize = 18 ;
+            if(_.isUndefined(titleSize) || _.isNaN(titleSize))
+                titleSize = 18;
 
             //set the height of the chart
             barContainer[0].style.height = elementH + 'px';
 
-            Data.getProjectVis("bar", projectId, viewType, lang)
-            .then(function (response) {
+            var chart = {};
+
+            var visualizeBar = function (response) {
                 var barData = response.data.data;
                 var barCategories = response.data.categories;
                 var barTitleAttr = _.first(response.view).attribute;
                 var barTitle = Data.deepObjSearch(response.data, barTitleAttr);
 
                 //check if the component is properly rendered
-                if (angular.isUndefined(barData) || !_.isArray(barData) || angular.isUndefined(barCategories)) {
-                    debugger;
-                    scope.ydsAlert = "The YDS component is not properly configured." +
-                        "Please check the corresponding documentation section";
+                if (_.isUndefined(barData) || !_.isArray(barData) || _.isUndefined(barCategories)) {
+                    scope.ydsAlert = "The YDS component is not properly configured. " +
+                        "Please check the corresponding documentation section.";
                     return false;
                 }
 
@@ -149,13 +156,67 @@ angular.module('yds').directive('ydsBar', ['Data', function(Data){
                     series: barData
                 };
 
-                var chart = new Highcharts.Chart(options);
-            }, function (error) {
+                if (!_.isEmpty(chart) && useCountriesService == "true") {
+                    // Chart exists, update its data
+                    if (_.isEmpty(barCategories)) {
+                        // New data is empty, destroy the chart
+                        chart.destroy();
+                    } else {
+                        // New data is not empty, update the bar chart
+                        chart.xAxis[0].setCategories(barCategories);
+                        chart.series[0].setData(barData[0].data);
+                    }
+                } else {
+                    // Chart is being created for the first time, create normally
+                    chart = new Highcharts.Chart(options);
+                }
+            };
+
+            var visualizeBarError = function (error) {
                 if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
                     scope.ydsAlert = "An error was occurred, please check the configuration of the component";
                 else
                     scope.ydsAlert = error.message;
-            });
+            };
+
+            /**
+             * Gets selected countries from the CountrySelectionService and formats them like a server response
+             * from the API so that visualizePie() can read it correctly
+             * @returns {{data: {data: *, series: string, title: string}, view: *[]}}
+             */
+            var getCountrySelectionServiceData = function() {
+                var data = CountrySelectionService.getCountries();
+
+                return {
+                    data: {
+                        data: [{
+                            name: "Value",
+                            data: _.pluck(data, "value")
+                        }],
+                        categories: _.pluck(data, "name"),
+                        title: null
+                    },
+                    view: [{
+                        attribute: "title"
+                    }]
+                };
+            };
+
+            if (useCountriesService == "true") {
+                // Create chart with data from country service
+                var selectedCountryData = getCountrySelectionServiceData();
+                if (!_.isEmpty(selectedCountryData.data.data)) {
+                    visualizeBar(selectedCountryData);
+                }
+
+                // Subscribe to be notified of country selection changes to update chart
+                CountrySelectionService.subscribe(scope, function() {
+                    visualizeBar(getCountrySelectionServiceData());
+                });
+            } else {
+                Data.getProjectVis("bar", projectId, viewType, lang)
+                    .then(visualizeBar, visualizeBarError);
+            }
         }
     };
 }]);
