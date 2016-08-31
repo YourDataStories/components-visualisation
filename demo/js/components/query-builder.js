@@ -23,7 +23,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                 }
 
 		        // Lazy load jQuery QueryBuilder and add it to the page
-                var drupalpath = ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'');
+                var drupalpath = ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath  +'/' :'');
 
                 $ocLazyLoad.load({
                     files: [
@@ -41,7 +41,6 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                         drupalpath + "lib/selectivity-full.min.js",                 // Selectivity JavaScript
                         drupalpath + "lib/querybuilder-selectivity-plugin.js",      // Selectivity QueryBuilder plugin
 
-                        drupalpath + "css/flags.css",                               // Flags CSS from flag-sprites.com
                         drupalpath + "css/selectize.bootstrap3.css",                // Selectize Bootstrap 3 theme
                         drupalpath + "lib/selectize.min.js",                        // Selectize javaScript
                         drupalpath + "lib/yds-country-selector.js",                 // Country selection jQuery plugin
