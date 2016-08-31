@@ -8,19 +8,30 @@ angular.module('yds').service('CountrySelectionService', function($rootScope) {
         return unregister;
     };
 
+    var notifySubscribers = function() {
+        $rootScope.$emit('country-selection-service-change');
+    };
+
     var setCountries = function(newCountries) {
         countries = newCountries;
 
-        $rootScope.$emit('country-selection-service-change');
+        notifySubscribers();
     };
 
     var getCountries = function() {
         return countries;
     };
 
+    var clearCountries = function() {
+        countries = [];
+
+        notifySubscribers();
+    };
+
     return {
         subscribe: subscribe,
         setCountries: setCountries,
-        getCountries: getCountries
+        getCountries: getCountries,
+        clearCountries: clearCountries
     };
 });

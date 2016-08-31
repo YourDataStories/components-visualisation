@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsCountryList', ['CountrySelectionService',
-    function(CountrySelectionService) {
+angular.module('yds').directive('ydsCountryList', ['$timeout', 'CountrySelectionService',
+    function($timeout, CountrySelectionService) {
         return {
             restrict: 'E',
             scope: {},
@@ -12,9 +12,10 @@ angular.module('yds').directive('ydsCountryList', ['CountrySelectionService',
 
                 // Subscribe to be notified of changes in selected countries
                 CountrySelectionService.subscribe(scope, function() {
-                    scope.countries = CountrySelectionService.getCountries();
-
-                    scope.$apply();
+                    // Update scope variable inside $timeout to trigger digest
+                    $timeout(function() {
+                        scope.countries = CountrySelectionService.getCountries();
+                    });
                 });
             }
         };

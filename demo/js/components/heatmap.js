@@ -197,7 +197,9 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 					} else if (!_.isEmpty(scope.heatmap.series)) {
 						// If heatmap has a series, remove it
 						scope.heatmap.series[0].remove();
-					}
+
+                        CountrySelectionService.clearCountries();
+                    }
 
 					// Create new series object
 					var newSeries = {
