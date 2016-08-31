@@ -14,17 +14,27 @@ public class UserChart {
     private String description;
     private String thumbnailUrl;
     private Object embedCode;
+    private String compType;
 
-    public UserChart(String id, String chartId, String title, String description, String thumbnailUrl, Object embedCode) {
+    public UserChart(String id, String chartId, String title, String description, String thumbnailUrl, Object embedCode, String compType) {
         this.id = id;
         this.chartId = chartId;
         this.title = title;
         this.description = description;
         this.thumbnailUrl = thumbnailUrl;
         this.embedCode = embedCode;
+        this.compType = compType;
     }
 
     public UserChart() {
+    }
+
+    public String getCompType() {
+        return compType;
+    }
+
+    public void setCompType(String compType) {
+        this.compType = compType;
     }
 
     public String getId() {
@@ -91,6 +101,7 @@ public class UserChart {
     public static final String FLD_DESCRIPTION = "description";
     public static final String FLD_THUMBNAILURL = "thumbnail_url";
     public static final String FLD_EMBEDCODE = "embed_code";
+    public static final String FLD_COMPTYPE = "comp_type";
 
     /**
      * Helper class to serialize as needed in the API
@@ -107,6 +118,7 @@ public class UserChart {
             jsonObject.addProperty(UserChart.FLD_DESCRIPTION, t.getDescription());
             jsonObject.addProperty(UserChart.FLD_THUMBNAILURL, t.getThumbnailUrl());
             jsonObject.addProperty(UserChart.FLD_EMBEDCODE, t.getEmbedCode().toString());
+            jsonObject.addProperty(UserChart.FLD_COMPTYPE, t.getCompType());
 
             return jsonObject;
         }

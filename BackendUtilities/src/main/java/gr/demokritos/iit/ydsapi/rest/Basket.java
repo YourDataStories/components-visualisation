@@ -125,7 +125,8 @@ public class Basket {
                         item.getTitle(),
                         "",             // description
                         "",             // thumbnail url
-                        embeddingId));
+                        embeddingId,
+                        item.getComponentType()));
             }
 
             uclr = new UserChartsLoadResponse(userCharts);
