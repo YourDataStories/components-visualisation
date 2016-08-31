@@ -142,8 +142,7 @@ angular.module('yds').directive('ydsPie', ['Data', 'CountrySelectionService', fu
                         chart.destroy();
                     } else {
                         // New data is not empty, update the pie chart's series
-                        chart.series[0].remove();
-                        chart.addSeries(options.series[0]);
+                        chart.series[0].setData(pieData);
                     }
                 } else {
                     // Chart is being created for the first time, create normally
