@@ -47,6 +47,10 @@ ydsDemo.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 		url: '/geo-editing',
 		templateUrl: 'templates-demo/geo-editing.html'
 	})
+	.state('cache', {
+		url: '/cache',
+		templateUrl: 'templates-demo/cache-management.html'
+	})
 	.state('embed', {
 		url: '/embed/:embedCode',
 		template: '<yds-hybrid></yds-hybrid>'

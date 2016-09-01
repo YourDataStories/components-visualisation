@@ -1,0 +1,32 @@
+<div class="col-md-6">
+    <!--Message box-->
+    <div class="alert alert-success" role="alert" ng-if="msg.length>0">
+        {{msg}}
+    </div>
+
+    <!--Table with cache info-->
+    <table class="table">
+        <thead>
+            <th>Table</th>
+            <th>Entries</th>
+            <th>Actions</th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="(tableName, value) in tables">
+                <td>{{ tableName }}</td>
+                <td>{{ value }}</td>
+                <td>
+                    <button class="btn btn-xs btn-primary"
+                            ng-click="truncateCache(tableName)">
+                        Truncate
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!--Truncate all button-->
+    <button class="btn btn-danger" ng-click="truncateCache('all')">
+        <span class="glyphicon glyphicon-trash"></span> Truncate All
+    </button>
+</div>

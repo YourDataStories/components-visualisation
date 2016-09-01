@@ -28,6 +28,7 @@ app.constant("YDS_CONSTANTS", {
     "API_COMBOBOX_FILTER": "platform.yourdatastories.eu/api/json-ld/component/filter.tcl",
     "API_YDS_STATISTICS": "platform.yourdatastories.eu/api/json-ld/component/statistics.tcl",
     "API_HUMAN_READABLE_DESCRIPTION": "platform.yourdatastories.eu/api/json-ld/model/human_readable_description.tcl",
+    "API_CACHE_INFO": "platform.yourdatastories.eu/api/json-ld/cache/cache_info.tcl",
 
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search",
     "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search-el",
@@ -774,6 +775,34 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                 lang: lang,
                 context: 0
             }
+        }).success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    /**
+     * Gets cache info from the API. If the tableToTruncate parameter is defined,
+     * then it sends it via GET in order for the table with that name to be truncated
+     * @param tableToTruncate   Table to be truncated (leave undefined for just getting info)
+     * @returns {*|d.promise|promise|s|d|a}
+     */
+    dataService.getCacheInfo = function(tableToTruncate) {
+        var deferred = $q.defer();
+
+        var params = {};
+        if (!_.isUndefined(tableToTruncate)) {
+            params.table = tableToTruncate;
+        }
+
+        $http({
+            method: 'GET',
+            url: "http://"+ YDS_CONSTANTS.API_CACHE_INFO,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            params: params
         }).success(function (data) {
             deferred.resolve(data);
         }).error(function (error) {
