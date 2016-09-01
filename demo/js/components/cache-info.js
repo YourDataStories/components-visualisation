@@ -7,7 +7,8 @@ angular.module('yds').directive('ydsCacheInfo', ['Data', '$timeout', function(Da
             scope.truncateCache = function(tableName) {
                 Data.getCacheInfo(tableName)
                     .then(function(response) {
-                        scope.tables = response.data;
+                        // Update cache info
+                        updateCacheInfo();
 
                         // Show message that truncation was successful
                         if (tableName == "all") {
@@ -23,13 +24,18 @@ angular.module('yds').directive('ydsCacheInfo', ['Data', '$timeout', function(Da
                     });
             };
 
-            // Get cache info from the server to display on page
-            Data.getCacheInfo()
-                .then(function(response) {
-                    scope.tables = response.data;
-                }, function(error) {
-                    console.error("Error when getting cache info: " + error);
-                });
+            var updateCacheInfo = function() {
+                // Get cache info from the server to display on page
+                Data.getCacheInfo()
+                    .then(function(response) {
+                        scope.tables = response.data;
+                    }, function(error) {
+                        console.error("Error when getting cache info: " + error);
+                    });
+            };
+
+            // Get cache info when component loads
+            updateCacheInfo();
         }
     };
 }]);

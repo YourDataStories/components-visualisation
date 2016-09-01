@@ -29,6 +29,7 @@ app.constant("YDS_CONSTANTS", {
     "API_YDS_STATISTICS": "platform.yourdatastories.eu/api/json-ld/component/statistics.tcl",
     "API_HUMAN_READABLE_DESCRIPTION": "platform.yourdatastories.eu/api/json-ld/model/human_readable_description.tcl",
     "API_CACHE_INFO": "platform.yourdatastories.eu/api/json-ld/cache/cache_info.tcl",
+    "API_CACHE_TRUNCATE": "platform.yourdatastories.eu/api/json-ld/cache/truncate.tcl",
 
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search",
     "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search-el",
@@ -798,9 +799,11 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             params.table = tableToTruncate;
         }
 
+        var url = "http://" + (_.isUndefined(tableToTruncate) ? YDS_CONSTANTS.API_CACHE_INFO : YDS_CONSTANTS.API_CACHE_TRUNCATE);
+
         $http({
             method: 'GET',
-            url: "http://"+ YDS_CONSTANTS.API_CACHE_INFO,
+            url: url,
             headers: {'Content-Type': 'application/json; charset=UTF-8'},
             params: params
         }).success(function (data) {
