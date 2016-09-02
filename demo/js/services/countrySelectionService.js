@@ -13,9 +13,11 @@ angular.module('yds').service('CountrySelectionService', function($rootScope) {
     };
 
     var setCountries = function(newCountries) {
-        countries = newCountries;
+        if (!_.isEqual(countries, newCountries)) {
+            countries = newCountries;
 
-        notifySubscribers();
+            notifySubscribers();
+        }
     };
 
     var getCountries = function() {
@@ -23,9 +25,11 @@ angular.module('yds').service('CountrySelectionService', function($rootScope) {
     };
 
     var clearCountries = function() {
-        countries = [];
+        if (!_.isEqual(countries, [])) {
+            countries = [];
 
-        notifySubscribers();
+            notifySubscribers();
+        }
     };
 
     return {
