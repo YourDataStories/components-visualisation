@@ -24,14 +24,23 @@
             </div>
         </div>
 
-        <!-- Country list -->
+        <!-- Grid -->
         <div class="col-md-3">
-            <yds-country-list element-h="550"></yds-country-list>
+            <yds-grid
+                    project-id="none"
+                    view-type="aidactivity.beneficiary.countries.all"
+                    element-h="650">
+            </yds-grid>
         </div>
     </div>
     <div class="row">
+        <!-- Country list -->
+        <div class="col-md-4">
+            <yds-country-list element-h="350"></yds-country-list>
+        </div>
+
         <!-- Pie chart -->
-        <div class="col-md-6">
+        <div class="col-md-4">
             <yds-pie
                     use-countries-service="true"
                     element-h="350">
@@ -39,7 +48,7 @@
         </div>
 
         <!-- Bar chart -->
-        <div class="col-md-6">
+        <div class="col-md-4">
             <yds-bar
                     use-countries-service="true"
                     show-legend="false"
