@@ -156,45 +156,94 @@ angular.module('yds').directive('ydsBar', ['Data', 'CountrySelectionService', fu
                     series: barData
                 };
 
-                if (!_.isEmpty(chart) && useYearRange == "true") {
-                    // Chart exists, update its data
-                    if (_.isEmpty(barCategories)) {
-                        // New data is empty, destroy the chart
-                        chart.destroy();
-                    } else {
-                        // New data is not empty, update the bar chart
-                        chart.xAxis[0].setCategories(barCategories);
-                        chart.series[0].setData(barData[0].data);
-                    }
-                } else {
+                if (useYearRange == "true" && !_.isEmpty(chart)) {
+                        // Chart exists, update its data
+                        if (_.isEmpty(barCategories)) {
+                            // New data is empty, destroy the chart
+                            chart.destroy();
+                        } else {
+                            // New data is not empty, update the bar chart
+                            chart.xAxis[0].setCategories(barCategories);
+                            chart.series[0].setData(barData[0].data);
+                        }
+                } else if (!_.isEmpty(barCategories)) {
                     // Chart is being created for the first time, create normally
                     chart = new Highcharts.Chart(options);
                 }
             };
 
             var visualizeBarError = function (error) {
-                if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
-                    scope.ydsAlert = "An error was occurred, please check the configuration of the component";
+                if (_.isNull(error) || _.isUndefined(error) || _.isUndefined(error.message))
+                    scope.ydsAlert = "An error has occurred, please check the configuration of the component";
                 else
                     scope.ydsAlert = error.message;
             };
 
+            /**
+             * Gets the response from the server, keeps only the categories selected via the heatmap
+             * and calls visualizeBar with the modified response
+             * @param response
+             */
+            var filterResponse = function(response) {
+                var newResponse = response;
+
+                // Get selected countries from heatmap
+                var selCountries = CountrySelectionService.getCountries();
+
+                // Get categories, series data and name from the response
+                var categories = response.data.categories;
+                var data = response.data.data[0].data;
+                var seriesName = response.data.data[0].name;
+
+                var newCategories = [];
+                var newData = [];
+
+                // For each country (category) if it exists in selected countries, add it to the new data
+                _.each(categories, function(category, index) {
+                    _.each(selCountries, function(country) {
+                        if (country.code == category) {
+                            // Add to the new data
+                            newCategories.push(category);
+                            newData.push(data[index]);
+                        }
+                    });
+                });
+
+                // Add new data to response
+                newResponse.data.categories = newCategories;
+                newResponse.data.data = [{
+                    name: seriesName,
+                    data: newData
+                }];
+
+                // Visualize bar with modified response
+                visualizeBar(newResponse);
+            };
+
+            /**
+             * Gets the minimum and maximum selected years from the heatmap and if they are not null
+             * gets data for that year range from the API, filters it and if any countries are selected
+             * the visualization is created
+             */
             var visualizeBarWithYearRange = function() {
                 var minYear = CountrySelectionService.getMinYear();
                 var maxYear = CountrySelectionService.getMaxYear();
 
                 if (!_.isNull(minYear) && !_.isNull(maxYear)) {
                     Data.getProjectVisInYearRange("bar", projectId, viewType, minYear, maxYear, lang)
-                        .then(visualizeBar, visualizeBarError);
+                        .then(filterResponse, visualizeBarError);
                 }
             };
 
             if (useYearRange == "true") {
-                // Create chart with data from country service
+                // Create chart with year range
                 visualizeBarWithYearRange();
 
                 // Subscribe to be notified of year range changes to update chart
                 CountrySelectionService.subscribeToYearChanges(scope, visualizeBarWithYearRange);
+
+                // Subscribe to be notified of country selection changes to update chart
+                CountrySelectionService.subscribe(scope, visualizeBarWithYearRange);
             } else {
                 Data.getProjectVis("bar", projectId, viewType, lang)
                     .then(visualizeBar, visualizeBarError);
