@@ -2,18 +2,26 @@
     <div class="row">
         <!-- Heatmap -->
         <div class="col-md-9">
-            <yds-heatmap
-                    project-id="none"
-                    view-type="aidactivity.beneficiary.countries.all"
-                    color-axis="true"
-                    color-type="logarithmic"
-                    legend="true"
-                    legend-v-align="bottom"
-                    year-selection="true"
-                    min-year="1997"
-                    max-year="2018"
-                    country-selection="true"
-                    element-h="550"></yds-heatmap>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Number of Aid Activities</h3>
+                </div>
+                <div class="panel-body">
+                    <yds-heatmap
+                            project-id="none"
+                            view-type="aidactivity.beneficiary.countries.all"
+                            color-axis="true"
+                            color-type="logarithmic"
+                            legend="true"
+                            legend-v-align="bottom"
+                            year-selection="true"
+                            min-year="1997"
+                            max-year="2018"
+                            country-selection="true"
+                            no-border="true"
+                            element-h="550"></yds-heatmap>
+                </div>
+            </div>
         </div>
 
         <!-- Country list -->
