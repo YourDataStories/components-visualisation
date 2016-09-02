@@ -75,6 +75,22 @@ angular.module('yds').service('CountrySelectionService', function($rootScope) {
         return yearRange;
     };
 
+    /**
+     * Returns the minimum year of the range or null if range is empty
+     * @returns {*}
+     */
+    var getMinYear = function() {
+        return _.isEmpty(yearRange) ? null : _.min(yearRange);
+    };
+
+    /**
+     * Returns the maximum year of the range or null if range is empty
+     * @returns {*}
+     */
+    var getMaxYear = function() {
+        return _.isEmpty(yearRange) ? null : _.max(yearRange);
+    };
+
     return {
         subscribe: subscribe,
         subscribeToYearChanges: subscribeToYearChanges,
@@ -82,6 +98,8 @@ angular.module('yds').service('CountrySelectionService', function($rootScope) {
         getCountries: getCountries,
         clearCountries: clearCountries,
         setYearRange: setYearRange,
-        getYearRange: getYearRange
+        getYearRange: getYearRange,
+        getMinYear: getMinYear,
+        getMaxYear: getMaxYear
     };
 });

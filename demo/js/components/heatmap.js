@@ -267,6 +267,9 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 						var minValue = scope.yearSlider.minValue;
 						var maxValue = scope.yearSlider.maxValue;
 
+						// Update selected years in CountrySelectionService
+						CountrySelectionService.setYearRange(minValue, maxValue);
+
 						// Call advanced heatmap service (which takes year parameter)
 						Data.getProjectVisInYearRange("heatmap", projectId, viewType, minValue, maxValue, lang)
 							.then(visualizeHeatmap, createHeatmapError);

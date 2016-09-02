@@ -3,10 +3,10 @@ angular.module('yds').directive('ydsBar', ['Data', 'CountrySelectionService', fu
         restrict: 'E',
         scope: {
             projectId: '@',     //id of the project that the data belong
-            viewType: '@',     //name of the array that contains the visualised data
+            viewType: '@',      //name of the array that contains the visualised data
             lang: '@',          //lang of the visualised data
 
-            useCountriesService: '@',  // if true will use selected countries service to load data instead of API
+            useYearRange: '@',  //use year range from CountrySelectionService for results, values: true, false
 
             titleX: '@',        //the text of the X-axis title
             titleY: '@',        //the text of the Y-axis title
@@ -37,7 +37,7 @@ angular.module('yds').directive('ydsBar', ['Data', 'CountrySelectionService', fu
             var projectId = scope.projectId;
             var viewType = scope.viewType;
             var lang = scope.lang;
-            var useCountriesService = scope.useCountriesService;
+            var useYearRange = scope.useYearRange;
             var titleX = scope.titleX;
             var titleY = scope.titleY;
             var showLabelsX = scope.showLabelsX;
@@ -48,7 +48,7 @@ angular.module('yds').directive('ydsBar', ['Data', 'CountrySelectionService', fu
             var titleSize = scope.titleSize;
 
             //check if the projectId and the viewType attr is defined, else stop the process
-            if (useCountriesService != "true" && (_.isUndefined(projectId) || projectId.trim()=="")) {
+            if (useYearRange != "true" && (_.isUndefined(projectId) || projectId.trim()=="")) {
                 scope.ydsAlert = "The YDS component is not properly configured. " +
                     "Please check the corresponding documentation section.";
                 return false;
@@ -62,9 +62,9 @@ angular.module('yds').directive('ydsBar', ['Data', 'CountrySelectionService', fu
             if(_.isUndefined(lang) || lang.trim()=="")
                 lang = "en";
 
-            //check if the useCountriesService attr is defined, else assign default value
-            if (_.isUndefined(useCountriesService) || useCountriesService.trim()=="")
-                useCountriesService = "false";
+            //check if the useYearRange attr is defined, else assign default value
+            if (_.isUndefined(useYearRange) || useYearRange.trim()=="")
+                useYearRange = "false";
 
             //check if the x-axis title attr is defined, else assign the default value
             if(_.isUndefined(titleX) || titleX.length==0)
@@ -156,7 +156,7 @@ angular.module('yds').directive('ydsBar', ['Data', 'CountrySelectionService', fu
                     series: barData
                 };
 
-                if (!_.isEmpty(chart) && useCountriesService == "true") {
+                if (!_.isEmpty(chart) && useYearRange == "true") {
                     // Chart exists, update its data
                     if (_.isEmpty(barCategories)) {
                         // New data is empty, destroy the chart
@@ -179,40 +179,22 @@ angular.module('yds').directive('ydsBar', ['Data', 'CountrySelectionService', fu
                     scope.ydsAlert = error.message;
             };
 
-            /**
-             * Gets selected countries from the CountrySelectionService and formats them like a server response
-             * from the API so that visualizePie() can read it correctly
-             * @returns {{data: {data: *, series: string, title: string}, view: *[]}}
-             */
-            var getCountrySelectionServiceData = function() {
-                var data = CountrySelectionService.getCountries();
+            var visualizeBarWithYearRange = function() {
+                var minYear = CountrySelectionService.getMinYear();
+                var maxYear = CountrySelectionService.getMaxYear();
 
-                return {
-                    data: {
-                        data: [{
-                            name: "Value",
-                            data: _.pluck(data, "value")
-                        }],
-                        categories: _.pluck(data, "name"),
-                        title: null
-                    },
-                    view: [{
-                        attribute: "title"
-                    }]
-                };
+                if (!_.isNull(minYear) && !_.isNull(maxYear)) {
+                    Data.getProjectVisInYearRange("bar", projectId, viewType, minYear, maxYear, lang)
+                        .then(visualizeBar, visualizeBarError);
+                }
             };
 
-            if (useCountriesService == "true") {
+            if (useYearRange == "true") {
                 // Create chart with data from country service
-                var selectedCountryData = getCountrySelectionServiceData();
-                if (!_.isEmpty(selectedCountryData.data.categories)) {
-                    visualizeBar(selectedCountryData);
-                }
+                visualizeBarWithYearRange();
 
-                // Subscribe to be notified of country selection changes to update chart
-                CountrySelectionService.subscribe(scope, function() {
-                    visualizeBar(getCountrySelectionServiceData());
-                });
+                // Subscribe to be notified of year range changes to update chart
+                CountrySelectionService.subscribeToYearChanges(scope, visualizeBarWithYearRange);
             } else {
                 Data.getProjectVis("bar", projectId, viewType, lang)
                     .then(visualizeBar, visualizeBarError);
