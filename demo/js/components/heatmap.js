@@ -16,6 +16,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 				minYear: '@',		    // Minimum year to show in year slider
 				maxYear: '@',		    // Maximum year to show in year slider
 				countrySelection: '@',  // Allow selecting countries on the map
+				noBorder: '@',			// If true, the component will have no border
 				exporting: '@',         // Enable or disable the export of the chart
 				elementH: '@'		    // Set the height of the component
 			},
@@ -34,6 +35,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 				var minYear = parseInt(scope.minYear);
 				var maxYear = parseInt(scope.maxYear);
 				var countrySelection = scope.countrySelection;
+				var noBorder = scope.noBorder;
 				var exporting = scope.exporting;
 				var elementH = scope.elementH;
 
@@ -99,6 +101,10 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 				if (_.isUndefined(countrySelection) || countrySelection.trim()=="")
 					countrySelection = "false";
 
+				//check if the noBorder attr is defined, else assign default value
+				if(_.isUndefined(noBorder) || (noBorder!="true" && noBorder!="false"))
+					noBorder = "false";
+
 				//check if the exporting attr is defined, else assign default value
 				if(_.isUndefined(exporting) || (exporting!="true" && exporting!="false"))
 					exporting = "true";
@@ -112,7 +118,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 					initialized: false,
 					chart : {
 						renderTo: elementId,
-						borderWidth : 1
+						borderWidth: (noBorder == "true") ? 0 : 1
 					},
 					title : { text : '' },
 					mapNavigation: {
