@@ -683,11 +683,12 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
      * Gets heatmap component data when year selection is needed
      * @param resourceId
      * @param viewType
-     * @param year
+     * @param minYear
+     * @param maxYear
      * @param lang
      * @returns {d.promise|promise|*|d|s|a}
      */
-    dataService.getHeatmapVisAdvanced = function(resourceId, viewType, year, lang) {
+    dataService.getHeatmapVisAdvanced = function(resourceId, viewType, minYear, maxYear, lang) {
         var deferred = $q.defer();
 
         $http({
@@ -698,7 +699,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                 id: resourceId,
                 type: viewType,
                 lang: lang,
-                year: year,
+                year: "[" + minYear + " TO " + maxYear + "]",
                 context: 0
             }
         }).success(function (data) {
