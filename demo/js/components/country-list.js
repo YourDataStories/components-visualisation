@@ -2,9 +2,23 @@ angular.module('yds').directive('ydsCountryList', ['$timeout', 'CountrySelection
     function($timeout, CountrySelectionService) {
         return {
             restrict: 'E',
-            scope: {},
+            scope: {
+                elementH: '@'   // Height of component
+            },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/country-list.html',
             link: function (scope, element, attrs) {
+                var elementH = scope.elementH;
+
+                var countrylistContainer = angular.element(element[0].querySelector(".countrylist-container"));
+
+                // Check if the component's height attribute is defined, else assign default value
+                if (_.isUndefined(elementH) || elementH.trim() == "")
+                    elementH = 300;
+
+                // Set the height of the component and make it scroll when content is longer
+                countrylistContainer[0].style.height = elementH + "px";
+                countrylistContainer[0].style.overflowY = "auto";
+
                 // Set path to blank.gif image (used for country flags) depending on Drupal config
                 scope.blankSrc = ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath  +'/' :'') + 'img/blank.gif';
 
