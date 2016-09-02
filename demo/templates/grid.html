@@ -4,7 +4,7 @@
         <span class="sr-only">Error:</span>
         {{ydsAlert}}
     </div>
-    <div>
+    <div ng-if="quickFiltering=='true'">
         <div class="component-adv-quick-filter-label"><i class="glyphicon glyphicon-filter"></i>Quick Filter:</div>
         <input type="text"
                class="form-control component-adv-quick-filter"
