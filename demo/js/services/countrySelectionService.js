@@ -25,7 +25,7 @@ angular.module('yds').service('CountrySelectionService', function($rootScope) {
     };
 
     var clearCountries = function() {
-        if (!_.isEqual(countries, [])) {
+        if (!_.isEmpty(countries)) {
             countries = [];
 
             notifySubscribers();
