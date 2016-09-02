@@ -680,20 +680,44 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
     };
 
     /**
-     * Gets heatmap component data when year selection is needed
-     * @param resourceId
-     * @param viewType
-     * @param minYear
-     * @param maxYear
-     * @param lang
+     * Get visualization data for a specific year range
+     * @param type          Type of visualization
+     * @param resourceId    Resource ID
+     * @param viewType      View type
+     * @param minYear       Minimum year
+     * @param maxYear       Maximum year
+     * @param lang          language of visualization
      * @returns {d.promise|promise|*|d|s|a}
      */
-    dataService.getHeatmapVisAdvanced = function(resourceId, viewType, minYear, maxYear, lang) {
+    dataService.getProjectVisInYearRange = function(type, resourceId, viewType, minYear, maxYear, lang) {
         var deferred = $q.defer();
+        var visualizationUrl = "";
+
+        switch(type) {
+            case "bar":
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_BAR;
+                break;
+            case "grid":
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_GRID;
+                break;
+            case "pie":
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_PIE;
+                break;
+            case "heatmap":
+                visualizationUrl = "http://"+ YDS_CONSTANTS.API_HEATMAP;
+                break;
+            default:
+                deferred.reject({
+                    success: false,
+                    message: "Error, unknown component type"
+                });
+
+                return deferred.promise;
+        }
 
         $http({
             method: 'GET',
-            url: "http://" + YDS_CONSTANTS.API_HEATMAP,
+            url: visualizationUrl,
             headers: {'Content-Type': 'application/json; charset=UTF-8'},
             params: {
                 id: resourceId,
