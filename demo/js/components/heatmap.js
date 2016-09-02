@@ -7,6 +7,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 				viewType: '@',          // Name of the array that contains the visualised data
 				lang: '@',			    // Lang of the visualised data
 				colorAxis: '@',         // Enable or disable colored axis of chart
+				colorType: '@',			// Axis color type (linear or logarithmic)
 				legend: '@',            // Enable or disable chart legend
 				legendVAlign: '@',      // Vertical alignment of the chart legend (top, middle, bottom)
 				legendHAlign: '@',      // Horizontal alignment of the chart legend (left, center, right)
@@ -24,6 +25,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 				var viewType = scope.viewType;
 				var lang = scope.lang;
 				var colorAxis = scope.colorAxis;
+				var colorType = scope.colorType;
 				var legend = scope.legend;
 				var legendVAlign = scope.legendVAlign;
 				var legendHAlign = scope.legendHAlign;
@@ -60,6 +62,10 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 				//check if colorAxis attr is defined, else assign default value
 				if (_.isUndefined(colorAxis) || colorAxis.trim()=="")
 					colorAxis = "false";
+
+				//check if colorType attr is defined, else assign default value
+				if (_.isUndefined(colorType) || colorType.trim()=="")
+					colorType = "linear";
 
 				//check if legend attr is defined, else assign default value
 				if (_.isUndefined(legend) || legend.trim()=="")
@@ -124,7 +130,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 				if (colorAxis == "true") {
 					heatmapOptions.colorAxis = {
 						min: 1,
-						type: 'linear',
+						type: colorType,
 						minColor: '#EEEEFF',
 						maxColor: '#000022',
 						stops: [
