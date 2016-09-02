@@ -31,7 +31,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 				var legendLayout = scope.legendLayout;
 				var yearSelection = scope.yearSelection;
 				var minYear = parseInt(scope.minYear);
-				var maxYear = parseInt(scope.maxYear);
+				var actualMaxYear = parseInt(scope.maxYear);
 				var defaultYear = parseInt(scope.defaultYear);
 				var countrySelection = scope.countrySelection;
 				var exporting = scope.exporting;
@@ -88,12 +88,12 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 					minYear = 1970;
 
 				//check if maxYear attr is defined, else assign default value
-				if (_.isUndefined(maxYear) || _.isNaN(maxYear))
-					maxYear = 2050;
+				if (_.isUndefined(actualMaxYear) || _.isNaN(actualMaxYear))
+					actualMaxYear = 2050;
 
 				//check if defaultYear attr is defined, else assign default value
 				if (_.isUndefined(defaultYear) || _.isNaN(defaultYear))
-					defaultYear = minYear + (maxYear-minYear)/2;	// default value is middle of the range
+					defaultYear = minYear + (actualMaxYear-minYear)/2;	// default value is middle of the range
 
 				//check if countrySelection attr is defined, else assign default value
 				if (_.isUndefined(countrySelection) || countrySelection.trim()=="")
@@ -258,8 +258,15 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 				 */
 				var createHeatmap = function() {
 					if (yearSelection == "true") {
+						var year = scope.yearSlider.value;
+
+						// If year is > specified max year, it means to show all the years so do not send year parameter
+						if (year > actualMaxYear) {
+							year = undefined;
+						}
+
 						// Call advanced heatmap service (which takes year parameter)
-						Data.getHeatmapVisAdvanced(projectId, viewType, scope.yearSlider.value, lang)
+						Data.getHeatmapVisAdvanced(projectId, viewType, year, lang)
 							.then(visualizeHeatmap, createHeatmapError);
 					} else {
 						// Call basic heatmap service
@@ -269,6 +276,8 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 				};
 
 				// Set year slider options
+				var maxYear = actualMaxYear + 1;	// Slider will show 1 more year which will mean "all years"
+
 				if (yearSelection == "true") {
 					scope.yearSlider = {
 						value: defaultYear,
@@ -276,7 +285,14 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 							floor: minYear,
 							ceil: maxYear,
 							step: 1,
-							onEnd: createHeatmap
+							onEnd: createHeatmap,
+							translate: function(value) {
+								if (value < maxYear) {
+									return value;
+								} else {
+									return "All years";
+								}
+							}
 						}
 					};
 				}
