@@ -713,3 +713,23 @@ div.ag-root {
     float: right;
     margin-left: 10px;
 }
+
+/*********************************************/
+/**** Dashboard Visualization Panel Color ****/
+/*********************************************/
+
+.dashboard-visualization-container > .panel-default {
+    border-color: #F59B11;
+}
+
+.dashboard-visualization-container > .panel-default > .panel-heading {
+    background-color: #F59B11;
+    border-color: #F59B11;
+    color: #ffffff;
+}
+
+.dashboard-visualization-container > .panel-default > .panel-heading > .btn-group > .btn-default {
+    background-color: #D68200;
+    border-color: #AD6900;
+    color:#ffffff;
+}
