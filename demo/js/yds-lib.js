@@ -686,62 +686,6 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         return deferred.promise;
     };
 
-    /**
-     * Get visualization data for a specific year range
-     * @param type          Type of visualization
-     * @param resourceId    Resource ID
-     * @param viewType      View type
-     * @param minYear       Minimum year
-     * @param maxYear       Maximum year
-     * @param lang          language of visualization
-     * @returns {d.promise|promise|*|d|s|a}
-     */
-    dataService.getProjectVisInYearRange = function(type, resourceId, viewType, minYear, maxYear, lang) {
-        var deferred = $q.defer();
-        var visualizationUrl = "";
-
-        switch(type) {
-            case "bar":
-                visualizationUrl = "http://" + YDS_CONSTANTS.API_BAR;
-                break;
-            case "grid":
-                visualizationUrl = "http://" + YDS_CONSTANTS.API_GRID;
-                break;
-            case "pie":
-                visualizationUrl = "http://" + YDS_CONSTANTS.API_PIE;
-                break;
-            case "heatmap":
-                visualizationUrl = "http://"+ YDS_CONSTANTS.API_HEATMAP;
-                break;
-            default:
-                deferred.reject({
-                    success: false,
-                    message: "Error, unknown component type"
-                });
-
-                return deferred.promise;
-        }
-
-        $http({
-            method: 'GET',
-            url: visualizationUrl,
-            headers: {'Content-Type': 'application/json; charset=UTF-8'},
-            params: {
-                id: resourceId,
-                type: viewType,
-                lang: lang,
-                year: "[" + minYear + " TO " + maxYear + "]",
-                context: 0
-            }
-        }).success(function (data) {
-            deferred.resolve(data);
-        }).error(function (error) {
-            deferred.reject(error);
-        });
-
-        return deferred.promise;
-    };
-
     dataService.getProjectVisAdvanced = function(type, resourceId, viewType, lang, comboFilters, start) {
         var deferred = $q.defer();
         var visualizationUrl = "";

@@ -298,14 +298,15 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 						// Update selected years in CountrySelectionService
 						CountrySelectionService.setYearRange(minValue, maxValue);
 
-						// Call advanced heatmap service (which takes year parameter)
-						Data.getProjectVisInYearRange("heatmap", projectId, viewType, minValue, maxValue, lang)
-							.then(visualizeHeatmap, createHeatmapError);
-					} else {
-						// Call basic heatmap service
-						Data.getProjectVis("heatmap", projectId, viewType, lang)
-							.then(visualizeHeatmap, createHeatmapError);
+						// Create extra parameters object with year
+						var extraParams = {
+							year: "[" + minValue + " TO " + maxValue + "]"
+						};
 					}
+
+					// Get heatmap data
+					Data.getProjectVis("heatmap", projectId, viewType, lang, extraParams)
+						.then(visualizeHeatmap, createHeatmapError);
 				};
 
 				if (yearSelection == "true") {
