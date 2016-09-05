@@ -87,7 +87,7 @@ angular.module('yds').directive('ydsPie', ['Data', 'CountrySelectionService', fu
 
                 //check if the component is properly rendered
                 if (_.isUndefined(pieData) || !_.isArray(pieData) || _.isUndefined(pieSeries) || _.isUndefined(pieTitle)) {
-                    scope.ydsAlert = "The YDS component is not properly configured." +
+                    scope.ydsAlert = "The YDS component is not properly configured. " +
                         "Please check the corresponding documentation section";
                     return false;
                 }
@@ -145,55 +145,73 @@ angular.module('yds').directive('ydsPie', ['Data', 'CountrySelectionService', fu
                         // New data is not empty, update the pie chart's series
                         chart.series[0].setData(pieData);
                     }
-                } else {
+                } else if (!_.isEmpty(pieData)) {
                     // Chart is being created for the first time, create normally
                     chart = new Highcharts.Chart(options);
                 }
             };
 
             var visualizePieError = function(error) {
-                if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
-                    scope.ydsAlert = "An error was occurred, please check the configuration of the component";
+                if (_.isNull(error) || _.isUndefined(error) || _.isUndefined(error.message))
+                    scope.ydsAlert = "An error has occurred, please check the configuration of the component";
                 else
                     scope.ydsAlert = error.message;
             };
 
             /**
-             * Gets selected countries from the CountrySelectionService and formats them like a server response
-             * from the API so that visualizePie() can read it correctly
-             * @returns {{data: {data: *, series: string, title: string}, view: *[]}}
+             * Gets the response from the server, keeps only the categories selected via the heatmap
+             * and calls visualizePie with the modified response
+             * @param response
              */
-            var getCountrySelectionServiceData = function() {
-                var data = CountrySelectionService.getCountries().map(function(c) {
-                    return {
-                        name: c.name,
-                        y: c.value
-                    }
+            var filterResponse = function(response) {
+                var newResponse = response;
+                var newData = [];
+
+                // Get selected countries from heatmap
+                var selCountries = CountrySelectionService.getCountries();
+
+                // Get grid data from response
+                var data = response.data.data;
+
+                _.each(data, function(responseCountry) {
+                    _.each(selCountries, function(selCountry) {
+                        if (selCountry.code == responseCountry.name) {
+                            newData.push(responseCountry);
+                        }
+                    });
                 });
 
-                return {
-                    data: {
-                        data: data,
-                        series: "",
-                        title: null
-                    },
-                    view: [{
-                        attribute: "title"
-                    }]
-                };
+                // Add new data to modified response
+                newResponse.data.data = newData;
+
+                // Visualize bar with modified response
+                visualizePie(newResponse);
+            };
+
+            /**
+             * Gets the minimum and maximum selected years from the heatmap and if they are not null
+             * gets data for that year range from the API, filters it and if any countries are selected
+             * the visualization is created
+             */
+            var visualizePieWithYearRange = function() {
+                var minYear = CountrySelectionService.getMinYear();
+                var maxYear = CountrySelectionService.getMaxYear();
+
+                if (!_.isNull(minYear) && !_.isNull(maxYear)) {
+                    Data.getProjectVisInYearRange("pie", projectId, viewType, minYear, maxYear, lang)
+                        .then(filterResponse, visualizePieError);
+                }
             };
 
             if (useCountriesService == "true") {
-                // Create chart with data from country service
-                var selectedCountryData = getCountrySelectionServiceData();
-                if (!_.isEmpty(selectedCountryData.data.data)) {
-                    visualizePie(selectedCountryData);
-                }
+                // Create chart with year range
+                visualizePieWithYearRange();
+
+                // Subscribe to be notified of year range changes to update chart
+                CountrySelectionService.subscribeYearChanges(scope, visualizePieWithYearRange);
 
                 // Subscribe to be notified of country selection changes to update chart
-                CountrySelectionService.subscribeSelectionChanges(scope, function() {
-                    visualizePie(getCountrySelectionServiceData());
-                });
+                CountrySelectionService.subscribeSelectionChanges(scope, visualizePieWithYearRange);
             } else {
                 //get the pie data from the server
                 Data.getProjectVis("pie", scope.projectId, viewType, lang)

@@ -157,15 +157,15 @@ angular.module('yds').directive('ydsBar', ['Data', 'CountrySelectionService', fu
                 };
 
                 if (useYearRange == "true" && !_.isEmpty(chart)) {
-                        // Chart exists, update its data
-                        if (_.isEmpty(barCategories)) {
-                            // New data is empty, destroy the chart
-                            chart.destroy();
-                        } else {
-                            // New data is not empty, update the bar chart
-                            chart.xAxis[0].setCategories(barCategories);
-                            chart.series[0].setData(barData[0].data);
-                        }
+                    // Chart exists, update its data
+                    if (_.isEmpty(barCategories)) {
+                        // New data is empty, destroy the chart
+                        chart.destroy();
+                    } else {
+                        // New data is not empty, update the bar chart
+                        chart.xAxis[0].setCategories(barCategories);
+                        chart.series[0].setData(barData[0].data);
+                    }
                 } else if (!_.isEmpty(barCategories)) {
                     // Chart is being created for the first time, create normally
                     chart = new Highcharts.Chart(options);
