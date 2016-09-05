@@ -140,7 +140,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'CountrySelection
                     }
                 });
 
-                var getGridDataSuccess = function(response) {
+                var visualizeGrid = function(response) {
                     var rawData = [];
                     var columnDefs = [];
 
@@ -179,9 +179,18 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'CountrySelection
                     } else {
                         scope.gridOptions.rowData = rawData;
                     }
+                    // Create new grid or update existing grid
+                    if (_.isUndefined(grid.agGrid)) {
+                        // Create a new Grid Component
+                        grid.agGrid = new agGrid.Grid(gridContainer[0], scope.gridOptions);
 
-                    //Create a new Grid Component
-                    new agGrid.Grid(gridContainer[0], scope.gridOptions);
+                        if (grid.useYearRange == "true") {
+                            scope.gridOptions.api.sizeColumnsToFit();
+                        }
+                    } else {
+                        // Update grid data
+                        grid.agGrid.setRowData(rawData);
+                    }
 
                     //If filtering is enabled, register function to watch for filter updates
                     if (grid.filtering === "true" || grid.quickFiltering === "true") {
@@ -189,7 +198,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'CountrySelection
                     }
                 };
 
-                var getGridDataError = function(error){
+                var visualizeGridError = function(error){
                     if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
                         scope.ydsAlert = "An error has occurred, please check the configuration of the component";
                     else
@@ -197,10 +206,65 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'CountrySelection
                 };
 
                 /**
-                 * get the grid data from the server and create the grid component
-                 **/
-                Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang)
-                .then(getGridDataSuccess, getGridDataError);
+                 * Gets the response from the server, keeps only the countries selected via the heatmap
+                 * and calls visualizeGrid with the modified response
+                 * @param response
+                 */
+                var filterResponse = function(response) {
+                    var newResponse = response;
+                    var newData = [];
+
+                    // Get selected countries from heatmap
+                    var selCountries = CountrySelectionService.getCountries();
+
+                    // Get grid data from response
+                    var data = response.data;
+
+                    _.each(data, function(responseCountry) {
+                        _.each(selCountries, function(selCountry) {
+                            if (selCountry.code == responseCountry.code) {
+                                newData.push(responseCountry);
+                            }
+                        });
+                    });
+
+                    // Add new data to modified response
+                    newResponse.data = newData;
+
+                    // Create grid with modified response
+                    visualizeGrid(newResponse);
+                };
+
+                /**
+                 * Gets the minimum and maximum selected years from the heatmap and if they are not null
+                 * gets data for that year range from the API, filters it and if any countries are selected
+                 * the visualization is created
+                 */
+                var visualizeGridWithYearRange = function() {
+                    var minYear = CountrySelectionService.getMinYear();
+                    var maxYear = CountrySelectionService.getMaxYear();
+
+                    if (!_.isNull(minYear) && !_.isNull(maxYear)) {
+                        Data.getProjectVisInYearRange("grid", grid.projectId, grid.viewType, minYear, maxYear, grid.lang)
+                            .then(filterResponse, visualizeGridError);
+                    }
+                };
+
+                // Make appropriate request to the API to get grid data and create the grid
+                if (grid.useYearRange == "true") {
+                    // Create grid taking into account the year range
+                    visualizeGridWithYearRange();
+
+                    // Subscribe to be notified of year range changes to update chart
+                    CountrySelectionService.subscribeToYearChanges(scope, visualizeGridWithYearRange);
+
+                    // Subscribe to be notified of country selection changes to update chart
+                    CountrySelectionService.subscribe(scope, visualizeGridWithYearRange);
+                } else {
+                    // Create grid without year data
+                    Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang)
+                        .then(visualizeGrid, visualizeGridError);
+                }
             }
         };
     }
