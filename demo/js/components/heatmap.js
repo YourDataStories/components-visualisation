@@ -181,24 +181,6 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 						// Create empty heatmap
 						scope.heatmap = new Highcharts.Map(heatmapOptions);
 
-						// Handle point selection
-						Highcharts.wrap(Highcharts.Point.prototype, 'select', function (proceed) {
-							proceed.apply(this, Array.prototype.slice.call(arguments, 1));
-
-							// Get selected points
-							var points = scope.heatmap.getSelectedPoints().map(function(p) {
-								// Keep only name, code and value of point
-								return {
-									name: p.name,
-									code: p.code,
-									value: p.value
-								};
-							});
-
-							// Give new selected countries to the service
-							CountrySelectionService.setCountries(points);
-						});
-
 						heatmapOptions.initialized = true;
 					} else if (!_.isEmpty(scope.heatmap.series)) {
 						// If heatmap has a series, remove it
@@ -239,6 +221,28 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 								color: '#a4edba',
 								borderColor: 'black',
 								dashStyle: 'shortdot'
+							}
+						};
+
+						newSeries.point = {
+							events: {
+								select: function () {
+									// Get selected points
+									var points = scope.heatmap.getSelectedPoints();
+									points.push(this);
+
+									// Keep only name, code and value of points
+									points = points.map(function(p) {
+										return {
+											name: p.name,
+											code: p.code,
+											value: p.value
+										};
+									});
+
+									// Give new selected countries to the service
+									CountrySelectionService.setCountries(points);
+								}
 							}
 						};
 					}
