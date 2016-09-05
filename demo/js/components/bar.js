@@ -240,10 +240,10 @@ angular.module('yds').directive('ydsBar', ['Data', 'CountrySelectionService', fu
                 visualizeBarWithYearRange();
 
                 // Subscribe to be notified of year range changes to update chart
-                CountrySelectionService.subscribeToYearChanges(scope, visualizeBarWithYearRange);
+                CountrySelectionService.subscribeYearChanges(scope, visualizeBarWithYearRange);
 
                 // Subscribe to be notified of country selection changes to update chart
-                CountrySelectionService.subscribe(scope, visualizeBarWithYearRange);
+                CountrySelectionService.subscribeSelectionChanges(scope, visualizeBarWithYearRange);
             } else {
                 Data.getProjectVis("bar", projectId, viewType, lang)
                     .then(visualizeBar, visualizeBarError);

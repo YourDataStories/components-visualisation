@@ -171,6 +171,22 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 				});
 
 				/**
+				 * Function that takes array of points from Highmaps and keeps only the
+				 * country names, codes and values
+				 * @param points
+				 * @returns {*}
+				 */
+				var formatPoints = function(points) {
+					return points.map(function(p) {
+						return {
+							name: p.name,
+							code: p.code,
+							value: p.value
+						};
+					});
+				};
+
+				/**
 				 * Creates the heatmap on the page if it doesn't exist, or updates it
 				 * with the new data if it is initialized already
 				 * @param response	Server response from heatmap API
@@ -231,14 +247,22 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 									var points = scope.heatmap.getSelectedPoints();
 									points.push(this);
 
-									// Keep only name, code and value of points
-									points = points.map(function(p) {
-										return {
-											name: p.name,
-											code: p.code,
-											value: p.value
-										};
-									});
+									points = formatPoints(points);
+
+									// Give new selected countries to the service
+									CountrySelectionService.setCountries(points);
+								},
+								unselect: function(event) {
+									// Get selected points
+									var points = scope.heatmap.getSelectedPoints();
+
+									// Remove unselected points from points
+									var pIndex = points.indexOf(this);
+									if (pIndex > -1 ) {
+										points.splice(pIndex, 1);
+									}
+
+									points = formatPoints(points);
 
 									// Give new selected countries to the service
 									CountrySelectionService.setCountries(points);

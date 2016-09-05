@@ -256,10 +256,10 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'CountrySelection
                     visualizeGridWithYearRange();
 
                     // Subscribe to be notified of year range changes to update chart
-                    CountrySelectionService.subscribeToYearChanges(scope, visualizeGridWithYearRange);
+                    CountrySelectionService.subscribeYearChanges(scope, visualizeGridWithYearRange);
 
                     // Subscribe to be notified of country selection changes to update chart
-                    CountrySelectionService.subscribe(scope, visualizeGridWithYearRange);
+                    CountrySelectionService.subscribeSelectionChanges(scope, visualizeGridWithYearRange);
                 } else {
                     // Create grid without year data
                     Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang)

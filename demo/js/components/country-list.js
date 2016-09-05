@@ -25,7 +25,7 @@ angular.module('yds').directive('ydsCountryList', ['$timeout', 'CountrySelection
                 scope.countries = [];
 
                 // Subscribe to be notified of changes in selected countries
-                CountrySelectionService.subscribe(scope, function() {
+                CountrySelectionService.subscribeSelectionChanges(scope, function() {
                     // Update scope variable inside $timeout to trigger digest
                     $timeout(function() {
                         scope.countries = CountrySelectionService.getCountries();

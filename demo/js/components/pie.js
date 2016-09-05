@@ -191,7 +191,7 @@ angular.module('yds').directive('ydsPie', ['Data', 'CountrySelectionService', fu
                 }
 
                 // Subscribe to be notified of country selection changes to update chart
-                CountrySelectionService.subscribe(scope, function() {
+                CountrySelectionService.subscribeSelectionChanges(scope, function() {
                     visualizePie(getCountrySelectionServiceData());
                 });
             } else {
@@ -199,7 +199,6 @@ angular.module('yds').directive('ydsPie', ['Data', 'CountrySelectionService', fu
                 Data.getProjectVis("pie", scope.projectId, viewType, lang)
                     .then(visualizePie, visualizePieError);
             }
-
         }
     };
 }]);

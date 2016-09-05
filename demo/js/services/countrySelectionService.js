@@ -1,8 +1,10 @@
-angular.module('yds').service('CountrySelectionService', function($rootScope) {
+angular.module('yds').service('CountrySelectionService', function($rootScope, $timeout) {
     var countries = [];
     var yearRange = [];
+    var notifySelectionChangeLock = false;
+    var notifyYearChangeLock = false;
 
-    var subscribe = function(scope, callback) {
+    var subscribeSelectionChanges = function(scope, callback) {
         var unregister = $rootScope.$on('country-selection-service-change', callback);
         scope.$on('$destroy', unregister);
 
@@ -22,22 +24,41 @@ angular.module('yds').service('CountrySelectionService', function($rootScope) {
         return unregister;
     };
 
-    var notifySubscribers = function() {
-        $rootScope.$emit('country-selection-service-change');
+    /**
+     * Emit event to notify about a country selection change
+     */
+    var notifyCountrySelectionChange = function() {
+        if (!notifySelectionChangeLock) {
+            notifySelectionChangeLock = true;
+
+            $timeout(function() {
+                $rootScope.$emit('country-selection-service-change');
+
+                notifySelectionChangeLock = false;
+            }, 150);
+        }
     };
 
     /**
      * Emit event to notify about a year range change
      */
     var notifySubscribersYearChange = function() {
-        $rootScope.$emit('country-selection-service-year-range-change');
+        if (!notifyYearChangeLock) {
+            notifyYearChangeLock = true;
+
+            $timeout(function() {
+                $rootScope.$emit('country-selection-service-year-range-change');
+
+                notifyYearChangeLock = false;
+            }, 150);
+        }
     };
 
     var setCountries = function(newCountries) {
         if (!_.isEqual(countries, newCountries)) {
             countries = newCountries;
 
-            notifySubscribers();
+            notifyCountrySelectionChange();
         }
     };
 
@@ -49,7 +70,7 @@ angular.module('yds').service('CountrySelectionService', function($rootScope) {
         if (!_.isEmpty(countries)) {
             countries = [];
 
-            notifySubscribers();
+            notifyCountrySelectionChange();
         }
     };
 
@@ -92,8 +113,8 @@ angular.module('yds').service('CountrySelectionService', function($rootScope) {
     };
 
     return {
-        subscribe: subscribe,
-        subscribeToYearChanges: subscribeToYearChanges,
+        subscribeSelectionChanges: subscribeSelectionChanges,
+        subscribeYearChanges: subscribeToYearChanges,
         setCountries: setCountries,
         getCountries: getCountries,
         clearCountries: clearCountries,
