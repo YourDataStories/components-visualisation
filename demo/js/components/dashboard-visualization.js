@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionService', '$ocLazyLoad',
-    function(CountrySelectionService, $ocLazyLoad) {
+angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionService', '$ocLazyLoad', '$timeout',
+    function(CountrySelectionService, $ocLazyLoad, $timeout) {
         return {
             restrict: 'E',
             scope: {
@@ -11,7 +11,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionS
                 if (_.isUndefined(scope.elementH) || scope.elementH.trim() == "")
                     scope.elementH = 300;
 
-                scope.selectedVis = "bar";
+                scope.selectedVis = "";
 
                 // Load FontAwesome CSS file
                 var drupalPath = ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '');
@@ -20,6 +20,22 @@ angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionS
                         drupalPath + "css/font-awesome.min.css"
                     ],
                     cache: true
+                });
+
+                // Subscribe to year selection changes
+                CountrySelectionService.subscribeYearChanges(scope, function() {
+                    var selectedVis = "bar";
+                    if (scope.selectedVis.length > 0) {
+                        selectedVis = scope.selectedVis;
+                    }
+
+                    // Make selectedVis empty in order for the component to re-render
+                    scope.selectedVis = "";
+
+                    // Postpone to end of digest queue
+                    $timeout(function() {
+                        scope.selectVis(selectedVis);
+                    });
                 });
 
                 /**
