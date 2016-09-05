@@ -622,7 +622,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         return deferred.promise;
     };
 
-    dataService.getProjectVis = function(type, resourceId, viewType, lang) {
+    dataService.getProjectVis = function(type, resourceId, viewType, lang, extraParams) {
         var deferred = $q.defer();
         var visualizationUrl = "";
 
@@ -660,16 +660,23 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                 return deferred.promise;
         }
 
+        var params = {
+            id: resourceId,
+            type: viewType,
+            lang: lang,
+            context: 0
+        };
+
+        // If there are extra parameters to send to the API, add them to params
+        if (!_.isUndefined(extraParams)) {
+            _.extend(params, extraParams);
+        }
+
         $http({
             method: 'GET',
             url: visualizationUrl,
             headers: {'Content-Type': 'application/json; charset=UTF-8'},
-            params: {
-                id: resourceId,
-                type: viewType,
-                lang: lang,
-                context: 0
-            }
+            params: params
         }).success(function (data) {
             deferred.resolve(data);
         }).error(function (error) {

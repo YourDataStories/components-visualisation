@@ -1,0 +1,46 @@
+<div class="dashboard-visualization-container">
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left" style="padding-top: 7.5px;">Visualization</h3>
+
+            <div class="btn-group btn-group-sm pull-right">
+                <button ng-click="selectVis('grid')" class="btn btn-default"><i class="glyphicon glyphicon-list-alt"></i></button>
+                <button ng-click="selectVis('pie')" class="btn btn-default"><i class="glyphicon glyphicon-record"></i></button>
+                <button ng-click="selectVis('bar')" class="btn btn-default"><i class="glyphicon glyphicon-stats"></i></button>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div ng-switch="selectedVis">
+                <!--Grid-->
+                <yds-grid
+                    ng-switch-when="grid"
+                    project-id="none"
+                    view-type="aidactivity.beneficiary.countries.all"
+                    extra-params="apiOptions"
+                    element-h="{{elementH}}">
+                </yds-grid>
+
+                <!--Pie-->
+                <yds-pie
+                    ng-switch-when="pie"
+                    project-id="none"
+                    view-type="aidactivity.beneficiary.countries.all"
+                    extra-params="apiOptions"
+                    element-h="{{elementH}}">
+                </yds-pie>
+
+                <!--Bar-->
+                <yds-bar
+                    ng-switch-when="bar"
+                    project-id="none"
+                    view-type="aidactivity.beneficiary.countries.all"
+                    extra-params="apiOptions"
+                    element-h="{{elementH}}">
+                </yds-bar>
+
+                <!--Default-->
+                <p ng-switch-default>No visualization selected</p>
+            </div>
+        </div>
+    </div>
+</div>

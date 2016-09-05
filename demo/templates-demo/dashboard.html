@@ -1,7 +1,7 @@
 <div class="container">
     <div class="row">
         <!-- Heatmap -->
-        <div class="col-md-9">
+        <div class="col-md-7">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h3 class="panel-title">Number of Aid Activities</h3>
@@ -17,48 +17,17 @@
                             year-selection="true"
                             min-year="1997"
                             max-year="2018"
-                            country-selection="true"
+                            country-selection="false"
                             no-border="true"
                             element-h="550"></yds-heatmap>
                 </div>
             </div>
         </div>
 
-        <!-- Grid -->
-        <div class="col-md-3">
-            <yds-grid
-                    project-id="none"
-                    view-type="aidactivity.beneficiary.countries.all"
-                    use-year-range="true"
-                    element-h="650">
-            </yds-grid>
-        </div>
-    </div>
-    <div class="row">
-        <!-- Country list -->
-        <div class="col-md-4">
-            <yds-country-list element-h="350"></yds-country-list>
-        </div>
-
-        <!-- Pie chart -->
-        <div class="col-md-4">
-            <yds-pie
-                    project-id="none"
-                    view-type="aidactivity.beneficiary.countries.all"
-                    use-countries-service="true"
-                    element-h="350">
-            </yds-pie>
-        </div>
-
-        <!-- Bar chart -->
-        <div class="col-md-4">
-            <yds-bar
-                    project-id="none"
-                    view-type="aidactivity.beneficiary.countries.all"
-                    use-year-range="true"
-                    show-legend="false"
-                    element-h="350">
-            </yds-bar>
+        <div class="col-md-5">
+            <yds-dashboard-visualization
+                    element-h="550">
+            </yds-dashboard-visualization>
         </div>
     </div>
 </div>

@@ -8,6 +8,8 @@ angular.module('yds').directive('ydsBar', ['Data', 'CountrySelectionService', fu
 
             useYearRange: '@',  //use year range from CountrySelectionService for results, values: true, false
 
+            extraParams: '=',    //extra attributes to pass to the API, if needed
+
             titleX: '@',        //the text of the X-axis title
             titleY: '@',        //the text of the Y-axis title
             showLabelsX: '@',   //show or hide the X-axis label
@@ -46,6 +48,7 @@ angular.module('yds').directive('ydsBar', ['Data', 'CountrySelectionService', fu
             var exporting = scope.exporting;
             var elementH = scope.elementH;
             var titleSize = scope.titleSize;
+            var extraParams = scope.extraParams;
 
             //check if the projectId and the viewType attr is defined, else stop the process
             if (useYearRange != "true" && (_.isUndefined(projectId) || projectId.trim()=="")) {
@@ -245,7 +248,7 @@ angular.module('yds').directive('ydsBar', ['Data', 'CountrySelectionService', fu
                 // Subscribe to be notified of country selection changes to update chart
                 CountrySelectionService.subscribeSelectionChanges(scope, visualizeBarWithYearRange);
             } else {
-                Data.getProjectVis("bar", projectId, viewType, lang)
+                Data.getProjectVis("bar", projectId, viewType, lang, extraParams)
                     .then(visualizeBar, visualizeBarError);
             }
         }

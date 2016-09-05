@@ -8,6 +8,8 @@ angular.module('yds').directive('ydsPie', ['Data', 'CountrySelectionService', fu
 
             useCountriesService: '@',  // if true will use selected countries service to load data instead of API
 
+            extraParams: '=',    //extra attributes to pass to the API, if needed
+
             showLegend: '@',    //enable or disable the chart's legend
             exporting: '@',     //enable or disable the export of the chart
             elementH: '@',      //set the height of the component
@@ -38,6 +40,7 @@ angular.module('yds').directive('ydsPie', ['Data', 'CountrySelectionService', fu
             var exporting = scope.exporting;
             var elementH = scope.elementH;
             var titleSize = scope.titleSize;
+            var extraParams = scope.extraParams;
 
             //check if the projectId is defined, else stop the process
             if (useCountriesService != "true" && (_.isUndefined(projectId) || projectId.trim()=="")) {
@@ -214,7 +217,7 @@ angular.module('yds').directive('ydsPie', ['Data', 'CountrySelectionService', fu
                 CountrySelectionService.subscribeSelectionChanges(scope, visualizePieWithYearRange);
             } else {
                 //get the pie data from the server
-                Data.getProjectVis("pie", scope.projectId, viewType, lang)
+                Data.getProjectVis("pie", scope.projectId, viewType, lang, extraParams)
                     .then(visualizePie, visualizePieError);
             }
         }

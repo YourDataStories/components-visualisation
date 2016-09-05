@@ -9,6 +9,8 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'CountrySelection
 
                 useYearRange: '@',      // Use year range from CountrySelectionService for results, values: true, false
 
+                extraParams: '=',       // Extra attributes to pass to the API, if needed
+
                 sorting: '@',           // Enable or disable array sorting, values: true, false
                 filtering: '@',         // Enable or disable array filtering, values: true, false
                 quickFiltering: '@',    // Enable or disable array quick filtering, values: true, false
@@ -42,6 +44,8 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'CountrySelection
                     pageSize: scope.pageSize,
                     elementH: scope.elementH
                 };
+
+                var extraParams = scope.extraParams;
 
                 //check if project id or grid type are defined
                 if(_.isUndefined(grid.projectId) || grid.projectId.trim()=="") {
@@ -262,7 +266,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'CountrySelection
                     CountrySelectionService.subscribeSelectionChanges(scope, visualizeGridWithYearRange);
                 } else {
                     // Create grid without year data
-                    Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang)
+                    Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang, extraParams)
                         .then(visualizeGrid, visualizeGridError);
                 }
             }
