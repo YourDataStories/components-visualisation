@@ -4,7 +4,7 @@
         <div class="col-md-9">
             <h2>Official Development Assistance (ODA) of the Netherlands</h2>
 
-            <p>This dashboard presents aspects of the data available for the development assistance provided by
+            <p class="lead">This dashboard presents aspects of the data available for the development assistance provided by
                 the Netherlands to various countries all over the world.</p>
             <p>The following map shows all countries that have received Dutch ODA, by showing the number of
                 aid activities for all involved countries over the specified date range:</p>
@@ -27,8 +27,8 @@
     </div>
 
     <div class="row">
-        <!--Heatmap-->
         <div class="col-md-7">
+            <!--Heatmap-->
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h3 class="panel-title">Number of Aid Activities</h3>
@@ -48,13 +48,81 @@
                             no-border="true"
                             element-h="400"></yds-heatmap>
                 </div>
+                <div class="panel-footer" style="padding: 3px 15px">
+                    <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
+                </div>
             </div>
+
+            <h3>What can I do with the available data?</h3>
+            <ul>
+                <li> You can see the data (as a table), either for all countries, or for selected countries in the map.</li>
+                <li>You can see the transactions (all, disbursement, commitment)</li>
+                <li>You can see the sectors.</li>
+                <li>You can search in the data.</li>
+                <li>You can visualise the data.</li>
+            </ul>
         </div>
 
-        <!--Dashboard Visualization-->
         <div class="col-md-5">
+            <!--Dashboard Visualization-->
             <yds-dashboard-visualization
-                    element-h="440">
+                    element-h="460">
+            </yds-dashboard-visualization>
+        </div>
+    </div>
+
+    <!--Trade activities-->
+    <div class="row">
+        <!--Trade activities title and description-->
+        <div class="col-md-12">
+            <h2>What data is related? Trade Activities</h2>
+
+            <p>International trade activities describe the trade activities among countries.</p>
+            <p>In the following map you can see the trade relations between the Netherlands, and the rest of the world:</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-7">
+            <!--Heatmap-->
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Number of Trade Activities</h3>
+                </div>
+                <div class="panel-body">
+                    <yds-heatmap
+                            project-id="none"
+                            view-type="aidactivity.beneficiary.countries.all"
+                            color-axis="true"
+                            color-type="logarithmic"
+                            legend="true"
+                            legend-v-align="bottom"
+                            year-selection="true"
+                            min-year="1997"
+                            max-year="2018"
+                            country-selection="false"
+                            no-border="true"
+                            element-h="400"></yds-heatmap>
+                </div>
+                <div class="panel-footer" style="padding: 3px 15px">
+                    <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
+                </div>
+            </div>
+
+            <h3>What can I do with the available trade activity data?</h3>
+            <ul>
+                <li>You can see the data (as a table), either for all countries, or for selected countries in the map.</li>
+                <li>You can see the transactions (all, disbursement, commitment)</li>
+                <li>You can see the sectors.</li>
+                <li>You can search in the data.</li>
+                <li>You can visualise the data.</li>
+            </ul>
+        </div>
+
+        <div class="col-md-5">
+            <!--Dashboard Visualization-->
+            <yds-dashboard-visualization
+                    element-h="460">
             </yds-dashboard-visualization>
         </div>
     </div>
