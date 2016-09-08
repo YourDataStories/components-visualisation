@@ -13,15 +13,6 @@ angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionS
 
                 scope.selectedVis = "";
 
-                // Load FontAwesome CSS file
-                var drupalPath = ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '');
-                $ocLazyLoad.load({
-                    files: [
-                        drupalPath + "css/font-awesome.min.css"
-                    ],
-                    cache: true
-                });
-
                 // Subscribe to year selection changes
                 CountrySelectionService.subscribeYearChanges(scope, function() {
                     var selectedVis = "bar";
