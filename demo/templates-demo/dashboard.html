@@ -1,6 +1,33 @@
 <div class="container">
     <div class="row">
-        <!-- Heatmap -->
+        <!--Dashboard title and description-->
+        <div class="col-md-9">
+            <h2>Official Development Assistance (ODA) of the Netherlands</h2>
+
+            <p>This dashboard presents aspects of the data available for the development assistance provided by
+                the Netherlands to various countries all over the world.</p>
+            <p>The following map shows all countries that have received Dutch ODA, by showing the number of
+                aid activities for all involved countries over the specified date range:</p>
+        </div>
+
+        <!--Panel with links to datasets-->
+        <div class="col-md-3">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Data from Datasets</h3>
+                </div>
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-sm" target="_blank" href="http://143.233.226.61:8890/describe/?url=http://linkedeconomy.org/resource/Dataset/ODA/NL">ODA of the Netherlands</a>
+                    <a class="list-group-item list-group-item-sm" target="_blank" href="http://143.233.226.61:8890/describe/?url=http://linkedeconomy.org/resource/Dataset/ODA/ZW">ODA to Zimbabwe</a>
+                    <a class="list-group-item list-group-item-sm" target="_blank" href="http://143.233.226.61:8890/describe/?url=http://linkedeconomy.org/resource/Dataset/trade/NL">International trade activities of the Netherlands</a>
+                    <a class="list-group-item list-group-item-sm" target="_blank" href="http://143.233.226.61:8890/describe/?url=http://linkedeconomy.org/resource/Dataset/trade/ZW">International trade activities of Zimbabwe</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!--Heatmap-->
         <div class="col-md-7">
             <div class="panel panel-primary">
                 <div class="panel-heading">
@@ -24,6 +51,7 @@
             </div>
         </div>
 
+        <!--Dashboard Visualization-->
         <div class="col-md-5">
             <yds-dashboard-visualization
                     element-h="440">

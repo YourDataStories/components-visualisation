@@ -733,3 +733,8 @@ div.ag-root {
     border-color: #AD6900;
     color:#ffffff;
 }
+
+/* "Data from Datasets" widget of Dashboard */
+.list-group-item-sm {
+    padding: 6px 15px;
+}
