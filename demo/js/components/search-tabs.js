@@ -8,7 +8,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                 lang : '@'
             },
             templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/search-tabs.html',
-            link: function(scope, element) {
+            link: function(scope) {
                 scope.initialized = false;	    // flag that indicated when the component is initialized
                 scope.tabs = {};                // Object with tab information
                 scope.translations = Translations.getAll(scope.lang);   // Translations used for no results message
