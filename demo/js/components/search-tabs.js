@@ -3,20 +3,23 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
         return {
             restrict: 'E',
             scope: {
+                defaultTab: '@',
                 lang : '@'
             },
             templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/search-tabs.html',
-            link: function(scope) {
+            link: function(scope, element) {
                 scope.initialized = false;	    // flag that indicated when the component is initialized
                 scope.tabs = {};                // Object with tab information
                 scope.translations = Translations.getAll(scope.lang);   // Translations used for no results message
+
+                var defaultTab = scope.defaultTab;
 
                 var prevQ = "";                 // Keeps previous search query value
                 var prevRules = "";             // Keeps previous advanced search rules
                 var prevTab = "";               // Keeps previous tab name value
 
                 // check if the language attr is defined, else assign default value
-                if(angular.isUndefined(scope.lang) || scope.lang.trim()=="")
+                if(_.isUndefined(scope.lang) || scope.lang.trim()=="")
                     scope.lang = "en";
 
                 /**
@@ -29,7 +32,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
 
                         // Set all the tabs to inactive so the first one isn't activated by default
                         _.each(tabs, function(tab) {
-                            tab.active = false;
+                            tab.active = (tab.concept == defaultTab);
                         });
 
                         // Set the tabs variable
