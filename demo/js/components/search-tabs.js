@@ -4,6 +4,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
             restrict: 'E',
             scope: {
                 defaultTab: '@',
+                hideTabs: '@',
                 lang : '@'
             },
             templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/search-tabs.html',

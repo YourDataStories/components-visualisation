@@ -127,6 +127,11 @@ body #main .container:first-child {
     }
 }
 
+/* Rule for hiding tabs in tabbed search */
+.hide-tabs > ul.nav.nav-tabs {
+    display: none;
+}
+
 /***************************************/
 /******* GEO EDITING COMPONENT *********/
 /***************************************/
