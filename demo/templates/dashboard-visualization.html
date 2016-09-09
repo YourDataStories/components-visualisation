@@ -1,17 +1,18 @@
 <div class="dashboard-visualization-container">
     <div class="row">
         <yds-aggregate
-                ng-repeat="type in aggregateTypes"
+                ng-repeat="type in aggregateTypes track by $index"
                 project-id="{{ projectId }}"
                 view-type="{{ type }}"
+                set-on-init="{{ ($index == 0) }}"
                 extra-params="apiOptions">
         </yds-aggregate>
     </div>
 
     <div class="row">
         <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-heading clearfix">
+            <div class="panel panel-default" ng-style="panelStyle">
+                <div class="panel-heading clearfix" ng-style="panelHeadingStyle">
                     <h3 class="panel-title pull-left" style="padding-top: 7.5px;">Visualization</h3>
 
                     <div class="btn-group btn-group-sm pull-right">

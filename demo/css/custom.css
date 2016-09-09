@@ -719,26 +719,6 @@ div.ag-root {
     margin-left: 10px;
 }
 
-/*********************************************/
-/**** Dashboard Visualization Panel Color ****/
-/*********************************************/
-
-.dashboard-visualization-container > .row > .col-md-12 > .panel-default {
-    border-color: #F59B11;
-}
-
-.dashboard-visualization-container > .row > .col-md-12 > .panel-default > .panel-heading {
-    background-color: #F59B11;
-    border-color: #F59B11;
-    color: #ffffff;
-}
-
-.dashboard-visualization-container > .row > .col-md-12 > .panel-default > .panel-heading > .btn-group > .btn-default {
-    background-color: #D68200;
-    border-color: #AD6900;
-    color:#ffffff;
-}
-
 /* "Data from Datasets" widget of Dashboard */
 .list-group-item-sm {
     padding: 6px 15px;

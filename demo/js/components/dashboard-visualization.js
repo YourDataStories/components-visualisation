@@ -20,13 +20,10 @@ angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionS
                 scope.selProjectId = scope.projectId;
                 scope.selViewType = "";
 
-                // Subscribe to year selection changes
-                CountrySelectionService.subscribeYearChanges(scope, function() {
-                    var selectedVis = "bar";
-                    if (scope.selectedVis.length > 0) {
-                        selectedVis = scope.selectedVis;
-                    }
-
+                /**
+                 * Re-render the Aggregate widgets
+                 */
+                var updateAggregates = function() {
                     var aggregateTypes = [
                         "aidactivity.beneficiary.countries.all",
                         "aidactivity.budget.for.countries.and.period",
@@ -37,23 +34,64 @@ angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionS
                         aggregateTypes = scope.aggregateTypes;
                     }
 
-                    var selViewType = _.first(aggregateTypes);
-                    if (scope.selViewType.length > 0) {
-                        selViewType = scope.selViewType;
-                    }
-
-
-                    // Make selectedVis empty in order for the component to re-render
-                    scope.selectedVis = "";
+                    // Make aggregateTypes empty in order for the component to re-render
                     scope.aggregateTypes = [];
 
                     // Postpone to end of digest queue
                     $timeout(function() {
                         scope.aggregateTypes = aggregateTypes;
-                        scope.selViewType = selViewType;
+                    });
+                };
+
+                /**
+                 * Re-render the selected visualization
+                 */
+                var updateVisualization = function() {
+                    var selectedVis = "bar";
+                    if (scope.selectedVis.length > 0) {
+                        selectedVis = scope.selectedVis;
+                    }
+
+                    // Make selectedVis empty in order for the component to re-render
+                    scope.selectedVis = "";
+
+                    // Postpone to end of digest queue
+                    $timeout(function() {
                         scope.selectVis(selectedVis);
                     });
-                });
+                };
+
+                /**
+                 * Update the view type from the CountrySelectionService
+                 * Also sets the Visualization panel's color
+                 */
+                var updateViewType = function() {
+                    var viewType = CountrySelectionService.getViewType();
+
+                    scope.selViewType = viewType.type;
+                    scope.panelStyle = viewType.panelStyle;
+                    scope.panelHeadingStyle = viewType.panelHeadingStyle;
+                };
+
+                /**
+                 * Handles year selection changes
+                 */
+                var yearChangeHandler = function() {
+                    updateAggregates();
+                    updateVisualization();
+                };
+
+                /**
+                 * Handles view type selection changes
+                 */
+                var viewTypeChangeHandler = function() {
+                    updateViewType();
+                    updateVisualization();
+                };
+
+                // Subscribe to year selection and view type changes
+                CountrySelectionService.subscribeYearChanges(scope, yearChangeHandler);
+                CountrySelectionService.subscribeViewTypeChanges(scope, viewTypeChangeHandler);
 
                 /**
                  * Change selected visualization type and if there is a year range selected, add it to apiOptions

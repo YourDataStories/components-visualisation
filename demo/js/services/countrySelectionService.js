@@ -1,8 +1,10 @@
 angular.module('yds').service('CountrySelectionService', function($rootScope, $timeout) {
     var countries = [];
     var yearRange = [];
+    var selectedViewType = {};
     var notifySelectionChangeLock = false;
     var notifyYearChangeLock = false;
+    var notifyViewTypeChangeLock = false;
 
     var subscribeSelectionChanges = function(scope, callback) {
         var unregister = $rootScope.$on('country-selection-service-change', callback);
@@ -22,6 +24,34 @@ angular.module('yds').service('CountrySelectionService', function($rootScope, $t
         scope.$on('$destroy', unregister);
 
         return unregister;
+    };
+
+    /**
+     * Function used to subscribe to be notified about changes in the selected view type
+     * @param scope
+     * @param callback
+     * @returns {*}
+     */
+    var subscribeViewTypeChanges = function(scope, callback) {
+        var unregister = $rootScope.$on('country-selection-service-view-type-change', callback);
+        scope.$on('$destroy', unregister);
+
+        return unregister;
+    };
+
+    /**
+     * Emit event to notify about a view type change
+     */
+    var notifyViewTypeChange = function() {
+        if (!notifyViewTypeChangeLock) {
+            notifyViewTypeChangeLock = true;
+
+            $timeout(function() {
+                $rootScope.$emit('country-selection-service-view-type-change');
+
+                notifyViewTypeChangeLock = false;
+            }, 150);
+        }
     };
 
     /**
@@ -112,15 +142,38 @@ angular.module('yds').service('CountrySelectionService', function($rootScope, $t
         return _.isEmpty(yearRange) ? null : _.max(yearRange);
     };
 
+    /**
+     * Returns the selected view type
+     * @returns {{}}
+     */
+    var getViewType = function() {
+        return selectedViewType;
+    };
+
+    /**
+     * Sets the selected view type
+     * @param viewType
+     */
+    var setViewType = function(viewType) {
+        if (!_.isEqual(selectedViewType, viewType)) {
+            selectedViewType = viewType;
+
+            notifyViewTypeChange();
+        }
+    };
+
     return {
         subscribeSelectionChanges: subscribeSelectionChanges,
         subscribeYearChanges: subscribeToYearChanges,
+        subscribeViewTypeChanges: subscribeViewTypeChanges,
         setCountries: setCountries,
         getCountries: getCountries,
         clearCountries: clearCountries,
         setYearRange: setYearRange,
         getYearRange: getYearRange,
         getMinYear: getMinYear,
-        getMaxYear: getMaxYear
+        getMaxYear: getMaxYear,
+        setViewType: setViewType,
+        getViewType: getViewType
     };
 });
