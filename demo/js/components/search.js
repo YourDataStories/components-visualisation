@@ -3,12 +3,13 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 		return {
 			restrict: 'E',
 			scope: {
-				lang:'@',				// language of component
-				maxSuggestions: '@',	// maximum suggestions to show in typeahead popup
-				standalone: '@',		// if search component is standalone
-				tabbed: '@',			// if search component is used in tabbed search (so it needs to use different URL)
-				concept: '@',			// concept for adv. search, used by QB for restoring rules from url parameters
-				conceptId: '@'			// concept id, used by advanced search for getting query builder rules
+				lang:'@',				// Language of component
+				urlParamPrefix: '@',	// Prefix to add before all url parameters (optional)
+				maxSuggestions: '@',	// Maximum suggestions to show in typeahead popup
+				standalone: '@',		// If search component is standalone
+				tabbed: '@',			// If search component is used in tabbed search (so it needs to use different URL)
+				concept: '@',			// Concept for adv. search, used by QB for restoring rules from url parameters
+				conceptId: '@'			// Concept id, used by advanced search for getting query builder rules
 			},
 			templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/search.html',
 			link: function (scope) {
@@ -19,8 +20,10 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 					searchKeyword: ""
 				};
 
+				var paramPrefix = scope.urlParamPrefix;
+
 				// Make advanced search visible if rules are defined in the URL
-				if (!_.isUndefined($location.search().rules) && scope.concept == $location.search().tab) {
+				if (!_.isUndefined($location.search()[paramPrefix + "rules"]) && scope.concept == $location.search()[paramPrefix + "tab"]) {
 					scope.searchOptions.advancedVisible = true;
 				}
 
@@ -30,6 +33,10 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 				if (_.isUndefined(scope.tabbed) || (scope.tabbed != "true" && scope.tabbed != "false")) {
 					scope.tabbed = "false";
 				}
+
+				// If no url parameter prefix is defined or it is only whitespace, use not parameter prefix
+				if (_.isUndefined(paramPrefix) || (paramPrefix.trim()=="" && paramPrefix.length > 0))
+					paramPrefix = "";
 
 				//check if the language attr is defined, else assign default value
 				if(angular.isUndefined(scope.searchOptions.lang) || scope.searchOptions.lang.trim()=="")
@@ -70,16 +77,16 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 					if (scope.tabbed == "true") {
 						//check if search box is empty
 						if (!searchForm.$valid) {
-							$location.search("q", null);
-							$location.search("rules", null);
+							$location.search(paramPrefix + "q", null);
+							$location.search(paramPrefix + "rules", null);
 							Search.clearKeyword();
 						} else {
 							$timeout(function() {
 								// append the query and current tab params to the search url
 								var baseUrl = (scope.searchOptions.lang == "en") ? YDS_CONSTANTS.SEARCH_RESULTS_URL_TABBED : YDS_CONSTANTS.SEARCH_RESULTS_URL_EL;
-								var tabParam = (_.isUndefined($location.search().tab)) ? "" : "&tab=" + $location.search().tab;
+								var tabParam = (_.isUndefined($location.search()[paramPrefix + "tab"])) ? "" : "&" + paramPrefix + "tab=" + $location.search()[paramPrefix + "tab"];
 
-								$window.location.href = baseUrl + "?q=" + scope.searchOptions.searchKeyword + tabParam;
+								$window.location.href = baseUrl + "?" + paramPrefix + "q=" + scope.searchOptions.searchKeyword + tabParam;
 							});
 						}
 					} else {
@@ -120,9 +127,9 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 
 							// append the query, current tab params and query builder rules to the search url
 							var baseUrl = (scope.searchOptions.lang == "en") ? YDS_CONSTANTS.SEARCH_RESULTS_URL_TABBED : YDS_CONSTANTS.SEARCH_RESULTS_URL_EL;
-							var queryParam = "?q=" + keyword;
-							var tabParam = (_.isUndefined($location.search().tab)) ? "" : "&tab=" + $location.search().tab;
-							var rulesParam = "&rules=" + JSURL.stringify(rules);
+							var queryParam = "?" + paramPrefix + "q=" + keyword;
+							var tabParam = (_.isUndefined($location.search()[paramPrefix + "tab"])) ? "" : "&" + paramPrefix + "tab=" + $location.search()[paramPrefix + "tab"];
+							var rulesParam = "&" + paramPrefix + "rules=" + JSURL.stringify(rules);
 
 							$window.location.href = baseUrl + queryParam + tabParam + rulesParam;
 						});

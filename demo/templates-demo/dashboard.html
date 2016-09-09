@@ -102,6 +102,7 @@
                             <!--Tabbed Search-->
                             <yds-search-tabs
                                     default-tab="AidActivity"
+                                    url-param-prefix="aa-"
                                     hide-tabs="true"
                                     lang="en">
                             </yds-search-tabs>
@@ -153,15 +154,6 @@
                     <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
                 </div>
             </div>
-
-            <h3>What can I do with the available trade activity data?</h3>
-            <ul>
-                <li>You can see the data (as a table), either for all countries, or for selected countries in the map.</li>
-                <li>You can see the transactions (all, disbursement, commitment)</li>
-                <li>You can see the sectors.</li>
-                <li>You can search in the data.</li>
-                <li>You can visualise the data.</li>
-            </ul>
         </div>
 
         <div class="col-md-5">
@@ -169,6 +161,61 @@
             <yds-dashboard-visualization
                     element-h="460">
             </yds-dashboard-visualization>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading" ng-click="isCollapsedTradeActivityPanel = !isCollapsedTradeActivityPanel">
+                    <h3 class="panel-title">What can I do with the available trade activity data?</h3>
+                </div>
+
+                <div class="panel-body" uib-collapse="isCollapsedTradeActivityPanel" ng-init="isCollapsedTradeActivityPanel = true">
+                    <uib-tabset type="pills">
+                        <uib-tab heading="View data (as a table)">
+                            <!--Placeholder table-->
+                            <yds-grid
+                                    project-id="none"
+                                    view-type="aidactivity.beneficiary.countries.all"
+                                    extra-params="apiOptions"
+                                    element-h="400">
+                            </yds-grid>
+                        </uib-tab>
+                        <uib-tab heading="View transactions">
+                            <!--Placeholder table-->
+                            <yds-grid
+                                    project-id="none"
+                                    view-type="aidactivity.beneficiary.countries.all"
+                                    extra-params="apiOptions"
+                                    element-h="400">
+                            </yds-grid>
+                        </uib-tab>
+                        <uib-tab heading="View sectors">
+                            <!--Placeholder table-->
+                            <yds-grid
+                                    project-id="none"
+                                    view-type="aidactivity.beneficiary.countries.all"
+                                    extra-params="apiOptions"
+                                    element-h="400">
+                            </yds-grid>
+                        </uib-tab>
+                        <uib-tab heading="Search the data">
+                            <!--Tabbed Search-->
+                            <yds-search-tabs
+                                    default-tab="TradeActivity"
+                                    url-param-prefix="ta-"
+                                    hide-tabs="true"
+                                    lang="en">
+                            </yds-search-tabs>
+                        </uib-tab>
+                        <uib-tab heading="Visualize the data">
+                            <!--Workbench-->
+                            <yds-workbench user-id="ydsUser"></yds-workbench>
+                        </uib-tab>
+                    </uib-tabset>
+                </div>
+            </div>
         </div>
     </div>
 </div>

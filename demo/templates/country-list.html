@@ -14,7 +14,7 @@
         <tbody>
             <tr ng-repeat="country in countries">
                 <td>
-                    <img ng-src="{{ blankSrc }}" class="flag flag-{{ country.code }}" alt='{{ country.code }}' />
+                    <img ng-src="{{ blankSrc }}" class="flag flag-{{ country.code }}" alt="{{ country.code }}" />
                 </td>
                 <td>{{ country.name }}</td>
                 <td>{{ country.value }}</td>

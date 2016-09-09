@@ -3,29 +3,30 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
         return {
             restrict: 'E',
             scope: {
-                viewType: '@',          // name of the view to use for the grid
-                lang: '@',              // lang of the visualised data
+                viewType: '@',          // Name of the view to use for the grid
+                lang: '@',              // Lang of the visualised data
+                urlParamPrefix: '@',    // Prefix to add before all url parameters (optional)
 
-                sorting: '@',           // enable or disable array sorting, values: true, false
-                filtering: '@',         // enable or disable array filtering, values: true, false
-                quickFiltering: '@',    // enable or disable array quick filtering, values: true, false
-                colResize: '@',         // enable or disable column resize, values: true, false
-                pageSize: '@',          // set the number of rows of each page
-                elementH: '@',          // set the height of the component
+                sorting: '@',           // Enable or disable array sorting, values: true, false
+                filtering: '@',         // Enable or disable array filtering, values: true, false
+                quickFiltering: '@',    // Enable or disable array quick filtering, values: true, false
+                colResize: '@',         // Enable or disable column resize, values: true, false
+                pageSize: '@',          // Set the number of rows of each page
+                elementH: '@',          // Set the height of the component
 
-                addToBasket: '@',       // enable or disable "add to basket" functionality, values: true, false
-                basketBtnX: '@',        // x-axis position of the basket button
-                basketBtnY: '@'         // y-axis position of the basket button
+                addToBasket: '@',       // Enable or disable "add to basket" functionality, values: true, false
+                basketBtnX: '@',        // X-axis position of the basket button
+                basketBtnY: '@'         // Y-axis position of the basket button
             },
             templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/grid-advanced.html',
             link: function(scope, element) {
-                //reference the dom elements in which the yds-grid is rendered
+                // Reference the dom elements in which the yds-grid is rendered
                 var gridWrapper = angular.element(element[0].querySelector('.component-wrapper'));
                 var gridContainer = angular.element(element[0].querySelector('.grid-container'));
 
                 var prevTab =   "";     // Keeps the previous tab to check if the tab has changed
 
-                //set the variables which will be used for the creation of the grid
+                // Set the variables which will be used for the creation of the grid
                 scope.quickFilterValue = "";
                 var grid = {
                     elementId: "grid" + Data.createRandomId(),
@@ -39,7 +40,9 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     elementH: scope.elementH
                 };
 
-                // if viewType is undefined we can't show the grid
+                var paramPrefix = scope.urlParamPrefix;
+
+                // If viewType is undefined we can't show the grid
                 if(_.isUndefined(grid.viewType) || grid.viewType.trim()=="") {
                     scope.ydsAlert = "The YDS component is not properly initialized " +
                         "because the viewType attribute isn't configured properly. " +
@@ -47,35 +50,39 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     return false;
                 }
 
-                //check if the language attr is defined, else assign default value
-                if(angular.isUndefined(grid.lang) || grid.lang.trim()=="")
+                // Check if the language attr is defined, else assign default value
+                if(_.isUndefined(grid.lang) || grid.lang.trim()=="")
                     grid.lang = "en";
 
-                //check if the sorting attr is defined, else assign the default value
-                if(angular.isUndefined(grid.sorting) || (grid.sorting!="true" && grid.sorting!="false"))
+                // if no url parameter prefix is defined or it is only whitespace, use not parameter prefix
+                if (_.isUndefined(paramPrefix) || (paramPrefix.trim()=="" && paramPrefix.length > 0))
+                    paramPrefix = "";
+
+                // Check if the sorting attr is defined, else assign the default value
+                if(_.isUndefined(grid.sorting) || (grid.sorting!="true" && grid.sorting!="false"))
                     grid.sorting = "true";
 
-                //check if the filtering attr is defined, else assign the default value
-                if(angular.isUndefined(grid.filtering) || (grid.filtering!="true" && grid.filtering!="false"))
+                // Check if the filtering attr is defined, else assign the default value
+                if(_.isUndefined(grid.filtering) || (grid.filtering!="true" && grid.filtering!="false"))
                     grid.filtering = "false";
 
-                //check if the quick filtering attr is defined, else assign the default value
-                if(angular.isUndefined(grid.quickFiltering) || (grid.quickFiltering!="true" && grid.quickFiltering!="false"))
+                // Check if the quick filtering attr is defined, else assign the default value
+                if(_.isUndefined(grid.quickFiltering) || (grid.quickFiltering!="true" && grid.quickFiltering!="false"))
                     grid.quickFiltering = "false";
 
-                //check if the colResize attr is defined, else assign default value
-                if(angular.isUndefined(grid.colResize) || (grid.colResize!="true" && grid.colResize!="false"))
+                // Check if the colResize attr is defined, else assign default value
+                if(_.isUndefined(grid.colResize) || (grid.colResize!="true" && grid.colResize!="false"))
                     grid.colResize = "false";
 
-                //check if the page size attr is defined, else assign default value
-                if(angular.isUndefined(grid.pageSize) || isNaN(grid.pageSize))
+                // Check if the page size attr is defined, else assign default value
+                if(_.isUndefined(grid.pageSize) || _.isNaN(grid.pageSize))
                     grid.pageSize = "100";
 
-                //check if the component's height attr is defined, else assign default value
-                if(angular.isUndefined(grid.elementH) || isNaN(grid.elementH))
+                // Check if the component's height attr is defined, else assign default value
+                if(_.isUndefined(grid.elementH) || _.isNaN(grid.elementH))
                     grid.elementH = 200 ;
 
-                //set the id and the height of the grid component
+                // Set the id and the height of the grid component
                 gridContainer[0].id = grid.elementId;
 
                 if (grid.quickFiltering === "true") {
@@ -133,14 +140,14 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     var urlParams = $location.search();
 
                     // Only look for changes if this grid is in the active tab
-                    if (urlParams.tab == scope.viewType) {
+                    if (urlParams[paramPrefix + "tab"] == scope.viewType) {
                         // If the tab changed and grid options are ready, size columns to fit
-                        if (urlParams.tab != prevTab && !_.isUndefined(scope.gridOptions) && _.has(scope.gridOptions, "api")) {
+                        if (urlParams[paramPrefix + "tab"] != prevTab && !_.isUndefined(scope.gridOptions) && _.has(scope.gridOptions, "api")) {
                             scope.gridOptions.api.sizeColumnsToFit();
                         }
 
                         // Update prevTab variable to the new tab
-                        prevTab = urlParams.tab;
+                        prevTab = urlParams[paramPrefix + "tab"];
 
                         // Visualize the grid
                         visualizeGrid();
@@ -303,7 +310,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                 params.successCallback(rowsWithButtons, numOfResults);
 
                                 // Call sizeColumnsToFit (for the visible grid when page loads)
-                                if (scope.viewType == $location.search().tab) {
+                                if (scope.viewType == $location.search()[paramPrefix + "tab"]) {
                                     scope.gridOptions.api.sizeColumnsToFit();
                                 }
                             };
@@ -320,7 +327,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                             }
 
                             // If there are advanced search rules, get them and perform advanced search
-                            var rules = $location.search().rules;
+                            var rules = $location.search()[paramPrefix + "rules"];
                             if (!_.isUndefined(rules)) {
                                 rules = JSURL.parse(rules);
 

@@ -3,9 +3,10 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
         return {
             restrict: 'E',
             scope: {
-                defaultTab: '@',
-                hideTabs: '@',
-                lang : '@'
+                defaultTab: '@',        // Default tab to select when page loads
+                urlParamPrefix: '@',    // Prefix to add before all url parameters (optional)
+                hideTabs: '@',          // If true, tabs will be hidden and only the default tab will show
+                lang : '@'              // Language of component
             },
             templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/search-tabs.html',
             link: function(scope) {
@@ -14,6 +15,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                 scope.translations = Translations.getAll(scope.lang);   // Translations used for no results message
 
                 var defaultTab = scope.defaultTab;
+                var paramPrefix = scope.urlParamPrefix;
 
                 var prevQ = "";                 // Keeps previous search query value
                 var prevRules = "";             // Keeps previous advanced search rules
@@ -22,6 +24,12 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                 // check if the language attr is defined, else assign default value
                 if(_.isUndefined(scope.lang) || scope.lang.trim()=="")
                     scope.lang = "en";
+
+                // if no url parameter prefix is defined or it is only whitespace, use not parameter prefix
+                if (_.isUndefined(paramPrefix) || (paramPrefix.trim()=="" && paramPrefix.length > 0)) {
+                    paramPrefix = "";
+                    scope.urlParamPrefix = "";
+                }
 
                 /**
                  * Initializes the tabs and makes the first one active
@@ -49,7 +57,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                  */
                 scope.tabChangeHandler = function (tabName) {
                     // Change the url parameter to reflect the tab change
-                    $location.search("tab", tabName);
+                    $location.search(paramPrefix + "tab", tabName);
                 };
 
                 /**
@@ -59,18 +67,18 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                     // Get url parameters to see if the tab or the query/rules changed
                     var urlParams = $location.search();
 
-                    if (urlParams.q != prevQ || urlParams.rules != prevRules) {
+                    if (urlParams[paramPrefix + "q"] != prevQ || urlParams[paramPrefix + "rules"] != prevRules) {
                         // The query or rules changed, need to update tab result counts
-                        prevQ = urlParams.q;
-                        prevRules = urlParams.rules;
-                        prevTab = urlParams.tab;
+                        prevQ = urlParams[paramPrefix + "q"];
+                        prevRules = urlParams[paramPrefix + "rules"];
+                        prevTab = urlParams[paramPrefix + "tab"];
 
                         // Get the search term from url params and set it as search keyword
-                        var keyword = urlParams.q;
+                        var keyword = urlParams[paramPrefix + "q"];
                         Search.setKeyword(keyword);
 
                         // Get the advanced search rules from url params to use for getting tab result counts
-                        var rules = $location.search().rules;
+                        var rules = urlParams[paramPrefix + "rules"];
                         if (!_.isUndefined(rules)) {
                             rules = JSURL.parse(rules);
                         }
@@ -94,7 +102,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                             });
 
                             // Make the correct tab selected
-                            var prevSelTab = $location.search().tab;
+                            var prevSelTab = $location.search()[paramPrefix + "tab"];
 
                             if (!_.isUndefined(prevSelTab)) {
                                 // Find and select the previously selected tab
@@ -110,16 +118,16 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                                 prevTab = tabToSel.concept;
                             }
                         });
-                    } else if (urlParams.tab != prevTab) {
+                    } else if (urlParams[paramPrefix + "tab"] != prevTab) {
                         // The tab changed
-                        prevTab = urlParams.tab;
+                        prevTab = urlParams[paramPrefix + "tab"];
 
                         // Reset the search keyword and remove it from URL parameters
                         Search.clearKeyword();
-                        $location.search("q", null);
+                        $location.search(paramPrefix + "q", null);
 
                         // Remove query builder rules from URL parameters (if there are any)
-                        $location.search("rules", null);
+                        $location.search(paramPrefix + "rules", null);
                     }
                 };
 
