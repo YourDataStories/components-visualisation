@@ -8,44 +8,46 @@
     </div>
 
     <div class="row">
-        <div class="panel panel-default">
-            <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left" style="padding-top: 7.5px;">Visualization</h3>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left" style="padding-top: 7.5px;">Visualization</h3>
 
-                <div class="btn-group btn-group-sm pull-right">
-                    <button ng-click="selectVis('grid')" class="btn btn-default"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
-                    <button ng-click="selectVis('pie')" class="btn btn-default"><i class="fa fa-pie-chart" aria-hidden="true"></i></button>
-                    <button ng-click="selectVis('bar')" class="btn btn-default"><i class="fa fa-bar-chart" aria-hidden="true"></i></button>
+                    <div class="btn-group btn-group-sm pull-right">
+                        <button ng-click="selectVis('grid')" class="btn btn-default"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
+                        <button ng-click="selectVis('pie')" class="btn btn-default"><i class="fa fa-pie-chart" aria-hidden="true"></i></button>
+                        <button ng-click="selectVis('bar')" class="btn btn-default"><i class="fa fa-bar-chart" aria-hidden="true"></i></button>
+                    </div>
                 </div>
-            </div>
-            <div class="panel-body">
-                <div ng-switch="selectedVis">
-                    <!--Grid-->
-                    <yds-grid
-                            ng-switch-when="grid"
-                            project-id="{{ projectId }}"
-                            view-type="{{ viewType }}"
-                            extra-params="apiOptions"
-                            element-h="{{elementH}}">
-                    </yds-grid>
+                <div class="panel-body">
+                    <div ng-switch="selectedVis">
+                        <!--Grid-->
+                        <yds-grid
+                                ng-switch-when="grid"
+                                project-id="{{ selProjectId }}"
+                                view-type="{{ selViewType }}"
+                                extra-params="apiOptions"
+                                element-h="{{elementH}}">
+                        </yds-grid>
 
-                    <!--Pie-->
-                    <yds-pie
-                            ng-switch-when="pie"
-                            project-id="{{ projectId }}"
-                            view-type="{{ viewType }}"
-                            extra-params="apiOptions"
-                            element-h="{{ elementH }}">
-                    </yds-pie>
+                        <!--Pie-->
+                        <yds-pie
+                                ng-switch-when="pie"
+                                project-id="{{ selProjectId }}"
+                                view-type="{{ selViewType }}"
+                                extra-params="apiOptions"
+                                element-h="{{ elementH }}">
+                        </yds-pie>
 
-                    <!--Bar-->
-                    <yds-bar
-                            ng-switch-when="bar"
-                            project-id="{{ projectId }}"
-                            view-type="{{ viewType }}"
-                            extra-params="apiOptions"
-                            element-h="{{ elementH }}">
-                    </yds-bar>
+                        <!--Bar-->
+                        <yds-bar
+                                ng-switch-when="bar"
+                                project-id="{{ selProjectId }}"
+                                view-type="{{ selViewType }}"
+                                extra-params="apiOptions"
+                                element-h="{{ elementH }}">
+                        </yds-bar>
+                    </div>
                 </div>
             </div>
         </div>

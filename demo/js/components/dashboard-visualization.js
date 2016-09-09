@@ -15,12 +15,17 @@ angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionS
 
                 scope.selectedVis = "";
 
+                // Set aggregate types
                 scope.aggregateTypes= [
                     "aidactivity.beneficiary.countries.all",
                     "aidactivity.budget.for.countries.and.period",
                     "aidactivity.sectors.for.countries.and.period",
                     "aidactivity.spending.for.countries.and.period"
                 ];
+
+                // Set the first type as default selected one
+                scope.selProjectId = scope.projectId;
+                scope.selViewType = _.first(scope.aggregateTypes);
 
                 // Subscribe to year selection changes
                 CountrySelectionService.subscribeYearChanges(scope, function() {
