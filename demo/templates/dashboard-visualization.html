@@ -14,8 +14,8 @@
                 <!--Grid-->
                 <yds-grid
                     ng-switch-when="grid"
-                    project-id="none"
-                    view-type="aidactivity.beneficiary.countries.all"
+                    project-id="{{ projectId }}"
+                    view-type="{{ viewType }}"
                     extra-params="apiOptions"
                     element-h="{{elementH}}">
                 </yds-grid>
@@ -23,8 +23,8 @@
                 <!--Pie-->
                 <yds-pie
                     ng-switch-when="pie"
-                    project-id="none"
-                    view-type="aidactivity.beneficiary.countries.all"
+                    project-id="{{ projectId }}"
+                    view-type="{{ viewType }}"
                     extra-params="apiOptions"
                     element-h="{{elementH}}">
                 </yds-pie>
@@ -32,8 +32,8 @@
                 <!--Bar-->
                 <yds-bar
                     ng-switch-when="bar"
-                    project-id="none"
-                    view-type="aidactivity.beneficiary.countries.all"
+                    project-id="{{ projectId }}"
+                    view-type="{{ viewType }}"
                     extra-params="apiOptions"
                     element-h="{{elementH}}">
                 </yds-bar>

@@ -3,6 +3,8 @@ angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionS
         return {
             restrict: 'E',
             scope: {
+                projectId: '@', // Project ID of chart
+                viewType: '@',  // View type of chart
                 elementH: '@'   // Height of component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + 'templates/dashboard-visualization.html',
