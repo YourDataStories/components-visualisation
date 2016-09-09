@@ -14,18 +14,11 @@ angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionS
                     scope.elementH = 300;
 
                 scope.selectedVis = "";
-
-                // Set aggregate types
-                scope.aggregateTypes= [
-                    "aidactivity.beneficiary.countries.all",
-                    "aidactivity.budget.for.countries.and.period",
-                    "aidactivity.sectors.for.countries.and.period",
-                    "aidactivity.spending.for.countries.and.period"
-                ];
+                scope.aggregateTypes= [];
 
                 // Set the first type as default selected one
                 scope.selProjectId = scope.projectId;
-                scope.selViewType = _.first(scope.aggregateTypes);
+                scope.selViewType = "";
 
                 // Subscribe to year selection changes
                 CountrySelectionService.subscribeYearChanges(scope, function() {
@@ -34,11 +27,30 @@ angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionS
                         selectedVis = scope.selectedVis;
                     }
 
+                    var aggregateTypes = [
+                        "aidactivity.beneficiary.countries.all",
+                        "aidactivity.budget.for.countries.and.period",
+                        "aidactivity.sectors.for.countries.and.period",
+                        "aidactivity.spending.for.countries.and.period"
+                    ];
+                    if (scope.aggregateTypes.length > 0) {
+                        aggregateTypes = scope.aggregateTypes;
+                    }
+
+                    var selViewType = _.first(aggregateTypes);
+                    if (scope.selViewType.length > 0) {
+                        selViewType = scope.selViewType;
+                    }
+
+
                     // Make selectedVis empty in order for the component to re-render
                     scope.selectedVis = "";
+                    scope.aggregateTypes = [];
 
                     // Postpone to end of digest queue
                     $timeout(function() {
+                        scope.aggregateTypes = aggregateTypes;
+                        scope.selViewType = selViewType;
                         scope.selectVis(selectedVis);
                     });
                 });

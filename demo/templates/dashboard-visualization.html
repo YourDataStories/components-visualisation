@@ -3,7 +3,8 @@
         <yds-aggregate
                 ng-repeat="type in aggregateTypes"
                 project-id="{{ projectId }}"
-                view-type="{{ type }}">
+                view-type="{{ type }}"
+                extra-params="apiOptions">
         </yds-aggregate>
     </div>
 
@@ -19,7 +20,7 @@
                         <button ng-click="selectVis('bar')" class="btn btn-default"><i class="fa fa-bar-chart" aria-hidden="true"></i></button>
                     </div>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" ng-if="selViewType.length > 0">
                     <div ng-switch="selectedVis">
                         <!--Grid-->
                         <yds-grid
