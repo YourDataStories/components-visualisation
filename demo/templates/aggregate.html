@@ -1,0 +1,20 @@
+<div class="col-md-6">
+    <div class="panel panel-default" ng-style="panelStyle">
+        <div class="panel-heading clearfix" ng-style="panelHeadingStyle">
+            <!--FontAwesome icon-->
+            <div class="pull-left">
+                <i class="fa fa-4x" ng-class="iconClass" aria-hidden="true"></i>
+            </div>
+
+            <!--Value and label-->
+            <div class="pull-right" style="text-align: right">
+                <h4>{{ value }}</h4>
+                <h5>{{ label }}</h5>
+            </div>
+        </div>
+        <div class="list-group">
+            <!--View details "button"-->
+            <a class="list-group-item">View details <i class="fa fa-arrow-circle-right pull-right" aria-hidden="true"></i></a>
+        </div>
+    </div>
+</div>

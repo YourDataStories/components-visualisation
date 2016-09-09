@@ -30,6 +30,7 @@ app.constant("YDS_CONSTANTS", {
     "API_HUMAN_READABLE_DESCRIPTION": "platform.yourdatastories.eu/api/json-ld/model/human_readable_description.tcl",
     "API_CACHE_INFO": "platform.yourdatastories.eu/api/json-ld/cache/cache_info.tcl",
     "API_CACHE_TRUNCATE": "platform.yourdatastories.eu/api/json-ld/cache/truncate.tcl",
+    "API_AGGREGATE": "platform.yourdatastories.eu/api/json-ld/component/aggregate.tcl",
 
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search",
     "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search-el",
@@ -616,6 +617,43 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         }).then(function successCallback(response) {
             deferred.resolve(response.data);
         }, function errorCallback(error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    /**
+     * Gets the aggregate data
+     * @param resourceId    Resource ID
+     * @param viewType      View type
+     * @param lang          Language
+     * @param extraParams   Extra parameters to send with request
+     * @returns {promise|d.promise|*|d|s}
+     */
+    dataService.getAggregate = function(resourceId, viewType, lang, extraParams) {
+        var deferred = $q.defer();
+
+        var params = {
+            id: resourceId,
+            type: viewType,
+            lang: lang,
+            context: 0
+        };
+
+        // If there are extra parameters to send to the API, add them to params
+        if (!_.isUndefined(extraParams)) {
+            _.extend(params, extraParams);
+        }
+
+        $http({
+            method: 'GET',
+            url: "http://" + YDS_CONSTANTS.API_AGGREGATE,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            params: params
+        }).then(function(response) {
+            deferred.resolve(response.data);
+        }, function (error) {
             deferred.reject(error);
         });
 

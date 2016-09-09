@@ -15,6 +15,13 @@ angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionS
 
                 scope.selectedVis = "";
 
+                scope.aggregateTypes= [
+                    "aidactivity.beneficiary.countries.all",
+                    "aidactivity.budget.for.countries.and.period",
+                    "aidactivity.sectors.for.countries.and.period",
+                    "aidactivity.spending.for.countries.and.period"
+                ];
+
                 // Subscribe to year selection changes
                 CountrySelectionService.subscribeYearChanges(scope, function() {
                     var selectedVis = "bar";

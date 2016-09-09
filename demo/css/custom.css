@@ -723,17 +723,17 @@ div.ag-root {
 /**** Dashboard Visualization Panel Color ****/
 /*********************************************/
 
-.dashboard-visualization-container > .panel-default {
+.dashboard-visualization-container > .row > .panel-default {
     border-color: #F59B11;
 }
 
-.dashboard-visualization-container > .panel-default > .panel-heading {
+.dashboard-visualization-container > .row > .panel-default > .panel-heading {
     background-color: #F59B11;
     border-color: #F59B11;
     color: #ffffff;
 }
 
-.dashboard-visualization-container > .panel-default > .panel-heading > .btn-group > .btn-default {
+.dashboard-visualization-container > .row > .panel-default > .panel-heading > .btn-group > .btn-default {
     background-color: #D68200;
     border-color: #AD6900;
     color:#ffffff;
