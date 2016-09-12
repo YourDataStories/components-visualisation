@@ -26,8 +26,8 @@ angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionS
                 var updateAggregates = function() {
                     var aggregateTypes = [
                         "aidactivity.beneficiary.countries.all",
-                        "aidactivity.budget.for.countries.and.period",
                         "aidactivity.sectors.for.countries.and.period",
+                        "aidactivity.budget.for.countries.and.period",
                         "aidactivity.spending.for.countries.and.period"
                     ];
                     if (scope.aggregateTypes.length > 0) {
@@ -74,9 +74,9 @@ angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionS
                 };
 
                 /**
-                 * Handles year selection changes
+                 * Handles heatmap selection changes (country selection and year range)
                  */
-                var yearChangeHandler = function() {
+                var heatmapChangeHandler = function() {
                     updateAggregates();
                     updateVisualization();
                 };
@@ -90,7 +90,8 @@ angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionS
                 };
 
                 // Subscribe to year selection and view type changes
-                CountrySelectionService.subscribeYearChanges(scope, yearChangeHandler);
+                CountrySelectionService.subscribeYearChanges(scope, heatmapChangeHandler);
+                // CountrySelectionService.subscribeSelectionChanges(scope, heatmapChangeHandler);
                 CountrySelectionService.subscribeViewTypeChanges(scope, viewTypeChangeHandler);
 
                 /**
@@ -98,15 +99,24 @@ angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionS
                  * @param visType
                  */
                 scope.selectVis = function(visType) {
+                    // Reset api options object
+                    scope.apiOptions = {};
+
                     // If there is a selected year range, add it to the parameters that will be added to the API call
                     var minYear = CountrySelectionService.getMinYear();
                     var maxYear = CountrySelectionService.getMaxYear();
 
                     if (!_.isNull(minYear) && !_.isNull(maxYear)) {
-                        scope.apiOptions = {
-                            year: "[" + minYear + " TO " + maxYear + "]"
-                        };
+                        scope.apiOptions.year= "[" + minYear + " TO " + maxYear + "]";
                     }
+
+                    // // If there are selected countries, add them to api options
+                    // var selectedCountries = CountrySelectionService.getCountries();
+                    // selectedCountries = _.pluck(selectedCountries, "code").join(",");   // keep only codes and join them
+                    //
+                    // if (selectedCountries.length > 0) {
+                    //     scope.apiOptions.countries = selectedCountries;
+                    // }
 
                     // Change selected visualization type
                     scope.selectedVis = visType;

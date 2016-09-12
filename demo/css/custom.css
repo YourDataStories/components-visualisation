@@ -719,7 +719,41 @@ div.ag-root {
     margin-left: 10px;
 }
 
-/* "Data from Datasets" widget of Dashboard */
+/* Custom font size for Aggregate component label */
+.aggregate-label {
+    font-size: 16px;
+}
+
+/* Custom font size and weight for Aggregate component value */
+.aggregate-value {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/* Custom bootstrap column classes that have custom width
+   for Dashboard title and "Data from datasets" widget */
+.col-md-3half, .col-md-8half {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+@media (min-width: 992px) {
+    .col-md-3half, .col-md-8half {
+        float: left;
+    }
+
+    .col-md-8half {
+        width: 70%;
+    }
+
+    .col-md-3half {
+        width: 30%;
+    }
+}
+
+/* Custom list item padding for "Data from datasets" widget of Dashboard */
 .list-group-item-sm {
-    padding: 6px 15px;
+    padding: 6px 10px;
 }
