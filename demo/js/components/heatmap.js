@@ -132,7 +132,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 					series: []
 				};
 
-				// Add color axis to heatmap options
+				// Add default color axis to heatmap options
 				if (colorAxis == "true") {
 					heatmapOptions.colorAxis = {
 						min: 1,
@@ -204,6 +204,15 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 
                         CountrySelectionService.clearCountries();
                     }
+
+					// If view has color axis use that instead of default one
+					if (colorAxis == "true") {
+						var view = _.first(response.view);
+
+						if (_.has(view, "colorAxis")) {
+							scope.heatmap.colorAxis[0].update(view.colorAxis);
+						}
+					}
 
 					// Create new series object
 					var newSeries = {
