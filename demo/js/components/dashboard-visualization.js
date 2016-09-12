@@ -64,43 +64,9 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 };
 
                 /**
-                 * Update the view type from the DashboardService
-                 * Also sets the Visualization panel's color
+                 * Update the apiOptions variable with the needed values
                  */
-                var updateViewType = function() {
-                    var viewType = DashboardService.getViewType();
-
-                    scope.selViewType = viewType.type;
-                    scope.panelStyle = viewType.panelStyle;
-                    scope.panelHeadingStyle = viewType.panelHeadingStyle;
-                };
-
-                /**
-                 * Handles heatmap selection changes (country selection and year range)
-                 */
-                var heatmapChangeHandler = function() {
-                    updateAggregates();
-                    updateVisualization();
-                };
-
-                /**
-                 * Handles view type selection changes
-                 */
-                var viewTypeChangeHandler = function() {
-                    updateViewType();
-                    updateVisualization();
-                };
-
-                // Subscribe to year selection and view type changes
-                DashboardService.subscribeYearChanges(scope, heatmapChangeHandler);
-                // DashboardService.subscribeSelectionChanges(scope, heatmapChangeHandler);
-                DashboardService.subscribeViewTypeChanges(scope, viewTypeChangeHandler);
-
-                /**
-                 * Change selected visualization type and if there is a year range selected, add it to apiOptions
-                 * @param visType
-                 */
-                scope.selectVis = function(visType) {
+                var updateApiOptions = function() {
                     // Reset api options object
                     scope.apiOptions = {};
 
@@ -119,6 +85,49 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                     // if (selectedCountries.length > 0) {
                     //     scope.apiOptions.countries = selectedCountries;
                     // }
+                };
+
+                /**
+                 * Update the view type from the DashboardService
+                 * Also sets the Visualization panel's color
+                 */
+                var updateViewType = function() {
+                    var viewType = DashboardService.getViewType();
+
+                    scope.selViewType = viewType.type;
+                    scope.panelStyle = viewType.panelStyle;
+                    scope.panelHeadingStyle = viewType.panelHeadingStyle;
+                };
+
+                /**
+                 * Handles heatmap selection changes (country selection and year range)
+                 */
+                var heatmapChangeHandler = function() {
+                    updateApiOptions();
+                    updateAggregates();
+                    updateVisualization();
+                };
+
+                /**
+                 * Handles view type selection changes
+                 */
+                var viewTypeChangeHandler = function() {
+                    updateApiOptions();
+                    updateViewType();
+                    updateVisualization();
+                };
+
+                // Subscribe to year selection and view type changes
+                DashboardService.subscribeYearChanges(scope, heatmapChangeHandler);
+                // DashboardService.subscribeSelectionChanges(scope, heatmapChangeHandler);
+                DashboardService.subscribeViewTypeChanges(scope, viewTypeChangeHandler);
+
+                /**
+                 * Change selected visualization type and if there is a year range selected, add it to apiOptions
+                 * @param visType
+                 */
+                scope.selectVis = function(visType) {
+
 
                     // Change selected visualization type
                     scope.selectedVis = visType;
