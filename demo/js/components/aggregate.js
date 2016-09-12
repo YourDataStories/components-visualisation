@@ -53,7 +53,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'CountrySelectionServic
                         "color": "#FFFFFF"
                     };
 
-                    if (setOnInit == "true") {
+                    if (setOnInit == "true" && _.isEmpty(CountrySelectionService.getViewType())) {
                         scope.setViewType();
                     }
                 });
