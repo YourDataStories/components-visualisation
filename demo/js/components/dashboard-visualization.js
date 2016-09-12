@@ -13,6 +13,14 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 if (_.isUndefined(scope.elementH) || scope.elementH.trim() == "")
                     scope.elementH = 300;
 
+                // Mapping for which view type's selected countries go to which API parameter.
+                // For example selected countries for view type "aidactivity.beneficiary.countries.all"
+                // will be sent to the server in a parameter called "countries"
+                var apiOptionsMap = {
+                    countries: "aidactivity.beneficiary.countries.all",
+                    benefactors: "aidactivity.benefactor.countries.all"
+                };
+
                 scope.selectedVis = "";
                 scope.aggregateTypes= [];
 
@@ -78,13 +86,16 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                         scope.apiOptions.year= "[" + minYear + " TO " + maxYear + "]";
                     }
 
-                    // // If there are selected countries, add them to api options
-                    // var selectedCountries = DashboardService.getCountries();
-                    // selectedCountries = _.pluck(selectedCountries, "code").join(",");   // keep only codes and join them
-                    //
-                    // if (selectedCountries.length > 0) {
-                    //     scope.apiOptions.countries = selectedCountries;
-                    // }
+                    // If there are selected countries, add them to api options
+                    _.each(apiOptionsMap, function(viewType, key) {
+                        // Get selected countries for this key, keep only their codes, and join them into a string
+                        var selectedCountries = DashboardService.getCountries(viewType);
+                        selectedCountries = _.pluck(selectedCountries, "code").join(",");
+
+                        if (selectedCountries.length > 0) {
+                            scope.apiOptions[key] = selectedCountries;
+                        }
+                    });
                 };
 
                 /**
@@ -119,17 +130,14 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
 
                 // Subscribe to year selection and view type changes
                 DashboardService.subscribeYearChanges(scope, heatmapChangeHandler);
-                // DashboardService.subscribeSelectionChanges(scope, heatmapChangeHandler);
+                DashboardService.subscribeSelectionChanges(scope, heatmapChangeHandler);
                 DashboardService.subscribeViewTypeChanges(scope, viewTypeChangeHandler);
 
                 /**
-                 * Change selected visualization type and if there is a year range selected, add it to apiOptions
+                 * Change selected visualization type
                  * @param visType
                  */
                 scope.selectVis = function(visType) {
-
-
-                    // Change selected visualization type
                     scope.selectedVis = visType;
                 };
             }

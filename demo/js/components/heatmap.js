@@ -194,7 +194,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 						// If heatmap has a series, remove it
 						scope.heatmap.series[0].remove();
 
-                        DashboardService.clearCountries();
+                        DashboardService.clearCountries(viewType);
                     }
 
 					// If view has color axis use that instead of default one
@@ -251,7 +251,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 									points = formatPoints(points);
 
 									// Give new selected countries to the service
-									DashboardService.setCountries(points);
+									DashboardService.setCountries(viewType, points);
 								},
 								unselect: function(event) {
 									// Get selected points
@@ -266,7 +266,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 									points = formatPoints(points);
 
 									// Give new selected countries to the service
-									DashboardService.setCountries(points);
+									DashboardService.setCountries(viewType, points);
 								}
 							}
 						};
@@ -281,7 +281,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				 * @param error
 				 */
 				var createHeatmapError = function(error) {
-					if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
+					if (_.isNull(error) || _.isUndefined(error) || _.isUndefined(error.message))
 						scope.ydsAlert = "An error has occurred, please check the configuration of the component";
 					else
 						scope.ydsAlert = error.message;

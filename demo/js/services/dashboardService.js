@@ -1,5 +1,5 @@
 angular.module('yds').service('DashboardService', function($rootScope, $timeout) {
-    var countries = [];
+    var countries = {};
     var yearRange = [];
     var selectedViewType = {};
     var notifySelectionChangeLock = false;
@@ -85,31 +85,33 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     };
 
     /**
-     * Set new selected countries
-     * @param newCountries
+     * Set new selected countries for the given type
+     * @param type          Type to set countries for
+     * @param newCountries  Countries to set
      */
-    var setCountries = function(newCountries) {
-        if (!_.isEqual(countries, newCountries)) {
-            countries = newCountries;
+    var setCountries = function(type, newCountries) {
+        if (_.isUndefined(countries[type]) || !_.isEqual(countries[type], newCountries)) {
+            countries[type] = newCountries;
 
             notifyCountrySelectionChange();
         }
     };
 
     /**
-     * Get selected countries
-     * @returns {Array}
+     * Get selected countries for a given type
+     * @param type  Type to get countries for
+     * @returns {*}
      */
-    var getCountries = function() {
-        return countries;
+    var getCountries = function(type) {
+        return countries[type];
     };
 
     /**
-     * Clear selected countries
+     * Clear selected countries for a given type
      */
-    var clearCountries = function() {
-        if (!_.isEmpty(countries)) {
-            countries = [];
+    var clearCountries = function(type) {
+        if (!_.isEmpty(countries[type])) {
+            countries[type] = [];
 
             notifyCountrySelectionChange();
         }
