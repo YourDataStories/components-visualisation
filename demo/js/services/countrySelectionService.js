@@ -84,6 +84,10 @@ angular.module('yds').service('CountrySelectionService', function($rootScope, $t
         }
     };
 
+    /**
+     * Set new selected countries
+     * @param newCountries
+     */
     var setCountries = function(newCountries) {
         if (!_.isEqual(countries, newCountries)) {
             countries = newCountries;
@@ -92,10 +96,17 @@ angular.module('yds').service('CountrySelectionService', function($rootScope, $t
         }
     };
 
+    /**
+     * Get selected countries
+     * @returns {Array}
+     */
     var getCountries = function() {
         return countries;
     };
 
+    /**
+     * Clear selected countries
+     */
     var clearCountries = function() {
         if (!_.isEmpty(countries)) {
             countries = [];

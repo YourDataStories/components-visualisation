@@ -2,7 +2,7 @@
     <div class="row">
         <!--Dashboard title and description-->
         <div class="col-md-8half">
-            <h2>Official Development Assistance (ODA) of the Netherlands</h2>
+            <h2>Official Development Assistance (ODA)</h2>
 
             <p>This dashboard presents aspects of the data available for the development assistance provided by
                 the Netherlands to various countries all over the world.</p>
@@ -27,11 +27,11 @@
     </div>
 
     <div class="row">
-        <div class="col-md-7">
-            <!--Heatmap-->
+        <div class="col-md-6">
+            <!--Heatmap of Beneficiaries-->
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Number of Aid Activities</h3>
+                    <h3 class="panel-title">Number of Aid Activities per Beneficiary Country</h3>
                 </div>
                 <div class="panel-body">
                     <yds-heatmap
@@ -46,7 +46,7 @@
                             max-year="2018"
                             country-selection="false"
                             no-border="true"
-                            element-h="400"></yds-heatmap>
+                            element-h="350"></yds-heatmap>
                 </div>
                 <div class="panel-footer" style="padding: 3px 15px">
                     <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
@@ -54,7 +54,36 @@
             </div>
         </div>
 
-        <div class="col-md-5">
+        <div class="col-md-6">
+            <!--Heatmap of Benefactors-->
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Number of Aid Activities per Benefactor Country</h3>
+                </div>
+                <div class="panel-body">
+                    <yds-heatmap
+                            project-id="none"
+                            view-type="aidactivity.beneficiary.countries.all"
+                            color-axis="true"
+                            color-type="logarithmic"
+                            legend="true"
+                            legend-v-align="bottom"
+                            year-selection="true"
+                            min-year="1997"
+                            max-year="2018"
+                            country-selection="false"
+                            no-border="true"
+                            element-h="350"></yds-heatmap>
+                </div>
+                <div class="panel-footer" style="padding: 3px 15px">
+                    <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
             <!--Dashboard Visualization-->
             <yds-dashboard-visualization
                     project-id="none"
@@ -131,11 +160,11 @@
     </div>
 
     <div class="row">
-        <div class="col-md-7">
-            <!--Heatmap-->
+        <div class="col-md-6">
+            <!--Heatmap of Beneficiaries-->
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Number of Trade Activities</h3>
+                    <h3 class="panel-title">Number of Aid Activities per Beneficiary Country</h3>
                 </div>
                 <div class="panel-body">
                     <yds-heatmap
@@ -150,7 +179,7 @@
                             max-year="2018"
                             country-selection="false"
                             no-border="true"
-                            element-h="400"></yds-heatmap>
+                            element-h="350"></yds-heatmap>
                 </div>
                 <div class="panel-footer" style="padding: 3px 15px">
                     <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
@@ -158,7 +187,36 @@
             </div>
         </div>
 
-        <div class="col-md-5">
+        <div class="col-md-6">
+            <!--Heatmap of Benefactors-->
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Number of Aid Activities per Benefactor Country</h3>
+                </div>
+                <div class="panel-body">
+                    <yds-heatmap
+                            project-id="none"
+                            view-type="aidactivity.beneficiary.countries.all"
+                            color-axis="true"
+                            color-type="logarithmic"
+                            legend="true"
+                            legend-v-align="bottom"
+                            year-selection="true"
+                            min-year="1997"
+                            max-year="2018"
+                            country-selection="false"
+                            no-border="true"
+                            element-h="350"></yds-heatmap>
+                </div>
+                <div class="panel-footer" style="padding: 3px 15px">
+                    <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
             <!--Dashboard Visualization-->
             <yds-dashboard-visualization
                     project-id="none"
