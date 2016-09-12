@@ -1,4 +1,4 @@
-angular.module('yds').service('CountrySelectionService', function($rootScope, $timeout) {
+angular.module('yds').service('DashboardService', function($rootScope, $timeout) {
     var countries = [];
     var yearRange = [];
     var selectedViewType = {};
@@ -7,7 +7,7 @@ angular.module('yds').service('CountrySelectionService', function($rootScope, $t
     var notifyViewTypeChangeLock = false;
 
     var subscribeSelectionChanges = function(scope, callback) {
-        var unregister = $rootScope.$on('country-selection-service-change', callback);
+        var unregister = $rootScope.$on('dashboard-service-change', callback);
         scope.$on('$destroy', unregister);
 
         return unregister;
@@ -20,7 +20,7 @@ angular.module('yds').service('CountrySelectionService', function($rootScope, $t
      * @returns {*}
      */
     var subscribeToYearChanges = function(scope, callback) {
-        var unregister = $rootScope.$on('country-selection-service-year-range-change', callback);
+        var unregister = $rootScope.$on('dashboard-service-year-range-change', callback);
         scope.$on('$destroy', unregister);
 
         return unregister;
@@ -33,7 +33,7 @@ angular.module('yds').service('CountrySelectionService', function($rootScope, $t
      * @returns {*}
      */
     var subscribeViewTypeChanges = function(scope, callback) {
-        var unregister = $rootScope.$on('country-selection-service-view-type-change', callback);
+        var unregister = $rootScope.$on('dashboard-service-view-type-change', callback);
         scope.$on('$destroy', unregister);
 
         return unregister;
@@ -47,7 +47,7 @@ angular.module('yds').service('CountrySelectionService', function($rootScope, $t
             notifyViewTypeChangeLock = true;
 
             $timeout(function() {
-                $rootScope.$emit('country-selection-service-view-type-change');
+                $rootScope.$emit('dashboard-service-view-type-change');
 
                 notifyViewTypeChangeLock = false;
             }, 150);
@@ -62,7 +62,7 @@ angular.module('yds').service('CountrySelectionService', function($rootScope, $t
             notifySelectionChangeLock = true;
 
             $timeout(function() {
-                $rootScope.$emit('country-selection-service-change');
+                $rootScope.$emit('dashboard-service-change');
 
                 notifySelectionChangeLock = false;
             }, 150);
@@ -77,7 +77,7 @@ angular.module('yds').service('CountrySelectionService', function($rootScope, $t
             notifyYearChangeLock = true;
 
             $timeout(function() {
-                $rootScope.$emit('country-selection-service-year-range-change');
+                $rootScope.$emit('dashboard-service-year-range-change');
 
                 notifyYearChangeLock = false;
             }, 150);

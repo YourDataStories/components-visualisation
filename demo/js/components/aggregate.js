@@ -1,12 +1,12 @@
-angular.module('yds').directive('ydsAggregate', ['Data', 'CountrySelectionService', '$sce',
-    function(Data, CountrySelectionService, $sce) {
+angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$sce',
+    function(Data, DashboardService, $sce) {
         return {
             restrict: 'E',
             scope: {
                 projectId: '@',     // Project ID of chart
                 viewType: '@',      // View type of chart
                 lang: '@',          // Language
-                setOnInit: '@',     // If true, will set this aggregate's view type in CountrySelectionService on init
+                setOnInit: '@',     // If true, will set this aggregate's view type in DashboardService on init
                 extraParams: '='    // Extra parameters to send
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + 'templates/aggregate.html',
@@ -53,16 +53,16 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'CountrySelectionServic
                         "color": "#FFFFFF"
                     };
 
-                    if (setOnInit == "true" && _.isEmpty(CountrySelectionService.getViewType())) {
+                    if (setOnInit == "true" && _.isEmpty(DashboardService.getViewType())) {
                         scope.setViewType();
                     }
                 });
 
                 /**
-                 * Sets the view type to this aggregate component's view type in CountrySelectionService
+                 * Sets the view type to this aggregate component's view type in DashboardService
                  */
                 scope.setViewType = function() {
-                    CountrySelectionService.setViewType({
+                    DashboardService.setViewType({
                         type: viewType,
                         panelStyle: scope.panelStyle,
                         panelHeadingStyle: scope.panelHeadingStyle

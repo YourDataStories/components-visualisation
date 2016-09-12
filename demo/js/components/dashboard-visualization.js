@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionService', '$ocLazyLoad', '$timeout',
-    function(CountrySelectionService, $ocLazyLoad, $timeout) {
+angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService', '$ocLazyLoad', '$timeout',
+    function(DashboardService, $ocLazyLoad, $timeout) {
         return {
             restrict: 'E',
             scope: {
@@ -64,11 +64,11 @@ angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionS
                 };
 
                 /**
-                 * Update the view type from the CountrySelectionService
+                 * Update the view type from the DashboardService
                  * Also sets the Visualization panel's color
                  */
                 var updateViewType = function() {
-                    var viewType = CountrySelectionService.getViewType();
+                    var viewType = DashboardService.getViewType();
 
                     scope.selViewType = viewType.type;
                     scope.panelStyle = viewType.panelStyle;
@@ -92,9 +92,9 @@ angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionS
                 };
 
                 // Subscribe to year selection and view type changes
-                CountrySelectionService.subscribeYearChanges(scope, heatmapChangeHandler);
-                // CountrySelectionService.subscribeSelectionChanges(scope, heatmapChangeHandler);
-                CountrySelectionService.subscribeViewTypeChanges(scope, viewTypeChangeHandler);
+                DashboardService.subscribeYearChanges(scope, heatmapChangeHandler);
+                // DashboardService.subscribeSelectionChanges(scope, heatmapChangeHandler);
+                DashboardService.subscribeViewTypeChanges(scope, viewTypeChangeHandler);
 
                 /**
                  * Change selected visualization type and if there is a year range selected, add it to apiOptions
@@ -105,15 +105,15 @@ angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionS
                     scope.apiOptions = {};
 
                     // If there is a selected year range, add it to the parameters that will be added to the API call
-                    var minYear = CountrySelectionService.getMinYear();
-                    var maxYear = CountrySelectionService.getMaxYear();
+                    var minYear = DashboardService.getMinYear();
+                    var maxYear = DashboardService.getMaxYear();
 
                     if (!_.isNull(minYear) && !_.isNull(maxYear)) {
                         scope.apiOptions.year= "[" + minYear + " TO " + maxYear + "]";
                     }
 
                     // // If there are selected countries, add them to api options
-                    // var selectedCountries = CountrySelectionService.getCountries();
+                    // var selectedCountries = DashboardService.getCountries();
                     // selectedCountries = _.pluck(selectedCountries, "code").join(",");   // keep only codes and join them
                     //
                     // if (selectedCountries.length > 0) {

@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySelectionService',
-	function (Data, $ocLazyLoad, CountrySelectionService) {
+angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'DashboardService',
+	function (Data, $ocLazyLoad, DashboardService) {
 		return {
 			restrict: 'E',
 			scope: {
@@ -202,7 +202,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 						// If heatmap has a series, remove it
 						scope.heatmap.series[0].remove();
 
-                        CountrySelectionService.clearCountries();
+                        DashboardService.clearCountries();
                     }
 
 					// If view has color axis use that instead of default one
@@ -259,7 +259,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 									points = formatPoints(points);
 
 									// Give new selected countries to the service
-									CountrySelectionService.setCountries(points);
+									DashboardService.setCountries(points);
 								},
 								unselect: function(event) {
 									// Get selected points
@@ -274,7 +274,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 									points = formatPoints(points);
 
 									// Give new selected countries to the service
-									CountrySelectionService.setCountries(points);
+									DashboardService.setCountries(points);
 								}
 							}
 						};
@@ -304,8 +304,8 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 						var minValue = scope.yearSlider.minValue;
 						var maxValue = scope.yearSlider.maxValue;
 
-						// Update selected years in CountrySelectionService
-						CountrySelectionService.setYearRange(minValue, maxValue);
+						// Update selected years in DashboardService
+						DashboardService.setYearRange(minValue, maxValue);
 
 						// Create extra parameters object with year
 						var extraParams = {
