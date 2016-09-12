@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsAggregate', ['Data', 'CountrySelectionService',
-    function(Data, CountrySelectionService) {
+angular.module('yds').directive('ydsAggregate', ['Data', 'CountrySelectionService', '$sce',
+    function(Data, CountrySelectionService, $sce) {
         return {
             restrict: 'E',
             scope: {
@@ -34,7 +34,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'CountrySelectionServic
                 // Get data for aggregate from API to set variables
                 Data.getAggregate(projectId, viewType, lang, extraParams).then(function(response) {
                     // Get value and label
-                    scope.label = response.data.label;
+                    scope.label = $sce.trustAsHtml(response.data.label);
                     scope.value = response.data.value;
 
                     // Get icon class
