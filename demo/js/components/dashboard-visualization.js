@@ -27,6 +27,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['CountrySelectionS
                     var aggregateTypes = [
                         "aidactivity.beneficiary.countries.all",
                         "aidactivity.benefactor.countries.all",
+                        "aidactivity.beneficiary.organisations.all",
                         "aidactivity.sectors.for.countries.and.period",
                         "aidactivity.budget.for.countries.and.period",
                         "aidactivity.spending.for.countries.and.period"

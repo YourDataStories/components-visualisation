@@ -757,3 +757,13 @@ div.ag-root {
 .list-group-item-sm {
     padding: 6px 10px;
 }
+
+.panel-benefactor {
+    border-color: #D2691E;
+}
+
+.panel-benefactor > .panel-heading {
+    background-color: #D2691E;
+    border-color: #D2691E;
+    color: #FFFFFF;
+}

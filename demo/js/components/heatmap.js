@@ -141,7 +141,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'CountrySe
 						maxColor: '#000022',
 						stops: [
 							[0, '#EFEFFF'],
-							[0.5, '#4444FF'],
+							[0.67, '#4444FF'],
 							[1, '#000022']
 						]
 					};
