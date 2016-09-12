@@ -23,7 +23,6 @@ angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
                  * Update the year range in DashboardService
                  */
                 var updateYearRange = function() {
-                    console.log("updating it");
                     var minValue = scope.yearSlider.minValue;
                     var maxValue = scope.yearSlider.maxValue;
 

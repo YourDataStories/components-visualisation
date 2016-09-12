@@ -12,9 +12,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				legendVAlign: '@',      // Vertical alignment of the chart legend (top, middle, bottom)
 				legendHAlign: '@',      // Horizontal alignment of the chart legend (left, center, right)
 				legendLayout: '@',      // Layout of the chart legend (vertical, horizontal)
-				yearSelection: '@',	    // Enable selection of years with a slider
-				minYear: '@',		    // Minimum year to show in year slider
-				maxYear: '@',		    // Maximum year to show in year slider
+                useYearRange: '@',      // If true will watch the selected year range of DashboardService to update map
 				countrySelection: '@',  // Allow selecting countries on the map
 				noBorder: '@',			// If true, the component will have no border
 				exporting: '@',         // Enable or disable the export of the chart
@@ -31,9 +29,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				var legendVAlign = scope.legendVAlign;
 				var legendHAlign = scope.legendHAlign;
 				var legendLayout = scope.legendLayout;
-				var yearSelection = scope.yearSelection;
-				var minYear = parseInt(scope.minYear);
-				var maxYear = parseInt(scope.maxYear);
+				var useYearRange = scope.useYearRange;
 				var countrySelection = scope.countrySelection;
 				var noBorder = scope.noBorder;
 				var exporting = scope.exporting;
@@ -85,17 +81,9 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				if (_.isUndefined(legendLayout) || legendLayout.trim()=="")
 					legendLayout = "horizontal";
 
-				//check if yearSelection attr is defined, else assign default value
-				if (_.isUndefined(yearSelection) || yearSelection.trim()=="")
-					yearSelection = "false";
-
-				//check if minYear attr is defined, else assign default value
-				if (_.isUndefined(minYear) || _.isNaN(minYear))
-					minYear = 1970;
-
-				//check if maxYear attr is defined, else assign default value
-				if (_.isUndefined(maxYear) || _.isNaN(maxYear))
-					maxYear = 2050;
+				//check if watchYearRange attr is defined, else assign default value
+				if (_.isUndefined(useYearRange) || useYearRange.trim()=="")
+                    useYearRange = "false";
 
 				//check if countrySelection attr is defined, else assign default value
 				if (_.isUndefined(countrySelection) || countrySelection.trim()=="")
@@ -167,6 +155,10 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 					files: ['https://code.highcharts.com/mapdata/custom/world.js'],
 					cache: true
 				}).then(function() {
+					if (useYearRange == "true") {
+						DashboardService.subscribeYearChanges(scope, createHeatmap);
+					}
+
 					createHeatmap();
 				});
 
@@ -296,40 +288,25 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				};
 
 				/**
-				 * Fetch data using the appropriate service and call the function to
-				 * render the heatmap component
+				 * Get extra parameters if needed, fetch data and call the function to render the heatmap component
 				 */
 				var createHeatmap = function() {
-					if (yearSelection == "true") {
-						var minValue = scope.yearSlider.minValue;
-						var maxValue = scope.yearSlider.maxValue;
+					if (useYearRange == "true") {
+                        var minYear = DashboardService.getMinYear();
+                        var maxYear = DashboardService.getMaxYear();
 
-						// Update selected years in DashboardService
-						DashboardService.setYearRange(minValue, maxValue);
-
-						// Create extra parameters object with year
-						var extraParams = {
-							year: "[" + minValue + " TO " + maxValue + "]"
-						};
-					}
+                        // Create extra parameters object with year
+						if (!_.isNaN(minYear) && !_.isNaN(maxYear)) {
+							var extraParams = {
+								year: "[" + minYear + " TO " + maxYear + "]"
+							};
+						}
+                    }
 
 					// Get heatmap data
 					Data.getProjectVis("heatmap", projectId, viewType, lang, extraParams)
 						.then(visualizeHeatmap, createHeatmapError);
 				};
-
-				if (yearSelection == "true") {
-					scope.yearSlider = {
-						minValue: minYear,
-						maxValue: maxYear,
-						options: {
-							floor: minYear,
-							ceil: maxYear,
-							step: 1,
-							onEnd: createHeatmap
-						}
-					};
-				}
 			}
 		}
 	}
