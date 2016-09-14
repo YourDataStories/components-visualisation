@@ -19,36 +19,18 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 };
 
                 scope.selectedVis = "";
-                scope.aggregateTypes= [];
+                scope.aggregateTypes= [
+                    "aidactivity.beneficiary.countries.all",
+                    "aidactivity.benefactor.countries.all",
+                    "aidactivity.beneficiary.organisations.all",
+                    "aidactivity.sectors.for.countries.and.period",
+                    "aidactivity.budget.for.countries.and.period",
+                    "aidactivity.spending.for.countries.and.period"
+                ];
 
                 // Set the first type as default selected one
                 scope.selProjectId = scope.projectId;
                 scope.selViewType = "";
-
-                /**
-                 * Re-render the Aggregate widgets
-                 */
-                var updateAggregates = function() {
-                    var aggregateTypes = [
-                        "aidactivity.beneficiary.countries.all",
-                        "aidactivity.benefactor.countries.all",
-                        "aidactivity.beneficiary.organisations.all",
-                        "aidactivity.sectors.for.countries.and.period",
-                        "aidactivity.budget.for.countries.and.period",
-                        "aidactivity.spending.for.countries.and.period"
-                    ];
-                    if (scope.aggregateTypes.length > 0) {
-                        aggregateTypes = scope.aggregateTypes;
-                    }
-
-                    // Make aggregateTypes empty in order for the component to re-render
-                    scope.aggregateTypes = [];
-
-                    // Postpone to end of digest queue
-                    $timeout(function() {
-                        scope.aggregateTypes = aggregateTypes;
-                    });
-                };
 
                 /**
                  * Re-render the selected visualization
@@ -115,7 +97,6 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                  */
                 var heatmapChangeHandler = function() {
                     updateApiOptions();
-                    updateAggregates();
                     updateVisualization();
                 };
 
