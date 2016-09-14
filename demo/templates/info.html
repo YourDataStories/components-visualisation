@@ -12,7 +12,7 @@
              ng-text-truncate="infoObj.value" ng-tt-words-threshold="40">
             {{infoObj.value}}
         </div>
-        <div class="col col-md-8" ng-if="infoObj.type!='string-i18n-long' && infoObj.type!='url'">{{infoObj.value}}</div>
-        <div class="col col-md-8" ng-if="infoObj.type=='url'" ng-bind-html="infoObj.value"></div>
+        <div class="col col-md-8" ng-if="infoObj.type!='string-i18n-long' && infoObj.type!='url' && infoObj.type!='country_code_name_array'">{{infoObj.value}}</div>
+        <div class="col col-md-8" ng-if="infoObj.type=='url' || infoObj.type=='country_code_name_array'" ng-bind-html="infoObj.value"></div>
     </div>
 </div>

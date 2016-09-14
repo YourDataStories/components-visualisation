@@ -6,6 +6,22 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     var notifyYearChangeLock = false;
     var notifyViewTypeChangeLock = false;
 
+    // Mapping for which view type's selected countries go to which API parameter.
+    // For example selected countries for view type "aidactivity.beneficiary.countries.all"
+    // will be sent to the server in a parameter called "countries"
+    var apiOptionsMap = {
+        countries: "aidactivity.beneficiary.countries.all",
+        benefactors: "aidactivity.benefactor.countries.all"
+    };
+
+    /**
+     * Function that returns the api options mappings
+     * @returns {{countries: string, benefactors: string}}
+     */
+    var getApiOptionsMapping = function() {
+        return apiOptionsMap;
+    };
+
     var subscribeSelectionChanges = function(scope, callback) {
         var unregister = $rootScope.$on('dashboard-service-change', callback);
         scope.$on('$destroy', unregister);
@@ -176,6 +192,7 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     };
 
     return {
+        getApiOptionsMapping: getApiOptionsMapping,
         subscribeSelectionChanges: subscribeSelectionChanges,
         subscribeYearChanges: subscribeToYearChanges,
         subscribeViewTypeChanges: subscribeViewTypeChanges,
@@ -187,6 +204,6 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         getMinYear: getMinYear,
         getMaxYear: getMaxYear,
         setViewType: setViewType,
-        getViewType: getViewType
+        getViewType: getViewType,
     };
 });

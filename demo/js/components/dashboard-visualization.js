@@ -13,14 +13,6 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 if (_.isUndefined(scope.elementH) || scope.elementH.trim() == "")
                     scope.elementH = 300;
 
-                // Mapping for which view type's selected countries go to which API parameter.
-                // For example selected countries for view type "aidactivity.beneficiary.countries.all"
-                // will be sent to the server in a parameter called "countries"
-                var apiOptionsMap = {
-                    countries: "aidactivity.beneficiary.countries.all",
-                    benefactors: "aidactivity.benefactor.countries.all"
-                };
-
                 scope.selectedVis = "";
                 scope.aggregateTypes= [];
 
@@ -85,6 +77,9 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                     if (!_.isNull(minYear) && !_.isNull(maxYear)) {
                         scope.apiOptions.year= "[" + minYear + " TO " + maxYear + "]";
                     }
+
+                    // Get mappings for request from DashboardService
+                    var apiOptionsMap = DashboardService.getApiOptionsMapping();
 
                     // If there are selected countries, add them to api options
                     _.each(apiOptionsMap, function(viewType, key) {
