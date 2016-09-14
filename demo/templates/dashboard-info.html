@@ -1,11 +1,19 @@
 <div class="dashboard-info-container">
     <div class="col-md-12">
-        <yds-info
-                ng-if="showInfo"
-                project-id="none"
-                view-type="aidactivity.filters.selected"
-                extra-params="extraParams"
-                lang="{{lang}}">
-        </yds-info>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Selected filters</h3>
+            </div>
+
+            <div class="panel-body">
+                <yds-info
+                        ng-if="showInfo"
+                        project-id="none"
+                        view-type="aidactivity.filters.selected"
+                        extra-params="extraParams"
+                        lang="{{lang}}">
+                </yds-info>
+            </div>
+        </div>
     </div>
 </div>

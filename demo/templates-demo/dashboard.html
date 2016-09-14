@@ -122,9 +122,9 @@
     </div>
 
     <!--Dashboard Info box-->
-    <div class="row">
+    <div class="row" style="padding-top: 20px; padding-bottom: 10px;">
         <yds-dashboard-info
-                element-h="250">
+            lang="en">
         </yds-dashboard-info>
     </div>
 
@@ -151,7 +151,7 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading" ng-click="isCollapsedAidActivityPanel = !isCollapsedAidActivityPanel">
-                    <h3 class="panel-title">What can I do with the available data?</h3>
+                    <h3 class="panel-title">What else can I do with the available data?</h3>
                 </div>
 
                 <div class="panel-body" uib-collapse="isCollapsedAidActivityPanel" ng-init="isCollapsedAidActivityPanel = true">
@@ -182,15 +182,6 @@
                                     extra-params="apiOptions"
                                     element-h="400">
                             </yds-grid>
-                        </uib-tab>
-                        <uib-tab heading="Search the data">
-                            <!--Tabbed Search-->
-                            <yds-search-tabs
-                                    default-tab="AidActivity"
-                                    url-param-prefix="aa-"
-                                    hide-tabs="true"
-                                    lang="en">
-                            </yds-search-tabs>
                         </uib-tab>
                         <uib-tab heading="Visualize the data">
                             <!--Workbench-->
