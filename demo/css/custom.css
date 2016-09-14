@@ -767,3 +767,13 @@ div.ag-root {
     border-color: #D2691E;
     color: #FFFFFF;
 }
+
+/* Custom green callout for Dashboard */
+.bs-callout-success {
+    border-left-color: #50A150;
+    background-color: #F3FFF3;
+}
+
+.bs-callout-success h4 {
+    color: #50A150;
+}
