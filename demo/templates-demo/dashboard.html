@@ -1,17 +1,24 @@
 <div class="container">
+    <!--Official Development Assistance, Modelling ODA data-->
     <div class="row">
         <!--Dashboard title and description-->
-        <div class="col-md-8half">
-            <h2>Official Development Assistance (ODA)</h2>
+        <div class="col-md-9">
+            <h2>Official Development Assistance</h2>
 
-            <p>This dashboard presents aspects of the data available for the development assistance provided by
-                the Netherlands to various countries all over the world.</p>
-            <p>The following map shows all countries that have received Dutch ODA, by showing the number of
-                aid activities for all involved countries over the specified date range:</p>
+            <p>This dashboard presents aspects of the data available regarding the official development assistance (ODA)
+                provided by a set of benefactor countries (such as the Netherlands) to various beneficiary countries all
+                over the world.</p>
+
+            <h3 style="color: #3C75B7">YourDataStories: Modelling ODA data</h3>
+
+            <p>YourDataStories models ODA activities with the concept “Aid Activity”, whose main properties include the
+                benefactor/beneficiary countries, the duration of the activity, the involved organisations, the
+                assistance sector, and a set of related transactions (modelled by concepts “Disbursed Item”, “Committed
+                Item”, “Transaction”).</p>
         </div>
 
         <!--Panel with links to datasets-->
-        <div class="col-md-3half">
+        <div class="col-md-3">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h3 class="panel-title">Data from Datasets</h3>
@@ -26,6 +33,22 @@
         </div>
     </div>
 
+    <!--A quick overview of the ODA data-->
+    <div class="row">
+        <div class="col-md-12">
+            <h3 style="color: #3C75B7">A quick overview of the ODA data</h3>
+
+            <p>The following two maps show all beneficiary and benefactor countries contained in the data, coloured
+                according to the number of Aid Activities they have been involved in. Both maps are interactive, allowing
+                the selection of any number of beneficiary/benefactor countries.</p>
+
+            <p>Below the maps, the time period of all Aid Activities available in the data is displayed, which is also
+                interactive, and can be adjusted to any sub-range of the available time period (limiting the displayed
+                information to the Aid Activities within the selected period).</p>
+        </div>
+    </div>
+
+    <!--Maps-->
     <div class="row">
         <div class="col-md-6">
             <!--Heatmap of Beneficiaries-->
@@ -80,16 +103,25 @@
         </div>
     </div>
 
+    <!--Year selection slider-->
     <div class="row">
         <div class="col-md-offset-3 col-md-6">
             <yds-year-range
+                    title="Time Period for Aid Activities"
                     min-year="1997"
                     max-year="2018">
             </yds-year-range>
         </div>
     </div>
 
+    <!--Visualization-->
     <div class="row">
+        <!--Explanation-->
+        <div class="col-md-12">
+            <p>Finally, there is a set of “info boxes”, showing various aspects of the ODA data. Clicking on “View
+                Details” of each “info box”, some predefined visualisations are displayed in the details section.</p>
+        </div>
+
         <div class="col-md-12">
             <!--Dashboard Visualization-->
             <yds-dashboard-visualization
@@ -163,130 +195,6 @@
 
             <!--<p>International trade activities describe the trade activities among countries.</p>-->
             <!--<p>In the following map you can see the trade relations between the Netherlands, and the rest of the world:</p>-->
-        <!--</div>-->
-    <!--</div>-->
-
-    <!--<div class="row">-->
-        <!--<div class="col-md-6">-->
-            <!--&lt;!&ndash;Heatmap of Beneficiaries&ndash;&gt;-->
-            <!--<div class="panel panel-primary">-->
-                <!--<div class="panel-heading">-->
-                    <!--<h3 class="panel-title">Number of Aid Activities per Beneficiary Country</h3>-->
-                <!--</div>-->
-                <!--<div class="panel-body">-->
-                    <!--<yds-heatmap-->
-                            <!--project-id="none"-->
-                            <!--view-type="aidactivity.beneficiary.countries.all"-->
-                            <!--color-axis="true"-->
-                            <!--color-type="logarithmic"-->
-                            <!--legend="true"-->
-                            <!--legend-v-align="bottom"-->
-                            <!--year-selection="true"-->
-                            <!--min-year="1997"-->
-                            <!--max-year="2018"-->
-                            <!--country-selection="false"-->
-                            <!--no-border="true"-->
-                            <!--exporting="false"-->
-                            <!--element-h="350"></yds-heatmap>-->
-                <!--</div>-->
-                <!--<div class="panel-footer" style="padding: 3px 15px">-->
-                    <!--<small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-
-        <!--<div class="col-md-6">-->
-            <!--&lt;!&ndash;Heatmap of Benefactors&ndash;&gt;-->
-            <!--<div class="panel panel-default panel-benefactor">-->
-                <!--<div class="panel-heading">-->
-                    <!--<h3 class="panel-title">Number of Aid Activities per Benefactor Country</h3>-->
-                <!--</div>-->
-                <!--<div class="panel-body">-->
-                    <!--<yds-heatmap-->
-                            <!--project-id="none"-->
-                            <!--view-type="aidactivity.benefactor.countries.all"-->
-                            <!--color-axis="true"-->
-                            <!--color-type="logarithmic"-->
-                            <!--legend="true"-->
-                            <!--legend-v-align="bottom"-->
-                            <!--year-selection="true"-->
-                            <!--min-year="1997"-->
-                            <!--max-year="2018"-->
-                            <!--country-selection="false"-->
-                            <!--no-border="true"-->
-                            <!--exporting="false"-->
-                            <!--element-h="350"></yds-heatmap>-->
-                <!--</div>-->
-                <!--<div class="panel-footer" style="padding: 3px 15px">-->
-                    <!--<small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-
-    <!--<div class="row">-->
-        <!--<div class="col-md-12">-->
-            <!--&lt;!&ndash;Dashboard Visualization&ndash;&gt;-->
-            <!--<yds-dashboard-visualization-->
-                    <!--project-id="none"-->
-                    <!--view-type="aidactivity.beneficiary.countries.all"-->
-                    <!--element-h="460">-->
-            <!--</yds-dashboard-visualization>-->
-        <!--</div>-->
-    <!--</div>-->
-
-    <!--<div class="row">-->
-        <!--<div class="col-md-12">-->
-            <!--<div class="panel panel-default">-->
-                <!--<div class="panel-heading" ng-click="isCollapsedTradeActivityPanel = !isCollapsedTradeActivityPanel">-->
-                    <!--<h3 class="panel-title">What can I do with the available trade activity data?</h3>-->
-                <!--</div>-->
-
-                <!--<div class="panel-body" uib-collapse="isCollapsedTradeActivityPanel" ng-init="isCollapsedTradeActivityPanel = true">-->
-                    <!--<uib-tabset type="pills">-->
-                        <!--<uib-tab heading="View data (as a table)">-->
-                            <!--&lt;!&ndash;Placeholder table&ndash;&gt;-->
-                            <!--<yds-grid-->
-                                    <!--project-id="none"-->
-                                    <!--view-type="aidactivity.beneficiary.countries.all"-->
-                                    <!--extra-params="apiOptions"-->
-                                    <!--element-h="400">-->
-                            <!--</yds-grid>-->
-                        <!--</uib-tab>-->
-                        <!--<uib-tab heading="View transactions">-->
-                            <!--&lt;!&ndash;Placeholder table&ndash;&gt;-->
-                            <!--<yds-grid-->
-                                    <!--project-id="none"-->
-                                    <!--view-type="aidactivity.beneficiary.countries.all"-->
-                                    <!--extra-params="apiOptions"-->
-                                    <!--element-h="400">-->
-                            <!--</yds-grid>-->
-                        <!--</uib-tab>-->
-                        <!--<uib-tab heading="View sectors">-->
-                            <!--&lt;!&ndash;Placeholder table&ndash;&gt;-->
-                            <!--<yds-grid-->
-                                    <!--project-id="none"-->
-                                    <!--view-type="aidactivity.beneficiary.countries.all"-->
-                                    <!--extra-params="apiOptions"-->
-                                    <!--element-h="400">-->
-                            <!--</yds-grid>-->
-                        <!--</uib-tab>-->
-                        <!--<uib-tab heading="Search the data">-->
-                            <!--&lt;!&ndash;Tabbed Search&ndash;&gt;-->
-                            <!--<yds-search-tabs-->
-                                    <!--default-tab="TradeActivity"-->
-                                    <!--url-param-prefix="ta-"-->
-                                    <!--hide-tabs="true"-->
-                                    <!--lang="en">-->
-                            <!--</yds-search-tabs>-->
-                        <!--</uib-tab>-->
-                        <!--<uib-tab heading="Visualize the data">-->
-                            <!--&lt;!&ndash;Workbench&ndash;&gt;-->
-                            <!--<yds-workbench user-id="ydsUser"></yds-workbench>-->
-                        <!--</uib-tab>-->
-                    <!--</uib-tabset>-->
-                <!--</div>-->
-            <!--</div>-->
         <!--</div>-->
     <!--</div>-->
 </div>
