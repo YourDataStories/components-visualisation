@@ -21,8 +21,8 @@
                         <button ng-click="selectVis('bar')" class="btn btn-default"><i class="fa fa-bar-chart" aria-hidden="true"></i></button>
                     </div>
                 </div>
-                <div class="panel-body" ng-if="selViewType.length > 0">
-                    <div ng-switch="selectedVis">
+                <div class="panel-body" ng-style="panelBodyStyle">
+                    <div ng-if="selViewType.length > 0" ng-switch="selectedVis">
                         <!--Grid-->
                         <yds-grid
                                 ng-switch-when="grid"

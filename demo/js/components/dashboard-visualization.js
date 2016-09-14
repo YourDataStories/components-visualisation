@@ -13,6 +13,11 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 if (_.isUndefined(scope.elementH) || scope.elementH.trim() == "")
                     scope.elementH = 300;
 
+                // Set minimum height of details panel body
+                scope.panelBodyStyle = {
+                    "min-height": (parseInt(scope.elementH) + 30) + "px"
+                };
+
                 scope.selectedVis = "";
                 scope.aggregateTypes= [];
 
