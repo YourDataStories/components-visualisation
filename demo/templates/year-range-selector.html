@@ -1,6 +1,12 @@
 <div style="width: 100%">
-    <rzslider
-            rz-slider-options="yearSlider.options"
-            rz-slider-model="yearSlider.minValue"
-            rz-slider-high="yearSlider.maxValue"></rzslider>
+    <div class="row" ng-if="title.length > 0">
+        <h4 class="text-center">{{ title }}</h4>
+    </div>
+
+    <div class="row">
+        <rzslider
+                rz-slider-options="yearSlider.options"
+                rz-slider-model="yearSlider.minValue"
+                rz-slider-high="yearSlider.maxValue"></rzslider>
+    </div>
 </div>

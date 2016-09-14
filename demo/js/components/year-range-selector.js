@@ -3,8 +3,9 @@ angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
         return {
             restrict: 'E',
             scope: {
-                minYear: '@',
-                maxYear: '@',
+                minYear: '@',   // Minimum year of the slider
+                maxYear: '@',   // Maximum year of the slider
+                title: '@'      // Title to show above slider (optional)
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/year-range-selector.html',
             link: function (scope, element, attrs) {
