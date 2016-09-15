@@ -19,6 +19,7 @@
                         <button ng-click="selectVis('grid')" class="btn btn-default"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
                         <button ng-click="selectVis('pie')" class="btn btn-default"><i class="fa fa-pie-chart" aria-hidden="true"></i></button>
                         <button ng-click="selectVis('bar')" class="btn btn-default"><i class="fa fa-bar-chart" aria-hidden="true"></i></button>
+                        <button ng-click="selectVis('tree')" class="btn btn-default"><i class="fa fa-tree" aria-hidden="true"></i></button>
                     </div>
                 </div>
                 <div class="panel-body" ng-style="panelBodyStyle">
@@ -49,6 +50,15 @@
                                 extra-params="apiOptions"
                                 element-h="{{ elementH }}">
                         </yds-bar>
+
+                        <!--Treemap-->
+                        <yds-tree-map
+                                ng-switch-when="tree"
+                                project-id="{{ selProjectId }}"
+                                view-type="{{ selViewType }}"
+                                extra-params="apiOptions"
+                                element-h="{{ elementH }}">
+                        </yds-tree-map>
                     </div>
                 </div>
             </div>
