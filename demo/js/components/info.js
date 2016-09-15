@@ -5,6 +5,7 @@ angular.module('yds').directive('ydsInfo', ['Data', 'Translations', '$sce', func
             projectId: '@',     //id of the project that the data belong
             viewType: '@',      //type of the info object
             lang: '@',          //lang of the visualised data
+            labelColWidth: '@', //width of the labels column (1-11, using bootstrap's grid)
             extraParams: '='    //extra parameters to send with API call
         },
         templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/info.html',
@@ -12,6 +13,7 @@ angular.module('yds').directive('ydsInfo', ['Data', 'Translations', '$sce', func
             var projectId = scope.projectId;
             var viewType = scope.viewType;
             var lang = scope.lang;
+            var labelColWidth = parseInt(scope.labelColWidth);
             var extraParams = scope.extraParams;
 
             //check if project id or grid type are defined
@@ -29,6 +31,13 @@ angular.module('yds').directive('ydsInfo', ['Data', 'Translations', '$sce', func
             //check if the language attr is defined, else assign default value
             if(_.isUndefined(lang) || lang.trim()=="")
                 lang = "en";
+
+            if (_.isUndefined(labelColWidth) || _.isNaN(labelColWidth) || labelColWidth > 11 || labelColWidth < 1) {
+                labelColWidth = 4;
+            }
+
+            scope.labelCol = "col-md-" + labelColWidth;
+            scope.infoCol = "col-md-" + (12 - labelColWidth);
 
             scope.info = {};
             scope.translations = {

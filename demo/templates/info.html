@@ -5,8 +5,8 @@
         {{ydsAlert}}
     </div>
     <div class="row" ng-repeat="(key, infoObj) in info">
-        <div class="col col-md-4"><span class="label label-primary">{{key}}:</span></div>
-        <div class="col col-md-8" ng-if="infoObj.type=='string-i18n-long'"
+        <div class="col" ng-class="labelCol"><span class="label label-primary">{{key}}:</span></div>
+        <div class="col" ng-class="infoCol" ng-if="infoObj.type=='string-i18n-long'"
              ng-tt-more-label="{{translations.showMore}}"
              ng-tt-less-label="{{translations.showLess}}"
              ng-text-truncate="infoObj.value" ng-tt-words-threshold="40">

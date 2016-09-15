@@ -779,6 +779,6 @@ div.ag-root {
 }
 
 /* Rule to make Dashboard info component's labels cyan color */
-.dashboard-info-container > .col-md-12 > .panel > .panel-body > yds-info > .yds-info-wrapper > .row > .col-md-4 > .label {
+.dashboard-info-container > .col-md-12 > .panel > .panel-body > yds-info > .yds-info-wrapper > .row > .col-md-2 > .label {
     background-color: #5bc0de;
 }
