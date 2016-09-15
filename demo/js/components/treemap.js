@@ -2,22 +2,24 @@ angular.module('yds').directive('ydsTreeMap', ['Data', function(Data) {
     return {
         restrict: 'E',
         scope: {
-            projectId: '@',     //id of the project that the data belong
-            viewType: '@',      //name of the array that contains the visualised data
-            lang: '@',          //lang of the visualised data
+            projectId: '@',     // ID of the project that the data belong
+            viewType: '@',      // Name of the array that contains the visualised data
+            lang: '@',          // Lang of the visualised data
 
-            exporting: '@',     //enable or disable the export of the plot
-            elementH: '@',      //set the height of the component
-            titleSize: '@',     //the size of the chart's main title
+            extraParams: '=',   // Extra attributes to pass to the API, if needed
 
-            addToBasket: '@',   //enable or disable "add to basket" functionality, values: true, false
-            basketBtnX: '@',    //x-axis position of the basket button
-            basketBtnY: '@',    //y-axis position of the basket button
+            exporting: '@',     // Enable or disable the export of the plot
+            elementH: '@',      // Set the height of the component
+            titleSize: '@',     // The size of the chart's main title
 
-            embeddable: '@',    //enable or disable the embedding of the component
-            embedBtnX: '@',     //x-axis position of the embed button
-            embedBtnY: '@',     //y-axis position of the embed button
-            popoverPos: '@'     //the side of the embed button from which the embed information window will appear
+            addToBasket: '@',   // Enable or disable "add to basket" functionality, values: true, false
+            basketBtnX: '@',    // X-axis position of the basket button
+            basketBtnY: '@',    // Y-axis position of the basket button
+
+            embeddable: '@',    // Enable or disable the embedding of the component
+            embedBtnX: '@',     // X-axis position of the embed button
+            embedBtnY: '@',     // Y-axis position of the embed button
+            popoverPos: '@'     // The side of the embed button from which the embed information window will appear
         },
         templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/treemap.html',
         link: function (scope, element, attrs) {
@@ -30,6 +32,7 @@ angular.module('yds').directive('ydsTreeMap', ['Data', function(Data) {
             var projectId = scope.projectId;
             var viewType = scope.viewType;
             var lang = scope.lang;
+            var extraParams = scope.extraParams;
             var exporting = scope.exporting;
             var elementH = scope.elementH;
             var titleSize = scope.titleSize;
@@ -64,7 +67,7 @@ angular.module('yds').directive('ydsTreeMap', ['Data', function(Data) {
             //set the height of the plot
             treemapContainer[0].style.height = elementH + 'px';
 
-            Data.getProjectVis("treemap", projectId, viewType, lang)
+            Data.getProjectVis("treemap", projectId, viewType, lang, extraParams)
                 .then(function (response) {
                     var series = response.data;
                     var chartTitle = response.data.title;
