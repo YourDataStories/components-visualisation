@@ -50,6 +50,9 @@ angular.module('yds').directive('ydsDashboardInfo', ['Data', '$timeout', 'Dashbo
                 // Subscribe to be notified of changes in selected countries and year range
                 DashboardService.subscribeSelectionChanges(scope, updateInfo);
                 DashboardService.subscribeYearChanges(scope, updateInfo);
+
+                // Get initial info
+                updateInfo();
             }
         };
     }
