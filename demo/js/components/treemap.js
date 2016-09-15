@@ -66,12 +66,14 @@ angular.module('yds').directive('ydsTreeMap', ['Data', function(Data) {
 
             Data.getProjectVis("treemap", projectId, viewType, lang)
                 .then(function (response) {
-                    var chartData = response.data.data;
-                    var chartTitle = response.data.title.title;
-
+                    var series = response.data;
+                    var chartTitle = response.data.title;
+                    chartTitle.style = {
+                        fontSize: titleSize + "px"
+                    };
 
                     // Check if the component is properly rendered
-                    if (_.isUndefined(chartData) || !_.isArray(chartData) || _.isUndefined(chartTitle)) {
+                    if (_.isUndefined(series) || !_.isArray(series.data) || _.isUndefined(series)) {
                         scope.ydsAlert = "The YDS component is not properly configured." +
                             "Please check the corresponding documentation section";
                         return false;
@@ -81,20 +83,13 @@ angular.module('yds').directive('ydsTreeMap', ['Data', function(Data) {
                         chart: {
                             renderTo: elementId
                         },
-                        title: {
-                            text: chartTitle,
-                            style: {
-                                fontSize: titleSize + "px"
-                            }
-                        },
+                        title: chartTitle,
                         exporting: {
                             enabled: (exporting === "true")
                         },
-                        series: [{
-                            type: "treemap",
-                            layoutAlgorithm: "squarified",
-                            data: chartData
-                        }]
+                        series: [
+                            series
+                        ]
                     };
 
                     new Highcharts.Chart(options);
