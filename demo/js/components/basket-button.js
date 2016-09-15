@@ -94,7 +94,12 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', 'Basket', '
 			
 			//function used to open the basket modal
 			scope.openBasketModal = function () {
-				var userId ="ydsUser";
+				var userId = Basket.getUserId();
+
+				if (_.isUndefined(userId) || userId.length == 0) {
+					console.error("User ID is empty!");
+				}
+
 				var basketConfig = {
 					user_id: userId,
 					lang: lang,

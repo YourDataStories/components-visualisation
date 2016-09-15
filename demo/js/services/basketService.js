@@ -3,6 +3,7 @@ function (YDS_CONSTANTS, $q, $http, $uibModal) {
 	var basketCallbacks = [];
 	var lastSavedItem = {};
 	var modalInstance = {};
+	var userId = "";
 
 	var notifyObservers = function (observerStack) { //function to trigger the callbacks of observers
 		angular.forEach(observerStack, function (callback) {
@@ -18,6 +19,12 @@ function (YDS_CONSTANTS, $q, $http, $uibModal) {
 	return {
 		registerCallback: function(callback) { basketCallbacks.push(callback); },
 		getLastSavedItem: function() { return lastSavedItem; },
+		setUserId: function(newUserId) {
+			userId = newUserId;
+		},
+		getUserId: function() {
+			return userId;
+		},
 		openModal: function(basketInput, modalRestrictions) {
 			var modalInput = {
 				title: "Add to Basket",

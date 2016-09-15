@@ -81,6 +81,7 @@ angular.module('yds').directive('ydsBasketPreview', ['Data' , '$compile', '$time
 
 			scope.getBasketItem(scope.basketType);
 			Basket.registerCallback(updateBasketItems);
+			Basket.setUserId(scope.userId);
 		}
 	};
 }]);
