@@ -121,6 +121,9 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 scope.selectVis = function(visType) {
                     scope.selectedVis = visType;
                 };
+
+                // Initialize component
+                viewTypeChangeHandler();
             }
         };
     }
