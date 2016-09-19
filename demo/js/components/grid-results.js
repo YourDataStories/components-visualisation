@@ -312,8 +312,10 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
 
                                 params.successCallback(rowsWithButtons, numOfResults);
 
-                                // Call sizeColumnsToFit (for the visible grid when page loads)
-                                if (scope.viewType == $location.search()[paramPrefix + "tab"]) {
+                                // Call sizeColumnsToFit, if this grid is in the selected tab of Tabbed Search (so
+                                // tab url parameter will be the same as this grid's view type) or if query length
+                                // is > 0 (so this grid is using extraParams, which means it's shown in the Dashboard)
+                                if (scope.viewType == $location.search()[paramPrefix + "tab"] || query.length > 0) {
                                     scope.gridOptions.api.sizeColumnsToFit();
                                 }
                             };
