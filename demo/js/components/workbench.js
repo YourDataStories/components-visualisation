@@ -486,14 +486,14 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 				$window.dispatchEvent(evt);
 			};
 
-
+			var drupalpath = ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath  +'/' :'');
 			//function to prepare the templates used in search results 
 			var loadTemplates = function(){
 				$ocLazyLoad.load ({
-					files: ['templates/workbench/linechart-config.html',
-                            'templates/workbench/scatterchart-config.html',
-							'templates/workbench/barchart-config.html',
-							'templates/workbench/piechart-config.html'],
+					files: [drupalpath + 'templates/workbench/linechart-config.html',
+					        drupalpath + 'templates/workbench/scatterchart-config.html',
+							drupalpath + 'templates/workbench/barchart-config.html',
+							drupalpath + 'templates/workbench/piechart-config.html'],
 					cache: true
 				});
 			};

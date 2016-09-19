@@ -21,7 +21,7 @@
 
             // Add marker icon to Leaflet
             var markerIcon = L.icon({
-                iconUrl: 'lib/images/marker-icon-start.png',
+                iconUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'lib/images/marker-icon-start.png',
                 iconSize:   [26, 41],
                 iconAnchor:   [13, 41]
             });
