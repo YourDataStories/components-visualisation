@@ -197,13 +197,82 @@
     </div>
 
     <!--Trade activities-->
-    <!--<div class="row">-->
-        <!--&lt;!&ndash;Trade activities title and description&ndash;&gt;-->
-        <!--<div class="col-md-12">-->
-            <!--<h2>What data is related? Trade Activities</h2>-->
+    <div class="row">
+        <!--Trade activities title and description-->
+        <div class="col-md-12">
+            <h2>What data is related? Trade Activities</h2>
 
-            <!--<p>International trade activities describe the trade activities among countries.</p>-->
-            <!--<p>In the following map you can see the trade relations between the Netherlands, and the rest of the world:</p>-->
-        <!--</div>-->
-    <!--</div>-->
+            <p>International trade activities describe the trade activities among countries.</p>
+            <p>In the following map you can see the trade relations between the Netherlands, and the rest of the world:</p>
+        </div>
+    </div>
+
+    <!--Maps-->
+    <div class="row">
+        <div class="col-md-6">
+            <!--Heatmap of Origins-->
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Number of Trade Activities per Origin Country</h3>
+                </div>
+                <div class="panel-body">
+                    <yds-heatmap
+                            project-id="none"
+                            view-type="tradeactivity.hasorigin.countries.all"
+                            color-axis="true"
+                            color-type="logarithmic"
+                            legend="true"
+                            legend-v-align="bottom"
+                            use-year-range="true"
+                            dashboard-id="tradeactivity"
+                            country-selection="true"
+                            no-border="true"
+                            exporting="false"
+                            element-h="350"></yds-heatmap>
+                </div>
+                <div class="panel-footer" style="padding: 3px 15px">
+                    <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <!--Heatmap of Destinations-->
+            <div class="panel panel-default panel-benefactor">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Number of Trade Activities per Destination Country</h3>
+                </div>
+                <div class="panel-body">
+                    <yds-heatmap
+                            project-id="none"
+                            view-type="tradeactivity.hasdestination.countries.all"
+                            color-axis="true"
+                            color-type="logarithmic"
+                            legend="true"
+                            legend-v-align="bottom"
+                            use-year-range="true"
+                            dashboard-id="tradeactivity"
+                            country-selection="true"
+                            no-border="true"
+                            exporting="false"
+                            element-h="350"></yds-heatmap>
+                </div>
+                <div class="panel-footer" style="padding: 3px 15px">
+                    <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Year selection slider-->
+    <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+            <yds-year-range
+                    title="Time Period for Trade Activities"
+                    dashboard-id="tradeactivity"
+                    min-year="1997"
+                    max-year="2018">
+            </yds-year-range>
+        </div>
+    </div>
 </div>
