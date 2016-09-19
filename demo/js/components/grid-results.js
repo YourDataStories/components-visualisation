@@ -1,11 +1,13 @@
-angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 'Basket', 'YDS_CONSTANTS', '$location',
-    function(Data, Filters, Search, Basket, YDS_CONSTANTS, $location){
+angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 'Basket', 'YDS_CONSTANTS', '$location', '$q',
+    function(Data, Filters, Search, Basket, YDS_CONSTANTS, $location, $q){
         return {
             restrict: 'E',
             scope: {
                 viewType: '@',          // Name of the view to use for the grid
                 lang: '@',              // Lang of the visualised data
                 urlParamPrefix: '@',    // Prefix to add before all url parameters (optional)
+
+                extraParams: '=',       // Extra attributes to pass to the API (optional)
 
                 sorting: '@',           // Enable or disable array sorting, values: true, false
                 filtering: '@',         // Enable or disable array filtering, values: true, false
@@ -41,6 +43,9 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 };
 
                 var paramPrefix = scope.urlParamPrefix;
+                var extraParams = scope.extraParams;
+
+                var query = "";
 
                 // If viewType is undefined we can't show the grid
                 if(_.isUndefined(grid.viewType) || grid.viewType.trim()=="") {
@@ -134,27 +139,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 });
 
                 /**
-                 * Checks if any URL parameters change and acts accordingly
-                 */
-                scope.$watch(function () { return JSON.stringify($location.search()) + getKeyword(); }, function () {
-                    var urlParams = $location.search();
-
-                    // Only look for changes if this grid is in the active tab
-                    if (urlParams[paramPrefix + "tab"] == scope.viewType) {
-                        // If the tab changed and grid options are ready, size columns to fit
-                        if (urlParams[paramPrefix + "tab"] != prevTab && !_.isUndefined(scope.gridOptions) && _.has(scope.gridOptions, "api")) {
-                            scope.gridOptions.api.sizeColumnsToFit();
-                        }
-
-                        // Update prevTab variable to the new tab
-                        prevTab = urlParams[paramPrefix + "tab"];
-
-                        // Visualize the grid
-                        visualizeGrid();
-                    }
-                });
-
-                /**
                  * Function called when the "Apply" button is clicked
                  */
                 scope.applyComboFilters = function() {
@@ -201,14 +185,33 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                  * Gets the current keyword from the search service
                  * @returns {*}
                  */
-                var getKeyword = function() {
+                var getSearchQuery = function() {
+                    var deferred = $q.defer();
+
                     var newKeyword = Search.getKeyword();
 
                     if (_.isUndefined(newKeyword) || newKeyword.trim() == "") {
                         newKeyword = "*";
                     }
 
-                    return newKeyword;
+                    if (_.isUndefined(extraParams) || _.isEmpty(extraParams)) {
+                        deferred.resolve(newKeyword);
+                    } else {
+                        if (query.length == 0) {
+                            Data.getType2SolrQuery(grid.viewType, extraParams).then(function(response) {
+                                // Remember query so we don't need to call this API every time the page changes
+                                query = response.data.q;
+
+                                // Resolve promise
+                                deferred.resolve(query);
+                            });
+                        } else {
+                            // Resolve promise with saved query from before
+                            deferred.resolve(query);
+                        }
+                    }
+
+                    return deferred.promise;
                 };
 
                 /**
@@ -320,24 +323,33 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                 scope.ydsAlert = error.message;
                             };
 
-                            // Get the search keyword, and merge it with the quick filter if it's defined
-                            var keyword = getKeyword();
-                            if (!_.isUndefined(quickFilter)) {
-                                keyword = "(" + keyword + ") AND " + quickFilter;
-                            }
+                            // Get the search query, and merge it with the quick filter if it's defined
+                            getSearchQuery().then(function(searchQuery) {
+                                var query = searchQuery;
+                                if (!_.isUndefined(quickFilter)) {
+                                    query = "(" + query + ") AND " + quickFilter;
+                                }
 
-                            // If there are advanced search rules, get them and perform advanced search
-                            var rules = $location.search()[paramPrefix + "rules"];
-                            if (!_.isUndefined(rules)) {
-                                rules = JSURL.parse(rules);
+                                // If there are advanced search rules, get them and perform advanced search
+                                var rules = $location.search()[paramPrefix + "rules"];
+                                if (!_.isUndefined(rules)) {
+                                    rules = JSURL.parse(rules);
 
-                                Data.getGridResultDataAdvanced(keyword, rules, grid.viewType, params.startRow, grid.pageSize, grid.lang)
-                                    .then(gridResultDataSuccess, gridResultDataError);
-                            } else {
-                                // Perform normal search
-                                Data.getGridResultData(keyword, grid.viewType, params.startRow, grid.pageSize, grid.lang)
-                                    .then(gridResultDataSuccess, gridResultDataError);
-                            }
+                                    Data.getGridResultDataAdvanced(query, rules, grid.viewType, params.startRow, grid.pageSize, grid.lang)
+                                        .then(gridResultDataSuccess, gridResultDataError);
+                                } else {
+                                    var viewType = "";
+                                    if (_.isUndefined(extraParams) || _.isEmpty(extraParams)) {
+                                        // If extra params do not exist, send view type as normal
+                                        // If they exist, the type will be already included in the query
+                                        viewType = grid.viewType;
+                                    }
+
+                                    // Perform normal search
+                                    Data.getGridResultData(query, viewType, params.startRow, grid.pageSize, grid.lang)
+                                        .then(gridResultDataSuccess, gridResultDataError);
+                                }
+                            });
                         }
                     };
 
@@ -357,6 +369,30 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                         scope.gridOptions.api.setDatasource(dataSource);
                     }
                 };
+
+                if (_.isUndefined(extraParams)) {
+                    // If any URL parameters change act accordingly
+                    scope.$watch(function () { return JSON.stringify($location.search()) + getSearchQuery(); }, function () {
+                        var urlParams = $location.search();
+
+                        // Only look for changes if this grid is in the active tab
+                        if (urlParams[paramPrefix + "tab"] == scope.viewType) {
+                            // If the tab changed and grid options are ready, size columns to fit
+                            if (urlParams[paramPrefix + "tab"] != prevTab && !_.isUndefined(scope.gridOptions) && _.has(scope.gridOptions, "api")) {
+                                scope.gridOptions.api.sizeColumnsToFit();
+                            }
+
+                            // Update prevTab variable to the new tab
+                            prevTab = urlParams[paramPrefix + "tab"];
+
+                            // Visualize the grid
+                            visualizeGrid();
+                        }
+                    });
+                } else {
+                    // Visualize grid using extra params
+                    visualizeGrid();
+                }
             }
         };
     }

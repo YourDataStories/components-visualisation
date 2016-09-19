@@ -559,11 +559,14 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
 
     /**
      * Gets the Solr query that should be used with the Search API to get results with the specified parameters
+     * @param type      View type
      * @param params    Parameters object
      * @returns {*|d.promise|promise|d|s}
      */
-    dataService.getType2SolrQuery = function(params) {
+    dataService.getType2SolrQuery = function(type, params) {
         var deferred = $q.defer();
+
+        params.type = type;
 
         $http({
             method: "GET",
@@ -591,17 +594,22 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
     dataService.getGridResultData = function(query, viewType, start, rows, lang) {
         var deferred = $q.defer();
 
+        var params = {
+            q: query,
+            lang: lang,
+            rows: rows,
+            start: start
+        };
+
+        if (!_.isUndefined(viewType) && viewType.length > 0) {
+            params.fq = "{!tag=TYPE}type:" + viewType;
+        }
+
         $http({
             method: 'GET',
             url: "http://" + YDS_CONSTANTS.API_SEARCH,
             headers: {'Content-Type': 'application/json; charset=UTF-8'},
-            params: {
-                q: query,
-                fq: "{!tag=TYPE}type:" + viewType,
-                lang: lang,
-                rows: rows,
-                start: start
-            }
+            params: params
         }).success(function (data) {
             deferred.resolve(data);
         }).error(function (error) {
