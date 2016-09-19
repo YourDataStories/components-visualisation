@@ -32,6 +32,7 @@ app.constant("YDS_CONSTANTS", {
     "API_CACHE_INFO": "platform.yourdatastories.eu/api/json-ld/cache/cache_info.tcl",
     "API_CACHE_TRUNCATE": "platform.yourdatastories.eu/api/json-ld/cache/truncate.tcl",
     "API_AGGREGATE": "platform.yourdatastories.eu/api/json-ld/component/aggregate.tcl",
+    "API_TYPE2SOLRQUERY": "platform.yourdatastories.eu/api/json-ld/component/type2solrquery.tcl",
 
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search",
     "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search-el",
@@ -547,6 +548,28 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                 lang: lang
             },
             headers: {'Content-Type': 'application/json; charset=UTF-8'}
+        }).success(function (data) {
+            deferred.resolve(data);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    /**
+     * Gets the Solr query that should be used with the Search API to get results with the specified parameters
+     * @param params    Parameters object
+     * @returns {*|d.promise|promise|d|s}
+     */
+    dataService.getType2SolrQuery = function(params) {
+        var deferred = $q.defer();
+
+        $http({
+            method: "GET",
+            url: "http://" + YDS_CONSTANTS.API_TYPE2SOLRQUERY,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            params: params
         }).success(function (data) {
             deferred.resolve(data);
         }).error(function (error) {
