@@ -3,14 +3,16 @@ angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
         return {
             restrict: 'E',
             scope: {
-                minYear: '@',   // Minimum year of the slider
-                maxYear: '@',   // Maximum year of the slider
-                title: '@'      // Title to show above slider (optional)
+                minYear: '@',       // Minimum year of the slider
+                maxYear: '@',       // Maximum year of the slider
+                dashboardId: '@',   // ID to use for saving year range in DashboardService
+                title: '@'          // Title to show above slider (optional)
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/year-range-selector.html',
             link: function (scope, element, attrs) {
                 var minYear = parseInt(scope.minYear);
                 var maxYear = parseInt(scope.maxYear);
+                var dashboardId = scope.dashboardId;
 
                 // Check if minYear attr is defined, else assign default value
                 if (_.isUndefined(minYear) || _.isNaN(minYear))
@@ -20,6 +22,10 @@ angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
                 if (_.isUndefined(maxYear) || _.isNaN(maxYear))
                     maxYear = 2050;
 
+                // Check if dashboardId attr is defined, else assign default value
+                if (_.isUndefined(dashboardId) || dashboardId.length == 0)
+                    dashboardId = "default";
+
                 /**
                  * Update the year range in DashboardService
                  */
@@ -28,11 +34,11 @@ angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
                     var maxValue = scope.yearSlider.maxValue;
 
                     // Update selected years in DashboardService
-                    DashboardService.setYearRange(minValue, maxValue);
+                    DashboardService.setYearRange(dashboardId, minValue, maxValue);
                 };
 
                 // Set initial year selection in DashboardService
-                DashboardService.setYearRange(minYear, maxYear);
+                DashboardService.setYearRange(dashboardId, minYear, maxYear);
 
                 // Set slider options
                 scope.yearSlider = {

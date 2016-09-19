@@ -13,6 +13,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				legendHAlign: '@',      // Horizontal alignment of the chart legend (left, center, right)
 				legendLayout: '@',      // Layout of the chart legend (vertical, horizontal)
                 useYearRange: '@',      // If true will watch the selected year range of DashboardService to update map
+				dashboardId: '@',		// Optional, used for getting selected year range from DashboardService
 				countrySelection: '@',  // Allow selecting countries on the map
 				noBorder: '@',			// If true, the component will have no border
 				exporting: '@',         // Enable or disable the export of the chart
@@ -30,6 +31,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				var legendHAlign = scope.legendHAlign;
 				var legendLayout = scope.legendLayout;
 				var useYearRange = scope.useYearRange;
+				var dashboardId = scope.dashboardId;
 				var countrySelection = scope.countrySelection;
 				var noBorder = scope.noBorder;
 				var exporting = scope.exporting;
@@ -81,9 +83,13 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				if (_.isUndefined(legendLayout) || legendLayout.trim()=="")
 					legendLayout = "horizontal";
 
-				//check if watchYearRange attr is defined, else assign default value
+				//check if useYearRange attr is defined, else assign default value
 				if (_.isUndefined(useYearRange) || useYearRange.trim()=="")
                     useYearRange = "false";
+
+				//check if dashboardId attr is defined, else assign default value
+				if (_.isUndefined(dashboardId) || dashboardId.trim()=="")
+					dashboardId = "default";
 
 				//check if countrySelection attr is defined, else assign default value
 				if (_.isUndefined(countrySelection) || countrySelection.trim()=="")
@@ -292,8 +298,8 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				 */
 				var createHeatmap = function() {
 					if (useYearRange == "true") {
-                        var minYear = DashboardService.getMinYear();
-                        var maxYear = DashboardService.getMaxYear();
+                        var minYear = DashboardService.getMinYear(dashboardId);
+                        var maxYear = DashboardService.getMaxYear(dashboardId);
 
                         // Create extra parameters object with year
 						if (!_.isNaN(minYear) && !_.isNaN(maxYear)) {

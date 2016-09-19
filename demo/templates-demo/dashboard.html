@@ -72,6 +72,7 @@
                             legend="true"
                             legend-v-align="bottom"
                             use-year-range="true"
+                            dashboard-id="aidactivity"
                             country-selection="true"
                             no-border="true"
                             exporting="false"
@@ -98,6 +99,7 @@
                             legend="true"
                             legend-v-align="bottom"
                             use-year-range="true"
+                            dashboard-id="aidactivity"
                             country-selection="true"
                             no-border="true"
                             exporting="false"
@@ -115,6 +117,7 @@
         <div class="col-md-offset-3 col-md-6">
             <yds-year-range
                     title="Time Period for Aid Activities"
+                    dashboard-id="aidactivity"
                     min-year="1997"
                     max-year="2018">
             </yds-year-range>
@@ -124,7 +127,8 @@
     <!--Dashboard Info box-->
     <div class="row" style="padding-top: 20px; padding-bottom: 10px;">
         <yds-dashboard-info
-            lang="en">
+                dashboard-id="aidactivity"
+                lang="en">
         </yds-dashboard-info>
     </div>
 
@@ -142,6 +146,7 @@
             <yds-dashboard-visualization
                     project-id="none"
                     view-type="aidactivity.beneficiary.countries.all"
+                    dashboard-id="aidactivity"
                     element-h="460">
             </yds-dashboard-visualization>
         </div>
@@ -157,9 +162,9 @@
                 <div class="panel-body" uib-collapse="isCollapsedAidActivityPanel" ng-init="isCollapsedAidActivityPanel = true">
                     <uib-tabset type="pills">
                         <uib-tab heading="View data (as a table)">
-                            <!--Placeholder table-->
-
+                            <!--AidActivity grid-->
                             <yds-dashboard-grid
+                                    dashboard-id="aidactivity"
                                     lang="en">
                             </yds-dashboard-grid>
                         </uib-tab>

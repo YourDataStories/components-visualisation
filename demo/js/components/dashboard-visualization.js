@@ -3,12 +3,15 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
         return {
             restrict: 'E',
             scope: {
-                projectId: '@', // Project ID of chart
-                viewType: '@',  // View type of chart
-                elementH: '@'   // Height of component
+                projectId: '@',     // Project ID of chart
+                viewType: '@',      // View type of chart
+                dashboardId: '@',   // ID used for getting selected year range from DashboardService
+                elementH: '@'       // Height of component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + 'templates/dashboard-visualization.html',
             link: function (scope, element, attrs) {
+                var dashboardId = scope.dashboardId;
+
                 // Check if the component's height attribute is defined, else assign default value
                 if (_.isUndefined(scope.elementH) || scope.elementH.trim() == "")
                     scope.elementH = 300;
@@ -17,6 +20,11 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 scope.panelBodyStyle = {
                     "min-height": (parseInt(scope.elementH) + 30) + "px"
                 };
+
+                // If dashboardId is undefined, show error
+                if (_.isUndefined(dashboardId) || dashboardId.trim() == "") {
+                    dashboardId = "default";
+                }
 
                 scope.selectedVis = "";
                 scope.aggregateTypes= [
@@ -58,8 +66,8 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                     scope.apiOptions = {};
 
                     // If there is a selected year range, add it to the parameters that will be added to the API call
-                    var minYear = DashboardService.getMinYear();
-                    var maxYear = DashboardService.getMaxYear();
+                    var minYear = DashboardService.getMinYear(dashboardId);
+                    var maxYear = DashboardService.getMaxYear(dashboardId);
 
                     if (!_.isNull(minYear) && !_.isNull(maxYear)) {
                         scope.apiOptions.year= "[" + minYear + " TO " + maxYear + "]";
@@ -85,11 +93,13 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                  * Also sets the Visualization panel's color
                  */
                 var updateViewType = function() {
-                    var viewType = DashboardService.getViewType();
+                    var viewType = DashboardService.getViewType(dashboardId);
 
-                    scope.selViewType = viewType.type;
-                    scope.panelStyle = viewType.panelStyle;
-                    scope.panelHeadingStyle = viewType.panelHeadingStyle;
+                    if (!_.isUndefined(viewType)) {
+                        scope.selViewType = viewType.type;
+                        scope.panelStyle = viewType.panelStyle;
+                        scope.panelHeadingStyle = viewType.panelHeadingStyle;
+                    }
                 };
 
                 /**

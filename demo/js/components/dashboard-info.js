@@ -3,21 +3,28 @@ angular.module('yds').directive('ydsDashboardInfo', ['Data', '$timeout', 'Dashbo
         return {
             restrict: 'E',
             scope: {
-                lang: '@'      // Language of component
+                dashboardId: '@',   // ID used for getting selected year range from DashboardService
+                lang: '@'           // Language of component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/dashboard-info.html',
             link: function (scope) {
+                var dashboardId = scope.dashboardId;
                 scope.showInfo = false;
 
                 if (_.isUndefined(scope.lang) || scope.lang.trim() == "")
                     scope.lang = "en";
 
+                // If dashboardId is undefined, show error
+                if (_.isUndefined(dashboardId) || dashboardId.trim() == "") {
+                    dashboardId = "default";
+                }
+
                 var updateInfo = function() {
                     var apiOptionsMap = DashboardService.getApiOptionsMapping();
 
                     // Get min and max selected year and create the year range string for request
-                    var minYear = DashboardService.getMinYear();
-                    var maxYear = DashboardService.getMaxYear();
+                    var minYear = DashboardService.getMinYear(dashboardId);
+                    var maxYear = DashboardService.getMaxYear(dashboardId);
 
                     var yearRange = "[" + minYear + " TO " + maxYear + "]";
 

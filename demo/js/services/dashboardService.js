@@ -1,6 +1,6 @@
 angular.module('yds').service('DashboardService', function($rootScope, $timeout) {
     var countries = {};
-    var yearRange = [];
+    var yearRange = {};
     var selectedViewType = {};
     var notifySelectionChangeLock = false;
     var notifyYearChangeLock = false;
@@ -124,6 +124,7 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
 
     /**
      * Clear selected countries for a given type
+     * @param type
      */
     var clearCountries = function(type) {
         if (!_.isEmpty(countries[type])) {
@@ -135,13 +136,14 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
 
     /**
      * Set a new year range
-     * @param minYear   Minimum year
-     * @param maxYear   Maximum year
+     * @param dashboardId   ID to set year range for
+     * @param minYear       Minimum year
+     * @param maxYear       Maximum year
      */
-    var setYearRange = function(minYear, maxYear) {
+    var setYearRange = function(dashboardId, minYear, maxYear) {
         var newRange = [minYear, maxYear];
-        if (!_.isEqual(newRange, yearRange)) {
-            yearRange = newRange;
+        if (!_.isEqual(newRange, yearRange[dashboardId])) {
+            yearRange[dashboardId] = newRange;
 
             notifySubscribersYearChange();
         }
@@ -149,43 +151,48 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
 
     /**
      * Get the saved year range
+     * @param dashboardId
      * @returns {Array}
      */
-    var getYearRange = function() {
-        return yearRange;
+    var getYearRange = function(dashboardId) {
+        return yearRange[dashboardId];
     };
 
     /**
      * Returns the minimum year of the range or null if range is empty
+     * @param dashboardId
      * @returns {*}
      */
-    var getMinYear = function() {
-        return _.isEmpty(yearRange) ? null : _.min(yearRange);
+    var getMinYear = function(dashboardId) {
+        return _.isEmpty(yearRange[dashboardId]) ? null : _.min(yearRange[dashboardId]);
     };
 
     /**
      * Returns the maximum year of the range or null if range is empty
+     * @param dashboardId
      * @returns {*}
      */
-    var getMaxYear = function() {
-        return _.isEmpty(yearRange) ? null : _.max(yearRange);
+    var getMaxYear = function(dashboardId) {
+        return _.isEmpty(yearRange[dashboardId]) ? null : _.max(yearRange[dashboardId]);
     };
 
     /**
      * Returns the selected view type
+     * @param dashboardId
      * @returns {{}}
      */
-    var getViewType = function() {
-        return selectedViewType;
+    var getViewType = function(dashboardId) {
+        return selectedViewType[dashboardId];
     };
 
     /**
      * Sets the selected view type
-     * @param viewType
+     * @param dashboardID   Dashboard ID
+     * @param viewType      View type object
      */
-    var setViewType = function(viewType) {
-        if (!_.isEqual(selectedViewType, viewType)) {
-            selectedViewType = viewType;
+    var setViewType = function(dashboardID, viewType) {
+        if (!_.isEqual(selectedViewType[dashboardID], viewType)) {
+            selectedViewType[dashboardID] = viewType;
 
             notifyViewTypeChange();
         }

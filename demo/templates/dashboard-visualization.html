@@ -3,6 +3,7 @@
         <yds-aggregate
                 ng-repeat="type in aggregateTypes track by $index"
                 project-id="{{ projectId }}"
+                dashboard-id="{{ dashboardId }}"
                 view-type="{{ type }}"
                 set-on-init="{{ ($index == 0) }}"
                 extra-params="apiOptions">

@@ -5,6 +5,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
             scope: {
                 projectId: '@',     // Project ID of chart
                 viewType: '@',      // View type of chart
+                dashboardId: '@',   // ID used for getting selected year range from DashboardService
                 lang: '@',          // Language
                 setOnInit: '@',     // If true, will set this aggregate's view type in DashboardService on init
                 extraParams: '='    // Extra parameters to send
@@ -13,6 +14,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
             link: function (scope) {
                 var projectId = scope.projectId;
                 var viewType = scope.viewType;
+                var dashboardId = scope.dashboardId;
                 var lang = scope.lang;
                 var setOnInit = scope.setOnInit;
 
@@ -26,6 +28,11 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 if (_.isUndefined(viewType) || viewType.trim() == "") {
                     console.error("View type not defined!");
                     return;
+                }
+
+                // If dashboardId is undefined, show error
+                if (_.isUndefined(dashboardId) || dashboardId.trim() == "") {
+                    dashboardId = "default";
                 }
 
                 // If language is undefined, set default value
@@ -55,7 +62,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                             "color": "#FFFFFF"
                         };
 
-                        if (setOnInit == "true" && !initialized && _.isEmpty(DashboardService.getViewType())) {
+                        if (setOnInit == "true" && !initialized && _.isEmpty(DashboardService.getViewType(dashboardId))) {
                             scope.setViewType();
                         }
 
@@ -67,7 +74,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                  * Sets the view type to this aggregate component's view type in DashboardService
                  */
                 scope.setViewType = function() {
-                    DashboardService.setViewType({
+                    DashboardService.setViewType(dashboardId, {
                         type: viewType,
                         panelStyle: scope.panelStyle,
                         panelHeadingStyle: scope.panelHeadingStyle
