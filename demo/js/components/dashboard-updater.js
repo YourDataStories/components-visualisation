@@ -6,11 +6,13 @@ angular.module('yds').directive('ydsDashboardUpdater', ['$timeout', 'DashboardSe
                 type: '@',          // What type of component to show (grid, info etc.)
                 viewType: '@',      // Type to give to component
                 dashboardId: '@',   // ID used for getting selected year range from DashboardService
+                minHeight: '@',     // Minimum height of this component's container
                 lang: '@'           // Language of component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/dashboard-updater.html',
             link: function (scope) {
                 var dashboardId = scope.dashboardId;
+                var minHeight = parseInt(scope.minHeight);
                 scope.showInfo = false;
 
                 // If type is undefined, set default value
@@ -29,6 +31,17 @@ angular.module('yds').directive('ydsDashboardUpdater', ['$timeout', 'DashboardSe
                 if (_.isUndefined(dashboardId) || dashboardId.trim() == "") {
                     dashboardId = "default";
                 }
+
+                // If minHeight is undefined, set default value
+                if (_.isUndefined(minHeight) || _.isNaN(minHeight)) {
+                    minHeight = 0;
+                }
+
+                // Set minimum height of container so when component is being refreshed, the container's
+                // height does not become 0 which causes the page to scroll up
+                scope.containerStyle = {
+                    "min-height": minHeight + "px"
+                };
 
                 var updateExtraParams = function() {
                     var apiOptionsMap = DashboardService.getApiOptionsMapping();
