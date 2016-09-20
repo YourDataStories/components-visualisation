@@ -96,7 +96,8 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     gridContainer[0].style.minHeight = (grid.elementH - 35) + 'px';
                 } else {
                     gridWrapper[0].style.height = grid.elementH + 'px';
-                    gridWrapper[0].style.minHeight = grid.elementH + 'px';
+                    gridContainer[0].style.height = grid.elementH + 'px';
+                    gridContainer[0].style.minHeight = grid.elementH + 'px';
                 }
 
                 /**
