@@ -126,10 +126,22 @@
 
     <!--Dashboard Info box-->
     <div class="row" style="padding-top: 20px; padding-bottom: 10px;">
-        <yds-dashboard-info
-                dashboard-id="aidactivity"
-                lang="en">
-        </yds-dashboard-info>
+        <div class="col-md-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Selected filters</h3>
+                </div>
+
+                <div class="panel-body" style="min-height: 120px">
+                    <yds-dashboard-updater
+                            type="info"
+                            view-type="aidactivity.filters.selected"
+                            dashboard-id="aidactivity"
+                            lang="en">
+                    </yds-dashboard-updater>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!--Visualization-->
@@ -163,10 +175,12 @@
                     <uib-tabset type="pills">
                         <uib-tab heading="View data (as a table)">
                             <!--AidActivity grid-->
-                            <yds-dashboard-grid
+                            <yds-dashboard-updater
+                                    type="grid"
+                                    view-type="aidactivity.listitems.for.countries.and.period"
                                     dashboard-id="aidactivity"
                                     lang="en">
-                            </yds-dashboard-grid>
+                            </yds-dashboard-updater>
                         </uib-tab>
                         <uib-tab heading="View transactions">
                             <!--Placeholder table-->

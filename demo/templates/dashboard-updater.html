@@ -1,0 +1,20 @@
+<div ng-switch="type" class="dashboard-updater-container">
+    <yds-info
+            ng-switch-when="info"
+            project-id="none"
+            view-type="{{ viewType }}"
+            label-col-width="2"
+            extra-params="extraParams"
+            lang="{{ lang }}">
+    </yds-info>
+
+    <yds-grid-results
+            ng-switch-when="grid"
+            view-type="{{ viewType }}"
+            extra-params="extraParams"
+            page-size="50"
+            quick-filtering="true"
+            element-h="400"
+            lang="{{ lang }}">
+    </yds-grid-results>
+</div>
