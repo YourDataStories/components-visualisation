@@ -17,7 +17,7 @@
     <div class="row list-group results-content"></div>
     <div class="row">
         <div class="col-xs-12 text-center">
-            <uib-pagination ng-hide="pagination.hidden"
+            <ul uib-pagination ng-hide="pagination.hidden"
                             ng-model="pagination.current"
                             boundary-links="true"
                             ng-change="changePage()"
@@ -30,7 +30,7 @@
                             last-text="{{pagination.lastText}}"
                             next-text="{{pagination.nextText}}"
                             previous-text="{{pagination.previousText}}">
-            </uib-pagination>
+            </ul>
         </div>
     </div>
 </div>

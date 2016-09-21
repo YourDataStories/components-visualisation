@@ -42,9 +42,9 @@
         </div>
         <div class="col-xs-4">
             <!-------- Component Selection Carousel -------->
-            <uib-carousel active="slidesConfig.active" no-wrap="slidesConfig.noWrap">
+            <div uib-carousel active="slidesConfig.active" no-wrap="slidesConfig.noWrap">
                 <!-- Slides of carousel -->
-                <uib-slide ng-repeat="slide in slidesConfig.slides track by $index" ng-init="slideIndex = $index">
+                <div uib-slide ng-repeat="slide in slidesConfig.slides track by $index" ng-init="slideIndex = $index" index="$index">
                     <!-- Images of slide -->
                     <div ng-repeat="image in slide.images track by $index" class="col-xs-4 slider-img-wrapper"
                          ng-class="image.visible ? '' : 'low-opacity'"
@@ -54,15 +54,15 @@
                             <p class="unselectable">{{image.name}}</p>
                         </div>
                     </div>
-                </uib-slide>
-            </uib-carousel>
+                </div>
+            </div>
 
             <hr>
 
-            <uib-alert type="danger" ng-if="workbench.alert.length>0" class="col-xs-10 col-xs-offset-1 text-center">
+            <div uib-alert ng-if="workbench.alert.length>0" class="col-xs-10 col-xs-offset-1 text-center alert-danger">
                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                 {{workbench.alert}}
-            </uib-alert>
+            </div>
 
             <!-------- Dropdown for the Availble Views -------->
             <div class="row">
