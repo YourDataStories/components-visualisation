@@ -73,6 +73,41 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         return aggregates[dashboardId];
     };
 
+    /**
+     * Create and return the extra parameters that should be sent to the API
+     * with each Dashboard component request, for a specific Dashboard section
+     * @param dashboardId
+     * @returns {{}}
+     */
+    var getApiOptions = function(dashboardId) {
+        var apiOptionsMap = getApiOptionsMapping(dashboardId);
+
+        // Get min and max selected year and create the year range string for request
+        var minYear = getMinYear(dashboardId);
+        var maxYear = getMaxYear(dashboardId);
+
+        var yearRange = "[" + minYear + " TO " + maxYear + "]";
+
+        // Get name of parameter that should be used for sending year range
+        var yearParam = getYearParamName(dashboardId);
+
+        // Initialize extraParams object with year range
+        var apiOptions = {};
+        apiOptions[yearParam] = yearRange;
+
+        // Get countries to send with request from DashboardService
+        _.each(apiOptionsMap, function(viewType, key) {
+            var countries = getCountries(viewType);
+            countries = _.pluck(countries, "code").join(",");
+
+            if (countries.length > 0) {
+                apiOptions[key] = countries;
+            }
+        });
+
+        return apiOptions;
+    };
+
     var subscribeSelectionChanges = function(scope, callback) {
         var unregister = $rootScope.$on('dashboard-service-change', callback);
         scope.$on('$destroy', unregister);
@@ -253,6 +288,7 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         getApiOptionsMapping: getApiOptionsMapping,
         getYearParamName: getYearParamName,
         getAggregates: getAggregates,
+        getApiOptions: getApiOptions,
         subscribeSelectionChanges: subscribeSelectionChanges,
         subscribeYearChanges: subscribeToYearChanges,
         subscribeViewTypeChanges: subscribeViewTypeChanges,
@@ -264,6 +300,6 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         getMinYear: getMinYear,
         getMaxYear: getMaxYear,
         setViewType: setViewType,
-        getViewType: getViewType,
+        getViewType: getViewType
     };
 });

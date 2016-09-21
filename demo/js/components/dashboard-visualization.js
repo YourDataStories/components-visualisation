@@ -54,33 +54,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                  * Update the apiOptions variable with the needed values
                  */
                 var updateApiOptions = function() {
-                    // Reset api options object
-                    scope.apiOptions = {};
-
-                    // If there is a selected year range, add it to the parameters that will be added to the API call
-                    var minYear = DashboardService.getMinYear(dashboardId);
-                    var maxYear = DashboardService.getMaxYear(dashboardId);
-
-                    // Get parameter name for year range
-                    var yearParam = DashboardService.getYearParamName(dashboardId);
-
-                    if (!_.isNull(minYear) && !_.isNull(maxYear)) {
-                        scope.apiOptions[yearParam] = "[" + minYear + " TO " + maxYear + "]";
-                    }
-
-                    // Get mappings for request from DashboardService
-                    var apiOptionsMap = DashboardService.getApiOptionsMapping(dashboardId);
-
-                    // If there are selected countries, add them to api options
-                    _.each(apiOptionsMap, function(viewType, key) {
-                        // Get selected countries for this key, keep only their codes, and join them into a string
-                        var selectedCountries = DashboardService.getCountries(viewType);
-                        selectedCountries = _.pluck(selectedCountries, "code").join(",");
-
-                        if (selectedCountries.length > 0) {
-                            scope.apiOptions[key] = selectedCountries;
-                        }
-                    });
+                    scope.apiOptions = DashboardService.getApiOptions(dashboardId);
                 };
 
                 /**
