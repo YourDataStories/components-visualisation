@@ -14,6 +14,11 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                 scope.tabs = {};                // Object with tab information
                 scope.translations = Translations.getAll(scope.lang);   // Translations used for no results message
 
+                // Add flex class to grid results if we are not hiding tabs
+                if (scope.hideTabs != "true") {
+                    scope.flexClass = "flex";
+                }
+
                 var defaultTab = scope.defaultTab;
                 var paramPrefix = scope.urlParamPrefix;
 
