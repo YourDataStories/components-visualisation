@@ -127,9 +127,17 @@ body #main .container:first-child {
     }
 }
 
-/* Rule for hiding tabs in tabbed search */
-.hide-tabs > ul.nav.nav-tabs {
+/* Rules for hiding tabs in tabbed search */
+.hide-tabs {
+    border-width: 0;
+}
+
+.hide-tabs > div.panel-heading {
     display: none;
+}
+
+.hide-tabs > div.panel-body {
+    padding: 0;
 }
 
 /***************************************/
