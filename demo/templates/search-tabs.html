@@ -1,12 +1,12 @@
 <!-- Result tabs -->
-<uib-tabset active="active" class="flex" ng-class="{'hide-tabs': hideTabs=='true'}">
+<uib-tabset active="active" class="flex" ng-class="{'hide-tabs': hideTabs=='true'}" template-url="templates/tabset-panel.html">
     <uib-tab
             index="$index"
             ng-repeat="tab in tabs track by $index"
             active="tab.active"
             select="tabChangeHandler(tab.concept)">
         <uib-tab-heading>
-            {{ tab.label }} <span class="label label-primary">{{ tab.amount }}</span>
+            {{ tab.label }} <span class="label label-info">{{ tab.amount }}</span>
         </uib-tab-heading>
 
         <!-- Description of concept -->

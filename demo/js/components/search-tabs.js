@@ -8,7 +8,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                 hideTabs: '@',          // If true, tabs will be hidden and only the default tab will show
                 lang : '@'              // Language of component
             },
-            templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/search-tabs.html',
+            templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/search-tabs.html',
             link: function(scope) {
                 scope.initialized = false;	    // flag that indicated when the component is initialized
                 scope.tabs = {};                // Object with tab information
