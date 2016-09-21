@@ -4,7 +4,6 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
             restrict: 'E',
             scope: {
                 projectId: '@',     // Project ID of chart
-                viewType: '@',      // View type of chart
                 dashboardId: '@',   // ID used for getting selected year range from DashboardService
                 elementH: '@'       // Height of component
             },
@@ -27,14 +26,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 }
 
                 scope.selectedVis = "";
-                scope.aggregateTypes= [
-                    "aidactivity.beneficiary.countries.all",
-                    "aidactivity.benefactor.countries.all",
-                    "aidactivity.beneficiary.organisations.all",
-                    "aidactivity.sectors.for.countries.and.period",
-                    "aidactivity.budget.for.countries.and.period",
-                    "aidactivity.spending.for.countries.and.period"
-                ];
+                scope.aggregateTypes= DashboardService.getAggregates(dashboardId);
 
                 // Set the first type as default selected one
                 scope.selProjectId = scope.projectId;
@@ -69,12 +61,15 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                     var minYear = DashboardService.getMinYear(dashboardId);
                     var maxYear = DashboardService.getMaxYear(dashboardId);
 
+                    // Get parameter name for year range
+                    var yearParam = DashboardService.getYearParamName(dashboardId);
+
                     if (!_.isNull(minYear) && !_.isNull(maxYear)) {
-                        scope.apiOptions.year= "[" + minYear + " TO " + maxYear + "]";
+                        scope.apiOptions[yearParam] = "[" + minYear + " TO " + maxYear + "]";
                     }
 
                     // Get mappings for request from DashboardService
-                    var apiOptionsMap = DashboardService.getApiOptionsMapping();
+                    var apiOptionsMap = DashboardService.getApiOptionsMapping(dashboardId);
 
                     // If there are selected countries, add them to api options
                     _.each(apiOptionsMap, function(viewType, key) {

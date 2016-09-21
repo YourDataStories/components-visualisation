@@ -9,17 +9,68 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     // Mapping for which view type's selected countries go to which API parameter.
     // For example selected countries for view type "aidactivity.beneficiary.countries.all"
     // will be sent to the server in a parameter called "countries"
-    var apiOptionsMap = {
-        countries: "aidactivity.beneficiary.countries.all",
-        benefactors: "aidactivity.benefactor.countries.all"
+    var countryListMapping = {
+        aidactivity: {
+            countries: "aidactivity.beneficiary.countries.all",
+            benefactors: "aidactivity.benefactor.countries.all"
+        },
+        tradeactivity: {
+            origins: "tradeactivity.hasorigin.countries.all",
+            destinations: "tradeactivity.hasdestination.countries.all"
+        }
+    };
+
+    // Mapping of dashboardIds and parameter names that the API expects the selected
+    // year range to be sent at. For example for aid activities, the server expects
+    // the years in a parameter called "year"
+    var yearParamMapping = {
+        aidactivity: "year",
+        tradeactivity: "financialyear"
+    };
+
+    // View types of aggregates to show for each Dashboard section
+    var aggregates = {
+        aidactivity: [
+            "aidactivity.beneficiary.countries.all",
+            "aidactivity.benefactor.countries.all",
+            "aidactivity.beneficiary.organisations.all",
+            "aidactivity.sectors.for.countries.and.period",
+            "aidactivity.budget.for.countries.and.period",
+            "aidactivity.spending.for.countries.and.period"
+        ],
+        tradeactivity: [
+            "tradeactivity.hasorigin.amount.for.countries.and.period",
+            "tradeactivity.hasdestination.amount.for.countries.and.period",
+            "tradeactivity.sectors.for.countries.and.period"
+        ]
     };
 
     /**
-     * Function that returns the api options mappings
+     * Return the api options mappings
+     * @param dashboardId
      * @returns {{countries: string, benefactors: string}}
      */
-    var getApiOptionsMapping = function() {
-        return apiOptionsMap;
+    var getApiOptionsMapping = function(dashboardId) {
+        return countryListMapping[dashboardId];
+    };
+
+    /**
+     * Return the year parameter mapping for the specified dashboardId
+     * @param dashboardId
+     * @returns {*}
+     */
+    var getYearParamName = function(dashboardId) {
+        return yearParamMapping[dashboardId];
+    };
+
+    /**
+     * Return an array with the view types of the aggregates that should be shown
+     * for the specified dashboard section ID
+     * @param dashboardId
+     * @returns {*}
+     */
+    var getAggregates = function(dashboardId) {
+        return aggregates[dashboardId];
     };
 
     var subscribeSelectionChanges = function(scope, callback) {
@@ -30,7 +81,7 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     };
 
     /**
-     * Function used to subscribe to be notified about changes in the year range
+     * Subscribe to be notified about changes in the year range
      * @param scope
      * @param callback
      * @returns {*}
@@ -43,7 +94,7 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     };
 
     /**
-     * Function used to subscribe to be notified about changes in the selected view type
+     * Subscribe to be notified about changes in the selected view type
      * @param scope
      * @param callback
      * @returns {*}
@@ -159,7 +210,7 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     };
 
     /**
-     * Returns the minimum year of the range or null if range is empty
+     * Return the minimum year of the range or null if range is empty
      * @param dashboardId
      * @returns {*}
      */
@@ -168,7 +219,7 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     };
 
     /**
-     * Returns the maximum year of the range or null if range is empty
+     * Return the maximum year of the range or null if range is empty
      * @param dashboardId
      * @returns {*}
      */
@@ -177,7 +228,7 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     };
 
     /**
-     * Returns the selected view type
+     * Return the selected view type
      * @param dashboardId
      * @returns {{}}
      */
@@ -186,7 +237,7 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     };
 
     /**
-     * Sets the selected view type
+     * Set the selected view type
      * @param dashboardID   Dashboard ID
      * @param viewType      View type object
      */
@@ -200,6 +251,8 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
 
     return {
         getApiOptionsMapping: getApiOptionsMapping,
+        getYearParamName: getYearParamName,
+        getAggregates: getAggregates,
         subscribeSelectionChanges: subscribeSelectionChanges,
         subscribeYearChanges: subscribeToYearChanges,
         subscribeViewTypeChanges: subscribeViewTypeChanges,

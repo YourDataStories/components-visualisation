@@ -298,14 +298,18 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				 */
 				var createHeatmap = function() {
 					if (useYearRange == "true") {
+						// Get min/max selected years
                         var minYear = DashboardService.getMinYear(dashboardId);
                         var maxYear = DashboardService.getMaxYear(dashboardId);
 
+						// Get name of parameter that should be used to send year
+						var yearParam = DashboardService.getYearParamName(dashboardId);
+
                         // Create extra parameters object with year
 						if (!_.isNaN(minYear) && !_.isNaN(maxYear)) {
-							var extraParams = {
-								year: "[" + minYear + " TO " + maxYear + "]"
-							};
+							var extraParams = {};
+
+							extraParams[yearParam] = "[" + minYear + " TO " + maxYear + "]";
 						}
                     }
 

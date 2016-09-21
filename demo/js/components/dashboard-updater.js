@@ -44,7 +44,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['$timeout', 'DashboardSe
                 };
 
                 var updateExtraParams = function() {
-                    var apiOptionsMap = DashboardService.getApiOptionsMapping();
+                    var apiOptionsMap = DashboardService.getApiOptionsMapping(dashboardId);
 
                     // Get min and max selected year and create the year range string for request
                     var minYear = DashboardService.getMinYear(dashboardId);
@@ -52,10 +52,12 @@ angular.module('yds').directive('ydsDashboardUpdater', ['$timeout', 'DashboardSe
 
                     var yearRange = "[" + minYear + " TO " + maxYear + "]";
 
+                    // Get name of parameter that should be used for sending year range
+                    var yearParam = DashboardService.getYearParamName(dashboardId);
+
                     // Initialize extraParams object with year range
-                    var extraParams = {
-                        year: yearRange
-                    };
+                    var extraParams = {};
+                    extraParams[yearParam] = yearRange;
 
                     // Get countries to send with request from DashboardService
                     _.each(apiOptionsMap, function(viewType, key) {
