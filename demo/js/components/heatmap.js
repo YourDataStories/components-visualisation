@@ -43,6 +43,9 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				var elementId = "heatmap" + Data.createRandomId();
 				heatmapContainer[0].id = elementId;
 
+                // Year range will be saved to check if it actually changed before recreating the heatmap
+                var yearRange = [];
+
 				//check if project id or grid type are defined
 				if(angular.isUndefined(projectId) || projectId.trim()=="") {
 					scope.ydsAlert = "The YDS component is not properly initialized " +
@@ -301,6 +304,16 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 						// Get min/max selected years
                         var minYear = DashboardService.getMinYear(dashboardId);
                         var maxYear = DashboardService.getMaxYear(dashboardId);
+
+						// Check if year range changed before continuing
+                        var newYearRange = [minYear, maxYear];
+                        if (_.isEqual(yearRange, newYearRange)) {
+                            // Year range is the same as before, so don't refresh heatmap
+                            // (should mean that a year range with a different dashboardId changed)
+                            return;
+                        } else {
+                            yearRange = newYearRange;
+                        }
 
 						// Get name of parameter that should be used to send year
 						var yearParam = DashboardService.getYearParamName(dashboardId);
