@@ -1,13 +1,16 @@
 <div class="dashboard-visualization-container">
     <div class="row" style="margin-left: -10px; margin-right: -10px">
-        <yds-aggregate
-                ng-repeat="type in aggregateTypes track by $index"
-                project-id="{{ projectId }}"
-                dashboard-id="{{ dashboardId }}"
-                view-type="{{ type }}"
-                set-on-init="{{ ($index == 0) }}"
-                extra-params="apiOptions">
-        </yds-aggregate>
+        <div ng-class="aggregateClass"
+             ng-repeat="type in aggregateTypes track by $index"
+             style="padding-left: 10px; padding-right: 10px">
+            <yds-aggregate
+                    project-id="{{ projectId }}"
+                    dashboard-id="{{ dashboardId }}"
+                    view-type="{{ type }}"
+                    set-on-init="{{ ($index == 0) }}"
+                    extra-params="apiOptions">
+            </yds-aggregate>
+        </div>
     </div>
 
     <div class="row">

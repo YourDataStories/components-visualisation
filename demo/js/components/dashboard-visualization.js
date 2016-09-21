@@ -26,7 +26,11 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 }
 
                 scope.selectedVis = "";
-                scope.aggregateTypes= DashboardService.getAggregates(dashboardId);
+
+                var aggregates = DashboardService.getAggregates(dashboardId);
+
+                scope.aggregateTypes = aggregates.types;
+                scope.aggregateClass = "col-md-" + aggregates.width;
 
                 // Set the first type as default selected one
                 scope.selProjectId = scope.projectId;

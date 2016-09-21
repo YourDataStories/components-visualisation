@@ -30,19 +30,25 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
 
     // View types of aggregates to show for each Dashboard section
     var aggregates = {
-        aidactivity: [
-            "aidactivity.beneficiary.countries.all",
-            "aidactivity.benefactor.countries.all",
-            "aidactivity.beneficiary.organisations.all",
-            "aidactivity.sectors.for.countries.and.period",
-            "aidactivity.budget.for.countries.and.period",
-            "aidactivity.spending.for.countries.and.period"
-        ],
-        tradeactivity: [
-            "tradeactivity.hasorigin.amount.for.countries.and.period",
-            "tradeactivity.hasdestination.amount.for.countries.and.period",
-            "tradeactivity.sectors.for.countries.and.period"
-        ]
+        aidactivity: {
+            types: [
+                "aidactivity.beneficiary.countries.all",
+                "aidactivity.benefactor.countries.all",
+                "aidactivity.beneficiary.organisations.all",
+                "aidactivity.sectors.for.countries.and.period",
+                "aidactivity.budget.for.countries.and.period",
+                "aidactivity.spending.for.countries.and.period"
+            ],
+            width: 2
+        },
+        tradeactivity: {
+            types: [
+                "tradeactivity.hasorigin.amount.for.countries.and.period",
+                "tradeactivity.hasdestination.amount.for.countries.and.period",
+                "tradeactivity.sectors.for.countries.and.period"
+            ],
+            width: 4
+        }
     };
 
     /**
