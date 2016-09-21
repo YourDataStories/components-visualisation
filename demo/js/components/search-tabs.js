@@ -36,33 +36,39 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                     scope.urlParamPrefix = "";
                 }
 
-                /**
-                 * Initializes the tabs and makes the first one active
-                 */
-                var initTabs = function() {
-                    Search.getSearchTabs(scope.lang).then(function(response) {
-                        // Get tabs from the response
-                        var tabs = response.tabs;
-
-                        // Set all the tabs to inactive so the first one isn't activated by default
-                        _.each(tabs, function(tab) {
-                            tab.active = (tab.concept == defaultTab);
-                        });
-
-                        // Set the tabs variable
-                        scope.tabs = tabs;
-
-                        scope.initialized = true;
-                    });
-                };
+                // If defaultTab attribute is defined, make that tab selected
+                if (!_.isUndefined(defaultTab) && defaultTab.length > 0) {
+                    scope.activeTab = defaultTab;
+                }
 
                 /**
                  * Changes the url parameters to reflect tab changes
                  * @param tabName
                  */
-                scope.tabChangeHandler = function (tabName) {
-                    // Change the url parameter to reflect the tab change
-                    $location.search(paramPrefix + "tab", tabName);
+                scope.tabChangeHandler = function(tabName) {
+                    if (scope.initialized) {
+                        // Change the url parameter to reflect the tab change
+                        $location.search(paramPrefix + "tab", tabName);
+                    }
+                };
+
+                /**
+                 * Get result count for each tab and update the existing tabs with the new values
+                 * @param rules     Rules for query builder, if there are any (can be undefined)
+                 */
+                var updateTabResultCounts = function(rules) {
+                    Search.getTabResultCounts(rules).then(function(tabResultCounts) {
+                        // Update amounts of tabs
+                        _.each(scope.tabs, function(tab) {
+                            if (_.has(tabResultCounts, tab.concept)) {
+                                // update the tab's amount to the new one
+                                tab.amount = tabResultCounts[tab.concept];
+                            } else {
+                                // set tab's amount to 0
+                                tab.amount = 0;
+                            }
+                        });
+                    });
                 };
 
                 /**
@@ -90,39 +96,30 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
 
                         // Initialize tabs if needed
                         if (!scope.initialized) {
-                            initTabs();
-                        }
+                            Search.getSearchTabs(scope.lang).then(function(response) {
+                                // Set the tabs variable
+                                scope.tabs = response.tabs;
 
-                        // Update result counts of tabs
-                        Search.getTabResultCounts(rules).then(function(tabResultCounts) {
-                            // Update amounts of tabs
-                            _.each(scope.tabs, function(tab) {
-                                if (_.has(tabResultCounts, tab.concept)) {
-                                    // update the tab's amount to the new one
-                                    tab.amount = tabResultCounts[tab.concept];
+                                // Make the correct tab selected
+                                var prevSelTab = $location.search()[paramPrefix + "tab"];
+
+                                if (!_.isUndefined(prevSelTab)) {
+                                    // Select the previously selected tab
+                                    scope.activeTab = prevSelTab;
                                 } else {
-                                    // set tab's amount to 0
-                                    tab.amount = 0;
+                                    // Select first tab
+                                    var tabToSel = _.first(scope.tabs).concept;
+                                    scope.activeTab = tabToSel;
+                                    prevTab = tabToSel;
                                 }
+
+                                updateTabResultCounts(rules);
+
+                                scope.initialized = true;
                             });
-
-                            // Make the correct tab selected
-                            var prevSelTab = $location.search()[paramPrefix + "tab"];
-
-                            if (!_.isUndefined(prevSelTab)) {
-                                // Find and select the previously selected tab
-                                _.each(scope.tabs, function(tab) {
-                                    if (tab.concept == prevSelTab) {
-                                        tab.active = true;
-                                    }
-                                });
-                            } else {
-                                // Select first tab
-                                var tabToSel = _.first(scope.tabs);
-                                tabToSel.active = true;
-                                prevTab = tabToSel.concept;
-                            }
-                        });
+                        } else {
+                            updateTabResultCounts(rules);
+                        }
                     } else if (urlParams[paramPrefix + "tab"] != prevTab) {
                         // The tab changed
                         prevTab = urlParams[paramPrefix + "tab"];
