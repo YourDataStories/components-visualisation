@@ -34,12 +34,12 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 					scope.tabbed = "false";
 				}
 
-				// If no url parameter prefix is defined or it is only whitespace, use not parameter prefix
+				// If no url parameter prefix is defined or it is only whitespace, use no parameter prefix
 				if (_.isUndefined(paramPrefix) || (paramPrefix.trim()=="" && paramPrefix.length > 0))
 					paramPrefix = "";
 
 				//check if the language attr is defined, else assign default value
-				if(angular.isUndefined(scope.searchOptions.lang) || scope.searchOptions.lang.trim()=="")
+				if(_.isUndefined(scope.searchOptions.lang) || scope.searchOptions.lang.trim()=="")
 					scope.searchOptions.lang = "en";
 
 				switch(scope.searchOptions.lang) {
@@ -52,12 +52,12 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 						scope.searchBtnText = "Search";
 				}
 
-				// check if max suggestions attribute is defined, else assign default value
+				// Check if max suggestions attribute is defined, else assign default value
 				if (_.isUndefined(scope.maxSuggestions) || scope.maxSuggestions.trim() == "") {
 					scope.maxSuggestions = 15;
 				}
 
-				//check if the standalone attr is defined, else assign default value
+				// Check if the standalone attr is defined, else assign default value
 				if(angular.isUndefined(scope.searchOptions.standalone) || (scope.searchOptions.standalone != "true" && scope.searchOptions.standalone != "false"))
 					scope.searchOptions.standalone = "false";
 
@@ -81,26 +81,22 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 							$location.search(paramPrefix + "rules", null);
 							Search.clearKeyword();
 						} else {
-							$timeout(function() {
-								// append the query and current tab params to the search url
-								var currentBaseUrl = _.first($window.location.href.split("?"));
-								var tabParam = (_.isUndefined($location.search()[paramPrefix + "tab"])) ? "" : "&" + paramPrefix + "tab=" + $location.search()[paramPrefix + "tab"];
+							// Append the query and current tab params to the search url
+							var currentBaseUrl = _.first($window.location.href.split("?"));
+							var tabParam = (_.isUndefined($location.search()[paramPrefix + "tab"])) ? "" : "&" + paramPrefix + "tab=" + $location.search()[paramPrefix + "tab"];
 
-								$window.location.href = currentBaseUrl + "?" + paramPrefix + "q=" + scope.searchOptions.searchKeyword + tabParam;
-							});
+							$window.location.href = currentBaseUrl + "?" + paramPrefix + "q=" + scope.searchOptions.searchKeyword + tabParam;
 						}
 					} else {
 						// Check if search box is empty
 						if (!searchForm.$valid)
 							return false;
 
-						$timeout(function() {
-							// Append the query param to the search url
-							if (scope.searchOptions.lang == "en")
-								$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL + "?q=" + scope.searchOptions.searchKeyword;
-							else
-								$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL_EL + "?q=" + scope.searchOptions.searchKeyword;
-						});
+						// Append the query param to the search url
+						if (scope.searchOptions.lang == "en")
+							$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL + "?q=" + scope.searchOptions.searchKeyword;
+						else
+							$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL_EL + "?q=" + scope.searchOptions.searchKeyword;
 					}
 				};
 
@@ -150,9 +146,7 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 				 * Shows or hides the advanced search panel
 				 */
 				scope.toggleAdvancedSearch = function() {
-					$timeout(function(){
-						scope.searchOptions.advancedVisible = !scope.searchOptions.advancedVisible;
-					});
+					scope.searchOptions.advancedVisible = !scope.searchOptions.advancedVisible;
 				};
 			}
 		};

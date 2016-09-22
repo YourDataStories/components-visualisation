@@ -4,6 +4,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
             restrict: 'E',
             scope: {
                 lang:'@',               // Language of the query builder
+                urlParamPrefix: '@',	// Prefix to add before all url parameters (optional)
                 maxSuggestions: '@',    // Max suggestions to show in typeahead popups
                 concept: '@',           // Concept to get filters for
                 conceptId: '@',         // ID of concept for making requests to API
@@ -14,6 +15,8 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                 scope.qbInputs = {};		// Keeps the QueryBuilder's typeahead ng models
                 scope.noFilters = false;    // If there are no filters, show it on the page
 
+                var paramPrefix = scope.urlParamPrefix;
+
                 // Create unique ID for this query builder
                 scope.builderId = "builder" + Data.createRandomId();
 
@@ -21,6 +24,10 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                 if (_.isUndefined(scope.conceptId) || scope.conceptId.trim().length == 0 || _.isUndefined(scope.concept) || scope.concept.trim().length == 0) {
                     return;
                 }
+
+                // If no url parameter prefix is defined or it is only whitespace, use no parameter prefix
+                if (_.isUndefined(paramPrefix) || (paramPrefix.trim()=="" && paramPrefix.length > 0))
+                    paramPrefix = "";
 
 		        // Lazy load jQuery QueryBuilder and add it to the page
                 var drupalpath = ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath  +'/' :'');
@@ -61,8 +68,8 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                             // If there are filters, create builder
                             if (!_.isEmpty(formattedFilters)) {
                                 // If the builder is in the active tab and there are rules, give them to the builder
-                                var curTab = $location.search().tab;
-                                var rulesStr = $location.search().rules;
+                                var curTab = $location.search()[paramPrefix + "tab"];
+                                var rulesStr = $location.search()[paramPrefix + "rules"];
 
                                 if (!_.isUndefined(curTab) && !_.isUndefined(rulesStr) && scope.concept == curTab) {
                                     var rules = JSURL.parse(rulesStr);
