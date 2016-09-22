@@ -126,12 +126,12 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 							}
 
 							// append the query, current tab params and query builder rules to the search url
-							var baseUrl = (scope.searchOptions.lang == "en") ? YDS_CONSTANTS.SEARCH_RESULTS_URL_TABBED : YDS_CONSTANTS.SEARCH_RESULTS_URL_EL;
+							var currentBaseUrl = _.first($window.location.href.split("?"));
 							var queryParam = "?" + paramPrefix + "q=" + keyword;
 							var tabParam = (_.isUndefined($location.search()[paramPrefix + "tab"])) ? "" : "&" + paramPrefix + "tab=" + $location.search()[paramPrefix + "tab"];
 							var rulesParam = "&" + paramPrefix + "rules=" + JSURL.stringify(rules);
 
-							$window.location.href = baseUrl + queryParam + tabParam + rulesParam;
+							$window.location.href = currentBaseUrl + queryParam + tabParam + rulesParam;
 						});
 					} else {
 						scope.validationError = true;
