@@ -21,7 +21,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['$timeout', 'DashboardSe
 
                 // If viewType is undefined, set default value
                 if (_.isUndefined(scope.viewType) || scope.viewType.trim() == "")
-                    scope.type = "default";
+                    scope.viewType = "default";
 
                 // If lang is undefined, set default value
                 if (_.isUndefined(scope.lang) || scope.lang.trim() == "")
@@ -47,13 +47,17 @@ angular.module('yds').directive('ydsDashboardUpdater', ['$timeout', 'DashboardSe
                     // Add new extraParams to scope
                     scope.extraParams = DashboardService.getApiOptions(dashboardId);
 
-                    // Re-render component
-                    var type = scope.type;  // Save current type
-                    scope.type = "";        // Make type empty to hide component
+                    if (scope.type == "search") {
+                        //todo
+                    } else {
+                        // Re-render component
+                        var type = scope.type;  // Save current type
+                        scope.type = "";        // Make type empty to hide component
 
-                    $timeout(function() {
-                        scope.type = type;  // At end of digest show component again
-                    });
+                        $timeout(function() {
+                            scope.type = type;  // At end of digest show component again
+                        });
+                    }
                 };
 
                 // Subscribe to be notified of changes in selected countries and year range

@@ -6,7 +6,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                 defaultTab: '@',        // Default tab to select when page loads
                 urlParamPrefix: '@',    // Prefix to add before all url parameters (optional)
                 hideTabs: '@',          // If true, tabs will be hidden and only the default tab will show
-                lang : '@'              // Language of component
+                lang: '@'               // Language of component
             },
             templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/search-tabs.html',
             link: function(scope) {
