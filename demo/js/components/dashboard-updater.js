@@ -49,37 +49,41 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 };
 
                 var updateExtraParams = function() {
-                    // Add new extraParams to scope
+                    // Keep old parameters for comparison and get new parameters from DashboardService
+                    var oldParams = scope.extraParams;
                     scope.extraParams = DashboardService.getApiOptions(dashboardId);
 
-                    if (scope.type == "search") {
-                        if (!initialized) {
-                            // Get parameters for search component and keep requestType for later
-                            searchParams = DashboardService.getSearchParams(dashboardId);
-                            requestType = searchParams.requestType;
+                    // If something changed in the parameters, update component
+                    if (!_.isEqual(oldParams, scope.extraParams)) {
+                        if (scope.type == "search") {
+                            if (!initialized) {
+                                // Get parameters for search component and keep requestType for later
+                                searchParams = DashboardService.getSearchParams(dashboardId);
+                                requestType = searchParams.requestType;
 
-                            // Add parameters for the search-tabs component to scope (requestType not needed)
-                            _.extend(scope, _.omit(searchParams, "requestType"));
+                                // Add parameters for the search-tabs component to scope (requestType not needed)
+                                _.extend(scope, _.omit(searchParams, "requestType"));
 
-                            initialized = true;
+                                initialized = true;
+                            }
+
+                            // Make request to get rules for QueryBuilder
+                            Data.getQueryBuilderRules(requestType, scope.extraParams).then(function(response) {
+                                var paramPrefix = searchParams.urlParamPrefix;
+                                var newRules = JSURL.stringify(response.data);
+
+                                // Set rules URL parameter with the new rules so QueryBuilder can update itself
+                                $location.search(paramPrefix + "rules", newRules);
+                            });
+                        } else {
+                            // Re-render component
+                            var type = scope.type;  // Save current type
+                            scope.type = "";        // Make type empty to hide component
+
+                            $timeout(function() {
+                                scope.type = type;  // At end of digest show component again
+                            });
                         }
-
-                        // Make request to get rules for QueryBuilder
-                        Data.getQueryBuilderRules(requestType, scope.extraParams).then(function(response) {
-                            var paramPrefix = searchParams.urlParamPrefix;
-                            var newRules = JSURL.stringify(response.data);
-
-                            // Set rules URL parameter with the new rules so QueryBuilder can update itself
-                            $location.search(paramPrefix + "rules", newRules);
-                        });
-                    } else {
-                        // Re-render component
-                        var type = scope.type;  // Save current type
-                        scope.type = "";        // Make type empty to hide component
-
-                        $timeout(function() {
-                            scope.type = type;  // At end of digest show component again
-                        });
                     }
                 };
 
