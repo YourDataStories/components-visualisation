@@ -100,6 +100,15 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                                 // Set the tabs variable
                                 scope.tabs = response.tabs;
 
+                                // If there is a default tab set and tabs are hidden, load only the default tab
+                                if (!_.isUndefined(defaultTab) && defaultTab.trim().length > 0 && scope.hideTabs == "true") {
+                                    _.each(response.tabs, function(tab) {
+                                        if (tab.concept == defaultTab) {
+                                            scope.tabs = [ tab ];
+                                        }
+                                    });
+                                }
+
                                 // Make the correct tab selected
                                 var prevSelTab = $location.search()[paramPrefix + "tab"];
 
