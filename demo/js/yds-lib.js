@@ -33,6 +33,7 @@ app.constant("YDS_CONSTANTS", {
     "API_CACHE_TRUNCATE": "platform.yourdatastories.eu/api/json-ld/cache/truncate.tcl",
     "API_AGGREGATE": "platform.yourdatastories.eu/api/json-ld/component/aggregate.tcl",
     "API_TYPE2SOLRQUERY": "platform.yourdatastories.eu/api/json-ld/component/type2solrquery.tcl",
+    "API_TYPE2_ADVANCED_QUERY": "platform.yourdatastories.eu/api/json-ld/component/type2advancedquery.tcl",
 
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search",
     "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search-el",
@@ -551,6 +552,36 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         }).success(function (data) {
             deferred.resolve(data);
         }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    /**
+     * Get rules for QueryBuilder that will set it up with the specified parameters, eg. year range, countries
+     * @param viewType      Type to get rules for
+     * @param apiOptions    Options from ODA Dashboard (eg. year, selected countries...)
+     * @returns {*|d.promise|promise|d|s}
+     */
+    dataService.getQueryBuilderRules = function(viewType, apiOptions) {
+        var deferred = $q.defer();
+
+        var params = _.extend({
+            type: viewType
+        }, apiOptions);
+
+        console.log("params");
+        console.log(params);
+
+        $http({
+            method: "GET",
+            url: "http://" + YDS_CONSTANTS.API_TYPE2_ADVANCED_QUERY,
+            params: params,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'}
+        }).then(function(response) {
+            deferred.resolve(response.data);
+        }, function(error) {
             deferred.reject(error);
         });
 

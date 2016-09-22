@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsDashboardUpdater', ['$timeout', 'DashboardService',
-    function($timeout, DashboardService) {
+angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardService', '$timeout', '$location',
+    function(Data, DashboardService, $timeout, $location) {
         return {
             restrict: 'E',
             scope: {
@@ -14,7 +14,11 @@ angular.module('yds').directive('ydsDashboardUpdater', ['$timeout', 'DashboardSe
                 var dashboardId = scope.dashboardId;
                 var minHeight = parseInt(scope.minHeight);
                 scope.showInfo = false;
+
+                // Variables needed in case Search Tabs are shown
                 var initialized = false;
+                var requestType = "";
+                var searchParams = {};
 
                 // If type is undefined, set default value
                 if (_.isUndefined(scope.type) || scope.type.trim() == "")
@@ -50,11 +54,24 @@ angular.module('yds').directive('ydsDashboardUpdater', ['$timeout', 'DashboardSe
 
                     if (scope.type == "search") {
                         if (!initialized) {
-                            // Add required parameters for the search-tabs component to scope
-                            _.extend(scope, DashboardService.getSearchParams(dashboardId));
+                            // Get parameters for search component and keep requestType for later
+                            searchParams = DashboardService.getSearchParams(dashboardId);
+                            requestType = searchParams.requestType;
+
+                            // Add parameters for the search-tabs component to scope (requestType not needed)
+                            _.extend(scope, _.omit(searchParams, "requestType"));
 
                             initialized = true;
                         }
+
+                        // Make request to get rules for QueryBuilder
+                        Data.getQueryBuilderRules(requestType, scope.extraParams).then(function(response) {
+                            var paramPrefix = searchParams.urlParamPrefix;
+                            var newRules = JSURL.stringify(response.data);
+
+                            // Set rules URL parameter with the new rules so QueryBuilder can update itself
+                            $location.search(paramPrefix + "rules", newRules);
+                        });
                     } else {
                         // Re-render component
                         var type = scope.type;  // Save current type

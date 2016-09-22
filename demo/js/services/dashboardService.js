@@ -56,7 +56,8 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     var searchParams = {
         aidactivity: {
             defaultTab: "AidActivity",
-            urlParamPrefix: "aa-"
+            urlParamPrefix: "aa-",
+            requestType: "aidactivity.listitems.for.countries.and.period"
         }
     };
 
