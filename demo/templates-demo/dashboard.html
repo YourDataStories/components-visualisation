@@ -167,8 +167,12 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading" ng-click="isCollapsedAidActivityPanel = !isCollapsedAidActivityPanel">
-                    <h3 class="panel-title">What else can I do with the available data?</h3>
+                <div class="panel-heading clearfix" ng-click="isCollapsedAidActivityPanel = !isCollapsedAidActivityPanel">
+                    <h3 class="panel-title pull-left">What else can I do with the available data?</h3>
+
+                    <!--Icons to indicate if the panel is open or closed-->
+                    <i ng-if="isCollapsedAidActivityPanel" class="fa fa-chevron-right pull-right" aria-hidden="true"></i>
+                    <i ng-if="!isCollapsedAidActivityPanel" class="fa fa-chevron-down pull-right" aria-hidden="true"></i>
                 </div>
 
                 <div class="panel-body"
