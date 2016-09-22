@@ -20,8 +20,8 @@
 
     <yds-search-tabs
             ng-switch-when="search"
-            default-tab="AidActivity"
-            url-param-prefix="aa-"
+            default-tab="{{ defaultTab }}"
+            url-param-prefix=" {{ urlParamPrefix }}"
             hide-tabs="true"
             lang="{{ lang }}">
     </yds-search-tabs>

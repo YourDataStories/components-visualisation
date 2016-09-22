@@ -51,6 +51,15 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         }
     };
 
+    // Parameters that will be given to the search-tabs component by the Dashboard Updater,
+    // in order to initialize it with the appropriate options depending on its dashboardId
+    var searchParams = {
+        aidactivity: {
+            defaultTab: "AidActivity",
+            urlParamPrefix: "aa-"
+        }
+    };
+
     /**
      * Return the api options mappings
      * @param dashboardId
@@ -77,6 +86,15 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
      */
     var getAggregates = function(dashboardId) {
         return aggregates[dashboardId];
+    };
+
+    /**
+     * Returns the search-tabs parameters for the specified dashboardId
+     * @param dashboardId
+     * @returns {*}
+     */
+    var getSearchParams = function(dashboardId) {
+        return searchParams[dashboardId];
     };
 
     /**
@@ -294,6 +312,7 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         getApiOptionsMapping: getApiOptionsMapping,
         getYearParamName: getYearParamName,
         getAggregates: getAggregates,
+        getSearchParams: getSearchParams,
         getApiOptions: getApiOptions,
         subscribeSelectionChanges: subscribeSelectionChanges,
         subscribeYearChanges: subscribeToYearChanges,

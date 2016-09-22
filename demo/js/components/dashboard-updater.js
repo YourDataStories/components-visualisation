@@ -14,6 +14,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['$timeout', 'DashboardSe
                 var dashboardId = scope.dashboardId;
                 var minHeight = parseInt(scope.minHeight);
                 scope.showInfo = false;
+                var initialized = false;
 
                 // If type is undefined, set default value
                 if (_.isUndefined(scope.type) || scope.type.trim() == "")
@@ -48,7 +49,12 @@ angular.module('yds').directive('ydsDashboardUpdater', ['$timeout', 'DashboardSe
                     scope.extraParams = DashboardService.getApiOptions(dashboardId);
 
                     if (scope.type == "search") {
-                        //todo
+                        if (!initialized) {
+                            // Add required parameters for the search-tabs component to scope
+                            _.extend(scope, DashboardService.getSearchParams(dashboardId));
+
+                            initialized = true;
+                        }
                     } else {
                         // Re-render component
                         var type = scope.type;  // Save current type
