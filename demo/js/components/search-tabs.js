@@ -5,6 +5,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
             scope: {
                 defaultTab: '@',        // Default tab to select when page loads
                 urlParamPrefix: '@',    // Prefix to add before all url parameters (optional)
+                watchRuleUrlParam: '@', // If Advanced Search should watch URL parameter for rule changes and apply them
                 hideTabs: '@',          // If true, tabs will be hidden and only the default tab will show
                 lang: '@'               // Language of component
             },

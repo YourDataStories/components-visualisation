@@ -571,9 +571,6 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             type: viewType
         }, apiOptions);
 
-        console.log("params");
-        console.log(params);
-
         $http({
             method: "GET",
             url: "http://" + YDS_CONSTANTS.API_TYPE2_ADVANCED_QUERY,

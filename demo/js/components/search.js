@@ -5,6 +5,7 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 			scope: {
 				lang:'@',				// Language of component
 				urlParamPrefix: '@',	// Prefix to add before all url parameters (optional)
+				watchRuleUrlParam: '@', // If Advanced Search should watch URL parameter for rule changes and apply them
 				maxSuggestions: '@',	// Maximum suggestions to show in typeahead popup
 				standalone: '@',		// If search component is standalone
 				tabbed: '@',			// If search component is used in tabbed search (so it needs to use different URL)

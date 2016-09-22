@@ -8,6 +8,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                 maxSuggestions: '@',    // Max suggestions to show in typeahead popups
                 concept: '@',           // Concept to get filters for
                 conceptId: '@',         // ID of concept for making requests to API
+                watchRuleUrlParam: '@', // If the builder should watch URL parameter for rule changes and apply them
                 builderId: '='          // Builder ID. '=' so it binds to the parent scope & search component can see it
             },
             templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/query-builder.html',
@@ -16,6 +17,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                 scope.noFilters = false;    // If there are no filters, show it on the page
 
                 var paramPrefix = scope.urlParamPrefix;
+                var watchRuleUrlParam = scope.watchRuleUrlParam;
 
                 // Create unique ID for this query builder
                 scope.builderId = "builder" + Data.createRandomId();
@@ -29,8 +31,28 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                 if (_.isUndefined(paramPrefix) || (paramPrefix.trim()=="" && paramPrefix.length > 0))
                     paramPrefix = "";
 
+                // If watchRuleUrlParam is invalid, set it to false
+                if (_.isUndefined(watchRuleUrlParam) || watchRuleUrlParam.trim().length == 0)
+                    watchRuleUrlParam = "false";
+
 		        // Lazy load jQuery QueryBuilder and add it to the page
                 var drupalpath = ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath  +'/' :'');
+
+                /**
+                 * Get query builder rules from URL parameter and set them in the QueryBuilder service
+                 * @returns {*}     Rules from URL parameter
+                 */
+                var getRulesFromUrlParam = function() {
+                    var rulesStr = $location.search()[paramPrefix + "rules"];
+
+                    if (!_.isUndefined(rulesStr)) {
+                        var rules = JSURL.parse(rulesStr);
+
+                        queryBuilderService.setRules(scope.builderId, rules);
+                    }
+
+                    return rules;
+                };
 
                 $ocLazyLoad.load({
                     files: [
@@ -69,12 +91,9 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                             if (!_.isEmpty(formattedFilters)) {
                                 // If the builder is in the active tab and there are rules, give them to the builder
                                 var curTab = $location.search()[paramPrefix + "tab"];
-                                var rulesStr = $location.search()[paramPrefix + "rules"];
 
-                                if (!_.isUndefined(curTab) && !_.isUndefined(rulesStr) && scope.concept == curTab) {
-                                    var rules = JSURL.parse(rulesStr);
-
-                                    queryBuilderService.setRules(scope.builderId, rules);
+                                if (!_.isUndefined(curTab) && scope.concept == curTab) {
+                                    var rules = getRulesFromUrlParam();
                                 }
 
                                 // Create the builder
@@ -112,6 +131,23 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                                 $('body').off('hidden.bs.popover').on('hidden.bs.popover', function (e) {
                                     $(e.target).data("bs.popover").inState.click = false;
                                 });
+
+                                if (watchRuleUrlParam == "true") {
+                                    // Watch for changes in the rules URL parameter
+                                    var rulesParamName = paramPrefix + "rules";
+
+                                    scope.$watch(function() { return $location.search()[rulesParamName] }, function(urlParams) {
+                                        var curTab = $location.search()[paramPrefix + "tab"];
+
+                                        if (!_.isUndefined(curTab) && scope.concept == curTab) {
+                                            var newRules = getRulesFromUrlParam();
+
+                                            if (!_.isUndefined(newRules)) {
+                                                builder.queryBuilder('setRules', newRules);
+                                            }
+                                        }
+                                    });
+                                }
                             } else {
                                 // Show information box saying there are no filters
                                 scope.noFilters = true;
@@ -121,8 +157,8 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                 });
 
                 /**
-                 * Changes the filters array as returned from the server in order to add typeahead in string fields,
-                 * datepicker in date fields and get the correct labels depending on the language of the component
+                 * Changes the filters array as returned from the server in order to add typeahead in string fields
+                 * and get the correct labels depending on the language of the component
                  * @param filters       Filters as returned from the server
                  * @returns {Array}     Formatted filters
                  */
