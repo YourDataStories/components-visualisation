@@ -106,7 +106,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                                 if (!_.isUndefined(prevSelTab)) {
                                     // Select the previously selected tab
                                     scope.activeTab = prevSelTab;
-                                } else {
+                                } else if (_.isUndefined(defaultTab) || defaultTab.length == 0){
                                     // Select first tab
                                     var tabToSel = _.first(scope.tabs).concept;
                                     scope.activeTab = tabToSel;
