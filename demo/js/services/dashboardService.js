@@ -58,6 +58,11 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
             concept: "AidActivity",
             urlParamPrefix: "aa-",
             requestType: "aidactivity.listitems.for.countries.and.period"
+        },
+        tradeactivity: {
+            concept: "TradeActivity",
+            urlParamPrefix: "ta-",
+            requestType: "tradeactivity.listitems.for.countries.and.period"
         }
     };
 
