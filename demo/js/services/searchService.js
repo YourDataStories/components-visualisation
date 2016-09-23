@@ -91,6 +91,16 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 				var rawFacetOptions = newFacets[facetAttr];
 				var rawFacetView = _.findWhere(facetsView, {type: "field", attribute: facetAttr});
 
+				//create array of selected facets
+				var selectedFacets  = [];
+				_.each(rawFacetView.value, function(facetVal) {
+					// Strip parentheses and split into the strings of selected facets
+					var newSelectedFacets = facetVal.replace(/[()]/g, "").split(" OR ");
+
+					// Merge new facets with already selected ones
+					selectedFacets = _.union(selectedFacets, newSelectedFacets);
+				});
+
 				//initialize a basic object which will hold the required attributes of each field facet
 				var newFacet = {
 					facet_name: rawFacetView.header,
@@ -109,7 +119,8 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 					};
 
 					//check if the facet is already selected from the user, if it is selected make it selected
-					if(!_.isUndefined(rawFacetView.value) && _.contains(rawFacetView.value, facetOptions.name))
+					// if(!_.isUndefined(rawFacetView.value) && _.contains(rawFacetView.value, facetOptions.name))
+					if(_.contains(selectedFacets, facetOptions.name))
 						facetOptions.selected = true;
 
 					newFacet.facet_options.push(facetOptions);
