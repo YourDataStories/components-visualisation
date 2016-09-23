@@ -4,6 +4,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
             restrict: 'E',
             scope: {
                 viewType: '@',          // Name of the view to use for the grid
+                projectDetailsType: '@',// Type to use when viewing details. If undefined, will use the viewType
                 lang: '@',              // Lang of the visualised data
                 urlParamPrefix: '@',    // Prefix to add before all url parameters (optional)
 
@@ -44,6 +45,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
 
                 var paramPrefix = scope.urlParamPrefix;
                 var extraParams = scope.extraParams;
+                var projectDetailsType = scope.projectDetailsType;
 
                 var query = "";
 
@@ -54,6 +56,10 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                         "Please check the corresponding documentation section";
                     return false;
                 }
+
+                // Check if the projectDetailsType attr is defined, else assign default value
+                if(_.isUndefined(projectDetailsType) || projectDetailsType.trim()=="")
+                    projectDetailsType = grid.viewType;
 
                 // Check if the language attr is defined, else assign default value
                 if(_.isUndefined(grid.lang) || grid.lang.trim()=="")
@@ -239,7 +245,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     var newRows = [];
 
                     _.each(rows, function(row) {
-                        var viewBtnUrl = YDS_CONSTANTS.PROJECT_DETAILS_URL + "?id=" + row.id + "&type=" + grid.viewType;
+                        var viewBtnUrl = YDS_CONSTANTS.PROJECT_DETAILS_URL + "?id=" + row.id + "&type=" + projectDetailsType;
 
                         row.viewBtn = "<a href='" + viewBtnUrl + "' class='btn btn-xs btn-primary' target='_blank' style='margin-top: -4px'>View</a>";
                         // row.basketBtn = "<a href='" + viewBtnUrl + "' class='btn btn-xs btn-success' target='_blank' style='margin-top: -4px'>Basket</a>";

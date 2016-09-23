@@ -55,34 +55,47 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
 
                     // If something changed in the parameters, update component
                     if (!_.isEqual(oldParams, scope.extraParams)) {
-                        if (scope.type == "search") {
-                            if (!initialized) {
-                                // Get parameters for search component and keep requestType for later
-                                searchParams = DashboardService.getSearchParams(dashboardId);
-                                requestType = searchParams.requestType;
+                        switch(scope.type) {
+                            case "search":
+                                if (!initialized) {
+                                    // Get parameters for search component and keep requestType for later
+                                    searchParams = DashboardService.getSearchParams(dashboardId);
+                                    requestType = searchParams.requestType;
 
-                                // Add parameters for the search-tabs component to scope (requestType not needed)
-                                _.extend(scope, _.omit(searchParams, "requestType"));
+                                    // Add parameters for the search-tabs component to scope (requestType not needed)
+                                    _.extend(scope, _.omit(searchParams, "requestType"));
 
-                                initialized = true;
-                            }
+                                    initialized = true;
+                                }
 
-                            // Make request to get rules for QueryBuilder
-                            Data.getQueryBuilderRules(requestType, scope.extraParams).then(function(response) {
-                                var paramPrefix = searchParams.urlParamPrefix;
-                                var newRules = JSURL.stringify(response.data);
+                                // Make request to get rules for QueryBuilder
+                                Data.getQueryBuilderRules(requestType, scope.extraParams).then(function(response) {
+                                    var paramPrefix = searchParams.urlParamPrefix;
+                                    var newRules = JSURL.stringify(response.data);
 
-                                // Set rules URL parameter with the new rules so QueryBuilder can update itself
-                                $location.search(paramPrefix + "rules", newRules);
-                            });
-                        } else {
-                            // Re-render component
-                            var type = scope.type;  // Save current type
-                            scope.type = "";        // Make type empty to hide component
+                                    // Set rules URL parameter with the new rules so QueryBuilder can update itself
+                                    $location.search(paramPrefix + "rules", newRules);
+                                });
 
-                            $timeout(function() {
-                                scope.type = type;  // At end of digest show component again
-                            });
+                                break;
+                            case "grid":
+                                if (!initialized) {
+                                    // Get concept from DashboardService so "view" button will work correctly
+                                    scope.concept = DashboardService.getSearchParams(dashboardId).concept;
+
+                                    initialized = true;
+                                }
+                                // Continue to re-render grid
+                            default:
+                                // Re-render component
+                                var type = scope.type;  // Save current type
+                                scope.type = "";        // Make type empty to hide component
+
+                                $timeout(function() {
+                                    scope.type = type;  // At end of digest show component again
+                                });
+
+                                break;
                         }
                     }
                 };

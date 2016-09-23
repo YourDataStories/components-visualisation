@@ -11,6 +11,7 @@
     <yds-grid-results
             ng-switch-when="grid"
             view-type="{{ viewType }}"
+            project-details-type="{{ concept }}"
             extra-params="extraParams"
             page-size="50"
             quick-filtering="true"
@@ -20,7 +21,7 @@
 
     <yds-search-tabs
             ng-switch-when="search"
-            default-tab="{{ defaultTab }}"
+            default-tab="{{ concept }}"
             url-param-prefix=" {{ urlParamPrefix }}"
             watch-rule-url-param="true"
             hide-tabs="true"

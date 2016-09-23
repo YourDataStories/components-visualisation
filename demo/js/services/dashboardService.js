@@ -55,7 +55,7 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     // in order to initialize it with the appropriate options depending on its dashboardId
     var searchParams = {
         aidactivity: {
-            defaultTab: "AidActivity",
+            concept: "AidActivity",
             urlParamPrefix: "aa-",
             requestType: "aidactivity.listitems.for.countries.and.period"
         }
