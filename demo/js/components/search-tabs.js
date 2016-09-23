@@ -130,7 +130,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                         } else {
                             updateTabResultCounts(rules);
                         }
-                    } else if (urlParams[paramPrefix + "tab"] != prevTab) {
+                    } else if (urlParams[paramPrefix + "tab"] != prevTab && scope.hideTabs != "true") {
                         // The tab changed
                         prevTab = urlParams[paramPrefix + "tab"];
 
