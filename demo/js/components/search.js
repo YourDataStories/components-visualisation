@@ -23,6 +23,11 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 
 				var paramPrefix = scope.urlParamPrefix;
 
+				// If search should watch URL parameters, it means it will change automatically, so make it visible
+				if (scope.watchRuleUrlParam == "true") {
+                    scope.searchOptions.advancedVisible = true;
+                }
+
 				// Make advanced search visible if rules are defined in the URL
 				if (!_.isUndefined($location.search()[paramPrefix + "rules"]) && scope.concept == $location.search()[paramPrefix + "tab"]) {
 					scope.searchOptions.advancedVisible = true;

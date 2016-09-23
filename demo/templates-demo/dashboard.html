@@ -191,6 +191,7 @@
 
                             <!--AidActivity grid-->
                             <yds-dashboard-updater
+                                    ng-if="!isCollapsedAidActivityPanel && aaTab == 0"
                                     type="grid"
                                     view-type="aidactivity.listitems.for.countries.and.period"
                                     dashboard-id="aidactivity"
@@ -214,6 +215,7 @@
                             </div>
 
                             <yds-dashboard-updater
+                                    ng-if="!isCollapsedAidActivityPanel && aaTab == 1"
                                     type="search"
                                     dashboard-id="aidactivity"
                                     min-height="480"
@@ -228,6 +230,7 @@
 
                             <!--Grid with aid activities-->
                             <yds-dashboard-updater
+                                    ng-if="!isCollapsedAidActivityPanel && aaTab == 2"
                                     type="grid"
                                     view-type="aidactivity.listitems.for.countries.and.period"
                                     dashboard-id="aidactivity"
@@ -243,6 +246,7 @@
 
                             <!--Grid with aid activities-->
                             <yds-dashboard-updater
+                                    ng-if="!isCollapsedAidActivityPanel && aaTab == 3"
                                     type="grid"
                                     view-type="aidactivity.listitems.for.countries.and.period"
                                     dashboard-id="aidactivity"
@@ -253,7 +257,9 @@
 
                         <uib-tab heading="Visualize the data" index="4">
                             <!--Workbench-->
-                            <yds-workbench user-id="ydsUser"></yds-workbench>
+                            <yds-workbench
+                                    ng-if="!isCollapsedAidActivityPanel && aaTab == 4"
+                                    user-id="ydsUser"></yds-workbench>
                         </uib-tab>
                     </uib-tabset>
                 </div>
@@ -401,6 +407,7 @@
 
                             <!--TradeActivity grid-->
                             <yds-dashboard-updater
+                                    ng-if="!isCollapsedTradeActivityPanel && taTab == 0"
                                     type="grid"
                                     view-type="tradeactivity.listitems.for.countries.and.period"
                                     dashboard-id="tradeactivity"
@@ -424,6 +431,7 @@
                             </div>
 
                             <yds-dashboard-updater
+                                    ng-if="!isCollapsedTradeActivityPanel && taTab == 1"
                                     type="search"
                                     dashboard-id="tradeactivity"
                                     min-height="480"
@@ -438,6 +446,7 @@
 
                             <!--Grid with trade activities-->
                             <yds-dashboard-updater
+                                    ng-if="!isCollapsedTradeActivityPanel && taTab == 2"
                                     type="grid"
                                     view-type="tradeactivity.listitems.for.countries.and.period"
                                     dashboard-id="tradeactivity"
@@ -453,6 +462,7 @@
 
                             <!--Grid with trade activities-->
                             <yds-dashboard-updater
+                                    ng-if="!isCollapsedTradeActivityPanel && taTab == 3"
                                     type="grid"
                                     view-type="tradeactivity.listitems.for.countries.and.period"
                                     dashboard-id="tradeactivity"
@@ -463,7 +473,9 @@
 
                         <uib-tab heading="Visualize the data" index="4">
                             <!--Workbench-->
-                            <yds-workbench user-id="ydsUser"></yds-workbench>
+                            <yds-workbench
+                                    ng-if="!isCollapsedTradeActivityPanel && taTab == 4"
+                                    user-id="ydsUser"></yds-workbench>
                         </uib-tab>
                     </uib-tabset>
                 </div>
