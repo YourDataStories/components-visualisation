@@ -82,11 +82,9 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 							$location.search(paramPrefix + "rules", null);
 							Search.clearKeyword();
 						} else {
-							// Append the query and current tab params to the search url
-							var currentBaseUrl = _.first($window.location.href.split("?"));
-							var tabParam = (_.isUndefined($location.search()[paramPrefix + "tab"])) ? "" : "&" + paramPrefix + "tab=" + $location.search()[paramPrefix + "tab"];
-
-							$window.location.href = currentBaseUrl + "?" + paramPrefix + "q=" + scope.searchOptions.searchKeyword + tabParam;
+							// Add new keyword to url params, and remove any rules because this is not advanced search
+							$location.search(paramPrefix + "q", scope.searchOptions.searchKeyword);
+							$location.search(paramPrefix + "rules", null);
 						}
 					} else {
 						// Check if search box is empty
@@ -122,13 +120,9 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 								keyword = "*";
 							}
 
-							// append the query, current tab params and query builder rules to the search url
-							var baseUrl = _.first($window.location.href.split("?"));
-							var queryParam = "?" + paramPrefix + "q=" + keyword;
-							var tabParam = (_.isUndefined($location.search()[paramPrefix + "tab"])) ? "" : "&" + paramPrefix + "tab=" + $location.search()[paramPrefix + "tab"];
-							var rulesParam = "&" + paramPrefix + "rules=" + JSURL.stringify(rules);
-
-							$window.location.href = baseUrl + queryParam + tabParam + rulesParam;
+							// Add new keyword and rules to the URL params
+							$location.search(paramPrefix + "q", keyword);
+							$location.search(paramPrefix + "rules", JSURL.stringify(rules));
 						});
 					} else {
 						scope.validationError = true;
