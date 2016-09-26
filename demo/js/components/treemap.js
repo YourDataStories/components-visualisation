@@ -1,4 +1,4 @@
-angular.module('yds').directive('ydsTreeMap', ['Data', function(Data) {
+angular.module('yds').directive('ydsTreeMap', ['Data', 'Filters', function(Data, Filters) {
     return {
         restrict: 'E',
         scope: {
@@ -32,10 +32,15 @@ angular.module('yds').directive('ydsTreeMap', ['Data', function(Data) {
             var projectId = scope.projectId;
             var viewType = scope.viewType;
             var lang = scope.lang;
-            var extraParams = scope.extraParams;
             var exporting = scope.exporting;
             var elementH = scope.elementH;
             var titleSize = scope.titleSize;
+            var extraParams = scope.extraParams;
+
+            // If extra params exist, add them to Filters
+            if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
+                Filters.addExtraParamsFilter(elementId, extraParams);
+            }
 
             //check if the projectId and the viewType attr is defined, else stop the process
             if (angular.isUndefined(projectId) || projectId.trim()=="") {
