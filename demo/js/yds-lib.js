@@ -936,6 +936,14 @@ app.factory('Filters', [ function () {
 
             updateFilters(chartFilters, compId, filters);
         },
+        addExtraParamsFilter: function(compId, params) {
+            // Create array with params as filters
+            var newFilters = [{
+                attrs: params
+            }];
+
+            updateFilters(newFilters, compId, filters);
+        },
         addGridFilter: function(compId, gridFilters) {
             var chartFilters = [];
 
