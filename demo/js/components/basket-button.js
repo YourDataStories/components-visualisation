@@ -97,7 +97,8 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', 'Basket', '
 				var userId = Basket.getUserId();
 
 				if (_.isUndefined(userId) || userId.length == 0) {
-					console.error("User ID is empty!");
+					console.error("User ID is empty! Using default \"ydsUser\" as user ID...");
+					userId = "ydsUser";
 				}
 
 				var basketConfig = {
