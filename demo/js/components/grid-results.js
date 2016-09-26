@@ -43,11 +43,16 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     elementH: scope.elementH
                 };
 
-                var paramPrefix = scope.urlParamPrefix;
-                var extraParams = scope.extraParams;
-                var projectDetailsType = scope.projectDetailsType;
-
                 var query = "";
+
+                var paramPrefix = scope.urlParamPrefix;
+                var projectDetailsType = scope.projectDetailsType;
+                var extraParams = scope.extraParams;
+
+                // If extra params exist, add them to Filters
+                if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
+                    Filters.addExtraParamsFilter(grid.elementId, extraParams);
+                }
 
                 // If viewType is undefined we can't show the grid
                 if(_.isUndefined(grid.viewType) || grid.viewType.trim()=="") {

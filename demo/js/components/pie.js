@@ -1,4 +1,4 @@
-angular.module('yds').directive('ydsPie', ['Data', function(Data){
+angular.module('yds').directive('ydsPie', ['Data', 'Filters', function(Data, Filters){
     return {
         restrict: 'E',
         scope: {
@@ -6,7 +6,7 @@ angular.module('yds').directive('ydsPie', ['Data', function(Data){
             viewType: '@',      //name of the array that contains the visualised data
             lang: '@',          //lang of the visualised data
 
-            extraParams: '=',    //extra attributes to pass to the API, if needed
+            extraParams: '=',   //extra attributes to pass to the API, if needed
 
             showLegend: '@',    //enable or disable the chart's legend
             exporting: '@',     //enable or disable the export of the chart
@@ -38,6 +38,11 @@ angular.module('yds').directive('ydsPie', ['Data', function(Data){
             var elementH = scope.elementH;
             var titleSize = scope.titleSize;
             var extraParams = scope.extraParams;
+
+            // If extra params exist, add them to Filters
+            if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
+                Filters.addExtraParamsFilter(elementId, extraParams);
+            }
 
             //check if the projectId is defined, else stop the process
             if (_.isUndefined(projectId) || projectId.trim()=="") {

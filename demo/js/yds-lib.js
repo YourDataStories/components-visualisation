@@ -939,7 +939,7 @@ app.factory('Filters', [ function () {
         addExtraParamsFilter: function(compId, params) {
             // Create array with params as filters
             var newFilters = [{
-                attrs: params
+                attrs: _.clone(params)
             }];
 
             updateFilters(newFilters, compId, filters);

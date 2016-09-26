@@ -44,6 +44,11 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters',
 
                 var extraParams = scope.extraParams;
 
+                // If extra params exist, add them to Filters
+                if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
+                    Filters.addExtraParamsFilter(grid.elementId, extraParams);
+                }
+
                 //check if project id or grid type are defined
                 if(_.isUndefined(grid.projectId) || grid.projectId.trim()=="") {
                     scope.ydsAlert = "The YDS component is not properly initialized " +

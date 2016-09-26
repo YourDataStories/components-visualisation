@@ -1,4 +1,4 @@
-angular.module('yds').directive('ydsBar', ['Data', function(Data) {
+angular.module('yds').directive('ydsBar', ['Data', 'Filters', function(Data, Filters) {
     return {
         restrict: 'E',
         scope: {
@@ -46,6 +46,11 @@ angular.module('yds').directive('ydsBar', ['Data', function(Data) {
             var elementH = scope.elementH;
             var titleSize = scope.titleSize;
             var extraParams = scope.extraParams;
+
+            // If extra params exist, add them to Filters
+            if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
+                Filters.addExtraParamsFilter(elementId, extraParams);
+            }
 
             //check if the projectId and the viewType attr is defined, else stop the process
             if (_.isUndefined(projectId) || projectId.trim()=="") {
