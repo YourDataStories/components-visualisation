@@ -9,7 +9,7 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', 'Basket', '
 
 			var elementClass = attrs.class;
 			var visualisationType = "";
-			var defaultVisTypes = ["pie", "line", "scatter", "bar", "map", "grid", "result"];
+			var defaultVisTypes = ["pie", "line", "scatter", "bar", "tree", "map", "grid", "result"];
 			
 			//if projectId or viewType attr is undefined, stop the execution of the directive
 			if (angular.isUndefined(projectId)|| angular.isUndefined(viewType)) {
