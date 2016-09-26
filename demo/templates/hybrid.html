@@ -1,0 +1,69 @@
+<div class="hybrid-container" class="col-md-12" style="min-height: 300px; padding: 0px">
+    <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length>0">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <b>Error:</b> {{ydsAlert}}
+    </div>
+    <div ng-switch="vizType" style="height: 300px">
+        <yds-bar
+                ng-switch-when="bar"
+                project-id="{{ projectId }}"
+                view-type="{{ viewType }}"
+                extra-params="extraParams"
+                lang="{{ lang }}"
+                element-h="300">
+        </yds-bar>
+
+        <yds-pie
+                ng-switch-when="pie"
+                project-id="{{ projectId }}"
+                view-type="{{ viewType }}"
+                lang="{{ lang }}"
+                extra-params="extraParams"
+                element-h="300">
+        </yds-pie>
+
+        <yds-line
+                ng-switch-when="line"
+                project-id="{{ projectId }}"
+                view-type="{{ viewType }}"
+                show-navigator="false"
+                lang="{{ lang }}"
+                element-h="300">
+        </yds-line>
+
+        <yds-scatter
+                ng-switch-when="scatter"
+                project-id="{{ projectId }}"
+                view-type="{{ viewType }}"
+                show-navigator="false"
+                lang="{{ lang }}"
+                element-h="300">
+        </yds-scatter>
+
+        <yds-tree-map
+                ng-switch-when="tree"
+                project-id="{{ projectId }}"
+                view-type="{{ viewType }}"
+                extra-params="extraParams"
+                lang="{{ lang }}"
+                element-h="300">
+        </yds-tree-map>
+
+        <yds-map
+                ng-switch-when="map"
+                project-id="{{ projectId }}"
+                view-type="{{ viewType }}"
+                lang="{{ lang }}"
+                element-h="300">
+        </yds-map>
+
+        <yds-grid
+                ng-switch-when="grid"
+                project-id="{{ projectId }}"
+                view-type="{{ viewType }}"
+                extra-params="extraParams"
+                lang="{{ lang }}"
+                element-h="300">
+        </yds-grid>
+    </div>
+</div>
