@@ -698,6 +698,7 @@ div.ag-root {
     float: left;
     line-height: 34px;
     margin-right: 5px;
+	padding-bottom:10px;
 }
 .component-adv-quick-filter {
     width: 150px;
