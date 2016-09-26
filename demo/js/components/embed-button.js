@@ -1,4 +1,4 @@
-angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', function($compile, Data) {
+angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', 'Filters', function($compile, Data, Filters) {
 	return {
 		restrict: 'A',
 		link: function (scope, element, attrs) {
@@ -8,10 +8,10 @@ angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', function($compi
 			var elementClass = attrs.class;
 			var embedCode ="";
 			var visualisationType = "";
-			var defaultVisTypes = ["pie", "line", "scatter", "bar", "map"];
+			var defaultVisTypes = ["pie", "line", "scatter", "bar", "tree", "map"];
 
-			//check if the element has one of the accepted IDs: "pie-container", "line-container", "bar-container", "map-container"
-			if (!angular.isUndefined(elementClass) && elementClass != "") {
+			//check if the element has one of the accepted IDs: "pie-container", "line-container", "bar-container", "map-container" etc.
+			if (!_.isUndefined(elementClass) && elementClass != "") {
 				var visTypeFound = false;
 
 				for (var i=0; i<defaultVisTypes.length; i++) {				//check if the main element is a valid yds container
@@ -34,7 +34,7 @@ angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', function($compi
 			}
 
 			//if projectId or viewType attr is undefined, stop the execution of the directive
-			if (angular.isUndefined(projectId) || (angular.isUndefined(viewType) && visualisationType != "map")) {
+			if (_.isUndefined(projectId) || (_.isUndefined(viewType) && visualisationType != "map")) {
 				scope.embeddable = false;
 				return false;
 			}
@@ -42,23 +42,23 @@ angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', function($compi
 			//check if the user has enabled the embedding of the selected element
 			var embeddable = scope.embeddable;
 
-			if (!angular.isUndefined(embeddable) && embeddable=="true"){
-				if (!angular.isUndefined(projectId) /*&& !isNaN(projectId)*/){
+			if (!_.isUndefined(embeddable) && embeddable=="true"){
+				if (!_.isUndefined(projectId) /*&& !isNaN(projectId)*/){
 					var popoverPos = scope.popoverPos;		//indicates the position the popover
 					var embedBtnX = scope.embedBtnX;		//indicates the x position the embed button
 					var embedBtnY = scope.embedBtnY;		//indicates the y position the embed button
 					var defaultPos = ["top", "bottom", "left", "right"];
 
 					//if popover position is undefined assign the default value
-					if (angular.isUndefined(popoverPos) || _.indexOf(defaultPos, popoverPos)==-1)
+					if (_.isUndefined(popoverPos) || _.indexOf(defaultPos, popoverPos)==-1)
 						popoverPos = "right";
 
 					//if embedBtnX property is undefined assign the default value
-					if (angular.isUndefined(embedBtnX) || isNaN(embedBtnX))
+					if (_.isUndefined(embedBtnX) || _.isNaN(embedBtnX))
 						embedBtnX = 12;
 
 					//if embedBtnY property is undefined assign the default value
-					if (angular.isUndefined(embedBtnY) || isNaN(embedBtnY))
+					if (_.isUndefined(embedBtnY) || _.isNaN(embedBtnY))
 						embedBtnY = 12;
 
 					scope.popoverOpen = false;    //flag that indicates if the embed tooltip is shown
@@ -95,11 +95,11 @@ angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', function($compi
 			} else
 				return false;
 
-			scope.requestEmbed = function (element) {
+			scope.requestEmbed = function () {
 				if (embedCode=="") {          //if the request code doesn't exist
 					var facets = [{
 						facet_type : "",
-						facet_values: []
+						facet_values: Filters.get(element[0].id)
 					}];
 					var lang = (scope.lang || "en");	// if scope.lang is undefined, use English
 
@@ -111,12 +111,12 @@ angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', function($compi
 								'" style="width:600px; height:300px">' +
 								'<p>Your browser does not support iframes.</p>' +
 								'</iframe>';
-						element.popoverOpen = true;
+						this.popoverOpen = true;
 					}, function (error) {
 						console.log('request embed code error:', error);
 					});
 				} else
-					element.popoverOpen = !element.popoverOpen;
+					this.popoverOpen = !this.popoverOpen;
 			};
 		}
 	}
