@@ -72,7 +72,7 @@ angular.module('yds').directive('ydsPie', ['Data', 'Filters', function(Data, Fil
                 elementH = 200;
 
             //check if the component's title size attr is defined, else assign default value
-            if(_.isUndefined(titleSize) || _.isNaN(titleSize))
+            if(_.isUndefined(titleSize) || titleSize.length == 0 || _.isNaN(titleSize))
                 titleSize = 18;
 
             //set the height of the chart

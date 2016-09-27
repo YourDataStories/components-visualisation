@@ -64,7 +64,7 @@ angular.module('yds').directive('ydsScatter', ['Data', function(Data) {
                 elementH = 200;
 
             //check if the component's title size attr is defined, else assign default value
-            if(angular.isUndefined(titleSize) || isNaN(titleSize))
+            if(angular.isUndefined(titleSize) || titleSize.length == 0 || isNaN(titleSize))
                 titleSize = 18;
 
             //set the height of the plot

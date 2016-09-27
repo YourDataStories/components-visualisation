@@ -53,6 +53,12 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 							scope.viewType = "default";
 						}
 
+						// Get title size from URL params and add it to scope
+						var urlParams = $location.search();
+						if (_.has(urlParams, "titlesize")) {
+							scope.titleSize = urlParams.titlesize;
+						}
+
 						// Set visualization type so the ng-switch shows the component
 						scope.vizType = vizType.toLowerCase();
 					};
