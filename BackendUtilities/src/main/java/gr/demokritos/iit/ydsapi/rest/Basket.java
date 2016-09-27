@@ -1,10 +1,7 @@
 package gr.demokritos.iit.ydsapi.rest;
 
-import gr.demokritos.iit.ydsapi.model.BasketItem;
+import gr.demokritos.iit.ydsapi.model.*;
 import gr.demokritos.iit.ydsapi.model.BasketItem.BasketType;
-import gr.demokritos.iit.ydsapi.model.ComponentType;
-import gr.demokritos.iit.ydsapi.model.UserChart;
-import gr.demokritos.iit.ydsapi.model.YDSFacet;
 import gr.demokritos.iit.ydsapi.responses.*;
 import gr.demokritos.iit.ydsapi.responses.BaseResponse.Status;
 import gr.demokritos.iit.ydsapi.retrieve.BasketDatatestRetrieve;
@@ -110,11 +107,29 @@ public class Basket {
 
             // For each visualization, get an embed code
             for (BasketItem item : basketItems) {
+                // Create empty array for possible facets of basket item
+                ArrayList<YDSFacet> facets = new ArrayList<>();
+
+                // If there are any filters for the visualization, add them as facets
+                if (!item.getFilters().isEmpty()) {
+                    for (BFilter filter : item.getFilters()) {
+                        YDSFacet newFacet = new YDSFacet();                 // Create new facet
+
+                        ArrayList<String> filterValues = new ArrayList<>(); // Create array for facet values
+
+                        filterValues.add(filter.getAttrs().toString());     // Add filter attrs as a facet value
+
+                        newFacet.setFacet_values(filterValues);             // Set array with filter attrs as the facet's values
+
+                        facets.add(newFacet);                               // Add this facet to the facets array
+                    }
+                }
+
                 // Get embed code
                 Object embeddingId = api.saveEmbedding(
                         item.getComponentParentUUID(),
                         ComponentType.valueOf(item.getComponentType().toUpperCase()),
-                        new ArrayList<YDSFacet>(),
+                        facets,
                         item.getContentType(),
                         item.getLang());
 

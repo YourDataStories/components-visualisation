@@ -19,15 +19,22 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 					// Recover saved object from embed code and visualise it
 					Data.recoverEmbedCode(embedCode)
 					.then (function (response) {
+						// Get filters for this visualisation if there are any
 						var filters = [];
 						var facets = response.embedding.facets;
 						if (!_.isEmpty(facets)) {
 							var facetValues = _.first(facets).facet_values;
 							if (!_.isEmpty(facetValues)) {
-								filters = _.first(facetValues).attrs;
+							    var facetValue = _.first(facetValues);
+							    if (_.isString(facetValue)) {
+                                    facetValue = JSON.parse(facetValue);
+                                }
+
+                                filters = facetValue;
 							}
 						}
 
+						// Visualise project with filters
                         visualiseProject(response.embedding.project_id, response.embedding.type, filters,
 							response.embedding.view_type, response.embedding.lang);
 					}, function (error) {
@@ -40,7 +47,7 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 					 * @param projectId Project ID
 					 * @param vizType   Type of visualization to show (pie, grid, bar etc.)
 					 * @param filters   Any extra parameters for the component (countries, year range etc.)
-					 * @param viewType  View type of compoennt
+					 * @param viewType  View type of component
 					 * @param lang      Language of component
 					 */
 					var visualiseProject = function (projectId, vizType, filters, viewType, lang) {

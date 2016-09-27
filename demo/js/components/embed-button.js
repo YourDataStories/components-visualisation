@@ -98,8 +98,9 @@ angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', 'Filters', func
 			scope.requestEmbed = function () {
 				if (embedCode=="") {          //if the request code doesn't exist
 					var facets = [{
-						facet_type : "",
-						facet_values: Filters.get(element[0].id)
+						facet_values: Filters.get(element[0].id).map(function(f) {
+							return JSON.stringify(f.attrs);
+						})
 					}];
 					var lang = (scope.lang || "en");	// if scope.lang is undefined, use English
 
