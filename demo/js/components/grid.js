@@ -19,7 +19,12 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters',
 
                 addToBasket: '@',       // Enable or disable "add to basket" functionality, values: true, false
                 basketBtnX: '@',        // X-axis position of the basket button
-                basketBtnY: '@'         // Y-axis position of the basket button
+                basketBtnY: '@',        // Y-axis position of the basket button
+
+                embeddable: '@',        // Enable or disable the embedding of the component
+                embedBtnX: '@',         // X-axis position of the embed button
+                embedBtnY: '@',         // Y-axis position of the embed button
+                popoverPos: '@'         // The side of the embed button from which the embed  window will appear
             },
             templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/grid.html',
             link: function(scope, element, attrs) {

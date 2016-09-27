@@ -6,9 +6,9 @@ angular.module('yds').directive('ydsEmbed', ['$compile', 'Data', 'Filters', func
 			var viewType = scope.viewType;
 
 			var elementClass = attrs.class;
-			var embedCode ="";
+			var embedCode = "";
 			var visualisationType = "";
-			var defaultVisTypes = ["pie", "line", "scatter", "bar", "tree", "map"];
+			var defaultVisTypes = ["pie", "line", "scatter", "bar", "tree", "map", "grid"];
 
 			//check if the element has one of the accepted IDs: "pie-container", "line-container", "bar-container", "map-container" etc.
 			if (!_.isUndefined(elementClass) && elementClass != "") {
