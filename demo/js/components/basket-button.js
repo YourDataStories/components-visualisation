@@ -63,7 +63,7 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', 'Basket', '
 					var basketBtnTemplate = '<button type="button"' +
 						'class="btn btn-default btn-xs embed-btn"' +
 						'ng-click = "openBasketModal()">' +
-						'<span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>' +
+						'<i class="fa fa-shopping-basket" aria-hidden="true"></i>' +
 						'</button>';
 
 					//compile the embed button and append it to the element's container
