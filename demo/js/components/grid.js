@@ -161,6 +161,13 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters',
                 };
 
                 /**
+                 * Export grid data to CSV and download it
+                 */
+                scope.exportGrid = function() {
+                    scope.gridOptions.api.exportDataAsCsv();
+                };
+
+                /**
                  * function to be called on destroy of the component
                  */
                 scope.$on("$destroy", function() {
