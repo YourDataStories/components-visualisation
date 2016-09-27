@@ -21,6 +21,10 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters',
                 basketBtnX: '@',        // X-axis position of the basket button
                 basketBtnY: '@',        // Y-axis position of the basket button
 
+                exporting: '@',         // Enable or disable export to CSV
+                exportBtnX: '@',        // X-axis position of the exporting button
+                exportBtnY: '@',        // Y-axis position of the exporting button
+
                 embeddable: '@',        // Enable or disable the embedding of the component
                 embedBtnX: '@',         // X-axis position of the embed button
                 embedBtnY: '@',         // Y-axis position of the embed button
@@ -44,6 +48,9 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters',
                     colResize: scope.colResize,
                     paging: scope.paging,
                     pageSize: scope.pageSize,
+                    exporting: scope.exporting,
+                    exportBtnX: parseInt(scope.exportBtnX),
+                    exportBtnY: parseInt(scope.exportBtnY),
                     elementH: scope.elementH
                 };
 
@@ -90,6 +97,18 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters',
                 if(_.isUndefined(grid.paging) || (grid.paging!="true" && grid.paging!="false"))
                     grid.paging = "false";
 
+                //check if the exporting attr is defined, else assign default value
+                if(_.isUndefined(grid.exporting) || (grid.exporting!="true" && grid.exporting!="false"))
+                    grid.exporting = "false";
+
+                //check if the exportBtnX attr is defined, else assign default value
+                if(_.isUndefined(grid.exportBtnX) || _.isNaN(grid.exportBtnX))
+                    grid.exportBtnX = 0;
+
+                //check if the exportBtnY attr is defined, else assign default value
+                if(_.isUndefined(grid.exportBtnY) || _.isNaN(grid.exportBtnY))
+                    grid.exportBtnY = 0;
+
                 //check if the page size attr is defined, else assign default value
                 if(_.isUndefined(grid.pageSize) || _.isNaN(grid.pageSize))
                     grid.pageSize = "100";
@@ -106,6 +125,14 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters',
                     gridContainer[0].style.height = (grid.elementH - 35) + 'px';
                 } else {
                     gridWrapper[0].style.height = grid.elementH + 'px';
+                }
+
+                // If exporting is enabled, set position of export button
+                if (grid.exporting == "true") {
+                    scope.exportBtnPos = {
+                        left: grid.exportBtnX + "px",
+                        top: grid.exportBtnY + "px"
+                    }
                 }
 
                 /**

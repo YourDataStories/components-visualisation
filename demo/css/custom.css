@@ -254,7 +254,6 @@ body #main .container:first-child {
     margin-right: 5px;
 }
 
-
 .yds-browse-wrapper .yds-browse-breadcrumbs {
     display: flex;
 }
@@ -292,7 +291,6 @@ body #main .container:first-child {
     color: #fff!important;
     background-color: #008599;
     border-color: #008599;
-
 }
 
 /**********************************/
@@ -412,7 +410,8 @@ body #main .container:first-child {
 
 .yds-search-prev-inner .component-wrapper {
     padding-top: 10px;
-}/**********************************/
+}
+/**********************************/
 /**** Basket RESULTS PREVIEW ******/
 /**********************************/
 .yds-basket-prev-wrapper {
@@ -504,7 +503,7 @@ rzslider .rz-pointer:after {
 
 /**********************************/
 /**** NEW FACETS CUSTOMIZATION ****/
-/*********************************/
+/**********************************/
 .yds-checkbox-wrapper .yds-checkbox {
     margin-top: 2px;
     margin-bottom: 2px;
@@ -533,7 +532,7 @@ rzslider .rz-pointer:after {
     margin-bottom: 10px;
 }
 
-/**********************************/
+/*********************************/
 /***** BASKET  CUSTOMIZATION *****/
 /*********************************/
 
@@ -885,3 +884,10 @@ div.ag-root {
     background-color: #3c763d;
 }
 /********************************************************************/
+
+.grid-export-btn {
+    font-size: 11px;
+    cursor: pointer;
+    z-index: 999;
+    position: absolute;
+}

@@ -59,7 +59,6 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', 'Basket', '
 					if (angular.isUndefined(basketBtnY) || isNaN(basketBtnY))
 						basketBtnY = 12;
 
-
 					var basketBtnTemplate = '<button type="button"' +
 						'class="btn btn-default btn-xs embed-btn"' +
 						'ng-click = "openBasketModal()">' +
@@ -84,16 +83,10 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', 'Basket', '
 				return false;
 			}
 
-
-			/***************************************/
-			/******* BASKET'S MODAL FUNCS **********/
-			/***************************************/
-
-			//initialize the basket's modal reference;
-
-			
-			//function used to open the basket modal
-			scope.openBasketModal = function () {
+			/**
+			 * Open basket modal
+			 */
+			scope.openBasketModal = function() {
 				var userId = Basket.getUserId();
 
 				if (_.isUndefined(userId) || userId.length == 0) {
