@@ -36,29 +36,43 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 scope.selProjectId = scope.projectId;
                 scope.selViewType = "";
 
+                // Variables for previous values, to check that something really changed before re-rendering component
+                var prevViewType = "";
+                var prevApiOptions = {};
+                var updateVis = false;
+
                 /**
                  * Re-render the selected visualization
                  */
                 var updateVisualization = function() {
-                    var selectedVis = "bar";
-                    if (scope.selectedVis.length > 0) {
-                        selectedVis = scope.selectedVis;
+                    if (updateVis) {
+                        var selectedVis = "bar";
+                        if (scope.selectedVis.length > 0) {
+                            selectedVis = scope.selectedVis;
+                        }
+
+                        // Make selectedVis empty in order for the component to re-render
+                        scope.selectedVis = "";
+
+                        // Postpone to end of digest queue
+                        $timeout(function() {
+                            scope.selectVis(selectedVis);
+
+                            updateVis = false;
+                        });
                     }
-
-                    // Make selectedVis empty in order for the component to re-render
-                    scope.selectedVis = "";
-
-                    // Postpone to end of digest queue
-                    $timeout(function() {
-                        scope.selectVis(selectedVis);
-                    });
                 };
 
                 /**
                  * Update the apiOptions variable with the needed values
                  */
                 var updateApiOptions = function() {
+                    prevApiOptions = scope.apiOptions;
                     scope.apiOptions = DashboardService.getApiOptions(dashboardId);
+
+                    if (!_.isEqual(prevApiOptions, scope.apiOptions)) {
+                        updateVis = true;
+                    }
                 };
 
                 /**
@@ -66,12 +80,15 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                  * Also sets the Visualization panel's color
                  */
                 var updateViewType = function() {
+                    prevViewType = scope.selViewType;
                     var viewType = DashboardService.getViewType(dashboardId);
 
-                    if (!_.isUndefined(viewType)) {
+                    if (!_.isUndefined(viewType) && !_.isEqual(prevViewType, viewType.type)) {
                         scope.selViewType = viewType.type;
                         scope.panelStyle = viewType.panelStyle;
                         scope.panelHeadingStyle = viewType.panelHeadingStyle;
+
+                        updateVis = true;
                     }
                 };
 
