@@ -9,7 +9,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 minHeight: '@',     // Minimum height of this component's container
                 lang: '@'           // Language of component
             },
-            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/dashboard-updater.html',
+            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/dashboard-updater.html',
             link: function (scope) {
                 var dashboardId = scope.dashboardId;
                 var minHeight = parseInt(scope.minHeight);
@@ -19,6 +19,9 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 var initialized = false;
                 var requestType = "";
                 var searchParams = {};
+
+                // Keep previous parameter values, to check if the component needs to be re-rendered
+                var prevParams = {};
 
                 // If type is undefined, set default value
                 if (_.isUndefined(scope.type) || scope.type.trim() == "")
@@ -50,11 +53,13 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
 
                 var updateExtraParams = function() {
                     // Keep old parameters for comparison and get new parameters from DashboardService
-                    var oldParams = scope.extraParams;
-                    scope.extraParams = DashboardService.getApiOptions(dashboardId);
+                    var newParams = DashboardService.getApiOptions(dashboardId);
 
                     // If something changed in the parameters, update component
-                    if (!_.isEqual(oldParams, scope.extraParams)) {
+                    if (!_.isEqual(prevParams, newParams)) {
+                        prevParams = _.clone(newParams);    // Keep current parameters to check equality later
+                        scope.extraParams = newParams;      // Add new parameters to scope
+
                         switch(scope.type) {
                             case "search":
                                 if (!initialized) {
