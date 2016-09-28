@@ -116,6 +116,13 @@ angular.module('yds').directive('ydsLine', ['Data', 'Filters', function(Data, Fi
                         }
                     },
                     exporting: {
+                        buttons: {
+                            contextButton: {
+                                symbol: 'url(' + ((typeof Drupal != 'undefined')? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'img/fa-download-small.png)',
+                                symbolX: 12,
+                                symbolY: 12
+                            }
+                        },
                         enabled: (exporting === "true")
                     },
                     navigator: {

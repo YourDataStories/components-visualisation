@@ -114,6 +114,13 @@ angular.module('yds').directive('ydsPie', ['Data', 'Filters', function(Data, Fil
                             enabled: (showLegend === "true")
                         },
                         exporting: {
+                            buttons: {
+                                contextButton: {
+                                    symbol: 'url(' + ((typeof Drupal != 'undefined')? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'img/fa-download-small.png)',
+                                    symbolX: 12,
+                                    symbolY: 12
+                                }
+                            },
                             enabled: (exporting === "true")
                         },
                         plotOptions: {

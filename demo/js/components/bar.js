@@ -26,7 +26,7 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function(Data, Fil
             embedBtnY: '@',     //y-axis position of the embed button
             popoverPos: '@'     //the side of the embed button from which the embed information window will appear
         },
-        templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/bar.html',
+        templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/bar.html',
         link: function (scope, element, attrs) {
             var barContainer = angular.element(element[0].querySelector('.bar-container'));
 
@@ -139,7 +139,16 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function(Data, Fil
                             labels: { enabled: (showLabelsY === "true") }
                         },
                         legend: { enabled: (showLegend === "true") },
-                        exporting: { enabled: (exporting === "true") },
+                        exporting: {
+                            buttons: {
+                                contextButton: {
+                                    symbol: 'url(' + ((typeof Drupal != 'undefined')? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'img/fa-download-small.png)',
+                                    symbolX: 12,
+                                    symbolY: 12
+                                }
+                            },
+                            enabled: (exporting === "true")
+                        },
                         tooltip: {
                             headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
                             pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
