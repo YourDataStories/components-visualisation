@@ -24,6 +24,10 @@ ydsDemo.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 		url: '/dashboard',
 		templateUrl: 'templates-demo/dashboard.html'
 	})
+	.state('dashboard2', {
+		url: '/dashboard2',
+		templateUrl: 'templates-demo/dashboard2.html'
+	})
 	.state('project2', {
 		url: '/project2',
 		templateUrl: 'templates-demo/project2.html'
