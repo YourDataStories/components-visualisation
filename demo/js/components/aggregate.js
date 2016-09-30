@@ -7,6 +7,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 viewType: '@',      // View type of chart
                 dashboardId: '@',   // ID used for getting selected year range from DashboardService
                 lang: '@',          // Language
+                iconSize: '@',      // Icon size for FontAwesome icon (2-5)
                 setOnInit: '@',     // If true, will set this aggregate's view type in DashboardService on init
                 extraParams: '='    // Extra parameters to send
             },
@@ -17,6 +18,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 var dashboardId = scope.dashboardId;
                 var lang = scope.lang;
                 var setOnInit = scope.setOnInit;
+                var iconSize = scope.iconSize;
 
                 var initialized = false;
 
@@ -39,6 +41,10 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 if (_.isUndefined(lang) || lang.trim() == "")
                     lang = "en";
 
+                // If iconSize is undefined, set default value
+                if (_.isUndefined(iconSize) || iconSize.trim() == "")
+                    iconSize = "4";
+
                 var getAggregateData = function() {
                     // Get data for aggregate from API to set variables
                     Data.getAggregate(projectId, viewType, lang, scope.extraParams).then(function(response) {
@@ -47,7 +53,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                         scope.value = response.data.value;
 
                         // Get icon class
-                        scope.iconClass = _.first(response.view).icon;
+                        scope.iconClass = _.first(response.view).icon + " fa-" + iconSize + "x";
 
                         // Get color and create panel and panel heading styles
                         var color = _.first(response.view).color;
