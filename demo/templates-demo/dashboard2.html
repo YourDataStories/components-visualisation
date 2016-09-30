@@ -23,7 +23,7 @@
         </div>
 
         <!--Panel for country selection-->
-        <div uib-accordion-group class="panel panel-default panel-country-selection" is-open="status.countryOpen">
+        <div uib-accordion-group class="panel panel-default panel-country-selection zero-padding" is-open="status.countryOpen">
             <uib-accordion-heading>
                 <div class="panel-heading clearfix">
                     <h3 class="panel-title pull-left">{{ panelCountrySelectionTitle }}</h3>
@@ -32,9 +32,8 @@
             </uib-accordion-heading>
 
             <!--Aid Activity Country Selection-->
-            <div ng-if="selectedSector == 'aidactivity' && status.countryOpen" class="panel-body zero-padding"
-                 style="padding-left: 0; padding-right: 0; padding-bottom: 0;">
-                <div class="col-md-6">
+            <div ng-if="selectedSector == 'aidactivity' && status.countryOpen" class="panel-body zero-padding">
+                <div class="col-md-6" style="padding-left: 0">
                     <!--Heatmap of Beneficiaries-->
                     <div class="panel panel-primary">
                         <div class="panel-heading">
@@ -55,10 +54,13 @@
                                     exporting="false"
                                     element-h="350"></yds-heatmap>
                         </div>
+                        <div class="panel-footer" style="padding: 3px 15px">
+                            <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
+                        </div>
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-6" style="padding-right: 0">
                     <!--Heatmap of Benefactors-->
                     <div class="panel panel-default panel-benefactor">
                         <div class="panel-heading">
@@ -79,14 +81,16 @@
                                     exporting="false"
                                     element-h="350"></yds-heatmap>
                         </div>
+                        <div class="panel-footer" style="padding: 3px 15px">
+                            <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!--Trade Activity Country Selection-->
-            <div ng-if="selectedSector == 'tradeactivity' && status.countryOpen" class="panel-body zero-padding"
-                 style="padding-left: 0; padding-right: 0; padding-bottom: 0;">
-                <div class="col-md-6">
+            <div ng-if="selectedSector == 'tradeactivity' && status.countryOpen" class="panel-body zero-padding">
+                <div class="col-md-6" style="padding-left: 0">
                     <!--Heatmap of Origins-->
                     <div class="panel panel-primary">
                         <div class="panel-heading">
@@ -107,10 +111,14 @@
                                     exporting="false"
                                     element-h="350"></yds-heatmap>
                         </div>
+                        <div class="panel-footer" style="padding: 3px 15px">
+                            <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
+                        </div>
                     </div>
+
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-6" style="padding-right: 0">
                     <!--Heatmap of Destinations-->
                     <div class="panel panel-default panel-benefactor">
                         <div class="panel-heading">
@@ -131,12 +139,11 @@
                                     exporting="false"
                                     element-h="350"></yds-heatmap>
                         </div>
+                        <div class="panel-footer" style="padding: 3px 15px">
+                            <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="panel-footer" style="padding: 3px 15px">
-                <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
             </div>
         </div>
 
