@@ -19,6 +19,57 @@
             lang="{{ lang }}">
     </yds-grid-results>
 
+    <yds-grid
+            ng-switch-when="simple-grid"
+            project-id="{{ projectId }}"
+            view-type="{{ viewType }}"
+            extra-params="extraParams"
+            add-to-basket="true"
+            basket-btn-x="2"
+            basket-btn-y="2"
+            exporting="true"
+            export-btn-x="56"
+            export-btn-y="2"
+            embeddable="true"
+            embed-btn-x="30"
+            embed-btn-y="2"
+            element-h="{{ minHeight }}"
+            lang="{{ lang }}">
+    </yds-grid>
+
+    <yds-pie
+            ng-switch-when="pie"
+            project-id="{{ projectId }}"
+            view-type="{{ viewType }}"
+            extra-params="apiOptions"
+            add-to-basket="true"
+            embeddable="true"
+            embed-btn-x="40"
+            element-h="{{ minHeight }}">
+    </yds-pie>
+
+    <yds-bar
+            ng-switch-when="bar"
+            project-id="{{ projectId }}"
+            view-type="{{ viewType }}"
+            extra-params="extraParams"
+            add-to-basket="true"
+            embeddable="true"
+            embed-btn-x="40"
+            element-h="{{ minHeight }}">
+    </yds-bar>
+
+    <yds-tree-map
+            ng-switch-when="tree"
+            project-id="{{ projectId }}"
+            view-type="{{ viewType }}"
+            extra-params="extraParams"
+            add-to-basket="true"
+            embeddable="true"
+            embed-btn-x="40"
+            element-h="{{ minHeight }}">
+    </yds-tree-map>
+
     <yds-search-tabs
             ng-switch-when="search"
             default-tab="{{ concept }}"
@@ -27,4 +78,13 @@
             hide-tabs="true"
             lang="{{ lang }}">
     </yds-search-tabs>
+
+    <yds-aggregate
+            ng-switch-when="aggregate"
+            project-id="{{ projectId }}"
+            dashboard-id="{{ dashboardId }}"
+            view-type="{{ viewType }}"
+            set-on-init="{{ aggregateSetOnInit }}"
+            extra-params="extraParams">
+    </yds-aggregate>
 </div>

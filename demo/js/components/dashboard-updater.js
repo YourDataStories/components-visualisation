@@ -3,11 +3,13 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
         return {
             restrict: 'E',
             scope: {
-                type: '@',          // What type of component to show (grid, info etc.)
-                viewType: '@',      // Type to give to component
-                dashboardId: '@',   // ID used for getting selected year range from DashboardService
-                minHeight: '@',     // Minimum height of this component's container
-                lang: '@'           // Language of component
+                type: '@',                  // What type of component to show (grid, info etc.)
+                projectId: '@',             // Project ID
+                viewType: '@',              // Type to give to component
+                dashboardId: '@',           // ID used for getting selected year range from DashboardService
+                minHeight: '@',             // Minimum height of this component's container
+                aggregateSetOnInit: '@',    // If the component shown is an aggregate, this indicates if it's the first
+                lang: '@'                   // Language of component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/dashboard-updater.html',
             link: function (scope) {
@@ -61,6 +63,9 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                         scope.extraParams = newParams;      // Add new parameters to scope
 
                         switch(scope.type) {
+                            case "aggregate":
+                                // Aggregates watch their extra params for changes, so do nothing
+                                break;
                             case "search":
                                 if (!initialized) {
                                     // Get parameters for search component and keep requestType for later
