@@ -30,7 +30,7 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
          * Select a sector
          * @param newSector Sector to select
          */
-        scope.setSelectedSector = function(newSector) {
+        scope.setSelectedSector = function(newSector, setTitle) {
             if (scope.selectedSector != newSector) {
                 if (!_.isUndefined(scope.selectedSector)) {
                     // Get country types for previously selected sector
@@ -58,11 +58,17 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
                 scope.selectedSector = newSector;
             }
 
+            // If setTitle is true, set the panel's title to show the selection
+            if (setTitle) {
+                var selSectorStr = (newSector == "aidactivity") ? "Aid Activities" : "Trade Activities";
+                scope.panelSectorTitle = "You have chosen: " + selSectorStr;
+            }
+
             scope.status.countryOpen = true;
         };
 
         // Set default selected sector
-        scope.setSelectedSector("aidactivity");
+        scope.setSelectedSector("aidactivity", false);
 
         // Fix for angular slider rendering wrong when inside tabs
         // (https://github.com/angular-slider/angularjs-slider/issues/79#issuecomment-121141586)
