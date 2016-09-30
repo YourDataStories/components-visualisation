@@ -6,7 +6,7 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
         scope.allowOpenPanel = false;
 
         // Set initial panel titles
-        scope.panelSectorTitle = "Choose your sector";
+        scope.panelSectorTitle = "Choose activity type";
         scope.panelCountrySelectionTitle = "Choose countries";
         scope.panelTimePeriodTitle = "Choose time period of activities";
         scope.panelCategoryTitle = "Choose filter category";
