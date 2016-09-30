@@ -1,3 +1,47 @@
 <div class="container" ng-controller="Dashboard2Controller">
-    <h1 class="text-center">{{ title }}</h1>
+    <!--Panel for sector selection-->
+    <div class="panel panel-default panel-sector">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ panelSectorTitle }}</h3>
+        </div>
+
+        <div class="panel-body">
+            <p>Take a closer look at:</p>
+            <button type="button" class="btn btn-lg btn-primary">Aid Activities</button>
+            <button type="button" class="btn btn-lg btn-warning">Trade Activities</button>
+        </div>
+    </div>
+
+    <!--Panel for country selection-->
+    <div class="panel panel-default panel-country-selection">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ panelCountrySelectionTitle }}</h3>
+        </div>
+
+        <div class="panel-body">
+
+        </div>
+    </div>
+
+    <!--Panel for time period selection-->
+    <div class="panel panel-default panel-time-period">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ panelTimePeriodTitle }}</h3>
+        </div>
+
+        <div class="panel-body">
+
+        </div>
+    </div>
+
+    <!--Panel for category selection-->
+    <div class="panel panel-default panel-category">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ panelCategoryTitle }}</h3>
+        </div>
+
+        <div class="panel-body">
+
+        </div>
+    </div>
 </div>

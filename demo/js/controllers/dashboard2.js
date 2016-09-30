@@ -1,5 +1,14 @@
-angular.module('yds').controller('Dashboard2Controller', ['$scope', function($scope) {
-    var scope = $scope;
+angular.module('yds').controller('Dashboard2Controller', ['$scope', 'DashboardService',
+    function($scope, DashboardService) {
+        var scope = $scope;
 
-    scope.title = 'Pilot 2 - Design 2';
-}]);
+        // If the panels should be allowed to open
+        scope.allowOpenPanel = false;
+
+        // Set initial panel titles
+        scope.panelSectorTitle = "Choose your sector";
+        scope.panelCountrySelectionTitle = "Choose countries";
+        scope.panelTimePeriodTitle = "Choose time period of activities";
+        scope.panelCategoryTitle = "Choose filter category";
+    }
+]);
