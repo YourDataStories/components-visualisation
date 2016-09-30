@@ -170,21 +170,6 @@
         </div>
     </div>
 
-    <!--Panel for category selection-->
-    <div class="panel panel-default panel-category">
-        <div class="panel-heading">
-            <h3 class="panel-title">{{ panelCategoryTitle }}</h3>
-        </div>
-
-        <!--Aid Activity Category Selection-->
-        <div ng-if="selectedSector == 'aidactivity'" class="panel-body">
-        </div>
-
-        <!--Trade Activity Category Selection-->
-        <div ng-if="selectedSector == 'tradeactivity'" class="panel-body">
-        </div>
-    </div>
-
     <!--Dashboard Info box (for testing)-->
     <div class="row" style="padding-top: 20px; padding-bottom: 10px;">
         <div class="col-md-12">
@@ -216,4 +201,39 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <!--Aid Activity Visualization-->
+            <yds-dashboard-visualization
+                    ng-if="selectedSector == 'aidactivity'"
+                    project-id="none"
+                    dashboard-id="aidactivity"
+                    element-h="460">
+            </yds-dashboard-visualization>
+
+            <!--Trade Activity Visualization-->
+            <yds-dashboard-visualization
+                    ng-if="selectedSector == 'tradeactivity'"
+                    project-id="none"
+                    dashboard-id="tradeactivity"
+                    element-h="460">
+            </yds-dashboard-visualization>
+        </div>
+    </div>
+
+    <!--&lt;!&ndash;Panel for category selection&ndash;&gt;-->
+    <!--<div class="panel panel-default panel-category">-->
+        <!--<div class="panel-heading">-->
+            <!--<h3 class="panel-title">{{ panelCategoryTitle }}</h3>-->
+        <!--</div>-->
+
+        <!--&lt;!&ndash;Aid Activity Category Selection&ndash;&gt;-->
+        <!--<div ng-if="selectedSector == 'aidactivity'" class="panel-body">-->
+        <!--</div>-->
+
+        <!--&lt;!&ndash;Trade Activity Category Selection&ndash;&gt;-->
+        <!--<div ng-if="selectedSector == 'tradeactivity'" class="panel-body">-->
+        <!--</div>-->
+    <!--</div>-->
 </div>
