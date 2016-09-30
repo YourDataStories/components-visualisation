@@ -7,8 +7,14 @@
 
         <div class="panel-body">
             <p>Take a closer look at:</p>
-            <button type="button" class="btn btn-lg btn-primary">Aid Activities</button>
-            <button type="button" class="btn btn-lg btn-warning">Trade Activities</button>
+            <button type="button" class="btn btn-lg btn-primary"
+                    ng-click="setSelectedSector('aidactivity')">
+                Aid Activities
+            </button>
+            <button type="button" class="btn btn-lg btn-warning"
+                    ng-click="setSelectedSector('tradeactivity')">
+                Trade Activities
+            </button>
         </div>
     </div>
 
@@ -18,8 +24,118 @@
             <h3 class="panel-title">{{ panelCountrySelectionTitle }}</h3>
         </div>
 
-        <div class="panel-body">
+        <!--Aid Activity Country Selection-->
+        <div ng-if="selectedSector == 'aidactivity'" class="panel-body">
+            <div class="col-md-6">
+                <!--Heatmap of Beneficiaries-->
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Number of Aid Activities per Beneficiary Country</h3>
+                    </div>
+                    <div class="panel-body">
+                        <yds-heatmap
+                                project-id="none"
+                                view-type="aidactivity.beneficiary.countries.all"
+                                color-axis="true"
+                                color-type="logarithmic"
+                                legend="true"
+                                legend-v-align="bottom"
+                                use-year-range="true"
+                                dashboard-id="aidactivity"
+                                country-selection="true"
+                                no-border="true"
+                                exporting="false"
+                                element-h="350"></yds-heatmap>
+                    </div>
+                    <div class="panel-footer" style="padding: 3px 15px">
+                        <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
+                    </div>
+                </div>
+            </div>
 
+            <div class="col-md-6">
+                <!--Heatmap of Benefactors-->
+                <div class="panel panel-default panel-benefactor">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Number of Aid Activities per Benefactor Country</h3>
+                    </div>
+                    <div class="panel-body">
+                        <yds-heatmap
+                                project-id="none"
+                                view-type="aidactivity.benefactor.countries.all"
+                                color-axis="true"
+                                color-type="logarithmic"
+                                legend="true"
+                                legend-v-align="bottom"
+                                use-year-range="true"
+                                dashboard-id="aidactivity"
+                                country-selection="true"
+                                no-border="true"
+                                exporting="false"
+                                element-h="350"></yds-heatmap>
+                    </div>
+                    <div class="panel-footer" style="padding: 3px 15px">
+                        <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Trade Activity Country Selection-->
+        <div ng-if="selectedSector == 'tradeactivity'" class="panel-body">
+            <div class="col-md-6">
+                <!--Heatmap of Origins-->
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Number of Trade Activities per Origin Country</h3>
+                    </div>
+                    <div class="panel-body">
+                        <yds-heatmap
+                                project-id="none"
+                                view-type="tradeactivity.hasorigin.countries.all"
+                                color-axis="true"
+                                color-type="logarithmic"
+                                legend="true"
+                                legend-v-align="bottom"
+                                use-year-range="true"
+                                dashboard-id="tradeactivity"
+                                country-selection="true"
+                                no-border="true"
+                                exporting="false"
+                                element-h="350"></yds-heatmap>
+                    </div>
+                    <div class="panel-footer" style="padding: 3px 15px">
+                        <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <!--Heatmap of Destinations-->
+                <div class="panel panel-default panel-benefactor">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Number of Trade Activities per Destination Country</h3>
+                    </div>
+                    <div class="panel-body">
+                        <yds-heatmap
+                                project-id="none"
+                                view-type="tradeactivity.hasdestination.countries.all"
+                                color-axis="true"
+                                color-type="logarithmic"
+                                legend="true"
+                                legend-v-align="bottom"
+                                use-year-range="true"
+                                dashboard-id="tradeactivity"
+                                country-selection="true"
+                                no-border="true"
+                                exporting="false"
+                                element-h="350"></yds-heatmap>
+                    </div>
+                    <div class="panel-footer" style="padding: 3px 15px">
+                        <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -29,8 +145,28 @@
             <h3 class="panel-title">{{ panelTimePeriodTitle }}</h3>
         </div>
 
-        <div class="panel-body">
+        <!--Aid Activity Time Period Selection-->
+        <div ng-if="selectedSector == 'aidactivity'" class="panel-body">
+            <div class="col-md-offset-3 col-md-6">
+                <yds-year-range
+                        title="Time Period for Aid Activities"
+                        dashboard-id="aidactivity"
+                        min-year="1997"
+                        max-year="2018">
+                </yds-year-range>
+            </div>
+        </div>
 
+        <!--Trade Activity Time Period Selection-->
+        <div ng-if="selectedSector == 'tradeactivity'" class="panel-body">
+            <div class="col-md-offset-3 col-md-6">
+                <yds-year-range
+                        title="Time Period for Trade Activities"
+                        dashboard-id="tradeactivity"
+                        min-year="1997"
+                        max-year="2018">
+                </yds-year-range>
+            </div>
         </div>
     </div>
 
@@ -40,8 +176,44 @@
             <h3 class="panel-title">{{ panelCategoryTitle }}</h3>
         </div>
 
-        <div class="panel-body">
+        <!--Aid Activity Category Selection-->
+        <div ng-if="selectedSector == 'aidactivity'" class="panel-body">
+        </div>
 
+        <!--Trade Activity Category Selection-->
+        <div ng-if="selectedSector == 'tradeactivity'" class="panel-body">
+        </div>
+    </div>
+
+    <!--Dashboard Info box (for testing)-->
+    <div class="row" style="padding-top: 20px; padding-bottom: 10px;">
+        <div class="col-md-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Selected filters</h3>
+                </div>
+
+                <div class="panel-body dashboard-info-container">
+                    <yds-dashboard-updater
+                            ng-if="selectedSector == 'aidactivity'"
+                            type="info"
+                            view-type="aidactivity.filters.selected"
+                            dashboard-id="aidactivity"
+                            min-height="90"
+                            lang="en">
+                    </yds-dashboard-updater>
+
+
+                    <yds-dashboard-updater
+                            ng-if="selectedSector == 'tradeactivity'"
+                            type="info"
+                            view-type="tradeactivity.filters.selected"
+                            dashboard-id="tradeactivity"
+                            min-height="90"
+                            lang="en">
+                    </yds-dashboard-updater>
+                </div>
+            </div>
         </div>
     </div>
 </div>
