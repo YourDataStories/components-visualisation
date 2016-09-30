@@ -16,31 +16,32 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
          * @param newSector Sector to select
          */
         scope.setSelectedSector = function(newSector) {
-            if (!_.isUndefined(scope.selectedSector)) {
-                // Get country types for previously selected sector
-                var map = DashboardService.getApiOptionsMapping(scope.selectedSector);
+            if (scope.selectedSector != newSector) {
+                if (!_.isUndefined(scope.selectedSector)) {
+                    // Get country types for previously selected sector
+                    var map = DashboardService.getApiOptionsMapping(scope.selectedSector);
 
-                // For country type of previous sector, clear its selected countries
-                _.each(map, function(countryType) {
-                    DashboardService.clearCountries(countryType);
+                    // For country type of previous sector, clear its selected countries
+                    _.each(map, function(countryType) {
+                        DashboardService.clearCountries(countryType);
+                    });
+                }
+
+                // Get aggregates for new sector
+                var aggregates = DashboardService.getAggregates(newSector);
+                scope.aggregateClass = "col-md-" + aggregates.width;
+
+                // Clear current aggregates array
+                scope.aggregates = [];  // Empty aggregate array
+
+                $timeout(function() {
+                    // Set new aggregates
+                    scope.aggregates = aggregates.types;
                 });
+
+                // Select new sector
+                scope.selectedSector = newSector;
             }
-
-            // Get aggregates for new sector
-            var aggregates = DashboardService.getAggregates(newSector);
-            scope.aggregateClass = "col-md-" + aggregates.width;
-
-            // Clear current aggregates array
-            scope.aggregates = [];  // Empty aggregate array
-
-            $timeout(function() {
-                // Set new aggregates
-                scope.aggregates = aggregates.types;
-            });
-
-            // Select new sector
-            scope.selectedSector = newSector;
-
         };
 
         // Set default selected sector
