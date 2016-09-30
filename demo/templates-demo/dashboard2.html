@@ -170,7 +170,22 @@
         </div>
     </div>
 
-    <!--Dashboard Info box (for testing)-->
+    <!--Aggregates-->
+    <div class="row" style="margin-left: -10px; margin-right: -10px">
+        <div ng-class="aggregateClass"
+             ng-repeat="type in aggregates track by $index"
+             style="padding-left: 10px; padding-right: 10px">
+            <yds-dashboard-updater
+                    type="aggregate"
+                    project-id="{{ projectId }}"
+                    dashboard-id="{{ selectedSector }}"
+                    view-type="{{ type }}"
+                    aggregate-set-on-init="{{ ($index == 0) }}">
+            </yds-dashboard-updater>
+        </div>
+    </div>
+
+    <!--Selected filters-->
     <div class="row" style="padding-top: 20px; padding-bottom: 10px;">
         <div class="col-md-12">
             <div class="panel panel-info">
@@ -202,6 +217,7 @@
         </div>
     </div>
 
+    <!--Dashboard Visualization-->
     <div class="row">
         <div class="col-md-12">
             <!--Aid Activity Visualization-->
