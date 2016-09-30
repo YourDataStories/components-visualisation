@@ -27,18 +27,12 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
 
                 scope.selectedVis = "";
 
-                var aggregates = DashboardService.getAggregates(dashboardId);
-
-                scope.aggregateTypes = aggregates.types;
-                scope.aggregateClass = "col-md-" + aggregates.width;
-
                 // Set the first type as default selected one
                 scope.selProjectId = scope.projectId;
                 scope.selViewType = "";
 
                 // Variables for previous values, to check that something really changed before re-rendering component
                 var prevViewType = "";
-                var prevApiOptions = {};
                 var updateVis = false;
 
                 /**
@@ -64,18 +58,6 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 };
 
                 /**
-                 * Update the apiOptions variable with the needed values
-                 */
-                var updateApiOptions = function() {
-                    prevApiOptions = scope.apiOptions;
-                    scope.apiOptions = DashboardService.getApiOptions(dashboardId);
-
-                    if (!_.isEqual(prevApiOptions, scope.apiOptions)) {
-                        updateVis = true;
-                    }
-                };
-
-                /**
                  * Update the view type from the DashboardService
                  * Also sets the Visualization panel's color
                  */
@@ -93,25 +75,14 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 };
 
                 /**
-                 * Handles heatmap selection changes (country selection and year range)
-                 */
-                var heatmapChangeHandler = function() {
-                    updateApiOptions();
-                    updateVisualization();
-                };
-
-                /**
                  * Handles view type selection changes
                  */
                 var viewTypeChangeHandler = function() {
-                    updateApiOptions();
                     updateViewType();
                     updateVisualization();
                 };
 
                 // Subscribe to year selection and view type changes
-                DashboardService.subscribeYearChanges(scope, heatmapChangeHandler);
-                DashboardService.subscribeSelectionChanges(scope, heatmapChangeHandler);
                 DashboardService.subscribeViewTypeChanges(scope, viewTypeChangeHandler);
 
                 /**

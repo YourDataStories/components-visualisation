@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" ng-controller="DashboardController">
     <!--Official Development Assistance, The advantage of YourDataStories-->
     <div class="row">
         <!--Dashboard title and description-->
@@ -145,15 +145,32 @@
         </div>
     </div>
 
-    <!--Visualization-->
+    <!--Aggregates Explanation-->
     <div class="row">
-        <!--Explanation-->
         <div class="col-md-12">
             <p class="text-justify">Finally, there is a set of “info boxes”, showing various aspects of the ODA data.
                 Clicking on “View Details” of each “info box”, some predefined visualisations are displayed in the
                 details section.</p>
         </div>
+    </div>
 
+    <!--Aggregates-->
+    <div class="row" style="margin-left: -10px; margin-right: -10px">
+        <div ng-class="aidAggregateClass"
+             ng-repeat="type in aidAggregates track by $index"
+             style="padding-left: 10px; padding-right: 10px">
+            <yds-dashboard-updater
+                    type="aggregate"
+                    project-id="{{ projectId }}"
+                    dashboard-id="aidactivity"
+                    view-type="{{ type }}"
+                    aggregate-set-on-init="{{ ($index == 0) }}">
+            </yds-dashboard-updater>
+        </div>
+    </div>
+
+    <!--Visualization-->
+    <div class="row">
         <div class="col-md-12">
             <!--Dashboard Visualization-->
             <yds-dashboard-visualization
@@ -365,6 +382,21 @@
                     </yds-dashboard-updater>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!--Aggregates-->
+    <div class="row" style="margin-left: -10px; margin-right: -10px">
+        <div ng-class="tradeAggregateClass"
+             ng-repeat="type in tradeAggregates track by $index"
+             style="padding-left: 10px; padding-right: 10px">
+            <yds-dashboard-updater
+                    type="aggregate"
+                    project-id="{{ projectId }}"
+                    dashboard-id="tradeactivity"
+                    view-type="{{ type }}"
+                    aggregate-set-on-init="{{ ($index == 0) }}">
+            </yds-dashboard-updater>
         </div>
     </div>
 

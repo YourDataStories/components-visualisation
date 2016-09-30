@@ -1,88 +1,60 @@
 <div class="dashboard-visualization-container">
-    <div class="row" style="margin-left: -10px; margin-right: -10px">
-        <div ng-class="aggregateClass"
-             ng-repeat="type in aggregateTypes track by $index"
-             style="padding-left: 10px; padding-right: 10px">
-            <yds-aggregate
-                    project-id="{{ projectId }}"
-                    dashboard-id="{{ dashboardId }}"
-                    view-type="{{ type }}"
-                    set-on-init="{{ ($index == 0) }}"
-                    extra-params="apiOptions">
-            </yds-aggregate>
+    <div class="panel panel-default" ng-style="panelStyle">
+        <div class="panel-heading clearfix" ng-style="panelHeadingStyle">
+            <h3 class="panel-title pull-left" style="padding-top: 7.5px;">Details</h3>
+
+            <div class="btn-group btn-group-sm pull-right">
+                <button ng-click="selectVis('grid')" class="btn btn-default"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
+                <button ng-click="selectVis('pie')" class="btn btn-default"><i class="fa fa-pie-chart" aria-hidden="true"></i></button>
+                <button ng-click="selectVis('bar')" class="btn btn-default"><i class="fa fa-bar-chart" aria-hidden="true"></i></button>
+                <button ng-click="selectVis('tree')" class="btn btn-default"><i class="fa fa-tree" aria-hidden="true"></i></button>
+            </div>
         </div>
-    </div>
+        <div class="panel-body" ng-style="panelBodyStyle">
+            <div ng-if="selViewType.length > 0" ng-switch="selectedVis">
+                <!--Grid-->
+                <yds-dashboard-updater
+                        ng-switch-when="grid"
+                        type="simple-grid"
+                        project-id="{{ selProjectId }}"
+                        view-type="{{ selViewType }}"
+                        dashboard-id="{{ dashboardId }}"
+                        min-height="{{ elementH }}"
+                        lang="en">
+                </yds-dashboard-updater>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default" ng-style="panelStyle">
-                <div class="panel-heading clearfix" ng-style="panelHeadingStyle">
-                    <h3 class="panel-title pull-left" style="padding-top: 7.5px;">Details</h3>
+                <!--Pie-->
+                <yds-dashboard-updater
+                        ng-switch-when="pie"
+                        type="pie"
+                        project-id="{{ selProjectId }}"
+                        view-type="{{ selViewType }}"
+                        dashboard-id="{{ dashboardId }}"
+                        min-height="{{ elementH }}"
+                        lang="en">
+                </yds-dashboard-updater>
 
-                    <div class="btn-group btn-group-sm pull-right">
-                        <button ng-click="selectVis('grid')" class="btn btn-default"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
-                        <button ng-click="selectVis('pie')" class="btn btn-default"><i class="fa fa-pie-chart" aria-hidden="true"></i></button>
-                        <button ng-click="selectVis('bar')" class="btn btn-default"><i class="fa fa-bar-chart" aria-hidden="true"></i></button>
-                        <button ng-click="selectVis('tree')" class="btn btn-default"><i class="fa fa-tree" aria-hidden="true"></i></button>
-                    </div>
-                </div>
-                <div class="panel-body" ng-style="panelBodyStyle">
-                    <div ng-if="selViewType.length > 0" ng-switch="selectedVis">
-                        <!--Grid-->
-                        <yds-grid
-                                ng-switch-when="grid"
-                                project-id="{{ selProjectId }}"
-                                view-type="{{ selViewType }}"
-                                extra-params="apiOptions"
-                                add-to-basket="true"
-                                basket-btn-x="2"
-                                basket-btn-y="2"
-                                exporting="true"
-                                export-btn-x="56"
-                                export-btn-y="2"
-                                embeddable="true"
-                                embed-btn-x="30"
-                                embed-btn-y="2"
-                                element-h="{{elementH}}">
-                        </yds-grid>
+                <!--Bar-->
+                <yds-dashboard-updater
+                        ng-switch-when="bar"
+                        type="bar"
+                        project-id="{{ selProjectId }}"
+                        view-type="{{ selViewType }}"
+                        dashboard-id="{{ dashboardId }}"
+                        min-height="{{ elementH }}"
+                        lang="en">
+                </yds-dashboard-updater>
 
-                        <!--Pie-->
-                        <yds-pie
-                                ng-switch-when="pie"
-                                project-id="{{ selProjectId }}"
-                                view-type="{{ selViewType }}"
-                                extra-params="apiOptions"
-                                add-to-basket="true"
-                                embeddable="true"
-                                embed-btn-x="40"
-                                element-h="{{ elementH }}">
-                        </yds-pie>
-
-                        <!--Bar-->
-                        <yds-bar
-                                ng-switch-when="bar"
-                                project-id="{{ selProjectId }}"
-                                view-type="{{ selViewType }}"
-                                extra-params="apiOptions"
-                                add-to-basket="true"
-                                embeddable="true"
-                                embed-btn-x="40"
-                                element-h="{{ elementH }}">
-                        </yds-bar>
-
-                        <!--Treemap-->
-                        <yds-tree-map
-                                ng-switch-when="tree"
-                                project-id="{{ selProjectId }}"
-                                view-type="{{ selViewType }}"
-                                extra-params="apiOptions"
-                                add-to-basket="true"
-                                embeddable="true"
-                                embed-btn-x="40"
-                                element-h="{{ elementH }}">
-                        </yds-tree-map>
-                    </div>
-                </div>
+                <!--Treemap-->
+                <yds-dashboard-updater
+                        ng-switch-when="tree"
+                        type="tree"
+                        project-id="{{ selProjectId }}"
+                        view-type="{{ selViewType }}"
+                        dashboard-id="{{ dashboardId }}"
+                        min-height="{{ elementH }}"
+                        lang="en">
+                </yds-dashboard-updater>
             </div>
         </div>
     </div>

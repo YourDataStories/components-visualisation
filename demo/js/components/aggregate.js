@@ -93,7 +93,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                     if (!initialized) {
                         getAggregateData();
                     }
-                }, 1000);
+                });
             }
         };
     }
