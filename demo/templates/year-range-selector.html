@@ -3,7 +3,7 @@
         <h4 class="text-center">{{ title }}</h4>
     </div>
 
-    <div class="row">
+    <div class="row" ng-if="initialized">
         <rzslider
                 rz-slider-options="yearSlider.options"
                 rz-slider-model="yearSlider.minValue"

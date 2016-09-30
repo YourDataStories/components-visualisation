@@ -10,6 +10,8 @@ angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/year-range-selector.html',
             link: function (scope, element, attrs) {
+                scope.initialized = false;
+
                 var minYear = parseInt(scope.minYear);
                 var maxYear = parseInt(scope.maxYear);
                 var dashboardId = scope.dashboardId;
@@ -51,6 +53,9 @@ angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
                         onEnd: updateYearRange
                     }
                 };
+
+                // Show angular slider after options are set
+                scope.initialized = true;
             }
         };
     }
