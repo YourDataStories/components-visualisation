@@ -11,6 +11,21 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
         scope.panelTimePeriodTitle = "Choose time period of activities";
         scope.panelCategoryTitle = "Choose filter category";
 
+        // Accordion options
+        scope.oneAtATime = true;
+        scope.status = {
+            sectorOpen: true
+        };
+
+        // Style for 1st and last aggregate
+        scope.firstAggregateStyle = {
+            'padding-left': 0
+        };
+
+        scope.lastAggregateStyle = {
+            'padding-right': 0
+        };
+
         /**
          * Select a sector
          * @param newSector Sector to select
@@ -42,9 +57,17 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
                 // Select new sector
                 scope.selectedSector = newSector;
             }
+
+            scope.status.countryOpen = true;
         };
 
         // Set default selected sector
         scope.setSelectedSector("aidactivity");
+
+        // Fix for angular slider rendering wrong when inside tabs
+        // (https://github.com/angular-slider/angularjs-slider/issues/79#issuecomment-121141586)
+        scope.$watch("status.periodOpen", function() {
+            scope.$broadcast('reCalcViewDimensions');
+        });
     }
 ]);

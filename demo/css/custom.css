@@ -821,6 +821,11 @@ div.ag-root {
     color: #FFFFFF;
 }
 
+/* Zero padding class */
+.zero-padding {
+    padding: 0;
+}
+
 /* Custom green callout for Dashboard */
 .bs-callout-success {
     border-left-color: #50A150;

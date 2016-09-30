@@ -1,201 +1,203 @@
 <div class="container" ng-controller="Dashboard2Controller">
-    <!--Panel for sector selection-->
-    <div class="panel panel-default panel-sector">
-        <div class="panel-heading">
-            <h3 class="panel-title">{{ panelSectorTitle }}</h3>
-        </div>
-
-        <div class="panel-body">
-            <p>Take a closer look at:</p>
-            <button type="button" class="btn btn-lg btn-primary"
-                    ng-click="setSelectedSector('aidactivity')">
-                Aid Activities
-            </button>
-            <button type="button" class="btn btn-lg btn-warning"
-                    ng-click="setSelectedSector('tradeactivity')">
-                Trade Activities
-            </button>
-        </div>
-    </div>
-
-    <!--Panel for country selection-->
-    <div class="panel panel-default panel-country-selection">
-        <div class="panel-heading">
-            <h3 class="panel-title">{{ panelCountrySelectionTitle }}</h3>
-        </div>
-
-        <!--Aid Activity Country Selection-->
-        <div ng-if="selectedSector == 'aidactivity'" class="panel-body"
-             style="padding-left: 0; padding-right: 0; padding-bottom: 0;">
-            <div class="col-md-6">
-                <!--Heatmap of Beneficiaries-->
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Number of Aid Activities per Beneficiary Country</h3>
-                    </div>
-                    <div class="panel-body">
-                        <yds-heatmap
-                                project-id="none"
-                                view-type="aidactivity.beneficiary.countries.all"
-                                color-axis="true"
-                                color-type="logarithmic"
-                                legend="true"
-                                legend-v-align="bottom"
-                                use-year-range="true"
-                                dashboard-id="aidactivity"
-                                country-selection="true"
-                                no-border="true"
-                                exporting="false"
-                                element-h="350"></yds-heatmap>
-                    </div>
-                    <div class="panel-footer" style="padding: 3px 15px">
-                        <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <!--Heatmap of Benefactors-->
-                <div class="panel panel-default panel-benefactor">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Number of Aid Activities per Benefactor Country</h3>
-                    </div>
-                    <div class="panel-body">
-                        <yds-heatmap
-                                project-id="none"
-                                view-type="aidactivity.benefactor.countries.all"
-                                color-axis="true"
-                                color-type="logarithmic"
-                                legend="true"
-                                legend-v-align="bottom"
-                                use-year-range="true"
-                                dashboard-id="aidactivity"
-                                country-selection="true"
-                                no-border="true"
-                                exporting="false"
-                                element-h="350"></yds-heatmap>
-                    </div>
-                    <div class="panel-footer" style="padding: 3px 15px">
-                        <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!--Trade Activity Country Selection-->
-        <div ng-if="selectedSector == 'tradeactivity'" class="panel-body"
-             style="padding-left: 0; padding-right: 0; padding-bottom: 0;">
-            <div class="col-md-6">
-                <!--Heatmap of Origins-->
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Number of Trade Activities per Origin Country</h3>
-                    </div>
-                    <div class="panel-body">
-                        <yds-heatmap
-                                project-id="none"
-                                view-type="tradeactivity.hasorigin.countries.all"
-                                color-axis="true"
-                                color-type="logarithmic"
-                                legend="true"
-                                legend-v-align="bottom"
-                                use-year-range="true"
-                                dashboard-id="tradeactivity"
-                                country-selection="true"
-                                no-border="true"
-                                exporting="false"
-                                element-h="350"></yds-heatmap>
-                    </div>
-                    <div class="panel-footer" style="padding: 3px 15px">
-                        <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <!--Heatmap of Destinations-->
-                <div class="panel panel-default panel-benefactor">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Number of Trade Activities per Destination Country</h3>
-                    </div>
-                    <div class="panel-body">
-                        <yds-heatmap
-                                project-id="none"
-                                view-type="tradeactivity.hasdestination.countries.all"
-                                color-axis="true"
-                                color-type="logarithmic"
-                                legend="true"
-                                legend-v-align="bottom"
-                                use-year-range="true"
-                                dashboard-id="tradeactivity"
-                                country-selection="true"
-                                no-border="true"
-                                exporting="false"
-                                element-h="350"></yds-heatmap>
-                    </div>
-                    <div class="panel-footer" style="padding: 3px 15px">
-                        <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--Panel for time period selection-->
-    <div class="panel panel-default panel-time-period">
-        <div class="panel-heading">
-            <h3 class="panel-title">{{ panelTimePeriodTitle }}</h3>
-        </div>
-
-        <!--Aid Activity Time Period Selection-->
-        <div ng-if="selectedSector == 'aidactivity'" class="panel-body">
-            <div class="col-md-offset-3 col-md-6">
-                <yds-year-range
-                        title="Time Period for Aid Activities"
-                        dashboard-id="aidactivity"
-                        min-year="1997"
-                        max-year="2018">
-                </yds-year-range>
-            </div>
-        </div>
-
-        <!--Trade Activity Time Period Selection-->
-        <div ng-if="selectedSector == 'tradeactivity'" class="panel-body">
-            <div class="col-md-offset-3 col-md-6">
-                <yds-year-range
-                        title="Time Period for Trade Activities"
-                        dashboard-id="tradeactivity"
-                        min-year="1997"
-                        max-year="2018">
-                </yds-year-range>
-            </div>
-        </div>
-    </div>
-
-    <!--Aggregates-->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default panel-category">
+    <uib-accordion close-others="oneAtATime">
+        <!--Panel for sector selection-->
+        <div uib-accordion-group class="panel panel-default panel-sector" is-open="status.sectorOpen">
+            <uib-accordion-heading>
                 <div class="panel-heading">
-                    <h3 class="panel-title">{{ panelCategoryTitle }}</h3>
+                    <h3 class="panel-title">{{ panelSectorTitle }}</h3>
                 </div>
-                <div class="panel-body" style="padding-bottom: 0; padding-left: 5px; padding-right: 5px">
-                    <div ng-class="aggregateClass"
-                         ng-repeat="type in aggregates track by $index"
-                         style="padding-left: 10px; padding-right: 10px">
-                        <yds-dashboard-updater
-                                type="aggregate"
-                                project-id="{{ projectId }}"
-                                dashboard-id="{{ selectedSector }}"
-                                view-type="{{ type }}"
-                                aggregate-icon-size="3"
-                                aggregate-set-on-init="{{ ($index == 0) }}">
-                        </yds-dashboard-updater>
+            </uib-accordion-heading>
+
+            <div class="panel-body zero-padding">
+                <p>Take a closer look at:</p>
+                <button type="button" class="btn btn-lg btn-primary"
+                        ng-click="setSelectedSector('aidactivity')">
+                    Aid Activities
+                </button>
+                <button type="button" class="btn btn-lg btn-warning"
+                        ng-click="setSelectedSector('tradeactivity')">
+                    Trade Activities
+                </button>
+            </div>
+        </div>
+
+        <!--Panel for country selection-->
+        <div uib-accordion-group class="panel panel-default panel-country-selection" is-open="status.countryOpen">
+            <uib-accordion-heading>
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ panelCountrySelectionTitle }}</h3>
+                </div>
+            </uib-accordion-heading>
+
+            <!--Aid Activity Country Selection-->
+            <div ng-if="selectedSector == 'aidactivity' && status.countryOpen" class="panel-body zero-padding"
+                 style="padding-left: 0; padding-right: 0; padding-bottom: 0;">
+                <div class="col-md-6">
+                    <!--Heatmap of Beneficiaries-->
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Number of Aid Activities per Beneficiary Country</h3>
+                        </div>
+                        <div class="panel-body">
+                            <yds-heatmap
+                                    project-id="none"
+                                    view-type="aidactivity.beneficiary.countries.all"
+                                    color-axis="true"
+                                    color-type="logarithmic"
+                                    legend="true"
+                                    legend-v-align="bottom"
+                                    use-year-range="true"
+                                    dashboard-id="aidactivity"
+                                    country-selection="true"
+                                    no-border="true"
+                                    exporting="false"
+                                    element-h="350"></yds-heatmap>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <!--Heatmap of Benefactors-->
+                    <div class="panel panel-default panel-benefactor">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Number of Aid Activities per Benefactor Country</h3>
+                        </div>
+                        <div class="panel-body">
+                            <yds-heatmap
+                                    project-id="none"
+                                    view-type="aidactivity.benefactor.countries.all"
+                                    color-axis="true"
+                                    color-type="logarithmic"
+                                    legend="true"
+                                    legend-v-align="bottom"
+                                    use-year-range="true"
+                                    dashboard-id="aidactivity"
+                                    country-selection="true"
+                                    no-border="true"
+                                    exporting="false"
+                                    element-h="350"></yds-heatmap>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!--Trade Activity Country Selection-->
+            <div ng-if="selectedSector == 'tradeactivity' && status.countryOpen" class="panel-body zero-padding"
+                 style="padding-left: 0; padding-right: 0; padding-bottom: 0;">
+                <div class="col-md-6">
+                    <!--Heatmap of Origins-->
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Number of Trade Activities per Origin Country</h3>
+                        </div>
+                        <div class="panel-body">
+                            <yds-heatmap
+                                    project-id="none"
+                                    view-type="tradeactivity.hasorigin.countries.all"
+                                    color-axis="true"
+                                    color-type="logarithmic"
+                                    legend="true"
+                                    legend-v-align="bottom"
+                                    use-year-range="true"
+                                    dashboard-id="tradeactivity"
+                                    country-selection="true"
+                                    no-border="true"
+                                    exporting="false"
+                                    element-h="350"></yds-heatmap>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <!--Heatmap of Destinations-->
+                    <div class="panel panel-default panel-benefactor">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Number of Trade Activities per Destination Country</h3>
+                        </div>
+                        <div class="panel-body">
+                            <yds-heatmap
+                                    project-id="none"
+                                    view-type="tradeactivity.hasdestination.countries.all"
+                                    color-axis="true"
+                                    color-type="logarithmic"
+                                    legend="true"
+                                    legend-v-align="bottom"
+                                    use-year-range="true"
+                                    dashboard-id="tradeactivity"
+                                    country-selection="true"
+                                    no-border="true"
+                                    exporting="false"
+                                    element-h="350"></yds-heatmap>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-footer" style="padding: 3px 15px">
+                <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
+            </div>
         </div>
-    </div>
+
+        <!--Panel for time period selection-->
+        <div uib-accordion-group class="panel panel-default panel-time-period" is-open="status.periodOpen">
+            <uib-accordion-heading>
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ panelTimePeriodTitle }}</h3>
+                </div>
+            </uib-accordion-heading>
+
+            <!--Aid Activity Time Period Selection-->
+            <div ng-if="selectedSector == 'aidactivity'" class="panel-body zero-padding">
+                <div class="col-md-offset-3 col-md-6">
+                    <yds-year-range
+                            title="Time Period for Aid Activities"
+                            dashboard-id="aidactivity"
+                            min-year="1997"
+                            max-year="2018">
+                    </yds-year-range>
+                </div>
+            </div>
+
+            <!--Trade Activity Time Period Selection-->
+            <div ng-if="selectedSector == 'tradeactivity'" class="panel-body zero-padding">
+                <div class="col-md-offset-3 col-md-6">
+                    <yds-year-range
+                            title="Time Period for Trade Activities"
+                            dashboard-id="tradeactivity"
+                            min-year="1997"
+                            max-year="2018">
+                    </yds-year-range>
+                </div>
+            </div>
+        </div>
+
+        <!--Aggregates-->
+        <div uib-accordion-group class="panel panel-default panel-category" is-open="status.aggregatesOpen">
+            <uib-accordion-heading>
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left">{{ panelCategoryTitle }}</h3>
+                    <i class="pull-right glyphicon"ng-class="{'glyphicon-chevron-down': status.aggregatesOpen, 'glyphicon-chevron-right': !status.aggregatesOpen}"></i>
+                </div>
+            </uib-accordion-heading>
+
+            <div class="panel-body zero-padding"
+                 ng-if="status.aggregatesOpen">
+                <div ng-class="aggregateClass"
+                     ng-repeat="type in aggregates track by $index"
+                     style="padding-left: 10px; padding-right: 10px"
+                     ng-style="{{ ($first) ? firstAggregateStyle : (($last) ? lastAggregateStyle : {}) }}">
+                    <yds-dashboard-updater
+                            type="aggregate"
+                            project-id="{{ projectId }}"
+                            dashboard-id="{{ selectedSector }}"
+                            view-type="{{ type }}"
+                            aggregate-icon-size="3"
+                            aggregate-set-on-init="{{ ($index == 0) }}">
+                    </yds-dashboard-updater>
+                </div>
+            </div>
+        </div>
+    </uib-accordion>
 
     <!--Selected filters-->
     <div class="row">
