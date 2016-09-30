@@ -3,8 +3,9 @@
         <!--Panel for sector selection-->
         <div uib-accordion-group class="panel panel-default panel-sector" is-open="status.sectorOpen">
             <uib-accordion-heading>
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{ panelSectorTitle }}</h3>
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left">{{ panelSectorTitle }}</h3>
+                    <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.sectorOpen, 'glyphicon-chevron-right': !status.sectorOpen}"></i>
                 </div>
             </uib-accordion-heading>
 
@@ -24,8 +25,9 @@
         <!--Panel for country selection-->
         <div uib-accordion-group class="panel panel-default panel-country-selection" is-open="status.countryOpen">
             <uib-accordion-heading>
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{ panelCountrySelectionTitle }}</h3>
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left">{{ panelCountrySelectionTitle }}</h3>
+                    <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.countryOpen, 'glyphicon-chevron-right': !status.countryOpen}"></i>
                 </div>
             </uib-accordion-heading>
 
@@ -141,8 +143,9 @@
         <!--Panel for time period selection-->
         <div uib-accordion-group class="panel panel-default panel-time-period" is-open="status.periodOpen">
             <uib-accordion-heading>
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{ panelTimePeriodTitle }}</h3>
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left">{{ panelTimePeriodTitle }}</h3>
+                    <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.periodOpen, 'glyphicon-chevron-right': !status.periodOpen}"></i>
                 </div>
             </uib-accordion-heading>
 
@@ -176,7 +179,7 @@
             <uib-accordion-heading>
                 <div class="panel-heading clearfix">
                     <h3 class="panel-title pull-left">{{ panelCategoryTitle }}</h3>
-                    <i class="pull-right glyphicon"ng-class="{'glyphicon-chevron-down': status.aggregatesOpen, 'glyphicon-chevron-right': !status.aggregatesOpen}"></i>
+                    <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.aggregatesOpen, 'glyphicon-chevron-right': !status.aggregatesOpen}"></i>
                 </div>
             </uib-accordion-heading>
 
