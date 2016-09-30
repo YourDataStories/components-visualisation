@@ -173,17 +173,27 @@
     </div>
 
     <!--Aggregates-->
-    <div class="row" style="margin-left: -10px; margin-right: -10px">
-        <div ng-class="aggregateClass"
-             ng-repeat="type in aggregates track by $index"
-             style="padding-left: 10px; padding-right: 10px">
-            <yds-dashboard-updater
-                    type="aggregate"
-                    project-id="{{ projectId }}"
-                    dashboard-id="{{ selectedSector }}"
-                    view-type="{{ type }}"
-                    aggregate-set-on-init="{{ ($index == 0) }}">
-            </yds-dashboard-updater>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default panel-category">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ panelCategoryTitle }}</h3>
+                </div>
+                <div class="panel-body" style="padding-bottom: 0; padding-left: 5px; padding-right: 5px">
+                    <div ng-class="aggregateClass"
+                         ng-repeat="type in aggregates track by $index"
+                         style="padding-left: 10px; padding-right: 10px">
+                        <yds-dashboard-updater
+                                type="aggregate"
+                                project-id="{{ projectId }}"
+                                dashboard-id="{{ selectedSector }}"
+                                view-type="{{ type }}"
+                                aggregate-icon-size="3"
+                                aggregate-set-on-init="{{ ($index == 0) }}">
+                        </yds-dashboard-updater>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -239,19 +249,4 @@
             </yds-dashboard-visualization>
         </div>
     </div>
-
-    <!--&lt;!&ndash;Panel for category selection&ndash;&gt;-->
-    <!--<div class="panel panel-default panel-category">-->
-        <!--<div class="panel-heading">-->
-            <!--<h3 class="panel-title">{{ panelCategoryTitle }}</h3>-->
-        <!--</div>-->
-
-        <!--&lt;!&ndash;Aid Activity Category Selection&ndash;&gt;-->
-        <!--<div ng-if="selectedSector == 'aidactivity'" class="panel-body">-->
-        <!--</div>-->
-
-        <!--&lt;!&ndash;Trade Activity Category Selection&ndash;&gt;-->
-        <!--<div ng-if="selectedSector == 'tradeactivity'" class="panel-body">-->
-        <!--</div>-->
-    <!--</div>-->
 </div>

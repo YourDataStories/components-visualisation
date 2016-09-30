@@ -9,6 +9,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 dashboardId: '@',           // ID used for getting selected year range from DashboardService
                 minHeight: '@',             // Minimum height of this component's container
                 aggregateSetOnInit: '@',    // If the component shown is an aggregate, this indicates if it's the first
+                aggregateIconSize: '@',     // Aggregate icon size (used only if component shown is aggregate)
                 lang: '@'                   // Language of component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/dashboard-updater.html',
