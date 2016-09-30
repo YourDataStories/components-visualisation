@@ -19,9 +19,13 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', 'DashboardSe
          * @param newSector Sector to select
          */
         scope.setSelectedSector = function(newSector) {
-            // Clear selected countries
-            DashboardService.clearCountries(scope.selectedSector);
-            DashboardService.clearCountries(newSector);
+            // Get country types for previously selected sector
+            var map = DashboardService.getApiOptionsMapping(scope.selectedSector);
+
+            // For country type of previous sector, clear its selected countries
+            _.each(map, function(countryType) {
+                DashboardService.clearCountries(countryType);
+            });
 
             // Select new sector
             scope.selectedSector = newSector;
