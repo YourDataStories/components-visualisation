@@ -8,6 +8,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 dashboardId: '@',   // ID used for getting selected year range from DashboardService
                 lang: '@',          // Language
                 iconSize: '@',      // Icon size for FontAwesome icon (2-5)
+                disableButton: '@', // If true, the aggregate will not show button to "View details"
                 setOnInit: '@',     // If true, will set this aggregate's view type in DashboardService on init
                 extraParams: '='    // Extra parameters to send
             },
