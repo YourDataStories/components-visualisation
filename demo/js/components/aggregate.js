@@ -53,23 +53,25 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                         scope.value = response.data.value;
 
                         // Get icon class
-                        scope.iconClass = _.first(response.view).icon + " fa-" + iconSize + "x";
+                        if (!_.isEmpty(response.view)) {
+                            scope.iconClass = _.first(response.view).icon + " fa-" + iconSize + "x";
 
-                        // Get color and create panel and panel heading styles
-                        var color = _.first(response.view).color;
+                            // Get color and create panel and panel heading styles
+                            var color = _.first(response.view).color;
 
-                        scope.panelStyle = {
-                            "border-color": color
-                        };
+                            scope.panelStyle = {
+                                "border-color": color
+                            };
 
-                        scope.panelHeadingStyle = {
-                            "background-color": color,
-                            "border-color": color,
-                            "color": "#FFFFFF"
-                        };
+                            scope.panelHeadingStyle = {
+                                "background-color": color,
+                                "border-color": color,
+                                "color": "#FFFFFF"
+                            };
 
-                        if (setOnInit == "true" && !initialized && _.isEmpty(DashboardService.getViewType(dashboardId))) {
-                            scope.setViewType();
+                            if (setOnInit == "true" && !initialized && _.isEmpty(DashboardService.getViewType(dashboardId))) {
+                                scope.setViewType();
+                            }
                         }
 
                         initialized = true;
