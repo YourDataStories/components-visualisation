@@ -85,14 +85,10 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
 
                                 switch(scope.layout) {
                                     case "title":
-                                        scope.showDetailsButton = false;
                                         break;
                                     case "description":
-                                        scope.showDetailsButton = false;
                                         break;
                                     case "date":
-                                        scope.showDetailsButton = false;
-                                        scope.iconClass = "fa-calendar fa-" + iconSize + "x";
                                         scope.label = $sce.trustAsHtml("Date");
                                         break;
                                 }
