@@ -1,27 +1,49 @@
-<div class="panel panel-default" ng-style="panelStyle">
-    <div    ng-click="setViewType()"
-            class="panel-heading clearfix"
-            ng-style="panelHeadingStyle">
-        <div class="row">
-            <!--FontAwesome icon-->
-            <div class="col-xs-3">
-                <i class="fa" ng-class="iconClass" aria-hidden="true"></i>
-            </div>
+<div ng-switch="layout" class="aggregate-container">
+    <!--Description layout-->
+    <div ng-switch-when="description"
+            class="well" ng-style="panelHeadingStyle">
+        <p class="text-justify">{{ value }}</p>
+        <h5 class="aggregate-label" ng-bind-html="label"></h5>
+    </div>
 
-            <!--Value and label-->
-            <div class="col-xs-9" style="text-align: right">
+    <!--Title layout-->
+    <div ng-switch-when="title" class="panel panel-default" ng-style="panelStyle">
+        <div    class="panel-heading clearfix"
+                ng-style="panelHeadingStyle">
+            <div class="col-md-12" style="text-align: left">
                 <h4 class="aggregate-value">{{ value }}</h4>
                 <h5 class="aggregate-label" ng-bind-html="label"></h5>
             </div>
         </div>
     </div>
-    <div ng-if="disableButton != 'true'" class="list-group">
-        <!--View details "button"-->
-        <a ng-click="setViewType()"
-           class="list-group-item"
-           style="display: flex; align-items: center; padding-left: 0">
-            <span class="col-md-10">View details</span>
-            <i class="fa fa-arrow-circle-right col-md-offset-1 col-md-1" aria-hidden="true"></i>
-        </a>
+
+    <!--Default layout-->
+    <div ng-switch-default class="panel panel-default" ng-style="panelStyle">
+        <div
+                ng-click="setViewType()"
+                class="panel-heading clearfix"
+                ng-style="panelHeadingStyle">
+            <div class="row">
+                <!--FontAwesome icon-->
+                <div class="col-xs-3">
+                    <i class="fa" ng-class="iconClass" aria-hidden="true"></i>
+                </div>
+
+                <!--Value and label-->
+                <div class="col-xs-9" style="text-align: right">
+                    <h4 class="aggregate-value">{{ value }}</h4>
+                    <h5 class="aggregate-label" ng-bind-html="label"></h5>
+                </div>
+            </div>
+        </div>
+        <div ng-if="showDisableButton" class="list-group">
+            <!--View details "button"-->
+            <a ng-click="setViewType()"
+               class="list-group-item"
+               style="display: flex; align-items: center; padding-left: 0">
+                <span class="col-md-10">View details</span>
+                <i class="fa fa-arrow-circle-right col-md-offset-1 col-md-1" aria-hidden="true"></i>
+            </a>
+        </div>
     </div>
 </div>

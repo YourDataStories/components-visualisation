@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$sce', '$timeout',
-    function(Data, DashboardService, $sce, $timeout) {
+angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$sce',
+    function(Data, DashboardService, $sce) {
         return {
             restrict: 'E',
             scope: {
@@ -8,7 +8,6 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 dashboardId: '@',   // ID used for getting selected year range from DashboardService
                 lang: '@',          // Language
                 iconSize: '@',      // Icon size for FontAwesome icon (2-5)
-                disableButton: '@', // If true, the aggregate will not show button to "View details"
                 setOnInit: '@',     // If true, will set this aggregate's view type in DashboardService on init
                 extraParams: '='    // Extra parameters to send
             },
@@ -22,6 +21,8 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 var iconSize = scope.iconSize;
 
                 var initialized = false;
+
+                scope.showDisableButton = false;
 
                 // If project attribute is undefined, set default value
                 if (_.isUndefined(projectId) || projectId.trim() == "")
@@ -49,26 +50,51 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 var getAggregateData = function() {
                     // Get data for aggregate from API to set variables
                     Data.getAggregate(projectId, viewType, lang, scope.extraParams).then(function(response) {
+                        // Get view
+                        var view = _.first(response.view);
+
                         // Get value and label
                         scope.label = $sce.trustAsHtml(response.data.label);
                         scope.value = response.data.value;
 
-                        // Get icon class
                         if (!_.isEmpty(response.view)) {
-                            scope.iconClass = _.first(response.view).icon + " fa-" + iconSize + "x";
+                            // If view has icon, set the icon class
+                            if (_.has(view, "icon")) {
+                                scope.iconClass = view.icon + " fa-" + iconSize + "x";
+                            }
 
-                            // Get color and create panel and panel heading styles
-                            var color = _.first(response.view).color;
+                            // If view has a color, set the aggregate's color to that
+                            if (_.has(view, "color")) {
+                                // Get color and create panel and panel heading styles
+                                var color = view.color;
 
-                            scope.panelStyle = {
-                                "border-color": color
-                            };
+                                scope.panelStyle = {
+                                    "border-color": color
+                                };
 
-                            scope.panelHeadingStyle = {
-                                "background-color": color,
-                                "border-color": color,
-                                "color": "#FFFFFF"
-                            };
+                                scope.panelHeadingStyle = {
+                                    "background-color": color,
+                                    "border-color": color,
+                                    "color": "#FFFFFF"
+                                };
+                            }
+
+                            // Check if view has layout and set appropriate options
+                            if (_.has(view, "layout") || view.layout == "default") {
+                                scope.layout = view.layout;
+
+                                switch(scope.layout) {
+                                    case "title":
+                                        scope.showDisableButton = false;
+                                        break;
+                                    case "description":
+                                        scope.showDisableButton = false;
+                                        break;
+                                }
+                            } else {
+                                scope.layout = "default";
+                                scope.showDisableButton = true;
+                            }
 
                             if (setOnInit == "true" && !initialized && _.isEmpty(DashboardService.getViewType(dashboardId))) {
                                 scope.setViewType();
@@ -98,11 +124,9 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 });
 
                 // Create aggregate for the first time
-                $timeout(function() {
-                    if (!initialized) {
-                        getAggregateData();
-                    }
-                });
+                if (!initialized) {
+                    getAggregateData();
+                }
             }
         };
     }
