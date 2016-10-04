@@ -22,7 +22,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
 
                 var initialized = false;
 
-                scope.showDisableButton = false;
+                scope.showDetailsButton = false;
 
                 // If project attribute is undefined, set default value
                 if (_.isUndefined(projectId) || projectId.trim() == "")
@@ -85,15 +85,21 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
 
                                 switch(scope.layout) {
                                     case "title":
-                                        scope.showDisableButton = false;
+                                        scope.showDetailsButton = false;
                                         break;
                                     case "description":
-                                        scope.showDisableButton = false;
+                                        scope.showDetailsButton = false;
+                                        break;
+                                    case "date":
+                                        scope.showDetailsButton = false;
+                                        scope.iconClass = "fa-calendar fa-" + iconSize + "x";
+                                        scope.label = $sce.trustAsHtml("Date");
                                         break;
                                 }
                             } else {
+                                // Set default layout options
                                 scope.layout = "default";
-                                scope.showDisableButton = true;
+                                scope.showDetailsButton = true;
                             }
 
                             if (setOnInit == "true" && !initialized && _.isEmpty(DashboardService.getViewType(dashboardId))) {
