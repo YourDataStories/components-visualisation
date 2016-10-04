@@ -89,7 +89,6 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                                     case "description":
                                         break;
                                     case "date":
-                                        scope.label = $sce.trustAsHtml("Date");
                                         break;
                                 }
                             } else {
