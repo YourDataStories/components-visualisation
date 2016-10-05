@@ -55,7 +55,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
 
                         // Get value and label
                         scope.label = $sce.trustAsHtml(response.data.label);
-                        scope.value = response.data.value;
+                        scope.value = $sce.trustAsHtml(String(response.data.value));
 
                         if (!_.isEmpty(response.view)) {
                             // If view has icon, set the icon class
