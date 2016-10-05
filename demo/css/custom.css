@@ -942,4 +942,6 @@ div.ag-root {
     position: absolute;
 }
 
-
+.plain-layout-label {
+    font-weight: bold;
+}
