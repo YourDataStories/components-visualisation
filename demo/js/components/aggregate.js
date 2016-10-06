@@ -9,6 +9,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 lang: '@',          // Language
                 iconSize: '@',      // Icon size for FontAwesome icon (2-5)
                 setOnInit: '@',     // If true, will set this aggregate's view type in DashboardService on init
+                elementH: '@',      // Minimum height of Aggregate
                 extraParams: '='    // Extra parameters to send
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + 'templates/aggregate.html',
@@ -18,6 +19,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 var dashboardId = scope.dashboardId;
                 var lang = scope.lang;
                 var setOnInit = scope.setOnInit;
+                var elementH = parseInt(scope.elementH);
                 var iconSize = scope.iconSize;
 
                 var initialized = false;
@@ -46,6 +48,10 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 // If iconSize is undefined, set default value
                 if (_.isUndefined(iconSize) || iconSize.trim() == "")
                     iconSize = "4";
+
+                // If elementH is undefined, set default value
+                if (_.isUndefined(elementH) || _.isNaN(elementH))
+                    elementH = 140;
 
                 var getAggregateData = function() {
                     // Get data for aggregate from API to set variables
@@ -80,22 +86,28 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                             }
 
                             // Check if view has layout and set appropriate options
-                            if (_.has(view, "layout") || view.layout == "default") {
+                            if (_.has(view, "layout") && view.layout != "default") {
                                 scope.layout = view.layout;
-
-                                switch(scope.layout) {
-                                    case "title":
-                                        break;
-                                    case "description":
-                                        break;
-                                    case "date":
-                                        break;
-                                }
                             } else {
                                 // Set default layout options
                                 scope.layout = "default";
                                 scope.showDetailsButton = true;
                             }
+
+                            // If showDetailsButton is shown, subtract the button's height from the elementH
+                            if (scope.showDetailsButton) {
+                                elementH -= 40;
+                            }
+
+                            // If view didn't have a color so style is undefined, initialize it as empty object
+                            if (_.isUndefined(scope.panelHeadingStyle)) {
+                                scope.panelHeadingStyle = {};
+                            }
+
+                            // Add height to the panel heading style
+                            scope.panelHeadingStyle = _.extend(scope.panelHeadingStyle, {
+                                "min-height": elementH + "px"
+                            });
 
                             if (setOnInit == "true" && !initialized && _.isEmpty(DashboardService.getViewType(dashboardId))) {
                                 scope.setViewType();

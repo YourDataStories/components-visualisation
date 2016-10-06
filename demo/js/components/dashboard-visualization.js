@@ -68,7 +68,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                     if (!_.isUndefined(viewType) && !_.isEqual(prevViewType, viewType.type)) {
                         scope.selViewType = viewType.type;
                         scope.panelStyle = viewType.panelStyle;
-                        scope.panelHeadingStyle = viewType.panelHeadingStyle;
+                        scope.panelHeadingStyle = _.omit(viewType.panelHeadingStyle, "min-height");
 
                         updateVis = true;
                     }
