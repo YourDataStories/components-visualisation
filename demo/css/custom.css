@@ -942,6 +942,6 @@ div.ag-root {
     position: absolute;
 }
 
-.plain-layout-label {
+.plain-layout-label, .info-table-title {
     font-weight: bold;
 }

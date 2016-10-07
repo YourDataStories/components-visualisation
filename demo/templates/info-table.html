@@ -5,13 +5,9 @@
         {{ydsAlert}}
     </div>
     <table class="table table-striped">
-        <thead>
-            <th>Title</th>
-            <th>Value</th>
-        </thead>
         <tbody>
             <tr ng-repeat="(key, infoObj) in info">
-                <td>{{ key }}</td>
+                <td class="info-table-title">{{ key }}</td>
 
                 <!--Long string-->
                 <td ng-if="infoObj.type=='string-i18n-long'"
@@ -21,7 +17,7 @@
                     {{infoObj.value}}
                 </td>
 
-                <!--URL or country array                -->
+                <!--URL or country array-->
                 <td ng-if="infoObj.type=='url' || infoObj.type=='country_code_name_array'" ng-bind-html="infoObj.value"></td>
 
                 <!--Default-->
