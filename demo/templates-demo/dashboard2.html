@@ -1,4 +1,30 @@
 <div class="container" ng-controller="Dashboard2Controller">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Official Development Assistance (ODA)</h2>
+        </div>
+
+        <div class="col-md-12">
+            <p class="text-justify">This dashboard allows you to explore data related to official development assistance
+                (ODA) provided by donor countries (such as the Netherlands) to developing countries all over the world
+                (such as Zimbabwe).</p>
+        </div>
+
+        <div class="col-md-8">
+            <p>You can start by either using the keyword search</p>
+            <div class="col-md-12" style="padding-left: 0">
+                <div class="col-md-7"  style="padding-left: 0">
+                    <yds-search standalone="true"></yds-search>
+                </div>
+            </div>
+            <p style="padding-top: 40px">Or start by choosing to dig into the data on aid- or trade-activity directly:</p>
+        </div>
+        <div class="col-md-4">
+            <button uib-popover="Popover text" popover-title="Popover title" type="button" class="btn btn-info pull-right">
+                <span class="glyphicon glyphicon-info-sign"></span> Learn how this search engine works</button>
+        </div>
+    </div>
+
     <uib-accordion close-others="oneAtATime">
         <!--Panel for sector selection-->
         <div uib-accordion-group class="panel panel-default panel-sector" is-open="status.sectorOpen">
@@ -281,7 +307,7 @@
                                 template-url="templates/tabset-panel-success.html">
                         <uib-tab heading="View Data" index="0">
                             <p class="text-justify">The following table shows all Aid Activities for the selected
-                                benefactor and beneficiary countries, that span the selected time period. You can obtain
+                                benefactor and beneficiary countries that span the selected time period. You can obtain
                                 the same results through search: an example is provided on the
                                 <!--Because of extra scopes created by uib-tab we need
                                 to access the aaTab variable like this-->
@@ -301,7 +327,7 @@
                         <uib-tab heading="Search Data" index="1">
                             <p class="text-justify">The following example shows how a detailed search can be performed
                                 in the YourDataStories platform, through the “Advanced Search”. The advanced search
-                                allows to graphically create rules, that filter specific properties. Auto-completion is
+                                allows you to graphically create rules that filter specific properties. Auto-completion is
                                 also supported!</p>
 
                             <div class="bs-callout bs-callout-success" style="margin-top: 0">
@@ -384,7 +410,7 @@
                                 template-url="templates/tabset-panel-success.html">
                         <uib-tab heading="View Data" index="0">
                             <p class="text-justify">The following table shows all Trade Activities for the selected
-                                origin and destination countries, that span the selected time period. You can obtain
+                                origin and destination countries that span the selected time period. You can obtain
                                 the same results through search: an example is provided on the
                                 <!--Because of extra scopes created by uib-tab we need
                                 to access the taTab variable like this-->
@@ -404,7 +430,7 @@
                         <uib-tab heading="Search Data" index="1">
                             <p class="text-justify">The following example shows how a detailed search can be performed
                                 in the YourDataStories platform, through the “Advanced Search”. The advanced search
-                                allows to graphically create rules, that filter specific properties. Auto-completion is
+                                allows you to graphically create rules that filter specific properties. Auto-completion is
                                 also supported!</p>
 
                             <div class="bs-callout bs-callout-success" style="margin-top: 0">

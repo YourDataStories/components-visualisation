@@ -779,45 +779,45 @@ div.ag-root {
 
 /* Custom sector selection panel color */
 .panel-sector{
-    border-color: #3B70AF;
+    border-color: #003b46;
 }
 
 .panel-sector > .panel-heading {
-    background-color: #3B70AF;
-    border-color: #3B70AF;
+    background-color: #003b46;
+    border-color: #003b46;
     color: #FFFFFF;
 }
 
 /* Custom country selection panel color */
 .panel-country-selection {
-    border-color: #31AF8C;
+    border-color: #07575b;
 }
 
 .panel-country-selection > .panel-heading {
-    background-color: #31AF8C;
-    border-color: #31AF8C;
+    background-color: #07575b;
+    border-color: #07575b;
     color: #FFFFFF;
 }
 
 /* Custom time selection panel color */
 .panel-time-period {
-    border-color: #FF8A47;
+    border-color: #518a91;
 }
 
 .panel-time-period > .panel-heading {
-    background-color: #FF8A47;
-    border-color: #FF8A47;
+    background-color: #518a91;
+    border-color: #518a91;
     color: #FFFFFF;
 }
 
 /* Custom category selection panel color */
 .panel-category {
-    border-color: #FFB847;
+    border-color: #67aab2;
 }
 
 .panel-category > .panel-heading {
-    background-color: #FFB847;
-    border-color: #FFB847;
+    background-color: #67aab2;
+    border-color: #67aab2;
     color: #FFFFFF;
 }
 
