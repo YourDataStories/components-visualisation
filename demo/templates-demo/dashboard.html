@@ -3,17 +3,19 @@
     <div class="row">
         <!--Dashboard title and description-->
         <div class="col-md-9">
-            <h2>Official Development Assistance</h2>
+            <h2>Official Development Assistance (ODA)</h2>
 
-            <p class="text-justify">This dashboard presents aspects of the data available regarding the official
-                development assistance (ODA) provided by a set of benefactor countries (such as the Netherlands) to
-                various beneficiary countries all over the world.</p>
+            <p class="text-justify">This dashboard allows you to explore data related to official development assistance
+                (ODA) provided by donor countries (such as the Netherlands) to developing countries all over the world
+                (such as Zimbabwe).</p>
 
             <div class="bs-callout bs-callout-success">
-                <h4>The advantage of YourDataStories</h4>
-                <p class="text-justify">YourDataStories aggregates data from various datasets, into a common “semantic
-                    graph” in RDF. This enables users to browse, search, and visualise the aggregated data as curated by
-                    YourDataStories, instead of the original, discrete datasets.</p>
+                <h4>Why use YourDataStories?</h4>
+                <p class="text-justify">YourDataStories aggregates data from various separate datasets into a common
+                    “semantic graph” in RDF. In plain English: YourDataStories connects information from different
+                    sources in one place. It enables users to access such data easily and to discover relations between
+                    data. In such a way, users can browse, search, visualize, and make sense of the aggregated data,
+                    rather than chase the original, discrete datasets which may only be accessible to experts.</p>
             </div>
         </div>
 
@@ -38,20 +40,26 @@
         <div class="col-md-12">
             <h3 style="color: #3C75B7; margin-top: 0">YourDataStories: Modelling ODA data</h3>
 
-            <p class="text-justify">YourDataStories models ODA activities with the concept “<a href="http://vowl.visualdataweb.org/webvowl/#iri=http://platform.yourdatastories.eu/api/json-ld/model/owl/AidActivity.owl" target="_blank">Aid Activity</a>”, whose main
-                properties include the benefactor/beneficiary countries, the duration of the activity, the involved
-                organisations, the assistance sector, and a set of related transactions (modelled by concepts “<a href="http://vowl.visualdataweb.org/webvowl/#iri=http://platform.yourdatastories.eu/api/json-ld/model/owl/DisbursedItem.owl" target="_blank">Disbursed
-                Item</a>”, “<a href="http://vowl.visualdataweb.org/webvowl/#iri=http://platform.yourdatastories.eu/api/json-ld/model/owl/CommittedItem.owl" target="_blank">Committed Item</a>”, “<a href="http://vowl.visualdataweb.org/webvowl/#iri=http://platform.yourdatastories.eu/api/json-ld/model/owl/Transaction.owl" target="_blank">Transaction</a>”).</p>
+            <p class="text-justify">YourDataStories looks at ODA broken down into individual “<a href="http://vowl.visualdataweb.org/webvowl/#iri=http://platform.yourdatastories.eu/api/json-ld/model/owl/AidActivity.owl" target="_blank">Aid Activities</a>”. An Aid Activity has</p>
+            <ul>
+                <li>one or more benefactor and beneficiary countries</li>
+                <li>a duration or date range</li>
+                <li>organisations involved in its implementation</li>
+                <li>a thematic sector (e.g., humanitarian assistance, disaster relief, water supply), and</li>
+                <li>a set of financial transactions (such as “<a href="http://vowl.visualdataweb.org/webvowl/#iri=http://platform.yourdatastories.eu/api/json-ld/model/owl/DisbursedItem.owl" target="_blank">Disbursement</a>”
+                    a.k.a. actual payment, or “<a href="http://vowl.visualdataweb.org/webvowl/#iri=http://platform.yourdatastories.eu/api/json-ld/model/owl/CommittedItem.owl" target="_blank">Commitment</a>”
+                    a.k.a. planned payment).</li>
+            </ul>
 
             <h3 style="color: #3C75B7">A quick overview of the ODA data</h3>
 
-            <p class="text-justify">The following two maps show all beneficiary and benefactor countries contained in
-                the data, coloured according to the number of Aid Activities they have been involved in. Both maps are
-                interactive, allowing the selection of any number of beneficiary/benefactor countries.</p>
+            <p class="text-justify">The following two maps show all beneficiary (recipient) and benefactor (donor)
+                countries available in the data, coloured according to the number of Aid Activities they have been
+                involved in. Both maps are interactive, allowing the selection of any number and combination of
+                beneficiary/benefactor countries.</p>
 
-            <p class="text-justify">Below the maps, the time period of all Aid Activities available in the data is
-                displayed, which is also interactive, and can be adjusted to any sub-range of the available time period
-                (limiting the displayed information to the Aid Activities within the selected period).</p>
+            <p class="text-justify">Below the maps, a slider allows the selection of any time period within
+                the available data.</p>
         </div>
     </div>
 
@@ -125,7 +133,7 @@
     </div>
 
     <!--Dashboard Info box-->
-    <div class="row" style="padding-top: 20px; padding-bottom: 10px;">
+    <div class="row" style="padding-top: 20px">
         <div class="col-md-12">
             <div class="panel panel-info">
                 <div class="panel-heading">
@@ -148,9 +156,11 @@
     <!--Aggregates Explanation-->
     <div class="row">
         <div class="col-md-12">
-            <p class="text-justify">Finally, there is a set of “info boxes”, showing various aspects of the ODA data.
-                Clicking on “View Details” of each “info box”, some predefined visualisations are displayed in the
-                details section.</p>
+            <p class="text-justify">Finally, there is a set of “info boxes” that allow you to filter for various aspects
+                of the ODA data. Clicking on each “info box” shows predefined visualisations. Using the icons in the
+                upper right corner of the visualisation, you can toggle between various types of infographics. The icons
+                in the upper left corner allow you to generate an embed code to use the visualisation on another
+                website, and to add it to your personal data collection (“basket”).</p>
         </div>
     </div>
 
@@ -201,7 +211,7 @@
                             template-url="templates/tabset-panel-success.html">
                         <uib-tab heading="View Data" index="0">
                             <p class="text-justify">The following table shows all Aid Activities for the selected
-                                benefactor and beneficiary countries, that span the selected time period. You can obtain
+                                benefactor and beneficiary countries that span the selected time period. You can obtain
                                 the same results through search: an example is provided on the
                                 <!--Because of extra scopes created by uib-tab we need
                                 to access the aaTab variable like this-->
@@ -433,7 +443,7 @@
                                 template-url="templates/tabset-panel-success.html">
                         <uib-tab heading="View Data" index="0">
                             <p class="text-justify">The following table shows all Trade Activities for the selected
-                                origin and destination countries, that span the selected time period. You can obtain
+                                origin and destination countries that span the selected time period. You can obtain
                                 the same results through search: an example is provided on the
                                 <!--Because of extra scopes created by uib-tab we need
                                 to access the taTab variable like this-->
