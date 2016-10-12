@@ -37,17 +37,15 @@ app.constant("YDS_CONSTANTS", {
 
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search",
     "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search-el",
-    "SEARCH_RESULTS_URL_TABBED": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search-tabbed",
     // "SEARCH_RESULTS_URL": "http://yds-lib.dev/#!/search",
     // "SEARCH_RESULTS_URL_EL": "http://yds-lib.dev/#!/search-el",
-    // "SEARCH_RESULTS_URL_TABBED": "http://yds-lib.dev/#!/search-tabbed",
 
     "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
     "API_EMBED": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/embed/",
     "BASKET_URL": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/basket/"
 });
 
-app.directive('clipboard', [ '$document', function(){
+app.directive('clipboard', ['$document', function(){
     return {
         restrict: 'A',
         link: function (scope, element, attrs) {
@@ -533,7 +531,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
     };
 
     /**
-     * Returns a human readable description for a specific context
+     * Returns a human readable description for a specific concept
      * @param conceptId     ID of concept to get description for
      * @param lang          Language of the description
      * @returns {d|s|a}
@@ -697,8 +695,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         var params = {
             id: resourceId,
             type: viewType,
-            lang: lang,
-            context: 0
+            lang: lang
         };
 
         // If there are extra parameters to send to the API, add them to params
@@ -722,8 +719,20 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
 
     dataService.getProjectVis = function(type, resourceId, viewType, lang, extraParams) {
         var deferred = $q.defer();
-        var visualizationUrl = "";
 
+        // Setup request parameters
+        var params = {
+            id: resourceId,
+            type: viewType,
+            lang: lang
+        };
+
+        // If there are extra parameters to send to the API, add them to params
+        if (!_.isUndefined(extraParams)) {
+            _.extend(params, extraParams);
+        }
+
+        var visualizationUrl = "";
         switch(type) {
             case "bar":
                 visualizationUrl="http://" + YDS_CONSTANTS.API_BAR;
@@ -733,6 +742,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                 break;
             case "grid":
                 visualizationUrl="http://" + YDS_CONSTANTS.API_GRID;
+                params.context = 0;
                 break;
             case "pie":
                 visualizationUrl="http://" + YDS_CONSTANTS.API_PIE;
@@ -761,18 +771,6 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                 return deferred.promise;
         }
 
-        var params = {
-            id: resourceId,
-            type: viewType,
-            lang: lang,
-            context: 0
-        };
-
-        // If there are extra parameters to send to the API, add them to params
-        if (!_.isUndefined(extraParams)) {
-            _.extend(params, extraParams);
-        }
-
         $http({
             method: 'GET',
             url: visualizationUrl,
@@ -792,20 +790,20 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         var visualizationUrl = "";
 
         var inputParams = {
-            "id": resourceId,
-            "type": viewType,
-            "lang": lang,
-            "context": 0
+            id: resourceId,
+            type: viewType,
+            lang: lang
         };
 
         if(!_.isUndefined(start))
-            inputParams["start"] = start;
+            inputParams.start = start;
 
         _.extendOwn(inputParams, comboFilters);
 
         switch(type) {
             case "grid":
                 visualizationUrl="http://" + YDS_CONSTANTS.API_GRID;
+                inputParams.context = 0;
                 break;
             case "bar":
                 visualizationUrl="http://" + YDS_CONSTANTS.API_BAR;
