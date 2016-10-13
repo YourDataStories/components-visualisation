@@ -826,6 +826,18 @@ div.ag-root {
     width: 550px;
 }
 
+.btn-green {
+    color: #50A150;
+    background-color: #F3FFF3;
+    border-color: #50A150;
+}
+
+.btn-green:hover {
+    color: #F3FFF3;
+    background-color: #50A150;
+    border-color: #50A150;
+}
+
 /* Zero padding class */
 .zero-padding {
     padding: 0;
