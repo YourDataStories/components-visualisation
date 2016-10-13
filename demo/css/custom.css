@@ -858,6 +858,11 @@ div.ag-root {
     background-color: #5bc0de;
 }
 
+/* Rule to make Dashboard info component's labels gray (bootstrap's default) color */
+.dashboard-info-container-default > yds-dashboard-updater > .dashboard-updater-container > yds-info > .yds-info-wrapper > .row > .col-md-2 > .label {
+    background-color: #939393;
+}
+
 /* Panel with nav tabs CSS */
 .panel.with-nav-tabs .panel-heading{
     padding: 5px 5px 0 5px;
