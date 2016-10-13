@@ -779,7 +779,7 @@ div.ag-root {
 
 /* Custom Dashboard 2 panel color */
 .panel-sector, .panel-country-selection, .panel-time-period, .panel-category {
-    border-color: #e5e5e5;
+    border-color: #BBBBBB;
 }
 
 .panel-sector > .panel-heading, .panel-country-selection > .panel-heading, .panel-time-period > .panel-heading, .panel-category > .panel-heading {
@@ -790,6 +790,7 @@ div.ag-root {
     background: linear-gradient(to bottom,  #ffffff 0%,#e5e5e5 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
 
+    border-color: #BBBBBB;
     color: #333;
 }
 
