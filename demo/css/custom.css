@@ -779,46 +779,51 @@ div.ag-root {
 
 /* Custom sector selection panel color */
 .panel-sector{
-    border-color: #003b46;
+    border-color: #005B9A;
 }
 
 .panel-sector > .panel-heading {
-    background-color: #003b46;
-    border-color: #003b46;
+    background-color: #005B9A;
+    border-color: #005B9A;
     color: #FFFFFF;
 }
 
 /* Custom country selection panel color */
 .panel-country-selection {
-    border-color: #07575b;
+    border-color: #0191C8;
 }
 
 .panel-country-selection > .panel-heading {
-    background-color: #07575b;
-    border-color: #07575b;
+    background-color: #0191C8;
+    border-color: #0191C8;
     color: #FFFFFF;
 }
 
 /* Custom time selection panel color */
 .panel-time-period {
-    border-color: #518a91;
+    border-color: #74C2E1;
 }
 
 .panel-time-period > .panel-heading {
-    background-color: #518a91;
-    border-color: #518a91;
+    background-color: #74C2E1;
+    border-color: #74C2E1;
     color: #FFFFFF;
 }
 
 /* Custom category selection panel color */
 .panel-category {
-    border-color: #67aab2;
+    border-color: #6CD5E0;
 }
 
 .panel-category > .panel-heading {
-    background-color: #67aab2;
-    border-color: #67aab2;
+    background-color: #6CD5E0;
+    border-color: #6CD5E0;
     color: #FFFFFF;
+}
+
+.dashboard2-info-popover {
+    max-width: 550px;
+    width: 550px;
 }
 
 /* Zero padding class */

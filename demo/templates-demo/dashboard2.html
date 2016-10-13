@@ -3,25 +3,31 @@
         <div class="col-md-12">
             <h2>Official Development Assistance (ODA)</h2>
         </div>
+    </div>
 
+    <div class="row">
         <div class="col-md-12">
             <p class="text-justify">This dashboard allows you to explore data related to official development assistance
                 (ODA) provided by donor countries (such as the Netherlands) to developing countries all over the world
                 (such as Zimbabwe).</p>
         </div>
+    </div>
 
-        <div class="col-md-8">
+    <div class="row">
+        <div class="col-md-12">
             <p>You can start by either using the keyword search</p>
-            <div class="col-md-12" style="padding-left: 0">
-                <div class="col-md-7"  style="padding-left: 0">
+            <div class="col-md-12 zero-padding">
+                <div class="col-md-4 zero-padding">
                     <yds-search standalone="true"></yds-search>
+                </div>
+                <div class="col-md-offset-4 col-md-4 zero-padding">
+                    <button popover-placement="auto bottom-right" popover-class="dashboard2-info-popover"
+                            uib-popover-template="infoPopoverUrl"
+                            type="button" class="btn btn-info pull-right">
+                        <span class="glyphicon glyphicon-info-sign"></span> Learn how this Dashboard works</button>
                 </div>
             </div>
             <p style="padding-top: 40px">Or start by choosing to dig into the data on aid- or trade-activity directly:</p>
-        </div>
-        <div class="col-md-4">
-            <button uib-popover="Popover text" popover-title="Popover title" type="button" class="btn btn-info pull-right">
-                <span class="glyphicon glyphicon-info-sign"></span> Learn how this search engine works</button>
         </div>
     </div>
 
@@ -489,6 +495,35 @@
                                     user-id="ydsUser"></yds-workbench>
                         </uib-tab>
                     </uib-tabset>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!--Why use YDS Callout-->
+        <div class="col-md-8">
+            <div class="bs-callout bs-callout-success">
+                <h4>Why use YourDataStories?</h4>
+                <p class="text-justify">YourDataStories aggregates data from various separate datasets into a common
+                    “semantic graph” in RDF. In plain English: YourDataStories connects information from different
+                    sources in one place. It enables users to access such data easily and to discover relations between
+                    data. In such a way, users can browse, search, visualize, and make sense of the aggregated data,
+                    rather than chase the original, discrete datasets which may only be accessible to experts.</p>
+            </div>
+        </div>
+
+        <!--Panel with links to datasets-->
+        <div class="col-md-4">
+            <div class="panel panel-default" style="margin-top: 20px">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Data from Datasets</h3>
+                </div>
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-sm" target="_blank" href="http://143.233.226.61:8890/describe/?url=http://linkedeconomy.org/resource/Dataset/ODA/NL">ODA of the Netherlands</a>
+                    <a class="list-group-item list-group-item-sm" target="_blank" href="http://143.233.226.61:8890/describe/?url=http://linkedeconomy.org/resource/Dataset/ODA/ZW">ODA to Zimbabwe</a>
+                    <a class="list-group-item list-group-item-sm" target="_blank" href="http://143.233.226.61:8890/describe/?url=http://linkedeconomy.org/resource/Dataset/trade/NL">International trade activities of the Netherlands</a>
+                    <a class="list-group-item list-group-item-sm" target="_blank" href="http://143.233.226.61:8890/describe/?url=http://linkedeconomy.org/resource/Dataset/trade/ZW">International trade activities of Zimbabwe</a>
                 </div>
             </div>
         </div>

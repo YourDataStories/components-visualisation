@@ -26,6 +26,8 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
             'padding-right': 0
         };
 
+        scope.infoPopoverUrl = ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + "templates-demo/dashboard2-info.html";
+
         /**
          * Select a sector
          * @param newSector Sector to select
