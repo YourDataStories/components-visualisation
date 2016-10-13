@@ -35,13 +35,14 @@
         <!--Panel for sector selection-->
         <div uib-accordion-group class="panel panel-default panel-sector" is-open="status.sectorOpen">
             <uib-accordion-heading>
-                <div class="panel-heading clearfix">
+                <div class="dashboard2-accordion-heading">
+                    <div class="accordion-arrow pull-left">Step 1</div>
                     <h3 class="panel-title pull-left">{{ panelSectorTitle }}</h3>
                     <i class="pull-right glyphicon" ng-class="{'glyphicon-minus-sign': status.sectorOpen, 'glyphicon-plus-sign': !status.sectorOpen}"></i>
                 </div>
             </uib-accordion-heading>
 
-            <div class="panel-body zero-padding text-center">
+            <div class="text-center">
                 <p>Take a closer look at:</p>
                 <button type="button" class="btn btn-lg btn-primary"
                         ng-click="setSelectedSector('aidactivity', true)">
@@ -57,14 +58,15 @@
         <!--Panel for country selection-->
         <div uib-accordion-group class="panel panel-default panel-country-selection zero-padding" is-open="status.countryOpen">
             <uib-accordion-heading>
-                <div class="panel-heading clearfix">
+                <div class="dashboard2-accordion-heading">
+                    <div class="accordion-arrow pull-left">Step 2</div>
                     <h3 class="panel-title pull-left">{{ panelCountrySelectionTitle }}</h3>
                     <i class="pull-right glyphicon" ng-class="{'glyphicon-minus-sign': status.countryOpen, 'glyphicon-plus-sign': !status.countryOpen}"></i>
                 </div>
             </uib-accordion-heading>
 
             <!--Aid Activity Country Selection-->
-            <div ng-if="selectedSector == 'aidactivity' && status.countryOpen" class="panel-body zero-padding">
+            <div ng-if="selectedSector == 'aidactivity' && status.countryOpen">
                 <div class="col-md-6" style="padding-left: 0">
                     <!--Heatmap of Beneficiaries-->
                     <div class="panel panel-primary">
@@ -121,7 +123,7 @@
             </div>
 
             <!--Trade Activity Country Selection-->
-            <div ng-if="selectedSector == 'tradeactivity' && status.countryOpen" class="panel-body zero-padding">
+            <div ng-if="selectedSector == 'tradeactivity' && status.countryOpen">
                 <div class="col-md-6" style="padding-left: 0">
                     <!--Heatmap of Origins-->
                     <div class="panel panel-primary">
@@ -182,61 +184,57 @@
         <!--Panel for time period selection-->
         <div uib-accordion-group class="panel panel-default panel-time-period" is-open="status.periodOpen">
             <uib-accordion-heading>
-                <div class="panel-heading clearfix">
+                <div class="dashboard2-accordion-heading">
+                    <div class="accordion-arrow pull-left">Step 3</div>
                     <h3 class="panel-title pull-left">{{ panelTimePeriodTitle }}</h3>
                     <i class="pull-right glyphicon" ng-class="{'glyphicon-minus-sign': status.periodOpen, 'glyphicon-plus-sign': !status.periodOpen}"></i>
                 </div>
             </uib-accordion-heading>
 
             <!--Aid Activity Time Period Selection-->
-            <div ng-if="selectedSector == 'aidactivity'" class="panel-body zero-padding">
-                <div class="col-md-offset-3 col-md-6">
-                    <yds-year-range
-                            title="Time Period for Aid Activities"
-                            dashboard-id="aidactivity"
-                            min-year="1997"
-                            max-year="2018">
-                    </yds-year-range>
-                </div>
+            <div ng-if="selectedSector == 'aidactivity'" class="col-md-offset-3 col-md-6">
+                <yds-year-range
+                        title="Time Period for Aid Activities"
+                        dashboard-id="aidactivity"
+                        min-year="1997"
+                        max-year="2018">
+                </yds-year-range>
             </div>
 
             <!--Trade Activity Time Period Selection-->
-            <div ng-if="selectedSector == 'tradeactivity'" class="panel-body zero-padding">
-                <div class="col-md-offset-3 col-md-6">
-                    <yds-year-range
-                            title="Time Period for Trade Activities"
-                            dashboard-id="tradeactivity"
-                            min-year="1997"
-                            max-year="2018">
-                    </yds-year-range>
-                </div>
+            <div ng-if="selectedSector == 'tradeactivity'" class="col-md-offset-3 col-md-6">
+                <yds-year-range
+                        title="Time Period for Trade Activities"
+                        dashboard-id="tradeactivity"
+                        min-year="1997"
+                        max-year="2018">
+                </yds-year-range>
             </div>
         </div>
 
         <!--Aggregates-->
         <div uib-accordion-group class="panel panel-default panel-category" is-open="status.aggregatesOpen">
             <uib-accordion-heading>
-                <div class="panel-heading clearfix">
+                <div class="dashboard2-accordion-heading">
+                    <div class="accordion-arrow pull-left">Step 4</div>
                     <h3 class="panel-title pull-left">{{ panelCategoryTitle }}</h3>
                     <i class="pull-right glyphicon" ng-class="{'glyphicon-minus-sign': status.aggregatesOpen, 'glyphicon-plus-sign': !status.aggregatesOpen}"></i>
                 </div>
             </uib-accordion-heading>
 
-            <div class="panel-body zero-padding">
-                <div ng-class="aggregateClass"
-                     ng-repeat="type in aggregates track by $index"
-                     style="padding-left: 10px; padding-right: 10px"
-                     ng-style="{{ ($first) ? firstAggregateStyle : (($last) ? lastAggregateStyle : {}) }}">
-                    <yds-dashboard-updater
-                            type="aggregate"
-                            project-id="{{ projectId }}"
-                            dashboard-id="{{ selectedSector }}"
-                            view-type="{{ type }}"
-                            min-height="150"
-                            aggregate-icon-size="3"
-                            aggregate-set-on-init="{{ ($index == 0) }}">
-                    </yds-dashboard-updater>
-                </div>
+            <div ng-class="aggregateClass"
+                 ng-repeat="type in aggregates track by $index"
+                 style="padding-left: 10px; padding-right: 10px"
+                 ng-style="{{ ($first) ? firstAggregateStyle : (($last) ? lastAggregateStyle : {}) }}">
+                <yds-dashboard-updater
+                        type="aggregate"
+                        project-id="{{ projectId }}"
+                        dashboard-id="{{ selectedSector }}"
+                        view-type="{{ type }}"
+                        min-height="150"
+                        aggregate-icon-size="3"
+                        aggregate-set-on-init="{{ ($index == 0) }}">
+                </yds-dashboard-updater>
             </div>
         </div>
     </uib-accordion>

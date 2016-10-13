@@ -816,6 +816,50 @@ div.ag-root {
     padding: 0;
 }
 
+/* Rectangle part of accordion arrow on Dashboard 2 */
+.accordion-arrow {
+    background: #d0d0d0;
+    display: inline-block;
+    margin-left: 0;
+    margin-top: 0;
+    position: relative;
+    width: 70px;
+    height: 57px;
+
+    top: -20px;
+    left: -15px;
+
+    margin-right: 15px;
+
+    /* Center text horizontally and vertically */
+    text-align: center;
+    color: #333;
+    vertical-align: middle;
+    line-height: 57px;
+}
+
+/* Triangle part of accordion arrow on Dashboard 2 */
+.accordion-arrow:after {
+    content: "";
+    left: 70px;
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-top: 28.5px solid transparent;
+    border-left: 25px solid #d0d0d0;
+    border-bottom: 28.5px solid transparent;
+}
+
+.dashboard2-accordion-heading {
+    margin-top: 10px;
+    height: 27px;
+}
+
+.panel-sector > div > .panel-body, .panel-time-period > div > .panel-body, .panel-category > div > .panel-body, .panel-country-selection > div > .panel-body {
+    padding-top: 19px;
+}
+
 /* Custom green callout for Dashboard */
 .bs-callout-success {
     border-left-color: #50A150;
