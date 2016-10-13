@@ -777,48 +777,20 @@ div.ag-root {
     color: #FFFFFF;
 }
 
-/* Custom sector selection panel color */
-.panel-sector{
-    border-color: #005B9A;
+/* Custom Dashboard 2 panel color */
+.panel-sector, .panel-country-selection, .panel-time-period, .panel-category {
+    border-color: #e5e5e5;
 }
 
-.panel-sector > .panel-heading {
-    background-color: #005B9A;
-    border-color: #005B9A;
-    color: #FFFFFF;
-}
+.panel-sector > .panel-heading, .panel-country-selection > .panel-heading, .panel-time-period > .panel-heading, .panel-category > .panel-heading {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,e5e5e5+100;White+3D */
+    background: #ffffff; /* Old browsers */
+    background: -moz-linear-gradient(top,  #ffffff 0%, #e5e5e5 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #ffffff 0%,#e5e5e5 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
 
-/* Custom country selection panel color */
-.panel-country-selection {
-    border-color: #0191C8;
-}
-
-.panel-country-selection > .panel-heading {
-    background-color: #0191C8;
-    border-color: #0191C8;
-    color: #FFFFFF;
-}
-
-/* Custom time selection panel color */
-.panel-time-period {
-    border-color: #74C2E1;
-}
-
-.panel-time-period > .panel-heading {
-    background-color: #74C2E1;
-    border-color: #74C2E1;
-    color: #FFFFFF;
-}
-
-/* Custom category selection panel color */
-.panel-category {
-    border-color: #6CD5E0;
-}
-
-.panel-category > .panel-heading {
-    background-color: #6CD5E0;
-    border-color: #6CD5E0;
-    color: #FFFFFF;
+    color: #333;
 }
 
 .dashboard2-info-popover {
