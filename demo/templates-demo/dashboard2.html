@@ -33,10 +33,10 @@
 
     <uib-accordion close-others="oneAtATime">
         <!--Panel for sector selection-->
-        <div uib-accordion-group class="panel panel-default panel-sector" is-open="status.sectorOpen">
+        <div uib-accordion-group class="panel panel-default dashboard2-accordion-panel" is-open="status.sectorOpen">
             <uib-accordion-heading>
-                <div class="dashboard2-accordion-heading">
-                    <div class="accordion-arrow pull-left">Step 1</div>
+                <div class="accordion-arrow pull-left">Step 1</div>
+                <div class="dashboard2-accordion-inner-heading">
                     <h3 class="panel-title pull-left">{{ panelSectorTitle }}</h3>
                     <i class="pull-right glyphicon" ng-class="{'glyphicon-minus-sign': status.sectorOpen, 'glyphicon-plus-sign': !status.sectorOpen}"></i>
                 </div>
@@ -56,10 +56,10 @@
         </div>
 
         <!--Panel for country selection-->
-        <div uib-accordion-group class="panel panel-default panel-country-selection zero-padding" is-open="status.countryOpen">
+        <div uib-accordion-group class="panel panel-default dashboard2-accordion-panel zero-padding" is-open="status.countryOpen">
             <uib-accordion-heading>
-                <div class="dashboard2-accordion-heading">
-                    <div class="accordion-arrow pull-left">Step 2</div>
+                <div class="accordion-arrow pull-left">Step 2</div>
+                <div class="dashboard2-accordion-inner-heading">
                     <h3 class="panel-title pull-left">{{ panelCountrySelectionTitle }}</h3>
                     <i class="pull-right glyphicon" ng-class="{'glyphicon-minus-sign': status.countryOpen, 'glyphicon-plus-sign': !status.countryOpen}"></i>
                 </div>
@@ -182,10 +182,10 @@
         </div>
 
         <!--Panel for time period selection-->
-        <div uib-accordion-group class="panel panel-default panel-time-period" is-open="status.periodOpen">
+        <div uib-accordion-group class="panel panel-default dashboard2-accordion-panel" is-open="status.periodOpen">
             <uib-accordion-heading>
-                <div class="dashboard2-accordion-heading">
-                    <div class="accordion-arrow pull-left">Step 3</div>
+                <div class="accordion-arrow pull-left">Step 3</div>
+                <div class="dashboard2-accordion-inner-heading">
                     <h3 class="panel-title pull-left">{{ panelTimePeriodTitle }}</h3>
                     <i class="pull-right glyphicon" ng-class="{'glyphicon-minus-sign': status.periodOpen, 'glyphicon-plus-sign': !status.periodOpen}"></i>
                 </div>
@@ -213,10 +213,10 @@
         </div>
 
         <!--Aggregates-->
-        <div uib-accordion-group class="panel panel-default panel-category" is-open="status.aggregatesOpen">
+        <div uib-accordion-group class="panel panel-default dashboard2-accordion-panel dashboard2-aggregate-panel" is-open="status.aggregatesOpen">
             <uib-accordion-heading>
-                <div class="dashboard2-accordion-heading">
-                    <div class="accordion-arrow pull-left">Step 4</div>
+                <div class="accordion-arrow pull-left">Step 4</div>
+                <div class="dashboard2-accordion-inner-heading">
                     <h3 class="panel-title pull-left">{{ panelCategoryTitle }}</h3>
                     <i class="pull-right glyphicon" ng-class="{'glyphicon-minus-sign': status.aggregatesOpen, 'glyphicon-plus-sign': !status.aggregatesOpen}"></i>
                 </div>
@@ -224,8 +224,7 @@
 
             <div ng-class="aggregateClass"
                  ng-repeat="type in aggregates track by $index"
-                 style="padding-left: 10px; padding-right: 10px"
-                 ng-style="{{ ($first) ? firstAggregateStyle : (($last) ? lastAggregateStyle : {}) }}">
+                 style="padding-left: 10px; padding-right: 10px">
                 <yds-dashboard-updater
                         type="aggregate"
                         project-id="{{ projectId }}"

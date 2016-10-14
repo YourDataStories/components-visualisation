@@ -17,15 +17,6 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
             sectorOpen: true
         };
 
-        // Style for 1st and last aggregate
-        scope.firstAggregateStyle = {
-            'padding-left': 0
-        };
-
-        scope.lastAggregateStyle = {
-            'padding-right': 0
-        };
-
         scope.infoPopoverUrl = ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + "templates-demo/dashboard2-info.html";
 
         /**
