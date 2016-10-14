@@ -460,18 +460,18 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                 } else if (viewVal.type == "date" && !_.isUndefined(attrValue) && attrValue.indexOf("/") == -1) {
                     // Format date to DD/MM/YYYY format (if it contains "/" it was already formatted)
                     attrValue = formatDateToDDMMYYYY(attrValue);
-                } else if (viewVal.type == "amount" && !_.isUndefined(attrValue)) {
+                } else if (viewVal.type == "format_to_amount" && !_.isUndefined(attrValue)) {
                     // Make attribute a string so we can do more checks
                     var attrStr =  attrValue.toString().trim();
 
                     // Format the amount only if it's not empty, and doesn't contain dollar or euro sign
-                    if (attrStr.length > 0 && attrStr.indexOf("$") == -1 && attrStr.indexOf("€") == -1) {
+                    if (attrStr.length > 0) {
                         attrValue = formatThousandsWithRounding(attrValue, 2);
 
                         // Try to find and add currency symbol
                         var lastTokenLength = _.last(attributeTokens).length;
                         var attrLength = viewVal.attribute.length;
-                        
+
                         // Create string which is the attribute to look at for currency notation
                         // (currently: newVal.attribute without last part + "hasCurrency.notation")
                         var currNotAttr = viewVal.attribute.substr(0, attrLength - lastTokenLength) + "hasCurrency.notation";
@@ -491,8 +491,6 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                             }
                         }
                     }
-
-
                 }
 
                 // If the column should have a url, make the attribute a link
