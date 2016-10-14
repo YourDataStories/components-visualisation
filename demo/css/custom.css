@@ -777,11 +777,31 @@ div.ag-root {
     color: #FFFFFF;
 }
 
-/* Custom Dashboard 2 panel color */
-.dashboard2-accordion-panel {
-    border-color: #BBBBBB;
+/* Accordion rule to give it rounded border */
+.dashboard2-accordion > div.panel-group {
+    border: 1px solid #BBBBBB;
+    border-radius: 4px;
+    overflow: hidden;
 }
 
+/* Remove top border from 1st child in accordion */
+.dashboard2-accordion-panel:first-child {
+    border-top: 0;
+}
+
+/* Make corners of panels in accordion not rounded, and remove all borders except top */
+.dashboard2-accordion-panel {
+    border-color: #BBBBBB;
+
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+
+    border-radius: 0!important;
+    margin-top: 0!important;
+}
+
+/* Gradient for panels in accordion and remove rounded corners */
 .dashboard2-accordion-panel > .panel-heading {
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,e5e5e5+100;White+3D */
     background: #ffffff; /* Old browsers */
@@ -790,7 +810,7 @@ div.ag-root {
     background: linear-gradient(to bottom,  #ffffff 0%,#e5e5e5 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
 
-    border-color: #BBBBBB;
+    border-radius: 0;
     color: #333;
 }
 
@@ -815,21 +835,10 @@ div.ag-root {
     width: 550px;
 }
 
-.btn-green {
-    color: #50A150;
-    background-color: #F3FFF3;
-    border-color: #50A150;
-}
-
-.btn-green:hover {
-    color: #F3FFF3;
-    background-color: #50A150;
-    border-color: #50A150;
-}
-
-/* Zero padding class */
-.zero-padding {
-    padding: 0;
+/* Make padding of aggregate panel body in Dashboard 2 5px left and right*/
+.dashboard2-aggregate-panel > .panel-collapse > .panel-body {
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 /* Rectangle part of accordion arrow on Dashboard 2 */
@@ -862,10 +871,22 @@ div.ag-root {
     border-bottom: 28.5px solid transparent;
 }
 
-/* Make padding of aggregate panel body in Dashboard 2 5px left and right*/
-.dashboard2-aggregate-panel > .panel-collapse > .panel-body {
-    padding-left: 5px;
-    padding-right: 5px;
+/* Button style for custom green button */
+.btn-green {
+    color: #50A150;
+    background-color: #F3FFF3;
+    border-color: #50A150;
+}
+
+.btn-green:hover {
+    color: #F3FFF3;
+    background-color: #50A150;
+    border-color: #50A150;
+}
+
+/* Zero padding class */
+.zero-padding {
+    padding: 0;
 }
 
 /* Custom green callout for Dashboard */
