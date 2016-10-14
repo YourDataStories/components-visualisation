@@ -200,7 +200,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 var getSearchQuery = function() {
                     var deferred = $q.defer();
 
-                    var newKeyword = Search.getKeyword();
+                    var newKeyword = $location.search()[paramPrefix + "q"];
 
                     if (_.isUndefined(newKeyword) || newKeyword.trim() == "") {
                         newKeyword = "*";
