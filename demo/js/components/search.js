@@ -81,15 +81,28 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 				 */
 				scope.search = function (searchForm) {
 					if (scope.tabbed == "true") {
-						//check if search box is empty
-						if (!searchForm.$valid) {
-							$location.search(paramPrefix + "q", null);
-							$location.search(paramPrefix + "rules", null);
-							Search.clearKeyword();
-						} else {
-							// Add new keyword to url params, and remove any rules because this is not advanced search
-							$location.search(paramPrefix + "q", scope.searchOptions.searchKeyword);
-							$location.search(paramPrefix + "rules", null);
+						if (scope.searchOptions.standalone != "true") {
+							//check if search box is empty
+							if (!searchForm.$valid) {
+								$location.search(paramPrefix + "q", null);
+								$location.search(paramPrefix + "rules", null);
+								Search.clearKeyword();
+							} else {
+								// Add new keyword to url params, and remove any rules because this is not advanced search
+								$location.search(paramPrefix + "q", scope.searchOptions.searchKeyword);
+								$location.search(paramPrefix + "rules", null);
+							}
+						} else if (searchForm.$valid) {
+							// Standalone tabbed search
+							var concept = scope.concept;
+
+							if (!_.isUndefined(concept) && concept.trim().length > 0) {
+								// Concept is defined and search is standalone, so use it as the tab for Tabbed search
+								$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL_TABBED + "?q=" + scope.searchOptions.searchKeyword + "&tab=" + concept;
+							} else {
+								// No concept defined, go to tabbed search with no tab parameter
+								$window.location.href = YDS_CONSTANTS.SEARCH_RESULTS_URL_TABBED + "?q=" + scope.searchOptions.searchKeyword;
+							}
 						}
 					} else {
 						// Check if search box is empty
