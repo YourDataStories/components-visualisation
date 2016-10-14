@@ -784,11 +784,6 @@ div.ag-root {
     overflow: hidden;
 }
 
-/* Remove top border from 1st child in accordion */
-.dashboard2-accordion-panel:first-child {
-    border-top: 0;
-}
-
 /* Make corners of panels in accordion not rounded, and remove all borders except top */
 .dashboard2-accordion-panel {
     border-color: #BBBBBB;
@@ -799,6 +794,11 @@ div.ag-root {
 
     border-radius: 0!important;
     margin-top: 0!important;
+}
+
+/* Remove top border from 1st child in accordion */
+.dashboard2-accordion-panel:first-child {
+    border-top: 0;
 }
 
 /* Gradient for panels in accordion and remove rounded corners */
@@ -843,7 +843,13 @@ div.ag-root {
 
 /* Rectangle part of accordion arrow on Dashboard 2 */
 .accordion-arrow {
-    background: #d0d0d0;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ededed+0,cccccc+100 */
+    background: #ededed; /* Old browsers */
+    background: -moz-linear-gradient(top,  #ededed 0%, #cccccc 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #ededed 0%,#cccccc 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #ededed 0%,#cccccc 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ededed', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
+
     display: inline-block;
     position: relative;
     width: 70px;
@@ -856,19 +862,32 @@ div.ag-root {
     color: #333;
     vertical-align: middle;
     line-height: 57px;
+
+    /* Make the box be over the child element */
+    z-index: 0;
 }
 
-/* Triangle part of accordion arrow on Dashboard 2 */
 .accordion-arrow:after {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ededed+0,cccccc+100 */
+    background: #ededed; /* Old browsers */
+    background: -moz-linear-gradient(-45deg,  #ededed 0%, #cccccc 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(-45deg,  #ededed 0%,#cccccc 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(135deg,  #ededed 0%,#cccccc 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ededed', endColorstr='#cccccc',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
     content: "";
-    left: 70px;
+    left: 49.5px;
     position: absolute;
-    top: 0;
-    width: 0;
-    height: 0;
-    border-top: 28.5px solid transparent;
-    border-left: 25px solid #d0d0d0;
-    border-bottom: 28.5px solid transparent;
+    top: 8px;
+    width: 40.5px;
+    height: 40.5px;
+
+    -ms-transform: rotate(45deg); /* IE 9 */
+    -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+    transform: rotate(45deg);
+
+    /* Make child be below parent element so text is visible */
+    z-index: -1;
 }
 
 /* Button style for custom green button */
