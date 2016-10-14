@@ -784,6 +784,11 @@ div.ag-root {
     overflow: hidden;
 }
 
+/* Remove Firefox outline when clicking accordion panel headings */
+a.accordion-toggle:focus, a.accordion-toggle:active {
+    outline: none;
+}
+
 /* Make corners of panels in accordion not rounded, and remove all borders except top */
 .dashboard2-accordion-panel {
     border-color: #BBBBBB;
