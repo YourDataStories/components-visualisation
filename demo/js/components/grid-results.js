@@ -3,10 +3,12 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
         return {
             restrict: 'E',
             scope: {
+                projectId: '@',         // Project ID of data
                 viewType: '@',          // Name of the view to use for the grid
                 projectDetailsType: '@',// Type to use when viewing details. If undefined, will use the viewType
                 lang: '@',              // Lang of the visualised data
                 urlParamPrefix: '@',    // Prefix to add before all url parameters (optional)
+                useGridApi: '@',        // If true, grid will use the grid API for the request
 
                 extraParams: '=',       // Extra attributes to pass to the API (optional)
 
@@ -33,6 +35,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 scope.quickFilterValue = "";
                 var grid = {
                     elementId: "grid" + Data.createRandomId(),
+                    projectId: scope.projectId,
                     viewType: scope.viewType,
                     lang: scope.lang,
                     sorting: scope.sorting,
@@ -48,6 +51,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 var paramPrefix = scope.urlParamPrefix;
                 var projectDetailsType = scope.projectDetailsType;
                 var extraParams = scope.extraParams;
+                var useGridApi = scope.useGridApi;
 
                 // If extra params exist, add them to Filters
                 if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
@@ -67,6 +71,10 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     projectDetailsType = grid.viewType;
 
                 // Check if the language attr is defined, else assign default value
+                if(_.isUndefined(grid.projectId) || grid.projectId.trim()=="")
+                    grid.projectId = "none";
+
+                // Check if the language attr is defined, else assign default value
                 if(_.isUndefined(grid.lang) || grid.lang.trim()=="")
                     grid.lang = "en";
 
@@ -77,6 +85,10 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 // Check if the sorting attr is defined, else assign the default value
                 if(_.isUndefined(grid.sorting) || (grid.sorting!="true" && grid.sorting!="false"))
                     grid.sorting = "true";
+
+                // Check if the useGridApi attr is defined, else assign the default value
+                if(_.isUndefined(useGridApi) || (useGridApi!="true" && useGridApi!="false"))
+                    useGridApi = "false";
 
                 // Check if the filtering attr is defined, else assign the default value
                 if(_.isUndefined(grid.filtering) || (grid.filtering!="true" && grid.filtering!="false"))
@@ -337,33 +349,38 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                 scope.ydsAlert = error.message;
                             };
 
-                            // Get the search query, and merge it with the quick filter if it's defined
-                            getSearchQuery().then(function(searchQuery) {
-                                var query = searchQuery;
-                                if (!_.isUndefined(quickFilter)) {
-                                    query = "(" + query + ") AND " + quickFilter;
-                                }
-
-                                // If there are advanced search rules, get them and perform advanced search
-                                var rules = $location.search()[paramPrefix + "rules"];
-                                if (!_.isUndefined(rules)) {
-                                    rules = JSURL.parse(rules);
-
-                                    Data.getGridResultDataAdvanced(query, rules, grid.viewType, params.startRow, grid.pageSize, grid.lang)
-                                        .then(gridResultDataSuccess, gridResultDataError);
-                                } else {
-                                    var viewType = "";
-                                    if (_.isUndefined(extraParams) || _.isEmpty(extraParams)) {
-                                        // If extra params do not exist, send view type as normal
-                                        // If they exist, the type will be already included in the query
-                                        viewType = grid.viewType;
+                            if (useGridApi == "false") {
+                                // Get the search query, and merge it with the quick filter if it's defined
+                                getSearchQuery().then(function(searchQuery) {
+                                    var query = searchQuery;
+                                    if (!_.isUndefined(quickFilter)) {
+                                        query = "(" + query + ") AND " + quickFilter;
                                     }
 
-                                    // Perform normal search
-                                    Data.getGridResultData(query, viewType, params.startRow, grid.pageSize, grid.lang)
-                                        .then(gridResultDataSuccess, gridResultDataError);
-                                }
-                            });
+                                    // If there are advanced search rules, get them and perform advanced search
+                                    var rules = $location.search()[paramPrefix + "rules"];
+                                    if (!_.isUndefined(rules)) {
+                                        rules = JSURL.parse(rules);
+
+                                        Data.getGridResultDataAdvanced(query, rules, grid.viewType, params.startRow, grid.pageSize, grid.lang)
+                                            .then(gridResultDataSuccess, gridResultDataError);
+                                    } else {
+                                        var viewType = "";
+                                        if (_.isUndefined(extraParams) || _.isEmpty(extraParams)) {
+                                            // If extra params do not exist, send view type as normal
+                                            // If they exist, the type will be already included in the query
+                                            viewType = grid.viewType;
+                                        }
+
+                                        // Perform normal search
+                                        Data.getGridResultData(query, viewType, params.startRow, grid.pageSize, grid.lang)
+                                            .then(gridResultDataSuccess, gridResultDataError);
+                                    }
+                                });
+                            } else {
+                                Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang, extraParams)
+                                    .then(gridResultDataSuccess, gridResultDataError);
+                            }
                         }
                     };
 
@@ -384,7 +401,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     }
                 };
 
-                if (_.isUndefined(extraParams)) {
+                if (_.isUndefined(extraParams) && grid.useGridApi == "false") {
                     // If any URL parameters change act accordingly
                     scope.$watch(function () { return JSON.stringify($location.search()) + getSearchQuery(); }, function () {
                         var urlParams = $location.search();
