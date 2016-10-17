@@ -320,6 +320,10 @@
                                 to access the aaTab variable like this-->
                                 <a ng-click="$parent.$parent.aaTab = 1">search tab</a>.</p>
 
+                            <p class="text-justify">Each Aid Activity has a set of related transactions and sectors. In
+                                order to see them, please select an Aid Activity from the table below, and press its
+                                “View” button. The related transactions and sectors will be listed in a new page.</p>
+
                             <!--AidActivity grid-->
                             <yds-dashboard-updater
                                     ng-if="!isCollapsedAidActivityPanel && aaTab == 0"
@@ -354,42 +358,10 @@
                             </yds-dashboard-updater>
                         </uib-tab>
 
-                        <uib-tab heading="View transactions" index="2">
-                            <p class="text-justify">Each Aid Activity has a set of related transactions. In order to see
-                                them, please select an Aid Activity from the table below, and press its “View” button.
-                                The related transactions will be listed in a new page.</p>
-
-                            <!--Grid with aid activities-->
-                            <yds-dashboard-updater
-                                    ng-if="!isCollapsedAidActivityPanel && aaTab == 2"
-                                    type="grid"
-                                    view-type="aidactivity.listitems.for.countries.and.period"
-                                    dashboard-id="aidactivity"
-                                    min-height="400"
-                                    lang="en">
-                            </yds-dashboard-updater>
-                        </uib-tab>
-
-                        <uib-tab heading="View sectors" index="3">
-                            <p class="text-justify">Each Aid Activity has a set of related sectors. In order to see
-                                them, please select an Aid Activity from the table below, and press its “View” button.
-                                The related sectors will be listed in a new page.</p>
-
-                            <!--Grid with aid activities-->
-                            <yds-dashboard-updater
-                                    ng-if="!isCollapsedAidActivityPanel && aaTab == 3"
-                                    type="grid"
-                                    view-type="aidactivity.listitems.for.countries.and.period"
-                                    dashboard-id="aidactivity"
-                                    min-height="400"
-                                    lang="en">
-                            </yds-dashboard-updater>
-                        </uib-tab>
-
-                        <uib-tab heading="Visualize the data" index="4">
+                        <uib-tab heading="Visualize the data" index="2">
                             <!--Workbench-->
                             <yds-workbench
-                                    ng-if="!isCollapsedAidActivityPanel && aaTab == 4"
+                                    ng-if="!isCollapsedAidActivityPanel && aaTab == 2"
                                     user-id="ydsUser"></yds-workbench>
                         </uib-tab>
                     </uib-tabset>
@@ -422,6 +394,10 @@
                                 <!--Because of extra scopes created by uib-tab we need
                                 to access the taTab variable like this-->
                                 <a ng-click="$parent.$parent.taTab = 1">search tab</a>.</p>
+
+                            <p class="text-justify">Each Trade Activity has a set of related transactions and sectors.
+                                In order to see them, please select a Trade Activity from the table below, and press its
+                                “View” button. The related transactions and sectors will be listed in a new page.</p>
 
                             <!--TradeActivity grid-->
                             <yds-dashboard-updater
@@ -457,42 +433,10 @@
                             </yds-dashboard-updater>
                         </uib-tab>
 
-                        <uib-tab heading="View transactions" index="2">
-                            <p class="text-justify">Each Trade Activity has a set of related transactions. In order to
-                                see them, please select a Trade Activity from the table below, and press its “View”
-                                button. The related transactions will be listed in a new page.</p>
-
-                            <!--Grid with trade activities-->
-                            <yds-dashboard-updater
-                                    ng-if="!isCollapsedTradeActivityPanel && taTab == 2"
-                                    type="grid"
-                                    view-type="tradeactivity.listitems.for.countries.and.period"
-                                    dashboard-id="tradeactivity"
-                                    min-height="400"
-                                    lang="en">
-                            </yds-dashboard-updater>
-                        </uib-tab>
-
-                        <uib-tab heading="View sectors" index="3">
-                            <p class="text-justify">Each Trade Activity has a set of related sectors. In order to see
-                                them, please select a Trade Activity from the table below, and press its “View” button.
-                                The related sectors will be listed in a new page.</p>
-
-                            <!--Grid with trade activities-->
-                            <yds-dashboard-updater
-                                    ng-if="!isCollapsedTradeActivityPanel && taTab == 3"
-                                    type="grid"
-                                    view-type="tradeactivity.listitems.for.countries.and.period"
-                                    dashboard-id="tradeactivity"
-                                    min-height="400"
-                                    lang="en">
-                            </yds-dashboard-updater>
-                        </uib-tab>
-
-                        <uib-tab heading="Visualize the data" index="4">
+                        <uib-tab heading="Visualize the data" index="2">
                             <!--Workbench-->
                             <yds-workbench
-                                    ng-if="!isCollapsedTradeActivityPanel && taTab == 4"
+                                    ng-if="!isCollapsedTradeActivityPanel && taTab == 2"
                                     user-id="ydsUser"></yds-workbench>
                         </uib-tab>
                     </uib-tabset>
