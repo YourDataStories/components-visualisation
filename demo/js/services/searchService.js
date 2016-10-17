@@ -224,7 +224,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 
 			$http({
 				method: 'GET',
-				url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_SEARCH,
+				url: "http://" + YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_SEARCH,
 				params: searchParameters,
 				headers: {'Content-Type': 'application/json'}
 			}).success(function (response) {
