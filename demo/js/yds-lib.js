@@ -13,6 +13,7 @@ app.constant("YDS_CONSTANTS", {
     "API_INFO": "platform.yourdatastories.eu/api/json-ld/component/info.tcl",
     "API_LINE": "platform.yourdatastories.eu/api/json-ld/component/linechart.tcl",
     "API_SCATTER": "platform.yourdatastories.eu/api/json-ld/component/scatterchart.tcl",
+    "API_BUBBLE": "platform.yourdatastories.eu/api/json-ld/component/bubblechart.tcl",
     "API_TREEMAP": "platform.yourdatastories.eu/api/json-ld/component/treemap.tcl",
     "API_MAP": "platform.yourdatastories.eu/api/json-ld/component/map.tcl",
     "API_PIE": "platform.yourdatastories.eu/api/json-ld/component/piechart.tcl",
@@ -749,6 +750,9 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                 break;
             case "scatter":
                 visualizationUrl="http://" + YDS_CONSTANTS.API_SCATTER;
+                break;
+            case "bubble":
+                visualizationUrl="http://" + YDS_CONSTANTS.API_BUBBLE;
                 break;
             case "treemap":
                 visualizationUrl="http://" + YDS_CONSTANTS.API_TREEMAP;
