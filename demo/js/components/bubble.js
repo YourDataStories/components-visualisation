@@ -101,7 +101,7 @@ angular.module('yds').directive('ydsBubble', ['YDS_CONSTANTS', 'Data', '$window'
                     // Add function to check if URI for a point exists in order to open details page for it
                     options.plotOptions.series.point = {
                         events: {
-                            click: function() {
+                            click: function(event) {
                                 var point = event.point;
                                 if (_.has(point, "uri") && _.has(point, "type")) {
                                     var url = YDS_CONSTANTS.PROJECT_DETAILS_URL + "?id=" + point.uri + "&type=" + point.type;
