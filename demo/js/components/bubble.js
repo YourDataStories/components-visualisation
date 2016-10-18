@@ -1,4 +1,4 @@
-angular.module('yds').directive('ydsBubble', ['Data', function(Data) {
+angular.module('yds').directive('ydsBubble', ['Data', '$window', function(Data, $window) {
     return {
         restrict: 'E',
         scope: {
@@ -96,6 +96,18 @@ angular.module('yds').directive('ydsBubble', ['Data', function(Data) {
                         },
 
                         enabled: (exporting === "true")
+                    };
+
+                    // Add function to check if URI for a point exists in order to open details page for it
+                    options.plotOptions.series.point = {
+                        events: {
+                            click: function() {
+                                var point = event.point;
+                                if (_.has(point, "uri")) {
+                                    $window.open(point.uri, "_blank");
+                                }
+                            }
+                        }
                     };
 
                     new Highcharts.Chart(options);
