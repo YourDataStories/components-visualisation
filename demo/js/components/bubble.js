@@ -1,4 +1,4 @@
-angular.module('yds').directive('ydsBubble', ['Data', '$window', function(Data, $window) {
+angular.module('yds').directive('ydsBubble', ['YDS_CONSTANTS', 'Data', '$window', function(YDS_CONSTANTS, Data, $window) {
     return {
         restrict: 'E',
         scope: {
@@ -103,8 +103,10 @@ angular.module('yds').directive('ydsBubble', ['Data', '$window', function(Data, 
                         events: {
                             click: function() {
                                 var point = event.point;
-                                if (_.has(point, "uri")) {
-                                    $window.open(point.uri, "_blank");
+                                if (_.has(point, "uri") && _.has(point, "type")) {
+                                    var url = YDS_CONSTANTS.PROJECT_DETAILS_URL + "?id=" + point.uri + "&type=" + point.type;
+
+                                    $window.open(url, "_blank");
                                 }
                             }
                         }
