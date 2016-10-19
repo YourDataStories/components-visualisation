@@ -10,6 +10,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 iconSize: '@',      // Icon size for FontAwesome icon (2-5)
                 setOnInit: '@',     // If true, will set this aggregate's view type in DashboardService on init
                 elementH: '@',      // Minimum height of Aggregate
+                baseUrl: '@',       // Base URL to send to API (optional)
                 extraParams: '='    // Extra parameters to send
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + 'templates/aggregate.html',
@@ -21,6 +22,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 var setOnInit = scope.setOnInit;
                 var elementH = parseInt(scope.elementH);
                 var iconSize = scope.iconSize;
+                var baseUrl = scope.baseUrl;
 
                 var initialized = false;
 
@@ -54,8 +56,17 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                     elementH = 140;
 
                 var getAggregateData = function() {
+                    var params = scope.extraParams;
+
+                    // If base URL attribute is defined, add it to the parameters that will be sent
+                    if (!_.isUndefined(baseUrl) && baseUrl.length > 0) {
+                        params = _.extend({
+                            baseurl: baseUrl
+                        }, params);
+                    }
+
                     // Get data for aggregate from API to set variables
-                    Data.getAggregate(projectId, viewType, lang, scope.extraParams).then(function(response) {
+                    Data.getAggregate(projectId, viewType, lang, params).then(function(response) {
                         // Get view
                         var view = _.first(response.view);
 
