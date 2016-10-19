@@ -9,7 +9,7 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', 'Basket', '
 
 			var elementClass = attrs.class;
 			var visualisationType = "";
-			var defaultVisTypes = ["pie", "line", "scatter", "bar", "tree", "map", "grid", "result"];
+			var defaultVisTypes = ["pie", "line", "scatter", "bubble", "bar", "tree", "map", "grid", "result"];
 			
 			//if projectId or viewType attr is undefined, stop the execution of the directive
 			if (angular.isUndefined(projectId)|| angular.isUndefined(viewType)) {
@@ -37,7 +37,7 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', 'Basket', '
 				}
 
 				if (!visTypeFound) {
-					console.error('The embed extension cannot be applied on the selected element');
+					console.error('The basket extension cannot be applied on the selected element');
 					return false;
 				}
 			} else
