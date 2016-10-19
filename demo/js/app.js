@@ -53,7 +53,19 @@ ydsDemo.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 	})
 	.state('organisation', {
 		url: '/organisation',
-		template: '<div class="container"><h2>Organization</h2></div>'
+		template: '<div class="container"><h2>Organisation</h2></div>',
+		controller: function($scope, $location) {
+			// Check type url parameter and redirect to appropriate organisation page
+			var urlParams = $location.search();
+
+			if (_.has(urlParams, "type")) {
+				if (urlParams.type == "Organisation.Buyer") {
+					$location.path("/organisation-buyer");
+				} else if (urlParams.type == "Organisation.Seller") {
+					$location.path("/organisation-seller");
+				}
+			}
+		}
 	})
 	.state('organisation-buyer', {
 		url: '/organisation-buyer',
