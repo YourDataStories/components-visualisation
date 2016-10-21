@@ -28,6 +28,27 @@ ydsDemo.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 		url: '/dashboard2',
 		templateUrl: 'templates-demo/dashboard2.html'
 	})
+	.state('redirect', {
+		url: '/redirect',
+		template: '<div class="container"><h2>Redirecting...</h2></div>',
+		controller: function($scope, $location) {
+			// Check type url parameter and redirect to appropriate page
+			var urlParams = $location.search();
+
+			if (_.has(urlParams, "type")) {
+				switch(urlParams.type) {
+					case "Organisation.Buyer":
+						$location.path("/organisation-buyer");
+						break;
+					case "Organisation.Seller":
+						$location.path("/organisation-seller");
+						break;
+					default:
+						break;
+				}
+			}
+		}
+	})
 	.state('project2', {
 		url: '/project2',
 		templateUrl: 'templates-demo/project2.html'
@@ -53,32 +74,26 @@ ydsDemo.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 		controller: function($scope) {
 			// Set project ID and base URL variables
 			$scope.projectId = "http://linkedeconomy.org/resource/Contract/AwardNotice/6723325";
-			$scope.baseUrl = "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/organisation";
-		}
-	})
-	.state('organisation', {
-		url: '/organisation',
-		template: '<div class="container"><h2>Organisation</h2></div>',
-		controller: function($scope, $location) {
-			// Check type url parameter and redirect to appropriate organisation page
-			var urlParams = $location.search();
-
-			if (_.has(urlParams, "type")) {
-				if (urlParams.type == "Organisation.Buyer") {
-					$location.path("/organisation-buyer");
-				} else if (urlParams.type == "Organisation.Seller") {
-					$location.path("/organisation-seller");
-				}
-			}
+			$scope.baseUrl = "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect";
 		}
 	})
 	.state('organisation-buyer', {
 		url: '/organisation-buyer',
-		templateUrl: 'templates-demo/organisation-buyer.html'
+		templateUrl: 'templates-demo/organisation-buyer.html',
+		controller: function($scope) {
+			// Set project ID and base URL variables
+			$scope.projectId = "http://linkedeconomy.org/resource/Contract/AwardNotice/6723325";
+			$scope.baseUrl = "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect";
+		}
 	})
 	.state('organisation-seller', {
 		url: '/organisation-seller',
-		templateUrl: 'templates-demo/organisation-seller.html'
+		templateUrl: 'templates-demo/organisation-seller.html',
+		controller: function($scope) {
+			// Set project ID and base URL variables
+			$scope.projectId = "http://linkedeconomy.org/resource/Contract/AwardNotice/6723325";
+			$scope.baseUrl = "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect";
+		}
 	})
 	.state('map', {
 		url: '/map',
