@@ -103,29 +103,29 @@ body #main .container:first-child {
 
 /* CSS for Tabbed Search grids to take up all available screen height
    (only for browsers that are not IE or Safari < 6) */
-/*@media screen {*/
-    /*@media (min-width: 0px) {*/
-        /*html {*/
-            /*display: flex;*/
-            /*flex-direction: column;*/
-        /*}*/
+@media screen {
+    @media (min-width: 0px) {
+        html {
+            display: flex;
+            flex-direction: column;
+        }
 
-        /*.flex, body, .tab-content, .tab-content > .active, #main, #main > div {*/
-            /*flex: 1;*/
-            /*display: flex;*/
-            /*flex-direction: column;*/
-        /*}*/
+        .flex, body, .tab-content, .tab-content > .active, #main, #main > div {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
 
-        /*.footer {*/
-            /*position: relative;*/
-        /*}*/
+        .footer {
+            position: relative;
+        }
 
-        /*!* Fix for Bootstrap Datepicker's "Today" button becoming small *!*/
-        /*th.today {*/
-            /*display: table-cell !important;*/
-        /*}*/
-    /*}*/
-/*}*/
+        /* Fix for Bootstrap Datepicker's "Today" button becoming small */
+        th.today {
+            display: table-cell !important;
+        }
+    }
+}
 
 /* Rules for hiding tabs in tabbed search */
 .hide-tabs {
