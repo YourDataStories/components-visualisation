@@ -10,6 +10,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 minHeight: '@',             // Minimum height of this component's container
                 aggregateSetOnInit: '@',    // If the component shown is an aggregate, this indicates if it's the first
                 aggregateIconSize: '@',     // Aggregate icon size (used only if component shown is aggregate)
+                addToBasket: '@',           // If true, will show basket button in the components that support it
                 lang: '@'                   // Language of component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/dashboard-updater.html',
@@ -37,6 +38,10 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 // If lang is undefined, set default value
                 if (_.isUndefined(scope.lang) || scope.lang.trim() == "")
                     scope.lang = "en";
+
+                // If addToBasket is undefined, set default value
+                if (_.isUndefined(scope.addToBasket) || scope.addToBasket.trim() == "")
+                    scope.addToBasket = "false";
 
                 // If dashboardId is undefined, set default value
                 if (_.isUndefined(dashboardId) || dashboardId.trim() == "") {

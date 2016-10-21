@@ -5,6 +5,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
             scope: {
                 projectId: '@',     // Project ID of chart
                 dashboardId: '@',   // ID used for getting selected year range from DashboardService
+                addToBasket: '@',   // If true, the save to basket button will appear in visualizations
                 elementH: '@'       // Height of component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + 'templates/dashboard-visualization.html',
