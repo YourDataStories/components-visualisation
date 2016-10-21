@@ -32,8 +32,8 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     var aggregates = {
         aidactivity: {
             types: [
-                "aidactivity.beneficiary.countries.all",
                 "aidactivity.benefactor.countries.all",
+                "aidactivity.beneficiary.countries.all",
                 "aidactivity.beneficiary.organisations.all",
                 "aidactivity.sectors.for.countries.and.period",
                 "aidactivity.budget.for.countries.and.period",

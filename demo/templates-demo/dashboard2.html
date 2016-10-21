@@ -71,15 +71,15 @@
             <!--Aid Activity Country Selection-->
             <div ng-if="selectedSector == 'aidactivity' && status.countryOpen">
                 <div class="col-md-6" style="padding-left: 0">
-                    <!--Heatmap of Beneficiaries-->
-                    <div class="panel panel-primary">
+                    <!--Heatmap of Benefactors-->
+                    <div class="panel panel-default panel-benefactor">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Number of Aid Activities per Beneficiary Country</h3>
+                            <h3 class="panel-title">Number of Aid Activities per Benefactor Country</h3>
                         </div>
                         <div class="panel-body">
                             <yds-heatmap
                                     project-id="none"
-                                    view-type="aidactivity.beneficiary.countries.all"
+                                    view-type="aidactivity.benefactor.countries.all"
                                     color-axis="true"
                                     color-type="logarithmic"
                                     legend="true"
@@ -98,15 +98,15 @@
                 </div>
 
                 <div class="col-md-6" style="padding-right: 0">
-                    <!--Heatmap of Benefactors-->
-                    <div class="panel panel-default panel-benefactor">
+                    <!--Heatmap of Beneficiaries-->
+                    <div class="panel panel-primary">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Number of Aid Activities per Benefactor Country</h3>
+                            <h3 class="panel-title">Number of Aid Activities per Beneficiary Country</h3>
                         </div>
                         <div class="panel-body">
                             <yds-heatmap
                                     project-id="none"
-                                    view-type="aidactivity.benefactor.countries.all"
+                                    view-type="aidactivity.beneficiary.countries.all"
                                     color-axis="true"
                                     color-type="logarithmic"
                                     legend="true"
