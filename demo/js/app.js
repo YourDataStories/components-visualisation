@@ -80,19 +80,35 @@ ydsDemo.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 	.state('organisation-buyer', {
 		url: '/organisation-buyer',
 		templateUrl: 'templates-demo/organisation-buyer.html',
-		controller: function($scope) {
-			// Set project ID and base URL variables
-			$scope.projectId = "http://linkedeconomy.org/resource/Contract/AwardNotice/6723325";
+		controller: function($scope, $location) {
+			// Set base URL variable
 			$scope.baseUrl = "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect";
+
+			// Get project ID from url parameters
+			var projectId = $location.search().id;
+			if (_.isUndefined(projectId) || projectId.length == 0) {
+				// Set default project ID to be able to display the page
+				projectId = "http://linkedeconomy.org/resource/Organization/TED_730";
+			}
+
+			$scope.projectId = projectId;
 		}
 	})
 	.state('organisation-seller', {
 		url: '/organisation-seller',
 		templateUrl: 'templates-demo/organisation-seller.html',
-		controller: function($scope) {
-			// Set project ID and base URL variables
-			$scope.projectId = "http://linkedeconomy.org/resource/Contract/AwardNotice/6723325";
+		controller: function($scope, $location) {
+			// Set base URL variable
 			$scope.baseUrl = "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect";
+
+			// Get project ID from url parameters
+			var projectId = $location.search().id;
+			if (_.isUndefined(projectId) || projectId.length == 0) {
+				// Set default project ID to be able to display the page
+				projectId = "http://linkedeconomy.org/resource/Organization/TED_730";
+			}
+
+			$scope.projectId = projectId;
 		}
 	})
 	.state('map', {
