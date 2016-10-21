@@ -99,6 +99,13 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                             // Check if view has layout and set appropriate options
                             if (_.has(view, "layout") && view.layout != "default") {
                                 scope.layout = view.layout;
+
+                                switch(scope.layout) {
+                                    case "title_aspect":
+                                        // Get aspect to display on page
+                                        scope.aspect = response.data.aspect;
+                                        break;
+                                }
                             } else {
                                 // Set default layout options
                                 scope.layout = "default";

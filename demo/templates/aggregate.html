@@ -17,6 +17,14 @@
         </div>
     </div>
 
+    <!--Title Aspect layout-->
+    <div ng-switch-when="title_aspect" class="panel panel-default" ng-style="panelStyle">
+        <div class="panel-heading" ng-style="panelHeadingStyle">
+            <h4 class="aggregate-value pull-left" ng-bind-html="value"></h4>
+            <h4 class="aggregate-value pull-right">{{ aspect }}</h4>
+        </div>
+    </div>
+
     <!--Date layout-->
     <div ng-switch-when="date" class="panel panel-default" ng-style="panelStyle">
         <div class="panel-heading clearfix" ng-style="panelHeadingStyle">
