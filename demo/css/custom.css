@@ -1037,3 +1037,21 @@ a.accordion-toggle:focus, a.accordion-toggle:active {
 .plain-layout-label, .info-table-title {
     font-weight: bold;
 }
+
+/* Aggregate bright link colors */
+a.aggregate_link_bright, a.aggregate_link_bright:visited {
+    color: #fff;
+}
+
+a.aggregate_link_bright:hover {
+    color: #e4e4e4;
+}
+
+/* Aggregate dark link colors */
+a.aggregate_link_dark, a.aggregate_link_dark:visited {
+    color: #333;
+}
+
+a.aggregate_link_dark:hover {
+    color: #333;
+}
