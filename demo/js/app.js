@@ -60,8 +60,6 @@ ydsDemo.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 					case "Organisation.Seller":
 						$location.path("/organisation-seller");
 						break;
-					default:
-						break;
 				}
 			}
 		}
