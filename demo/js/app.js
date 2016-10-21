@@ -4,6 +4,23 @@ ydsDemo.run(function($rootScope, $location) {
 	$rootScope.location = $location;
 });
 
+// Controller to set base URL and project ID in Organisation buyer & seller demo pages
+ydsDemo.controller('OrganisationController', ['$scope', '$location', function($scope, $location) {
+	// Set base URL variable
+	$scope.baseUrl = "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect";
+
+	// Get project ID from url parameters
+	var projectId = $location.search().id;
+	if (_.isUndefined(projectId) || projectId.length == 0) {
+		// Set default project ID to be able to display the page
+		projectId = "http://linkedeconomy.org/resource/Organization/TED_730";
+
+		console.warn("No project ID in URL parameters: using default ID");
+	}
+
+	$scope.projectId = projectId;
+}]);
+
 ydsDemo.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 	$urlRouterProvider.otherwise('/search');
 	$locationProvider.hashPrefix('!');
@@ -80,36 +97,12 @@ ydsDemo.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 	.state('organisation-buyer', {
 		url: '/organisation-buyer',
 		templateUrl: 'templates-demo/organisation-buyer.html',
-		controller: function($scope, $location) {
-			// Set base URL variable
-			$scope.baseUrl = "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect";
-
-			// Get project ID from url parameters
-			var projectId = $location.search().id;
-			if (_.isUndefined(projectId) || projectId.length == 0) {
-				// Set default project ID to be able to display the page
-				projectId = "http://linkedeconomy.org/resource/Organization/TED_730";
-			}
-
-			$scope.projectId = projectId;
-		}
+		controller: 'OrganisationController'
 	})
 	.state('organisation-seller', {
 		url: '/organisation-seller',
 		templateUrl: 'templates-demo/organisation-seller.html',
-		controller: function($scope, $location) {
-			// Set base URL variable
-			$scope.baseUrl = "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect";
-
-			// Get project ID from url parameters
-			var projectId = $location.search().id;
-			if (_.isUndefined(projectId) || projectId.length == 0) {
-				// Set default project ID to be able to display the page
-				projectId = "http://linkedeconomy.org/resource/Organization/TED_730";
-			}
-
-			$scope.projectId = projectId;
-		}
+		controller: 'OrganisationController'
 	})
 	.state('map', {
 		url: '/map',
