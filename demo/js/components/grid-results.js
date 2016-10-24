@@ -357,12 +357,15 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                         query = "(" + query + ") AND " + quickFilter;
                                     }
 
+                                    // Get facets from URL parameters
+                                    var facets = $location.search().fq;
+
                                     // If there are advanced search rules, get them and perform advanced search
                                     var rules = $location.search()[paramPrefix + "rules"];
                                     if (!_.isUndefined(rules)) {
                                         rules = JSURL.parse(rules);
 
-                                        Data.getGridResultDataAdvanced(query, rules, grid.viewType, params.startRow, grid.pageSize, grid.lang)
+                                        Data.getGridResultDataAdvanced(query, facets, rules, grid.viewType, params.startRow, grid.pageSize, grid.lang)
                                             .then(gridResultDataSuccess, gridResultDataError);
                                     } else {
                                         var viewType = "";
@@ -373,7 +376,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                         }
 
                                         // Perform normal search
-                                        Data.getGridResultData(query, viewType, params.startRow, grid.pageSize, grid.lang)
+                                        Data.getGridResultData(query, facets, viewType, params.startRow, grid.pageSize, grid.lang)
                                             .then(gridResultDataSuccess, gridResultDataError);
                                     }
                                 });

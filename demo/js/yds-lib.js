@@ -610,15 +610,33 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
     };
 
     /**
+     * Merge the view type of tabbed search with facets, because the view type for tabbed search tabs is sent
+     * to the server as a facet
+     * @param viewType
+     * @param facets
+     * @returns {*}
+     */
+    var mergeFacetsAndViewType = function(viewType, facets) {
+        var newFacet = "{!tag=TYPE}type:" + viewType;
+
+        if (!_.contains(facets, newFacet)) {
+            facets = _.union(facets, [ newFacet ]);     // The view type of the tab is not selected in facets, add it
+        }
+
+        return facets;
+    };
+
+    /**
      * Gets the results for a tabbed search
      * @param query     Search query
+     * @param facets    Array with facets
      * @param viewType  Concept (eg. TradeActivity, AidActivity...)
      * @param start     Starting row
      * @param rows      Result rows to fetch
      * @param lang      Language of results
      * @returns {d|a|s}
      */
-    dataService.getGridResultData = function(query, viewType, start, rows, lang) {
+    dataService.getGridResultData = function(query, facets, viewType, start, rows, lang) {
         var deferred = $q.defer();
 
         var params = {
@@ -629,8 +647,11 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         };
 
         if (!_.isUndefined(viewType) && viewType.length > 0) {
-            params.fq = "{!tag=TYPE}type:" + viewType;
+            facets = mergeFacetsAndViewType(viewType, facets);
         }
+
+        // Add facets to the parameters of the request
+        params.fq = facets;
 
         $http({
             method: 'GET',
@@ -649,6 +670,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
     /**
      * Gets the results for an advanced tabbed search
      * @param query     Search query
+     * @param facets    Array with facets
      * @param rules     Query Builder rules
      * @param viewType  Concept (eg. TradeActivity, AidActivity...)
      * @param start     Starting row
@@ -656,12 +678,13 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
      * @param lang      Language of results
      * @returns {d|a|s}
      */
-    dataService.getGridResultDataAdvanced = function(query, rules, viewType, start, rows, lang) {
+    dataService.getGridResultDataAdvanced = function(query, facets, rules, viewType, start, rows, lang) {
         var deferred = $q.defer();
 
         var searchParameters = {
             q: query,
             rules: rules,
+            // fq: mergeFacetsAndViewType(viewType, facets),
             fq: "{!tag=TYPE}type:" + viewType,
             lang: lang,
             rows: rows,

@@ -140,6 +140,9 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
 
                         // Remove query builder rules from URL parameters (if there are any)
                         $location.search(paramPrefix + "rules", null);
+
+                        // Remove facet parameters
+                        $location.search(paramPrefix + "fq", null);
                     }
                 };
 
