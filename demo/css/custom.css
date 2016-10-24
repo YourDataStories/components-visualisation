@@ -127,6 +127,14 @@ body #main .container:first-child {
     }
 }
 
+/* Tabbed Search facets positioning */
+.tabbed-facet-container {
+    position: absolute;
+    right: 0;
+    top: 100px;
+    z-index: 0;
+}
+
 /* Rules for hiding tabs in tabbed search */
 .hide-tabs {
     border-width: 0;

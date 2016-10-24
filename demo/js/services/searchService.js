@@ -18,6 +18,22 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 		};
 
 		/**
+		 * Save the facets from the response to a local variable
+		 * @param response
+		 */
+		var saveFacets = function(response) {
+			//get the facet view from the response of the search API
+			facetsView  = _.find(response.view , function (view) { return "SearchFacets" in view })["SearchFacets"];
+
+			//copy the available facets in a local variable
+			fieldFacets = saveFieldFacets(response.data.facet_counts.facet_fields, facetsView);
+			rangeFacets = saveRangeFacets(response.data.facet_counts.facet_ranges, facetsView);
+			//format the facets returned from the search API based on the facet view
+
+			notifyObservers(facetsCallbacks);
+		};
+
+		/**
 		 * Formats the search results returned from the search API
 		 */
 		var formatResults = function(results, resultsView, resultsViewNames, prefLang) {
@@ -230,15 +246,9 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 			}).success(function (response) {
 				//if the search query is successful, copy the results in a local variable
 				searchResults = angular.copy(response);
-				//get the facet view from the response of the search API
-				facetsView  = _.find(response.view , function (view) { return "SearchFacets" in view })["SearchFacets"];
 
-				//copy the available facets in a local variable
-				fieldFacets = saveFieldFacets(response.data.facet_counts.facet_fields, facetsView);
-				rangeFacets = saveRangeFacets(response.data.facet_counts.facet_ranges, facetsView);
-				//format the facets returned from the search API based on the facet view
+				saveFacets(response);
 
-				notifyObservers(facetsCallbacks);
 				deferred.resolve(searchResults);
 			}).error(function (error) {
 				deferred.reject(error);
@@ -393,6 +403,10 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 					},
 					headers: {'Content-Type': 'application/json'}
 				}).success(function (response) {
+					// Save facets
+					saveFacets(response);
+
+					// Return formatted tabs
 					deferred.resolve(formatTabs(response));
 				}).error(function (error) {
 					deferred.reject(error);
@@ -409,6 +423,10 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 					},
 					headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 				}).success(function(response) {
+					// Save facets
+					saveFacets(response);
+
+					// Return formatted tabs
 					deferred.resolve(formatTabs(response));
 				}).error(function(error) {
 					deferred.reject(error);
