@@ -619,8 +619,15 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
     var mergeFacetsAndViewType = function(viewType, facets) {
         var newFacet = "{!tag=TYPE}type:" + viewType;
 
-        if (!_.contains(facets, newFacet)) {
-            facets = _.union(facets, [ newFacet ]);     // The view type of the tab is not selected in facets, add it
+        if (_.isArray(facets)) {
+            // facets is an array, add new facet to it (if it exists, union will not add it again)
+            facets = _.union(facets, [ newFacet ]);
+        } else if (_.isString(facets) && newFacet != facets) {
+            // facets is a single facet and is not an array, so make it an array with both facets
+            facets = [ facets, newFacet ];
+        } else if (_.isUndefined(facets)) {
+            // Facets is undefined, only facet is the view type
+            facets = newFacet;
         }
 
         return facets;
