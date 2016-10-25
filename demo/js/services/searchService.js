@@ -416,6 +416,11 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 				});
 			} else {
 				// Rules exist, use advanced search API to get tab result counts
+				// The server expects fq to always be an array, so if it's a string we make it an array
+				if (!_.isArray(facets)) {
+					facets = [ facets ];
+				}
+
 				$http({
 					method: "POST",
 					url: "http://" + YDS_CONSTANTS.API_ADVANCED_SEARCH,
