@@ -688,11 +688,17 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
     dataService.getGridResultDataAdvanced = function(query, facets, rules, viewType, start, rows, lang) {
         var deferred = $q.defer();
 
+        // Create facets array
+        var fq = mergeFacetsAndViewType(viewType, facets);
+        if (!_.isArray(fq)) {
+            // The server expects fq to always be an array, so if it's a string we make it an array with 1 string in it
+            fq = [ fq ];
+        }
+
         var searchParameters = {
             q: query,
             rules: rules,
-            // fq: mergeFacetsAndViewType(viewType, facets),
-            fq: "{!tag=TYPE}type:" + viewType,
+            fq: fq,
             lang: lang,
             rows: rows,
             start: start
