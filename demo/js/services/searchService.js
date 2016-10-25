@@ -380,9 +380,11 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 		/**
 		 * Gets the available tabs for the current (tabbed) search query and returns
 		 * their result counts so the number can be shown on the page for each tab
+		 * @param rules
+		 * @param facets
 		 * @returns {d|s|a}
 		 */
-		var getTabResultCounts = function(rules) {
+		var getTabResultCounts = function(rules, facets) {
 			var deferred = $q.defer();
 
 			// Get the current search keyword (if empty, get total results in each tab)
@@ -399,6 +401,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 					url: "http://" + YDS_CONSTANTS.API_SEARCH,
 					params: {
 						q: query,
+						fq: facets,
 						rows: 0
 					},
 					headers: {'Content-Type': 'application/json'}
@@ -418,6 +421,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 					url: "http://" + YDS_CONSTANTS.API_ADVANCED_SEARCH,
 					data: {
 						q: query,
+						fq: facets,
 						rules: rules,
 						rows: 0
 					},

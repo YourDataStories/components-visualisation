@@ -58,7 +58,10 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                  * @param rules     Rules for query builder, if there are any (can be undefined)
                  */
                 var updateTabResultCounts = function(rules) {
-                    Search.getTabResultCounts(rules).then(function(tabResultCounts) {
+                    // Get any selected facets from the URL
+                    var facets = $location.search().fq;
+
+                    Search.getTabResultCounts(rules, facets).then(function(tabResultCounts) {
                         // Update amounts of tabs
                         _.each(scope.tabs, function(tab) {
                             if (_.has(tabResultCounts, tab.concept)) {
