@@ -982,6 +982,14 @@ app.factory('Filters', [ function () {
 
             updateFilters(newFilters, compId, filters);
         },
+        addGridResultsFilter: function(compId, gridFilters) {
+            var newFilters = [{
+                applied_to: "search",
+                attrs: gridFilters
+            }];
+
+            updateFilters(newFilters, compId, filters);
+        },
         addGridFilter: function(compId, gridFilters) {
             var chartFilters = [];
 

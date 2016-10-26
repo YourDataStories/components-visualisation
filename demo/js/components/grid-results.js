@@ -274,6 +274,25 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 };
 
                 /**
+                 * Save parameters that were used to create the grid to the Filters service, so if the grid is
+                 * saved to the Basket, all parameters will be saved
+                 * @param query
+                 * @param facets
+                 * @param rules
+                 */
+                var saveParamsToFilters = function(query, facets, rules) {
+                    // Create parameters object
+                    var params = {
+                        q: query,
+                        fq: facets,
+                        rules: rules
+                    };
+
+                    // Save the parameters to Filters service
+                    Filters.addGridResultsFilter(grid.elementId, params);
+                };
+
+                /**
                  * Function to render the grid
                  */
                 var visualizeGrid = function(quickFilter) {
@@ -379,6 +398,9 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                         Data.getGridResultData(query, facets, viewType, params.startRow, grid.pageSize, grid.lang)
                                             .then(gridResultDataSuccess, gridResultDataError);
                                     }
+
+                                    // Save parameters used to create the grid to the filters service
+                                    saveParamsToFilters(query, facets, rules);
                                 });
                             } else {
                                 Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang, extraParams)
@@ -411,11 +433,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
 
                         // Only look for changes if this grid is in the active tab
                         if (urlParams[paramPrefix + "tab"] == scope.viewType) {
-                            // If the tab changed and grid options are ready, size columns to fit
-                            if (urlParams[paramPrefix + "tab"] != prevTab && !_.isUndefined(scope.gridOptions) && _.has(scope.gridOptions, "api")) {
-                                scope.gridOptions.api.sizeColumnsToFit();
-                            }
-
                             // Update prevTab variable to the new tab
                             prevTab = urlParams[paramPrefix + "tab"];
 
