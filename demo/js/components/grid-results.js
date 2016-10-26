@@ -53,11 +53,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 var extraParams = scope.extraParams;
                 var useGridApi = scope.useGridApi;
 
-                // If extra params exist, add them to Filters
-                if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
-                    Filters.addExtraParamsFilter(grid.elementId, extraParams);
-                }
-
                 // If viewType is undefined we can't show the grid
                 if(_.isUndefined(grid.viewType) || grid.viewType.trim()=="") {
                     scope.ydsAlert = "The YDS component is not properly initialized " +
