@@ -10,12 +10,16 @@
 
     <yds-grid-results
             ng-switch-when="grid"
+            project-id="none"
             view-type="{{ viewType }}"
             project-details-type="{{ concept }}"
             extra-params="extraParams"
             page-size="50"
             quick-filtering="true"
             element-h="400"
+            add-to-basket="{{ addToBasket }}"
+            basket-btn-x="400"
+            basket-btn-y="0"
             lang="{{ lang }}">
     </yds-grid-results>
 
@@ -75,6 +79,7 @@
             ng-switch-when="search"
             default-tab="{{ concept }}"
             url-param-prefix=" {{ urlParamPrefix }}"
+            add-to-basket="{{ addToBasket }}"
             watch-rule-url-param="true"
             hide-tabs="true"
             lang="{{ lang }}">

@@ -393,17 +393,19 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 				query = "*";
 			}
 
+			var params = {
+				q: query,
+				fq: facets,
+				rows: 0
+			};
+
 			// Get tabs from the server, using the appropriate API for normal or advanced search
 			if (_.isUndefined(rules)) {
 				// Rules do not exist, use normal search API to get tab result counts
 				$http({
 					method: "GET",
 					url: "http://" + YDS_CONSTANTS.API_SEARCH,
-					params: {
-						q: query,
-						fq: facets,
-						rows: 0
-					},
+					params: params,
 					headers: {'Content-Type': 'application/json'}
 				}).success(function (response) {
 					// Save facets
@@ -417,19 +419,17 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 			} else {
 				// Rules exist, use advanced search API to get tab result counts
 				// The server expects fq to always be an array, so if it's a string we make it an array
-				if (!_.isArray(facets)) {
-					facets = [ facets ];
+				if (_.isString(params.fq)) {
+					params.fq = [ params.fq ];
 				}
+
+				// Add rules to the array
+				params.rules = rules;
 
 				$http({
 					method: "POST",
 					url: "http://" + YDS_CONSTANTS.API_ADVANCED_SEARCH,
-					data: {
-						q: query,
-						fq: facets,
-						rules: rules,
-						rows: 0
-					},
+					data: params,
 					headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 				}).success(function(response) {
 					// Save facets

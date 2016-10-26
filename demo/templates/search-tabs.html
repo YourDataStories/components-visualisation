@@ -35,6 +35,7 @@
         <!-- Results grid -->
         <yds-grid-results
                 ng-class="flexClass"
+                project-id="none"
                 view-type="{{tab.concept}}"
                 sorting="true"
                 lang="{{lang}}"
@@ -44,7 +45,7 @@
                 element-h="450"
                 col-resize="true"
                 page-size="50"
-                add-to-basket="true"
+                add-to-basket="{{addToBasket}}"
                 basket-btn-x="400"
                 basket-btn-y="0">
         </yds-grid-results>

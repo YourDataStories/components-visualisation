@@ -7,6 +7,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                 urlParamPrefix: '@',    // Prefix to add before all url parameters (optional)
                 watchRuleUrlParam: '@', // If Advanced Search should watch URL parameter for rule changes and apply them
                 hideTabs: '@',          // If true, tabs will be hidden and only the default tab will show
+                addToBasket: '@',       // If true, the grids will have an "add to basket" button
                 lang: '@'               // Language of component
             },
             templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/search-tabs.html',
@@ -59,7 +60,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                  */
                 var updateTabResultCounts = function(rules) {
                     // Get any selected facets from the URL
-                    var facets = $location.search().fq;
+                    var facets = $location.search()[paramPrefix + "fq"];
 
                     Search.getTabResultCounts(rules, facets).then(function(tabResultCounts) {
                         // Update amounts of tabs

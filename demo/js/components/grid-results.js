@@ -358,7 +358,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                     }
 
                                     // Get facets from URL parameters
-                                    var facets = $location.search().fq;
+                                    var facets = $location.search()[paramPrefix + "fq"];
 
                                     // If there are advanced search rules, get them and perform advanced search
                                     var rules = $location.search()[paramPrefix + "rules"];
