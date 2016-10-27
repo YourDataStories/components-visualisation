@@ -299,6 +299,13 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                 field: gridView[i].attribute
             };
 
+            // Enable sorting only if sortable attribute is true
+            if (_.has(gridView[i], "sortable")) {
+                columnInfo.suppressSorting = !gridView[i].sortable;
+            } else {
+                columnInfo.suppressSorting = true;
+            }
+
             if (!_.isUndefined(gridView[i].style)) {
                 columnInfo.cellStyle = gridView[i].style;
             }
