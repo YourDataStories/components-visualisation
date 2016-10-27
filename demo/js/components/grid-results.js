@@ -423,21 +423,12 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                     // Get facets from URL parameters
                                     var facets = $location.search()[paramPrefix + "fq"];
 
-                                    // Get and format the sort model to send it with the request
-                                    var sortModel = _.first(params.sortModel);
-                                    if (!_.isUndefined(sortModel)) {
-                                        sortModel = {
-                                            sort: sortModel.colId,
-                                            sortdir: sortModel.sort
-                                        };
-                                    }
-
                                     // If there are advanced search rules, get them and perform advanced search
                                     var rules = $location.search()[paramPrefix + "rules"];
                                     if (!_.isUndefined(rules)) {
                                         rules = JSURL.parse(rules);
 
-                                        Data.getGridResultDataAdvanced(query, facets, rules, grid.viewType, params.startRow, grid.pageSize, grid.lang, sortModel)
+                                        Data.getGridResultDataAdvanced(query, facets, rules, grid.viewType, params.startRow, grid.pageSize, grid.lang, params.sortModel)
                                             .then(gridResultDataSuccess, gridResultDataError);
                                     } else {
                                         var viewType = "";
@@ -448,7 +439,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                         }
 
                                         // Perform normal search
-                                        Data.getGridResultData(query, facets, viewType, params.startRow, grid.pageSize, grid.lang, sortModel)
+                                        Data.getGridResultData(query, facets, viewType, params.startRow, grid.pageSize, grid.lang, params.sortModel)
                                             .then(gridResultDataSuccess, gridResultDataError);
                                     }
 

@@ -641,6 +641,18 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
     };
 
     /**
+     * Format sort options like the server wants them
+     * @param sortModel     Sort model as given by ag-grid
+     * @returns {{sort, sortdir}}
+     */
+    var formatAgGridSortParams = function(sortModel) {
+        return {
+            sort: _.pluck(sortModel, "colId"),
+            sortdir: _.pluck(sortModel, "sort")
+        };
+    };
+
+    /**
      * Gets the results for a tabbed search
      * @param query     Search query
      * @param facets    Array with facets
@@ -654,12 +666,14 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
     dataService.getGridResultData = function(query, facets, viewType, start, rows, lang, sortModel) {
         var deferred = $q.defer();
 
+        var sortParams = formatAgGridSortParams(sortModel);
+
         var params = _.extend({
             q: query,
             lang: lang,
             rows: rows,
             start: start
-        }, sortModel);
+        }, sortParams);
 
         if (!_.isUndefined(viewType) && viewType.length > 0) {
             facets = mergeFacetsAndViewType(viewType, facets);
@@ -704,6 +718,8 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             fq = [ fq ];
         }
 
+        var sortParams = formatAgGridSortParams(sortModel);
+
         var searchParameters = _.extend({
             q: query,
             rules: rules,
@@ -711,7 +727,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             lang: lang,
             rows: rows,
             start: start
-        }, sortModel);
+        }, sortParams);
 
         $http({
             method: "POST",
