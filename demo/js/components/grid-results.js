@@ -359,8 +359,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                     var colDefsWithButtons = addButtonsToColumnDefs(columnDefs);
 
                                     scope.gridOptions.api.setColumnDefs(colDefsWithButtons);
-
-                                    hasColDefs = true;
                                 }
 
                                 // Format the data returned from the API and add them to the grid
@@ -395,9 +393,11 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                 // Call sizeColumnsToFit, if this grid is in the selected tab of Tabbed Search (so
                                 // tab url parameter will be the same as this grid's view type) or if query length
                                 // is > 0 (so this grid is using extraParams, which means it's shown in the Dashboard)
-                                if (scope.viewType == $location.search()[paramPrefix + "tab"] || query.length > 0) {
+                                if (!hasColDefs && (scope.viewType == $location.search()[paramPrefix + "tab"] || query.length > 0)) {
                                     scope.gridOptions.api.sizeColumnsToFit();
                                 }
+
+                                hasColDefs = true;
                             };
 
                             // Function to be called when grid results retrieval fails
