@@ -49,6 +49,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 };
 
                 var query = "";
+                var hasColDefs = false; // Indicates if the column definitions have been loaded for the grid
 
                 var paramPrefix = scope.urlParamPrefix;
                 var projectDetailsType = scope.projectDetailsType;
@@ -352,9 +353,13 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                 var responseView = findView(possibleViewNames, response.view);
                                 var numOfResults = response.data.response.numFound;
 
-                                // Format the column definitions returned from the API and add 2 extra columns to them
-                                var columnDefs = Data.prepareGridColumns(responseView);
-                                var colDefsWithButtons = addButtonsToColumnDefs(columnDefs);
+                                if (!hasColDefs) {
+                                    // Format the column definitions returned from the API and add 2 extra columns to them
+                                    var columnDefs = Data.prepareGridColumns(responseView);
+                                    var colDefsWithButtons = addButtonsToColumnDefs(columnDefs);
+
+                                    hasColDefs = true;
+                                }
 
                                 scope.gridOptions.api.setColumnDefs(colDefsWithButtons);
 
