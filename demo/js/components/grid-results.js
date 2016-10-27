@@ -358,10 +358,10 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                     var columnDefs = Data.prepareGridColumns(responseView);
                                     var colDefsWithButtons = addButtonsToColumnDefs(columnDefs);
 
+                                    scope.gridOptions.api.setColumnDefs(colDefsWithButtons);
+
                                     hasColDefs = true;
                                 }
-
-                                scope.gridOptions.api.setColumnDefs(colDefsWithButtons);
 
                                 // Format the data returned from the API and add them to the grid
                                 var rowsThisPage = Data.prepareGridData(responseData, responseView);
