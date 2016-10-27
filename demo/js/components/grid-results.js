@@ -240,8 +240,14 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     return deferred.promise;
                 };
 
+                /**
+                 * Set the project that should be selected in DashboardService.
+                 * (Used only if view-in-dashboard attribute is true)
+                 * @param itemId
+                 */
                 scope.viewBtn = function(itemId) {
-                    console.log(itemId);
+                    // Set selected project ID & type in DashboardService
+                    DashboardService.setSelectedProject(itemId, projectDetailsType);
                 };
 
                 /**

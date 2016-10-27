@@ -49,6 +49,9 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
 
                 // Select new sector
                 scope.selectedSector = newSector;
+
+                // Reset selected project
+                scope.selectedProject = {};
             }
 
             // If setTitle is true, set the panel's title to show the selection
@@ -67,6 +70,11 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
         // (https://github.com/angular-slider/angularjs-slider/issues/79#issuecomment-121141586)
         scope.$watch("status.periodOpen", function() {
             scope.$broadcast('reCalcViewDimensions');
+        });
+
+        // Subscribe to be notified of selected project changes
+        DashboardService.subscribeProjectChanges(scope, function() {
+            scope.selectedProject = DashboardService.getSelectedProjectInfo();
         });
     }
 ]);

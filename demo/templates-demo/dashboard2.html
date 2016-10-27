@@ -451,6 +451,16 @@
         </div>
     </div>
 
+    <!--Project Info-->
+    <div ng-switch="selectedProject.type" class="row">
+        <div ng-switch-when="AidActivity" class="col-md-12">
+            <ng-include src="'templates-demo/view-aid.html'"></ng-include>
+        </div>
+        <div ng-switch-when="TradeActivity" class="col-md-12">
+            <ng-include src="'templates-demo/view-trade.html'"></ng-include>
+        </div>
+    </div>
+
     <div class="row">
         <!--Why use YDS Callout-->
         <div class="col-md-8">
