@@ -82,6 +82,13 @@ angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout
 			};
 
 			/**
+			 * Hide the alert
+			 */
+			scope.hideAlert = function() {
+				scope.ydsAlert = "";
+			};
+
+			/**
 			 * function to get the required data of each different type of combobox
 			 **/
 			var getComboFilterData = function(name, attribute) {

@@ -188,6 +188,13 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 };
 
                 /**
+                 * Hide the alert
+                 */
+                scope.hideAlert = function() {
+                    scope.ydsAlert = "";
+                };
+
+                /**
                  * Finds the first available view for a data type
                  * @param possibleViewNames
                  * @param availableViews
