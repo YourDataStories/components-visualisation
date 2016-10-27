@@ -641,17 +641,18 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
      * @param start     Starting row
      * @param rows      Result rows to fetch
      * @param lang      Language of results
+     * @param sortModel Parameters for how the server should sort the data
      * @returns {d|a|s}
      */
-    dataService.getGridResultData = function(query, facets, viewType, start, rows, lang) {
+    dataService.getGridResultData = function(query, facets, viewType, start, rows, lang, sortModel) {
         var deferred = $q.defer();
 
-        var params = {
+        var params = _.extend({
             q: query,
             lang: lang,
             rows: rows,
             start: start
-        };
+        }, sortModel);
 
         if (!_.isUndefined(viewType) && viewType.length > 0) {
             facets = mergeFacetsAndViewType(viewType, facets);
@@ -683,9 +684,10 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
      * @param start     Starting row
      * @param rows      Result rows to fetch
      * @param lang      Language of results
+     * @param sortModel Parameters for how the server should sort the data
      * @returns {d|a|s}
      */
-    dataService.getGridResultDataAdvanced = function(query, facets, rules, viewType, start, rows, lang) {
+    dataService.getGridResultDataAdvanced = function(query, facets, rules, viewType, start, rows, lang, sortModel) {
         var deferred = $q.defer();
 
         // Create facets array
@@ -695,14 +697,14 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
             fq = [ fq ];
         }
 
-        var searchParameters = {
+        var searchParameters = _.extend({
             q: query,
             rules: rules,
             fq: fq,
             lang: lang,
             rows: rows,
             start: start
-        };
+        }, sortModel);
 
         $http({
             method: "POST",
