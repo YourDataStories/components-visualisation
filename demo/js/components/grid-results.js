@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 'Basket', 'YDS_CONSTANTS', '$location', '$q',
-    function(Data, Filters, Search, Basket, YDS_CONSTANTS, $location, $q){
+angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 'Basket', 'YDS_CONSTANTS', 'DashboardService', '$compile', '$location', '$q',
+    function(Data, Filters, Search, Basket, YDS_CONSTANTS, DashboardService, $compile, $location, $q){
         return {
             restrict: 'E',
             scope: {
@@ -9,6 +9,8 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 lang: '@',              // Lang of the visualised data
                 urlParamPrefix: '@',    // Prefix to add before all url parameters (optional)
                 useGridApi: '@',        // If true, grid will use the grid API for the request
+
+                viewInDashboard: '@',   // If true, the view button for each row will set the clicked value in DashboardService
 
                 extraParams: '=',       // Extra attributes to pass to the API (optional)
 
@@ -52,6 +54,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 var projectDetailsType = scope.projectDetailsType;
                 var extraParams = scope.extraParams;
                 var useGridApi = scope.useGridApi;
+                var viewInDashboard = scope.viewInDashboard;
 
                 // If viewType is undefined we can't show the grid
                 if(_.isUndefined(grid.viewType) || grid.viewType.trim()=="") {
@@ -84,6 +87,10 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 // Check if the useGridApi attr is defined, else assign the default value
                 if(_.isUndefined(useGridApi) || (useGridApi!="true" && useGridApi!="false"))
                     useGridApi = "false";
+
+                // Check if the viewInDashboard attr is defined, else assign the default value
+                if(_.isUndefined(viewInDashboard) || (viewInDashboard!="true" && viewInDashboard!="false"))
+                    viewInDashboard = "false";
 
                 // Check if the filtering attr is defined, else assign the default value
                 if(_.isUndefined(grid.filtering) || (grid.filtering!="true" && grid.filtering!="false"))
@@ -233,6 +240,10 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     return deferred.promise;
                 };
 
+                scope.viewBtn = function(itemId) {
+                    console.log(itemId);
+                };
+
                 /**
                  * Adds 2 columns to the column definitions of a grid in which
                  * the "view" and "add to basket" buttons will be
@@ -240,10 +251,30 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                  * @returns {Array.<*>} New column definitions
                  */
                 var addButtonsToColumnDefs = function(columnDefs) {
+                    var viewBtnColDef = {
+                        field: "viewBtn",
+                        headerName: "",
+                        width: 45,
+                        suppressSorting: true,
+                        suppressMenu: true,
+                        suppressSizeToFit: true
+                    };
+
+                    if (viewInDashboard == "true") {
+                        viewBtnColDef.cellRenderer = function(params) {
+                            var btnStr = "<button type='button' class='btn btn-xs btn-primary'" +
+                                "style='margin-top: -4px' ng-click='viewBtn(\"" + params.data.id + "\")'>View</button>";
+                            var compiled = $compile(btnStr)(scope);
+
+                            return _.first(compiled);
+                        };
+                    }
+
                     var newColDefs = [
-                        { field: "viewBtn", headerName: "", width: 45, suppressSorting: true, suppressMenu: true, suppressSizeToFit: true }
+                        viewBtnColDef
                         // { field: "basketBtn", headerName: "", width: 60, suppressSorting: true, suppressMenu: true }
                     ];
+
 
                     return newColDefs.concat(columnDefs);
                 };
