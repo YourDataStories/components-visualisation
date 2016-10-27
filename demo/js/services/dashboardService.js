@@ -2,9 +2,12 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     var countries = {};
     var yearRange = {};
     var selectedViewType = {};
+    var projectInfoType = "";
+    var projectInfoId = "";
     var notifySelectionChangeLock = false;
     var notifyYearChangeLock = false;
     var notifyViewTypeChangeLock = false;
+    var notifyProjectInfoChangeLock = false;
 
     // Mapping for which view type's selected countries go to which API parameter.
     // For example selected countries for view type "aidactivity.beneficiary.countries.all"
@@ -172,6 +175,19 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     };
 
     /**
+     * Subscribe to be notified about changes in the selected project
+     * @param scope
+     * @param callback
+     * @returns {*}
+     */
+    var subscribeProjectChanges = function(scope, callback) {
+        var unregister = $rootScope.$on('dashboard-service-project-info-change', callback);
+        scope.$on('$destroy', unregister);
+
+        return unregister;
+    };
+
+    /**
      * Emit event to notify about a view type change
      */
     var notifyViewTypeChange = function() {
@@ -212,6 +228,21 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
                 $rootScope.$emit('dashboard-service-year-range-change');
 
                 notifyYearChangeLock = false;
+            }, 150);
+        }
+    };
+
+    /**
+     * Emit event to notify about a selected project change
+     */
+    var notifyProjectChange = function() {
+        if (!notifyProjectInfoChangeLock) {
+            notifyProjectInfoChangeLock = true;
+
+            $timeout(function() {
+                $rootScope.$emit('dashboard-service-project-info-change');
+
+                notifyProjectInfoChangeLock = false;
             }, 150);
         }
     };
@@ -314,6 +345,29 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         }
     };
 
+    /**
+     * Return selected project info
+     * @returns {{id: string, type: string}}
+     */
+    var getSelectedProjectInfo = function() {
+        return {
+            id: projectInfoId,
+            type: projectInfoType
+        };
+    };
+
+    /**
+     * Set the properties for the selected project
+     * @param id
+     * @param type
+     */
+    var setSelectedProject = function(id, type) {
+        projectInfoId = id;
+        projectInfoType = type;
+
+        notifyProjectChange();
+    };
+
     return {
         getApiOptionsMapping: getApiOptionsMapping,
         getYearParamName: getYearParamName,
@@ -323,6 +377,7 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         subscribeSelectionChanges: subscribeSelectionChanges,
         subscribeYearChanges: subscribeToYearChanges,
         subscribeViewTypeChanges: subscribeViewTypeChanges,
+        subscribeProjectChanges: subscribeProjectChanges,
         setCountries: setCountries,
         getCountries: getCountries,
         clearCountries: clearCountries,
@@ -331,6 +386,8 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         getMinYear: getMinYear,
         getMaxYear: getMaxYear,
         setViewType: setViewType,
-        getViewType: getViewType
+        getViewType: getViewType,
+        getSelectedProjectInfo: getSelectedProjectInfo,
+        setSelectedProject: setSelectedProject
     };
 });
