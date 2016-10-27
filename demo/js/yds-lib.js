@@ -778,6 +778,7 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
                 break;
             case "info":
                 visualizationUrl="http://" + YDS_CONSTANTS.API_INFO;
+                params.context = 0;
                 break;
             case "grid":
                 visualizationUrl="http://" + YDS_CONSTANTS.API_GRID;
