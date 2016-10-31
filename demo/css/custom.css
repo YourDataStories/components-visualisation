@@ -1068,7 +1068,8 @@ a.aggregate_link_dark:hover {
 .aggregate-dashboard-layout {
     text-align: center;
     background-color: #c3c3c3;
-    padding: 19px;
+    padding-top: 19px;
+    padding-bottom: 19px;
     margin-bottom: 20px;
     border: 1px solid #757575;
     border-radius: 4px;
