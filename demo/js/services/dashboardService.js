@@ -42,6 +42,14 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
                 "aidactivity.budget.for.countries.and.period",
                 "aidactivity.spending.for.countries.and.period"
             ],
+            titles: [
+                "Benefactor Countries",
+                "Beneficiary Countries",
+                "Beneficiary Organisations",
+                "Sectors",
+                "Budget",
+                "Spending"
+            ],
             width: 2
         },
         tradeactivity: {
@@ -49,6 +57,11 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
                 "tradeactivity.hasorigin.amount.for.countries.and.period",
                 "tradeactivity.hasdestination.amount.for.countries.and.period",
                 "tradeactivity.sectors.for.countries.and.period"
+            ],
+            titles: [
+                "Amount (Origin)",
+                "Amount (Destination)",
+                "Sectors"
             ],
             width: 4
         }
