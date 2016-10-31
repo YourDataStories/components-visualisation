@@ -448,7 +448,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                         // Define the options of the grid component
                         scope.gridOptions = {
                             columnDefs: [],
-                            enableColResize: true,
+                            enableColResize: (grid.colResize == "true"),
                             enableServerSideSorting: (grid.sorting == "true"),
                             virtualPaging: true,
                             datasource: dataSource
