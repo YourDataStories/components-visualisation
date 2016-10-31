@@ -2,17 +2,19 @@ angular.module('yds').directive('ydsInfo', ['Data', 'Translations', '$sce', func
     return {
         restrict: 'E',
         scope: {
-            projectId: '@',     //id of the project that the data belong
-            viewType: '@',      //type of the info object
-            lang: '@',          //lang of the visualised data
-            labelColWidth: '@', //width of the labels column (1-11, using bootstrap's grid)
-            extraParams: '='    //extra parameters to send with API call
+            projectId: '@',     // ID of the project that the data belong
+            viewType: '@',      // Type of the info object
+            lang: '@',          // Lang of the visualised data
+            labelColWidth: '@', // Width of the labels column (1-11, using bootstrap's grid)
+            vertical: '@',      // If true, the info component will have a vertical layout
+            extraParams: '='    // Extra parameters to send with API call
         },
         templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/info.html',
         link: function(scope) {
             var projectId = scope.projectId;
             var viewType = scope.viewType;
             var lang = scope.lang;
+            var vertical = scope.vertical;
             var labelColWidth = parseInt(scope.labelColWidth);
             var extraParams = scope.extraParams;
 
@@ -32,12 +34,23 @@ angular.module('yds').directive('ydsInfo', ['Data', 'Translations', '$sce', func
             if(_.isUndefined(lang) || lang.trim()=="")
                 lang = "en";
 
+            //check if the vertical attr is defined, else assign default value
+            if(_.isUndefined(vertical) || (vertical != "true" && vertical != "false"))
+                vertical = "false";
+
             if (_.isUndefined(labelColWidth) || _.isNaN(labelColWidth) || labelColWidth > 11 || labelColWidth < 1) {
                 labelColWidth = 4;
             }
 
-            scope.labelCol = "col-md-" + labelColWidth;
-            scope.infoCol = "col-md-" + (12 - labelColWidth);
+            if (vertical != "true") {
+                // Make the label column the given width, and give the info column the remaining space
+                scope.labelCol = "col-md-" + labelColWidth;
+                scope.infoCol = "col-md-" + (12 - labelColWidth);
+            } else {
+                // In vertical layout, the labels and values take up whole rows
+                scope.labelCol = "col-md-12";
+                scope.infoCol = "col-md-12";
+            }
 
             scope.info = {};
             scope.translations = {

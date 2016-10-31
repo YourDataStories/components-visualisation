@@ -937,7 +937,7 @@ a.accordion-toggle:focus, a.accordion-toggle:active {
 }
 
 /* Rule to make Dashboard info component's labels gray (bootstrap's default) color */
-.dashboard-info-container-default > yds-dashboard-updater > .dashboard-updater-container > yds-info > .yds-info-wrapper > .row > .col-md-2 > .label {
+.dashboard-info-container-default > yds-dashboard-updater > .dashboard-updater-container > yds-info > .yds-info-wrapper > .row > div[class*="col-md-"] > .label {
     background-color: #939393;
 }
 
