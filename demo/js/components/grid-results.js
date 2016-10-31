@@ -15,7 +15,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 extraParams: '=',       // Extra attributes to pass to the API (optional)
 
                 sorting: '@',           // Enable or disable array sorting, values: true, false
-                filtering: '@',         // Enable or disable array filtering, values: true, false
                 quickFiltering: '@',    // Enable or disable array quick filtering, values: true, false
                 colResize: '@',         // Enable or disable column resize, values: true, false
                 pageSize: '@',          // Set the number of rows of each page
@@ -41,7 +40,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     viewType: scope.viewType,
                     lang: scope.lang,
                     sorting: scope.sorting,
-                    filtering: scope.filtering,
                     quickFiltering: scope.quickFiltering,
                     colResize: scope.colResize,
                     pageSize: scope.pageSize,
@@ -93,10 +91,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 if(_.isUndefined(viewInDashboard) || (viewInDashboard!="true" && viewInDashboard!="false"))
                     viewInDashboard = "false";
 
-                // Check if the filtering attr is defined, else assign the default value
-                if(_.isUndefined(grid.filtering) || (grid.filtering!="true" && grid.filtering!="false"))
-                    grid.filtering = "false";
-
                 // Check if the quick filtering attr is defined, else assign the default value
                 if(_.isUndefined(grid.quickFiltering) || (grid.quickFiltering!="true" && grid.quickFiltering!="false"))
                     grid.quickFiltering = "false";
@@ -133,10 +127,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 var filterModifiedListener = function() {
                     var gridFilters = {};
 
-                    //get all filters applied to the columns
-                    if (grid.filtering === "true")
-                        gridFilters = scope.gridOptions.api.getFilterModel();
-
                     //if quick filtering is enabled and has length>0, get its value and create an extra filter
                     if (grid.quickFiltering === "true")
                         gridFilters['_ydsQuickFilter_'] = scope.quickFilterValue;
@@ -156,7 +146,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                  */
                 scope.$on("$destroy", function() {
                     //if the grid filtering is enabled remove the filter event listener
-                    if (grid.filtering === "true" || grid.quickFiltering === "true") {
+                    if (grid.quickFiltering === "true") {
                         if (!_.isUndefined(scope.gridOptions) && _.has(scope.gridOptions, "api")) {
                             scope.gridOptions.api.removeEventListener('afterFilterChanged', filterModifiedListener);
                         }
@@ -277,7 +267,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     if (viewInDashboard == "true") {
                         viewBtnColDef.cellRenderer = function(params) {
                             var btnStr = "<button type='button' class='btn btn-xs btn-primary'" +
-                                "style='margin-top: -4px' ng-click='viewBtn(\"" + params.data.id + "\")'>View</button>";
+                                " style='margin-top: -4px' ng-click='viewBtn(\"" + params.data.id + "\")'>View</button>";
                             var compiled = $compile(btnStr)(scope);
 
                             return _.first(compiled);
