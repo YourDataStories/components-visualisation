@@ -18,8 +18,13 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
         };
 
         scope.showVis = true;
+        scope.aggregateToShow = 0;
 
         scope.infoPopoverUrl = ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + "templates-demo/dashboard2-info.html";
+
+        scope.selectTab = function(tabIndex) {
+            scope.aggregateToShow = tabIndex;
+        };
 
         /**
          * Select a sector
@@ -60,6 +65,7 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
 
                 // Select new sector
                 scope.selectedSector = newSector;
+                scope.infoType = newSector + ".filters.selected";
 
                 // Reset selected project
                 scope.selectedProject = {};
