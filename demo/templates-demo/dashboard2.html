@@ -216,51 +216,49 @@
         </div>
 
         <!--Aggregates-->
-        <div uib-accordion-group class="panel panel-default dashboard2-accordion-panel dashboard2-aggregate-panel" is-open="status.aggregatesOpen">
-            <uib-accordion-heading>
-                <div class="accordion-arrow pull-left">Step 4</div>
-                <div class="dashboard2-accordion-inner-heading">
-                    <h3 class="panel-title pull-left">{{ panelCategoryTitle }}</h3>
-                    <i class="pull-right glyphicon" ng-class="{'glyphicon-minus-sign': status.aggregatesOpen, 'glyphicon-plus-sign': !status.aggregatesOpen}"></i>
-                </div>
-            </uib-accordion-heading>
+        <!--<div uib-accordion-group class="panel panel-default dashboard2-accordion-panel dashboard2-aggregate-panel" is-open="status.aggregatesOpen">-->
+            <!--<uib-accordion-heading>-->
+                <!--<div class="accordion-arrow pull-left">Step 4</div>-->
+                <!--<div class="dashboard2-accordion-inner-heading">-->
+                    <!--<h3 class="panel-title pull-left">{{ panelCategoryTitle }}</h3>-->
+                    <!--<i class="pull-right glyphicon" ng-class="{'glyphicon-minus-sign': status.aggregatesOpen, 'glyphicon-plus-sign': !status.aggregatesOpen}"></i>-->
+                <!--</div>-->
+            <!--</uib-accordion-heading>-->
 
-            <div ng-class="aggregateClass"
-                 ng-repeat="type in aggregates track by $index"
-                 style="padding-left: 10px; padding-right: 10px">
-                <yds-dashboard-updater
-                        type="aggregate"
-                        project-id="{{ projectId }}"
-                        dashboard-id="{{ selectedSector }}"
-                        view-type="{{ type }}"
-                        min-height="150"
-                        aggregate-icon-size="3"
-                        aggregate-set-on-init="{{ ($index == 0) }}">
-                </yds-dashboard-updater>
-            </div>
-        </div>
+            <!--<div ng-class="aggregateClass"-->
+                 <!--ng-repeat="type in aggregates track by $index"-->
+                 <!--style="padding-left: 10px; padding-right: 10px">-->
+                <!--<yds-dashboard-updater-->
+                        <!--type="aggregate"-->
+                        <!--project-id="{{ projectId }}"-->
+                        <!--dashboard-id="{{ selectedSector }}"-->
+                        <!--view-type="{{ type }}"-->
+                        <!--min-height="150"-->
+                        <!--aggregate-icon-size="3"-->
+                        <!--aggregate-set-on-init="{{ ($index == 0) }}">-->
+                <!--</yds-dashboard-updater>-->
+            <!--</div>-->
+        <!--</div>-->
     </uib-accordion>
 
     <!--Dashboard Visualization-->
     <div class="row">
-        <div class="col-md-12">
-            <!--Aid Activity Visualization-->
-            <yds-dashboard-visualization
-                    ng-if="selectedSector == 'aidactivity'"
-                    project-id="none"
-                    dashboard-id="aidactivity"
-                    add-to-basket="true"
-                    element-h="460">
-            </yds-dashboard-visualization>
-
-            <!--Trade Activity Visualization-->
-            <yds-dashboard-visualization
-                    ng-if="selectedSector == 'tradeactivity'"
-                    project-id="none"
-                    dashboard-id="tradeactivity"
-                    add-to-basket="true"
-                    element-h="460">
-            </yds-dashboard-visualization>
+        <div class="col-md-12" style="min-height: 600px">
+            <uib-tabset active="dashboardVisActiveTab" ng-if="showVis">
+                <uib-tab index="$index" ng-repeat="type in aggregates track by $index">
+                    <uib-tab-heading>
+                        {{ aggregateTitles[$index] }}
+                    </uib-tab-heading>
+                    <yds-dashboard-visualization
+                            ng-if="dashboardVisActiveTab == $index"
+                            project-id="none"
+                            dashboard-id="{{ selectedSector }}"
+                            type="{{ type }}"
+                            add-to-basket="true"
+                            element-h="460">
+                    </yds-dashboard-visualization>
+                </uib-tab>
+            </uib-tabset>
         </div>
     </div>
 

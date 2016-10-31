@@ -17,11 +17,14 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
             sectorOpen: true
         };
 
+        scope.showVis = true;
+
         scope.infoPopoverUrl = ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + "templates-demo/dashboard2-info.html";
 
         /**
          * Select a sector
          * @param newSector Sector to select
+         * @param setTitle  If true will set the title of the 1st accordion heading
          */
         scope.setSelectedSector = function(newSector, setTitle) {
             if (scope.selectedSector != newSector) {
@@ -42,9 +45,17 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
                 // Clear current aggregates array
                 scope.aggregates = [];  // Empty aggregate array
 
+                // Reset uib-tabset
+                scope.dashboardVisActiveTab = 0;
+                scope.showVis = false;
+
                 $timeout(function() {
                     // Set new aggregates
                     scope.aggregates = aggregates.types;
+                    scope.aggregateTitles = aggregates.titles;
+
+                    // Show tabset again
+                    scope.showVis = true;
                 });
 
                 // Select new sector
