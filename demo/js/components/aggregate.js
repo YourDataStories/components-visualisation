@@ -8,6 +8,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 dashboardId: '@',   // ID used for getting selected year range from DashboardService
                 lang: '@',          // Language
                 iconSize: '@',      // Icon size for FontAwesome icon (2-5)
+                showViewBtn: '@',   // If true, will show the "view details" button in the layouts where it is available
                 setOnInit: '@',     // If true, will set this aggregate's view type in DashboardService on init
                 elementH: '@',      // Minimum height of Aggregate
                 baseUrl: '@',       // Base URL to send to API (optional)
@@ -26,7 +27,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
 
                 var initialized = false;
 
-                scope.showDetailsButton = false;
+                scope.detailsButton = false;
 
                 // If project attribute is undefined, set default value
                 if (_.isUndefined(projectId) || projectId.trim() == "")
@@ -109,11 +110,16 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                             } else {
                                 // Set default layout options
                                 scope.layout = "default";
-                                scope.showDetailsButton = true;
+
+                                if (!_.isUndefined(scope.showViewBtn) && (scope.showViewBtn == "true" || scope.showViewBtn == "false")) {
+                                    scope.detailsButton = (scope.showViewBtn == "true");
+                                } else {
+                                    scope.detailsButton = true;
+                                }
                             }
 
-                            // If showDetailsButton is shown, subtract the button's height from the elementH
-                            if (scope.showDetailsButton) {
+                            // If detailsButton is shown, subtract the button's height from the elementH
+                            if (scope.detailsButton) {
                                 elementH -= 40;
                             }
 
