@@ -459,7 +459,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                         scope.gridOptions = {
                             columnDefs: [],
                             enableColResize: true,
-                            enableServerSideSorting: true,
+                            enableServerSideSorting: (grid.sorting == "true"),
                             virtualPaging: true,
                             datasource: dataSource
                         };
