@@ -6,6 +6,15 @@
         <h5 class="aggregate-label" ng-bind-html="label"></h5>
     </div>
 
+    <!--Dashboard layout-->
+    <div ng-switch-when="dashboard" class="aggregate-dashboard-layout">
+        <div class="aggregate-dashboard-icon">
+            <i class="fa" ng-class="iconClass" aria-hidden="true"></i>
+        </div>
+        <div class="aggregate-dashboard-value" ng-bind-html="value"></div>
+        <div class="aggregate-dashboard-label" ng-bind-html="label"></div>
+    </div>
+
     <!--Title layout-->
     <div ng-switch-when="title" class="panel panel-default" ng-style="panelStyle">
         <div    class="panel-heading clearfix"

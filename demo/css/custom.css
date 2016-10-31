@@ -1063,3 +1063,17 @@ a.aggregate_link_dark, a.aggregate_link_dark:visited {
 a.aggregate_link_dark:hover {
     color: #333;
 }
+
+/* Classes for "dashboard" aggregate layout */
+.aggregate-dashboard-layout {
+    text-align: center;
+    background-color: #c3c3c3;
+    padding: 19px;
+    margin-bottom: 20px;
+    border: 1px solid #757575;
+    border-radius: 4px;
+}
+
+.aggregate-dashboard-value {
+    font-size: 25px;
+}
