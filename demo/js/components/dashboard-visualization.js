@@ -6,25 +6,30 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 projectId: '@',     // Project ID of chart
                 dashboardId: '@',   // ID used for getting selected year range from DashboardService
                 addToBasket: '@',   // If true, the save to basket button will appear in visualizations
+                disableColor: '@',  // If true, the component will ignore the color of the selected aggregate type
                 elementH: '@'       // Height of component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + 'templates/dashboard-visualization.html',
             link: function (scope, element, attrs) {
                 var dashboardId = scope.dashboardId;
+                var disableColor = scope.disableColor;
 
                 // Check if the component's height attribute is defined, else assign default value
                 if (_.isUndefined(scope.elementH) || scope.elementH.trim() == "")
                     scope.elementH = 300;
 
+                // If dashboardId is undefined, show error
+                if (_.isUndefined(dashboardId) || dashboardId.trim() == "")
+                    dashboardId = "default";
+
+                // If disableColor is undefined, show error
+                if (_.isUndefined(disableColor) || (disableColor != "true" && disableColor != "false"))
+                    disableColor = "false";
+
                 // Set minimum height of details panel body
                 scope.panelBodyStyle = {
                     "min-height": (parseInt(scope.elementH) + 30) + "px"
                 };
-
-                // If dashboardId is undefined, show error
-                if (_.isUndefined(dashboardId) || dashboardId.trim() == "") {
-                    dashboardId = "default";
-                }
 
                 scope.selectedVis = "";
 
@@ -68,8 +73,11 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
 
                     if (!_.isUndefined(viewType) && !_.isEqual(prevViewType, viewType.type)) {
                         scope.selViewType = viewType.type;
-                        scope.panelStyle = viewType.panelStyle;
-                        scope.panelHeadingStyle = _.omit(viewType.panelHeadingStyle, "min-height");
+
+                        if (disableColor != "true") {
+                            scope.panelStyle = viewType.panelStyle;
+                            scope.panelHeadingStyle = _.omit(viewType.panelHeadingStyle, "min-height");
+                        }
 
                         updateVis = true;
                     }
