@@ -7,12 +7,14 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 dashboardId: '@',   // ID used for getting selected year range from DashboardService
                 addToBasket: '@',   // If true, the save to basket button will appear in visualizations
                 disableColor: '@',  // If true, the component will ignore the color of the selected aggregate type
+                type: '@',          // View type of component. If not set, will get it from DashboardService
                 elementH: '@'       // Height of component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + 'templates/dashboard-visualization.html',
-            link: function (scope, element, attrs) {
+            link: function (scope) {
                 var dashboardId = scope.dashboardId;
                 var disableColor = scope.disableColor;
+                var type = scope.type;
 
                 // Check if the component's height attribute is defined, else assign default value
                 if (_.isUndefined(scope.elementH) || scope.elementH.trim() == "")
@@ -71,6 +73,13 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                     prevViewType = scope.selViewType;
                     var viewType = DashboardService.getViewType(dashboardId);
 
+                    if (!_.isUndefined(type) && type.length > 0) {
+                        // Use view type from attribute
+                        viewType = {
+                            type: type
+                        };
+                    }
+
                     if (!_.isUndefined(viewType) && !_.isEqual(prevViewType, viewType.type)) {
                         scope.selViewType = viewType.type;
 
@@ -91,8 +100,10 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                     updateVisualization();
                 };
 
-                // Subscribe to year selection and view type changes
-                DashboardService.subscribeViewTypeChanges(scope, viewTypeChangeHandler);
+                if (_.isUndefined(type) || type.length == 0) {
+                    // Subscribe to year selection and view type changes
+                    DashboardService.subscribeViewTypeChanges(scope, viewTypeChangeHandler);
+                }
 
                 /**
                  * Change selected visualization type
