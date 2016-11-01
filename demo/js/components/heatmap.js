@@ -6,17 +6,21 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				projectId: '@',         // ID of the project that the data belong
 				viewType: '@',          // Name of the array that contains the visualised data
 				lang: '@',			    // Lang of the visualised data
+
 				colorAxis: '@',         // Enable or disable colored axis of chart
 				colorType: '@',			// Axis color type (linear or logarithmic)
+
 				legend: '@',            // Enable or disable chart legend
 				legendVAlign: '@',      // Vertical alignment of the chart legend (top, middle, bottom)
 				legendHAlign: '@',      // Horizontal alignment of the chart legend (left, center, right)
 				legendLayout: '@',      // Layout of the chart legend (vertical, horizontal)
-                useYearRange: '@',      // If true will watch the selected year range of DashboardService to update map
+
+				useYearRange: '@',      // If true will watch the selected year range of DashboardService to update map
 				dashboardId: '@',		// Optional, used for getting selected year range from DashboardService
 				countrySelection: '@',  // Allow selecting countries on the map
-				noBorder: '@',			// If true, the component will have no border
+
 				exporting: '@',         // Enable or disable the export of the chart
+				noBorder: '@',			// If true, the component will have no border
 				elementH: '@'		    // Set the height of the component
 			},
 			templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/heatmap.html',
@@ -288,6 +292,48 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 								}
 							}
 						};
+
+						// Create data for Selectivity dropdown
+						var selectivityData = response.data.map(function(country) {
+							return {
+								id: country.code,
+								text: country.code + " (" + country.value + ")"
+							}
+						});
+
+						// Use jQuery to initialize Selectivity
+						var dropdownContainer = _.first(angular.element(elem[0].querySelector('.country-selection-container')));
+
+						var selectivity = $(dropdownContainer).selectivity({
+							items: selectivityData,
+							multiple: true,
+							placeholder: 'Type to search a country'
+						});
+
+						// Add listener for when something in Selectivity is added or removed
+						$(selectivity).on("change", function(e) {
+							var points = scope.heatmap.series[0].data;
+
+							if (_.has(e, "added")) {
+								var countryToSelect = e.added.id;
+
+								var pointToSelect = _.findWhere(points, {
+									"iso-a2": countryToSelect
+								});
+
+								pointToSelect.select(true, true);
+							}
+
+							if (_.has(e, "removed")) {
+								var countryToDeselect = e.removed.id;
+
+								var pointToDeselect = _.findWhere(points, {
+									"iso-a2": countryToDeselect
+								});
+
+								pointToDeselect.select(false, true);
+							}
+						});
 					}
 
 					// Add new series to the heatmap
