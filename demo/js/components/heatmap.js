@@ -308,16 +308,21 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 						scope.heatmap.addSeries(newSeries);
 
 						// Highcharts chart is initialized, create data for Selectivity dropdown
+						// Keep only countries that have a value, which means they are available for selection
 						var selectivityData = _.filter(scope.heatmap.series[0].data, function(item) {
-							// Keep only countries that have a value, which means they are available for selection
 							return !_.isNull(item.value) && !_.isUndefined(item["iso-a2"]);
-						}).map(function(point) {
-							// Keep only code and name for each country
+						});
+
+						// Keep only code and name for each country
+						selectivityData = selectivityData.map(function(point) {
 							return {
 								id: point["iso-a2"],
 								text: point.name
 							}
 						});
+
+						// Sort countries by their names
+						selectivityData = _.sortBy(selectivityData, "text");
 
 						// Use jQuery to initialize Selectivity
 						var dropdownContainer = _.first(angular.element(elem[0].querySelector('.country-selection-container')));
