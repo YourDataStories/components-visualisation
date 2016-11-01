@@ -88,7 +88,11 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
 
         // Subscribe to be notified of selected project changes
         DashboardService.subscribeProjectChanges(scope, function() {
-            scope.selectedProject = DashboardService.getSelectedProjectInfo();
+            scope.selectedProject = {};
+
+            $timeout(function() {
+                scope.selectedProject = DashboardService.getSelectedProjectInfo();
+            });
         });
     }
 ]);
