@@ -252,6 +252,9 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 
 					// Allow selecting countries
 					if (countrySelection == "true") {
+						// Variable to keep selectivity instance
+						var selectivity = null;
+
 						newSeries.allowPointSelect = true;
 						newSeries.cursor = "pointer";
 
@@ -274,8 +277,11 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 
 									// Give new selected countries to the service
 									DashboardService.setCountries(viewType, points);
+
+									// Set new selected points in Selectivity
+									setSelectivityData(selectivity, points);
 								},
-								unselect: function(event) {
+								unselect: function() {
 									// Get selected points
 									var points = scope.heatmap.getSelectedPoints();
 
@@ -289,6 +295,9 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 
 									// Give new selected countries to the service
 									DashboardService.setCountries(viewType, points);
+
+									// Set new selected points in Selectivity
+									setSelectivityData(selectivity, points);
 								}
 							}
 						};
@@ -304,7 +313,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 						// Use jQuery to initialize Selectivity
 						var dropdownContainer = _.first(angular.element(elem[0].querySelector('.country-selection-container')));
 
-						var selectivity = $(dropdownContainer).selectivity({
+						selectivity = $(dropdownContainer).selectivity({
 							items: selectivityData,
 							multiple: true,
 							placeholder: 'Type to search a country'
@@ -338,6 +347,24 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 
 					// Add new series to the heatmap
 					scope.heatmap.addSeries(newSeries);
+				};
+
+				/**
+				 * Get formatted points from the heatmap and add them as the selection in Selectivity
+				 * @param selectivity	Selectivity instance
+				 * @param points		Points to select
+				 */
+				var setSelectivityData = function(selectivity, points) {
+					$(selectivity).selectivity("data", points.map(function(country) {
+						return {
+							id: country.code,
+							text: country.code + " (" + country.value + ")"
+						}
+					}), {
+						triggerChange: false
+					});
+
+					$(selectivity).selectivity("rerenderSelection");
 				};
 
 				/**

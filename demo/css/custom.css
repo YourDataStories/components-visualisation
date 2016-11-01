@@ -789,7 +789,6 @@ div.ag-root {
 .dashboard2-accordion > div.panel-group {
     border: 1px solid #BBBBBB;
     border-radius: 4px;
-    overflow: hidden;
 }
 
 /* Remove Firefox outline when clicking accordion panel headings */
