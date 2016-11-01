@@ -66,8 +66,6 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                         drupalpath + "css/bootstrap-slider.min.css",                // Bootstrap Slider CSS
                         drupalpath + "lib/bootstrap-slider.min.js",                 // Bootstrap Slider JavaScript
 
-                        drupalpath + "css/selectivity-full.min.css",                // Selectivity CSS
-                        drupalpath + "lib/selectivity-full.min.js",                 // Selectivity JavaScript
                         drupalpath + "lib/querybuilder-selectivity-plugin.js",      // Selectivity QueryBuilder plugin
 
                         drupalpath + "css/selectize.bootstrap3.css",                // Selectize Bootstrap 3 theme
