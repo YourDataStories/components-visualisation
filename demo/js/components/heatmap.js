@@ -250,10 +250,12 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 						}
 					};
 
-					// Allow selecting countries
-					if (countrySelection == "true") {
-						// Variable to keep selectivity instance
-						var selectivity = null;
+					if (countrySelection != "true") {
+						// Country selection disabled, add new series to the heatmap
+						scope.heatmap.addSeries(newSeries);
+					} else {
+						// Country selection enabled, set more properties to the series before adding it to the heatmap
+						var selectivity = null;				// Variable to keep selectivity instance
 
 						newSeries.allowPointSelect = true;
 						newSeries.cursor = "pointer";
@@ -302,11 +304,18 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 							}
 						};
 
-						// Create data for Selectivity dropdown
-						var selectivityData = response.data.map(function(country) {
+						// Add new series to the heatmap
+						scope.heatmap.addSeries(newSeries);
+
+						// Highcharts chart is initialized, create data for Selectivity dropdown
+						var selectivityData = _.filter(scope.heatmap.series[0].data, function(item) {
+							// Keep only countries that have a value, which means they are available for selection
+							return !_.isNull(item.value) && !_.isUndefined(item["iso-a2"]);
+						}).map(function(point) {
+							// Keep only code and name for each country
 							return {
-								id: country.code,
-								text: country.code + " (" + country.value + ")"
+								id: point["iso-a2"],
+								text: point.name
 							}
 						});
 
@@ -344,9 +353,6 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 							}
 						});
 					}
-
-					// Add new series to the heatmap
-					scope.heatmap.addSeries(newSeries);
 				};
 
 				/**
@@ -358,7 +364,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 					$(selectivity).selectivity("data", points.map(function(country) {
 						return {
 							id: country.code,
-							text: country.code + " (" + country.value + ")"
+							text: country.name
 						}
 					}), {
 						triggerChange: false
