@@ -2,9 +2,6 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
     function($scope, $timeout, DashboardService) {
         var scope = $scope;
 
-        // If the panels should be allowed to open
-        scope.allowOpenPanel = false;
-
         // Set initial panel titles
         scope.panelSectorTitle = "Choose activity type";
         scope.panelCountrySelectionTitle = "Choose countries";
