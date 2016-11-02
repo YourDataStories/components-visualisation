@@ -1,9 +1,9 @@
 <div style="width: 100%">
-    <div class="row" ng-if="title.length > 0">
+    <div ng-if="title.length > 0">
         <h4 class="text-center">{{ title }}</h4>
     </div>
 
-    <div class="row" ng-if="initialized">
+    <div ng-if="initialized" ng-style="containerStyle">
         <rzslider
                 rz-slider-options="yearSlider.options"
                 rz-slider-model="yearSlider.minValue"

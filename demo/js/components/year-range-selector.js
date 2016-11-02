@@ -6,6 +6,8 @@ angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
                 minYear: '@',       // Minimum year of the slider
                 maxYear: '@',       // Maximum year of the slider
                 dashboardId: '@',   // ID to use for saving year range in DashboardService
+                vertical: '@',      // If true the slider will be vertical (defaults to horizontal)
+                height: '@',        // Height of the slider (optional)
                 title: '@'          // Title to show above slider (optional)
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/year-range-selector.html',
@@ -14,7 +16,9 @@ angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
 
                 var minYear = parseInt(scope.minYear);
                 var maxYear = parseInt(scope.maxYear);
+                var height = parseInt(scope.height);
                 var dashboardId = scope.dashboardId;
+                var vertical = scope.vertical;
 
                 // Check if minYear attr is defined, else assign default value
                 if (_.isUndefined(minYear) || _.isNaN(minYear))
@@ -27,6 +31,16 @@ angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
                 // Check if dashboardId attr is defined, else assign default value
                 if (_.isUndefined(dashboardId) || dashboardId.length == 0)
                     dashboardId = "default";
+
+                // Check if vertical attr is defined, else assign default value
+                if (_.isUndefined(vertical) || (vertical != "true" && vertical != "false"))
+                    vertical = "false";
+
+                if (!_.isUndefined(height) && !_.isNaN(height)) {
+                    scope.containerStyle = {
+                        height: height + "px"
+                    }
+                }
 
                 /**
                  * Update the year range in DashboardService
@@ -50,6 +64,7 @@ angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
                         floor: minYear,
                         ceil: maxYear,
                         step: 1,
+                        vertical: (vertical == "true"),
                         onEnd: updateYearRange
                     }
                 };
