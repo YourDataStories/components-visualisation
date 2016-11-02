@@ -1,0 +1,109 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Contracts</h2>
+        </div>
+    </div>
+    <!--Maps-->
+    <div class="row">
+        <div class="col-md-6">
+            <!--Heatmap of Buyers-->
+            <div class="panel panel-default panel-benefactor">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Buyer</h3>
+                </div>
+                <div class="panel-body">
+                    <yds-heatmap
+                            project-id="none"
+                            view-type="aidactivity.benefactor.countries.all"
+                            color-axis="true"
+                            color-type="logarithmic"
+                            legend="true"
+                            legend-v-align="bottom"
+                            use-year-range="true"
+                            dashboard-id="contract"
+                            country-selection="true"
+                            no-border="true"
+                            exporting="false"
+                            element-h="350"></yds-heatmap>
+                </div>
+                <div class="panel-footer" style="padding: 3px 15px">
+                    <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <!--Heatmap of Sellers-->
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Seller</h3>
+                </div>
+                <div class="panel-body">
+                    <yds-heatmap
+                            project-id="none"
+                            view-type="aidactivity.beneficiary.countries.all"
+                            color-axis="true"
+                            color-type="logarithmic"
+                            legend="true"
+                            legend-v-align="bottom"
+                            use-year-range="true"
+                            dashboard-id="contract"
+                            country-selection="true"
+                            no-border="true"
+                            exporting="false"
+                            element-h="350"></yds-heatmap>
+                </div>
+                <div class="panel-footer" style="padding: 3px 15px">
+                    <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Year selection slider-->
+    <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+            <yds-year-range
+                    title="Time Period for Contracts"
+                    dashboard-id="contract"
+                    min-year="1997"
+                    max-year="2018">
+            </yds-year-range>
+        </div>
+    </div>
+
+    <!--Dashboard Info box-->
+    <div class="row" style="padding-top: 20px">
+        <div class="col-md-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Selected filters</h3>
+                </div>
+
+                <div class="panel-body dashboard-info-container">
+                    <yds-dashboard-updater
+                            type="info"
+                            view-type="aidactivity.filters.selected"
+                            dashboard-id="contract"
+                            min-height="90"
+                            lang="en">
+                    </yds-dashboard-updater>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Visualization-->
+    <div class="row">
+        <div class="col-md-12">
+            <!--Dashboard Visualization-->
+            <yds-dashboard-visualization
+                    project-id="none"
+                    dashboard-id="contract"
+                    add-to-basket="true"
+                    element-h="460">
+            </yds-dashboard-visualization>
+        </div>
+    </div>
+</div>
