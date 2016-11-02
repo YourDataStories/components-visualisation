@@ -6,7 +6,7 @@
     </div>
     <!--Maps-->
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-5">
             <!--Heatmap of Buyers-->
             <div class="panel panel-default panel-benefactor">
                 <div class="panel-heading">
@@ -28,12 +28,12 @@
                             element-h="350"></yds-heatmap>
                 </div>
                 <div class="panel-footer" style="padding: 3px 15px">
-                    <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
+                    <small>You can select one or more countries with the <kbd>CTRL</kbd> key.</small>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-5">
             <!--Heatmap of Sellers-->
             <div class="panel panel-primary">
                 <div class="panel-heading">
@@ -55,20 +55,20 @@
                             element-h="350"></yds-heatmap>
                 </div>
                 <div class="panel-footer" style="padding: 3px 15px">
-                    <small>You can select one or more countries (with <kbd>CTRL</kbd> key), and adjust the date range.</small>
+                    <small>You can select one or more countries with the <kbd>CTRL</kbd> key.</small>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!--Year selection slider-->
-    <div class="row">
-        <div class="col-md-offset-3 col-md-6">
+        <!--Year selection slider-->
+        <div class="col-md-2">
             <yds-year-range
                     title="Time Period for Contracts"
                     dashboard-id="contract"
                     min-year="1997"
-                    max-year="2018">
+                    max-year="2018"
+                    vertical="true"
+                    height="350">
             </yds-year-range>
         </div>
     </div>
