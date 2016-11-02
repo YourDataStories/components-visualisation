@@ -20,6 +20,10 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         tradeactivity: {
             origins: "tradeactivity.hasorigin.countries.all",
             destinations: "tradeactivity.hasdestination.countries.all"
+        },
+        contract: {
+            buyers: "contract.buyer.countries.all",
+            sellers: "contract.seller.countries.all"
         }
     };
 
