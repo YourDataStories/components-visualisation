@@ -106,6 +106,9 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                                         // Get aspect to display on page
                                         scope.aspect = response.data.aspect;
                                         break;
+                                    case "dashboard":
+                                        // Create class for aggregate
+                                        scope.dashboardClass = "aggregate-" + viewType.replace(/\./g , "-");
                                 }
                             } else {
                                 // Set default layout options
