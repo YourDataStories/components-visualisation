@@ -55,7 +55,7 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
                 // Set classes for tabs
                 scope.aggregateClasses = [];
                 _.each(aggregates.types, function(aggregate) {
-                    scope.aggregateClasses.push('tab-' + aggregate.replace(/\./g , "-"));
+                    scope.aggregateClasses.push(aggregate.replace(/\./g , "-"));
                 });
 
                 $timeout(function() {

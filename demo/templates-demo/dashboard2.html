@@ -220,12 +220,13 @@
     <div class="row">
         <div class="col-md-10" style="min-height: 600px">
             <uib-tabset active="dashboardVisActiveTab" ng-if="showVis">
-                <uib-tab index="$index" class="{{ aggregateClasses[$index] }}" ng-repeat="type in aggregates track by $index" select="selectTab($index)">
+                <uib-tab index="$index" class="{{ 'tab-' + aggregateClasses[$index] }}" ng-repeat="type in aggregates track by $index" select="selectTab($index)">
                     <uib-tab-heading>
                         {{ aggregateTitles[$index] }}
                     </uib-tab-heading>
                     <yds-dashboard-visualization
                             ng-if="dashboardVisActiveTab == $index"
+                            class="{{ 'content-' + aggregateClasses[$index] }}"
                             project-id="none"
                             dashboard-id="{{ selectedSector }}"
                             type="{{ type }}"
