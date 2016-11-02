@@ -71,6 +71,11 @@ angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
 
                 // Show angular slider after options are set
                 scope.initialized = true;
+
+                // Make sure to show the pointers in the correct places
+                $timeout(function(){
+                    scope.$broadcast('reCalcViewDimensions');
+                }, 50);
             }
         };
     }

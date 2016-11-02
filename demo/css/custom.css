@@ -509,6 +509,10 @@ rzslider .rz-pointer:after {
     left: 4px;
 }
 
+rzslider.vertical .rz-pointer {
+    left: -6px !important;
+}
+
 /**********************************/
 /**** NEW FACETS CUSTOMIZATION ****/
 /**********************************/
