@@ -16,6 +16,7 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
 
         scope.showVis = true;
         scope.aggregateToShow = 0;
+        scope.aggregateClasses = [];
 
         scope.infoPopoverUrl = ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + "templates-demo/dashboard2-info.html";
 
@@ -50,6 +51,12 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
                 // Reset uib-tabset
                 scope.dashboardVisActiveTab = 0;
                 scope.showVis = false;
+
+                // Set classes for tabs
+                scope.aggregateClasses = [];
+                _.each(aggregates.types, function(aggregate) {
+                    scope.aggregateClasses.push('tab-' + aggregate.replace(/\./g , "-"));
+                });
 
                 $timeout(function() {
                     // Set new aggregates
