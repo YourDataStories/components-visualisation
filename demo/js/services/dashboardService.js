@@ -28,7 +28,8 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     // the years in a parameter called "year"
     var yearParamMapping = {
         aidactivity: "year",
-        tradeactivity: "financialyear"
+        tradeactivity: "financialyear",
+        contract: "year"
     };
 
     // View types of aggregates to show for each Dashboard section
