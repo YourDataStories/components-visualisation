@@ -33,7 +33,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                     "min-height": (parseInt(scope.elementH) + 30) + "px"
                 };
 
-                scope.selectedVis = "";
+                scope.selectedVis = DashboardService.getSelectedVisType();
 
                 // Set the first type as default selected one
                 scope.selProjectId = scope.projectId;
@@ -111,6 +111,8 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                  */
                 scope.selectVis = function(visType) {
                     scope.selectedVis = visType;
+
+                    DashboardService.setVisType(visType);
                 };
 
                 // Initialize component

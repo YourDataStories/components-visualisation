@@ -4,6 +4,8 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     var selectedViewType = {};
     var projectInfoType = "";
     var projectInfoId = "";
+    var visualizationType = "";
+
     var notifySelectionChangeLock = false;
     var notifyYearChangeLock = false;
     var notifyViewTypeChangeLock = false;
@@ -375,6 +377,14 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     };
 
     /**
+     * Return selected visualization type
+     * @returns {string}
+     */
+    var getSelectedVisType = function() {
+        return visualizationType;
+    };
+
+    /**
      * Set the properties for the selected project
      * @param id
      * @param type
@@ -384,6 +394,14 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         projectInfoType = type;
 
         notifyProjectChange();
+    };
+
+    /**
+     * Set the properties for the selected visualization type
+     * @param newVis
+     */
+    var setVisType = function(newVis) {
+        visualizationType = newVis;
     };
 
     return {
@@ -406,6 +424,8 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         setViewType: setViewType,
         getViewType: getViewType,
         getSelectedProjectInfo: getSelectedProjectInfo,
-        setSelectedProject: setSelectedProject
+        getSelectedVisType: getSelectedVisType,
+        setSelectedProject: setSelectedProject,
+        setVisType: setVisType
     };
 });
