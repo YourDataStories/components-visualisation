@@ -300,6 +300,7 @@
                             <!--AidActivity grid-->
                             <yds-dashboard-updater
                                     ng-if="!isCollapsedAidActivityPanel && aaTab == 0"
+                                    id="dashboard-aid-data-grid"
                                     type="grid"
                                     view-type="aidactivity.listitems.for.countries.and.period"
                                     dashboard-id="aidactivity"
@@ -378,6 +379,7 @@
                             <yds-dashboard-updater
                                     ng-if="!isCollapsedTradeActivityPanel && taTab == 0"
                                     type="grid"
+                                    id="dashboard-trade-data-grid"
                                     view-type="tradeactivity.listitems.for.countries.and.period"
                                     dashboard-id="tradeactivity"
                                     add-to-basket="true"

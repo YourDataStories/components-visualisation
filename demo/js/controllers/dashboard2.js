@@ -1,5 +1,5 @@
-angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 'DashboardService',
-    function($scope, $timeout, DashboardService) {
+angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', '$location', '$anchorScroll', '$window', 'DashboardService',
+    function($scope, $timeout, $location, $anchorScroll, $window, DashboardService) {
         var scope = $scope;
 
         // Set initial panel titles
@@ -95,6 +95,18 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
 
         // Subscribe to be notified of selected project changes
         DashboardService.subscribeProjectChanges(scope, function() {
+            if ($window.pageYOffset < 1000) {
+                // Scroll a bit to make details visible
+                if (scope.selectedSector == "aidactivity") {
+                    $location.hash("dashboard-aid-data-grid");
+                } else {
+                    $location.hash("dashboard-trade-data-grid");
+                }
+
+                $anchorScroll();
+            }
+
+            // Select new project
             scope.selectedProject = {};
 
             $timeout(function() {
