@@ -8,11 +8,6 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function(Data, Fil
 
             extraParams: '=',    //extra attributes to pass to the API, if needed
 
-            titleX: '@',        //the text of the X-axis title
-            titleY: '@',        //the text of the Y-axis title
-            showLabelsX: '@',   //show or hide the X-axis label
-            showLabelsY: '@',   //show or hide the Y-axis label
-            showLegend: '@',    //enable or disable the chart's legend
             exporting: '@',     //enable or disable the export of the chart
             elementH: '@',      //set the height of the component
             titleSize: '@',     //the size of the chart's main title
@@ -37,11 +32,6 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function(Data, Fil
             var projectId = scope.projectId;
             var viewType = scope.viewType;
             var lang = scope.lang;
-            var titleX = scope.titleX;
-            var titleY = scope.titleY;
-            var showLabelsX = scope.showLabelsX;
-            var showLabelsY = scope.showLabelsY;
-            var showLegend = scope.showLegend;
             var exporting = scope.exporting;
             var elementH = scope.elementH;
             var titleSize = scope.titleSize;
@@ -67,26 +57,6 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function(Data, Fil
             if(_.isUndefined(lang) || lang.trim()=="")
                 lang = "en";
 
-            //check if the x-axis title attr is defined, else assign the default value
-            if(_.isUndefined(titleX) || titleX.length==0)
-                titleX = "";
-
-            //check if the y-axis title attr is defined, else assign the default value
-            if(_.isUndefined(titleY) || titleY.length==0)
-                titleY = "";
-
-            //check if the x-axis showLabels attr is defined, else assign default value
-            if(_.isUndefined(showLabelsX) || (showLabelsX!="true" && showLabelsX!="false"))
-                showLabelsX = "true";
-
-            //check if the y-axis showLabels attr is defined, else assign default value
-            if(_.isUndefined(showLabelsY) || (showLabelsY!="true" && showLabelsY!="false"))
-                showLabelsY = "true";
-
-            //check if the showLegend attr is defined, else assign default value
-            if(_.isUndefined(showLegend) || (showLegend!="true" && showLegend!="false"))
-                showLegend = "true";
-
             //check if the exporting attr is defined, else assign default value
             if(_.isUndefined(exporting) || (exporting!="true" && exporting!="false"))
                 exporting = "true";
@@ -105,65 +75,27 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function(Data, Fil
             // Get data and visualize bar
             Data.getProjectVis("bar", projectId, viewType, lang, extraParams)
                 .then(function (response) {
-                    var barData = response.data.data;
-                    var barCategories = response.data.categories;
-                    var barTitleAttr = _.first(response.view).attribute;
-                    var barTitle = Data.deepObjSearch(response.data, barTitleAttr);
+                    var options = response.data;
 
-                    //check if the component is properly rendered
-                    if (_.isUndefined(barData) || !_.isArray(barData) || _.isUndefined(barCategories)) {
-                        scope.ydsAlert = "The YDS component is not properly configured. " +
-                            "Please check the corresponding documentation section.";
-                        return false;
-                    }
+                    // Add element ID to render the chart to in the options
+                    options.chart.renderTo = elementId;
 
-                    var options = {
-                        chart: {
-                            type: 'column',
-                            renderTo: elementId
-                        },
-                        title: {
-                            text: barTitle,
-                            style: {
-                                fontSize: titleSize + "px"
+                    // Set title size in options
+                    options.title.style = {
+                        fontSize: titleSize + "px"
+                    };
+
+                    // Set exporting options
+                    options.exporting = {
+                        buttons: {
+                            contextButton: {
+                                symbol: 'url(' + ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'img/fa-download-small.png)',
+                                symbolX: 12,
+                                symbolY: 12
                             }
                         },
-                        xAxis: {
-                            categories: barCategories,
-                            crosshair: true,
-                            title : { text: titleX },
-                            labels: { enabled: (showLabelsX === "true") }
-                        },
-                        yAxis: {
-                            title : { text: titleY },
-                            labels: { enabled: (showLabelsY === "true") }
-                        },
-                        legend: { enabled: (showLegend === "true") },
-                        exporting: {
-                            buttons: {
-                                contextButton: {
-                                    symbol: 'url(' + ((typeof Drupal != 'undefined')? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'img/fa-download-small.png)',
-                                    symbolX: 12,
-                                    symbolY: 12
-                                }
-                            },
-                            enabled: (exporting === "true")
-                        },
-                        tooltip: {
-                            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                            '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
-                            footerFormat: '</table>',
-                            shared: true,
-                            useHTML: true
-                        },
-                        plotOptions: {
-                            column: {
-                                pointPadding: 0.2,
-                                borderWidth: 0
-                            }
-                        },
-                        series: barData
+
+                        enabled: (exporting === "true")
                     };
 
                     var chart = new Highcharts.Chart(options);
