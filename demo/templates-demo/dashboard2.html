@@ -47,11 +47,11 @@
 
             <div class="text-center">
                 <p>Take a closer look at:</p>
-                <button type="button" class="btn btn-lg btn-primary"
+                <button type="button" class="btn btn-lg btn-primary" ng-class="{'dashboard-btn-active': selectedSector == 'aidactivity'}"
                         ng-click="setSelectedSector('aidactivity', true)">
                     Aid Activities
                 </button>
-                <button type="button" class="btn btn-lg btn-warning"
+                <button type="button" class="btn btn-lg btn-warning" ng-class="{'dashboard-btn-active': selectedSector == 'tradeactivity'}"
                         ng-click="setSelectedSector('tradeactivity', true)">
                     Trade Activities
                 </button>
