@@ -462,14 +462,6 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 				},
 				headers: {'Content-Type': 'application/json'}
 			}).success(function(response) {
-				// Change all rules of type "percentage" or "duration" to "double"
-				_.each(response.data.filters, function(rule) {
-					if (rule.type == "percentage" || rule.type == "duration") {
-						console.warn("Type " + rule.type + " is not supported by QueryBuilder, changing it to double");
-						rule.type = "double";
-					}
-				});
-
 				deferred.resolve(response.data.filters);
 			}).error(function(error) {
 				deferred.reject(error);
