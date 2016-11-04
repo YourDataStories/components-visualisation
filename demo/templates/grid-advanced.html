@@ -27,5 +27,9 @@
         </div>
         <div style="clear: both"></div>
     </div>
+    <button type="button" class="btn btn-default btn-xs grid-export-btn"
+            ng-if="exporting == 'true'" ng-style="exportBtnPos" ng-click="exportGrid()">
+        <span class="glyphicon glyphicon-save-file"></span>
+    </button>
     <div class="flex ag-fresh grid-container" yds-basket-btn></div>
 </div>
