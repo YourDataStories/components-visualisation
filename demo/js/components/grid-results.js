@@ -279,8 +279,27 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                  * Export grid data to csv
                  */
                 scope.exportGrid = function() {
-                    //todo
-                    console.log("Export data button");
+                    getSearchQuery().then(function(searchQuery) {
+                        var query = searchQuery;
+                        var quickFilter = scope.quickFilterValue;
+
+                        if (!_.isUndefined(quickFilter) && quickFilter.length > 0) {
+                            query = "(" + query + ") AND " + quickFilter;
+                        }
+
+                        // Get facets from URL parameters
+                        var facets = $location.search()[paramPrefix + "fq"];
+
+                        // If there are advanced search rules, get them and perform advanced search
+                        var rules = $location.search()[paramPrefix + "rules"];
+
+                        if (!_.isUndefined(rules)) {
+                            rules = JSURL.parse(rules);
+                        }
+
+                        // Download the data as a CSV file from the server
+                        Data.downloadGridResultDataAsCsv(query, facets, rules, grid.viewType, grid.lang);
+                    });
                 };
 
                 /**

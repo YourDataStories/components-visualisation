@@ -69,7 +69,7 @@ app.directive('clipboard', ['$document', function(){
 }]);
 
 
-app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CONSTANTS) {
+app.factory('Data', ['$http', '$q', '$window', 'YDS_CONSTANTS', function ($http, $q, $window, YDS_CONSTANTS) {
     var dataService = {};
 
     //function to convert date to timestamp
@@ -739,6 +739,78 @@ app.factory('Data', ['$http', '$q', 'YDS_CONSTANTS', function ($http, $q, YDS_CO
         });
 
         return deferred.promise;
+    };
+
+    /**
+     * Download grid results as a CSV file
+     * @param query
+     * @param facets
+     * @param rules
+     * @param viewType
+     * @param lang
+     */
+    dataService.downloadGridResultDataAsCsv = function(query, facets, rules, viewType, lang) {
+        // Create facets array
+        var fq = mergeFacetsAndViewType(viewType, facets);
+        if (!_.isArray(fq)) {
+            // The server expects fq to always be an array, so if it's a string we make it an array with 1 string in it
+            fq = [ fq ];
+        }
+
+        var params = {
+            q: query,
+            fq: fq,
+            lang: lang,
+            start: 0,
+            rows: 100
+        };
+
+        if (!_.isUndefined(rules)) {
+            // Advanced search
+            params.rules = rules;
+            params.export = "csv";
+
+            $http({
+                method: "POST",
+                url: "http://" + YDS_CONSTANTS.API_ADVANCED_SEARCH,
+                data: params,
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            }).then(function(response) {
+                // Download the received CSV data as a file
+                var csvData = response.data;
+                var filename = "YourDataStories-Export.csv";
+
+                var blob = new Blob([csvData], {type: 'text/csv'});
+                if(window.navigator.msSaveOrOpenBlob) {
+                    window.navigator.msSaveBlob(blob, filename);
+                } else {
+                    var elem = window.document.createElement('a');
+                    elem.href = window.URL.createObjectURL(blob);
+                    elem.download = filename;
+                    document.body.appendChild(elem);
+                    elem.click();
+                    document.body.removeChild(elem);
+                }
+            }, function(error) {
+                console.error("An error occured while exporting the data!", error);
+            });
+        } else {
+            // Normal search
+            var url = "http://" + YDS_CONSTANTS.API_SEARCH + "?export=csv";
+
+            _.each(params, function(value, key) {
+                if (key == "fq") {
+                    _.each(value, function(value) {
+                        url += "&" + key + "=" + encodeURIComponent(value);
+                    });
+                } else {
+                    url += "&" + key + "=" + encodeURIComponent(value);
+                }
+            });
+
+            console.log(url);
+            $window.open(url, "_blank");
+        }
     };
 
     /**
