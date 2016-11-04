@@ -298,7 +298,12 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                         }
 
                         // Download the data as a CSV file from the server
-                        Data.downloadGridResultDataAsCsv(query, facets, rules, grid.viewType, grid.lang);
+                        var viewType = grid.viewType;
+                        if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
+                            viewType = undefined;
+                        }
+
+                        Data.downloadGridResultDataAsCsv(query, facets, rules, viewType, grid.lang);
                     });
                 };
 

@@ -751,18 +751,23 @@ app.factory('Data', ['$http', '$q', '$window', 'YDS_CONSTANTS', function ($http,
      */
     dataService.downloadGridResultDataAsCsv = function(query, facets, rules, viewType, lang) {
         // Create facets array
-        var fq = mergeFacetsAndViewType(viewType, facets);
-        if (!_.isArray(fq)) {
-            // The server expects fq to always be an array, so if it's a string we make it an array with 1 string in it
+        var fq = facets;
+        if (!_.isUndefined(viewType)) {
+            // If there is a viewType, merge it with the facets
+            fq = mergeFacetsAndViewType(viewType, facets);
+        }
+        // The server expects fq to always be an array, so if it's a string we make it an array with 1 string in it
+        if (!_.isArray(fq) && !_.isUndefined(fq)) {
             fq = [ fq ];
         }
 
+        // Create parameters object
         var params = {
             q: query,
             fq: fq,
             lang: lang,
-            start: 0,
-            rows: 100
+            start: 0,   // this is ignored by the server
+            rows: 100   // this is ignored by the server
         };
 
         if (!_.isUndefined(rules)) {
@@ -808,7 +813,7 @@ app.factory('Data', ['$http', '$q', '$window', 'YDS_CONSTANTS', function ($http,
                 }
             });
 
-            console.log(url);
+            // console.log(url);
             $window.open(url, "_blank");
         }
     };
