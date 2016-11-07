@@ -847,8 +847,8 @@ a.accordion-toggle:focus, a.accordion-toggle:active {
 }
 
 .dashboard2-info-popover {
-    max-width: 550px;
-    width: 550px;
+    max-width: 750px;
+    width: 750px;
 }
 
 /* Make padding of aggregate panel body in Dashboard 2 5px left and right*/
