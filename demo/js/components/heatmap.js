@@ -337,7 +337,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 						$(selectivity).on("change", function(e) {
 							var points = scope.heatmap.series[0].data;
 
-							if (_.has(e, "added")) {
+							if (_.has(e, "added") && !_.isUndefined(e.added)) {
 								var countryToSelect = e.added.id;
 
 								var pointToSelect = _.findWhere(points, {
@@ -347,7 +347,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 								pointToSelect.select(true, true);
 							}
 
-							if (_.has(e, "removed")) {
+							if (_.has(e, "removed") && !_.isUndefined(e.removed)) {
 								var countryToDeselect = e.removed.id;
 
 								var pointToDeselect = _.findWhere(points, {
