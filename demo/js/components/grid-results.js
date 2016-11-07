@@ -19,6 +19,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 colResize: '@',         // Enable or disable column resize, values: true, false
                 pageSize: '@',          // Set the number of rows of each page
                 elementH: '@',          // Set the height of the component
+                showResultsNum: '@',    // If true, will show the results number below the grid
 
                 exporting: '@',         // Enable or disable export to CSV
                 exportBtnX: '@',        // X-axis position of the exporting button
@@ -97,6 +98,10 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 // Check if the viewInDashboard attr is defined, else assign the default value
                 if(_.isUndefined(viewInDashboard) || (viewInDashboard!="true" && viewInDashboard!="false"))
                     viewInDashboard = "false";
+
+                // Check if the showResultsNum attr is defined, else assign the default value
+                if(_.isUndefined(scope.showResultsNum) || (scope.showResultsNum!="true" && scope.showResultsNum!="false"))
+                    scope.showResultsNum = "false";
 
                 // Check if the quick filtering attr is defined, else assign the default value
                 if(_.isUndefined(grid.quickFiltering) || (grid.quickFiltering!="true" && grid.quickFiltering!="false"))
@@ -405,8 +410,8 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
 
 
                                 // Disable the export button if there are more than 5000 results
-                                var resultsNum = response.data.response.numFound;
-                                if (resultsNum > 5000) {
+                                scope.resultsNum = response.data.response.numFound;
+                                if (scope.resultsNum > 5000) {
                                     scope.exportBtnClass = "disabled";
                                 } else {
                                     scope.exportBtnClass = "";
