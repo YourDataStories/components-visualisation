@@ -50,6 +50,9 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
                 // Year range will be saved to check if it actually changed before recreating the heatmap
                 var yearRange = [];
 
+				// Selectivity instance
+				var selectivity = null;
+
 				//check if project id or grid type are defined
 				if(angular.isUndefined(projectId) || projectId.trim()=="") {
 					scope.ydsAlert = "The YDS component is not properly initialized " +
@@ -201,6 +204,69 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				};
 
 				/**
+				 * Get points from the heatmap's series, and turn it into options for Selectivity
+				 * @returns {*}
+				 */
+				var getSelectivityItemsFromPoints = function() {
+					// Keep only countries that have a value, which means they are available for selection
+					var selectivityData = _.filter(scope.heatmap.series[0].data, function(item) {
+						return !_.isNull(item.value) && !_.isUndefined(item["iso-a2"]);
+					});
+
+					// Keep only code and name for each country
+					selectivityData = selectivityData.map(function(point) {
+						return {
+							id: point["iso-a2"],
+							text: point.name
+						}
+					});
+
+					// Sort countries by their names
+					selectivityData = _.sortBy(selectivityData, "text");
+
+					return selectivityData;
+				};
+
+				/**
+				 * Initialize Selectivity dropdown for country selection
+				 */
+				var initializeSelectivity = function() {
+					// Use jQuery to initialize Selectivity
+					var dropdownContainer = _.first(angular.element(elem[0].querySelector('.country-selection-container')));
+
+					selectivity = $(dropdownContainer).selectivity({
+						items: getSelectivityItemsFromPoints(),
+						multiple: true,
+						placeholder: 'Type to search a country'
+					});
+
+					// Add listener for when something in Selectivity is added or removed
+					$(selectivity).on("change", function(e) {
+						var points = scope.heatmap.series[0].data;
+
+						if (_.has(e, "added") && !_.isUndefined(e.added)) {
+							var countryToSelect = e.added.id;
+
+							var pointToSelect = _.findWhere(points, {
+								"iso-a2": countryToSelect
+							});
+
+							pointToSelect.select(true, true);
+						}
+
+						if (_.has(e, "removed") && !_.isUndefined(e.removed)) {
+							var countryToDeselect = e.removed.id;
+
+							var pointToDeselect = _.findWhere(points, {
+								"iso-a2": countryToDeselect
+							});
+
+							pointToDeselect.select(false, true);
+						}
+					});
+				};
+
+				/**
 				 * Creates the heatmap on the page if it doesn't exist, or updates it
 				 * with the new data if it is initialized already
 				 * @param response	Server response from heatmap API
@@ -212,11 +278,6 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 						scope.heatmap = new Highcharts.Map(heatmapOptions);
 
 						heatmapOptions.initialized = true;
-					} else if (!_.isEmpty(scope.heatmap.series)) {
-						// If heatmap has a series, remove it
-						scope.heatmap.series[0].remove();
-
-                        DashboardService.clearCountries(viewType);
                     }
 
 					// If view has color axis use that instead of default one
@@ -228,134 +289,106 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 						}
 					}
 
-					// Create new series object
-					var newSeries = {
-						name: 'Country',
-						mapData: Highcharts.maps['custom/world'],
-						data: response.data,
-						mapZoom: 2,
-						joinBy: ['iso-a2', 'code'],
-						dataLabels: {
-							enabled: true,
-							color: '#FFFFFF',
-							formatter: function () {
-								if (this.point.value) {
-									return this.point.name;
-								}
-							}
-						},
-						tooltip: {
-							headerFormat: '',
-							pointFormat: '{point.name}'
-						}
-					};
-
-					if (countrySelection != "true") {
-						// Country selection disabled, add new series to the heatmap
-						scope.heatmap.addSeries(newSeries);
-					} else {
-						// Country selection enabled, set more properties to the series before adding it to the heatmap
-						var selectivity = null;				// Variable to keep selectivity instance
-
-						newSeries.allowPointSelect = true;
-						newSeries.cursor = "pointer";
-
-						newSeries.states = {
-							select: {
-								color: '#a4edba',
-								borderColor: 'black',
-								dashStyle: 'shortdot'
-							}
-						};
-
-						newSeries.point = {
-							events: {
-								select: function () {
-									// Get selected points
-									var points = scope.heatmap.getSelectedPoints();
-									points.push(this);
-
-									points = formatPoints(points);
-
-									// Give new selected countries to the service
-									DashboardService.setCountries(viewType, points);
-
-									// Set new selected points in Selectivity
-									setSelectivityData(selectivity, points);
-								},
-								unselect: function() {
-									// Get selected points
-									var points = scope.heatmap.getSelectedPoints();
-
-									// Remove unselected points from points
-									var pIndex = points.indexOf(this);
-									if (pIndex > -1 ) {
-										points.splice(pIndex, 1);
+					if (_.isEmpty(scope.heatmap.series)) {
+						// Create new series object
+						var newSeries = {
+							name: 'Country',
+							mapData: Highcharts.maps['custom/world'],
+							data: response.data,
+							mapZoom: 2,
+							joinBy: ['iso-a2', 'code'],
+							dataLabels: {
+								enabled: true,
+								color: '#FFFFFF',
+								formatter: function () {
+									if (this.point.value) {
+										return this.point.name;
 									}
-
-									points = formatPoints(points);
-
-									// Give new selected countries to the service
-									DashboardService.setCountries(viewType, points);
-
-									// Set new selected points in Selectivity
-									setSelectivityData(selectivity, points);
 								}
+							},
+							tooltip: {
+								headerFormat: '',
+								pointFormat: '{point.name}'
 							}
 						};
 
-						// Add new series to the heatmap
-						scope.heatmap.addSeries(newSeries);
+						if (countrySelection == "true") {
+							// Country selection enabled, set more properties to the series before adding it to heatmap
+							newSeries.allowPointSelect = true;
+							newSeries.cursor = "pointer";
 
-						// Highcharts chart is initialized, create data for Selectivity dropdown
-						// Keep only countries that have a value, which means they are available for selection
-						var selectivityData = _.filter(scope.heatmap.series[0].data, function(item) {
-							return !_.isNull(item.value) && !_.isUndefined(item["iso-a2"]);
+							newSeries.states = {
+								select: {
+									color: '#a4edba',
+									borderColor: 'black',
+									dashStyle: 'shortdot'
+								}
+							};
+
+							newSeries.point = {
+								events: {
+									select: function () {
+										// Get selected points
+										var points = scope.heatmap.getSelectedPoints();
+										points.push(this);
+
+										points = formatPoints(points);
+
+										// Give new selected countries to the service
+										DashboardService.setCountries(viewType, points);
+
+										// Set new selected points in Selectivity
+										setSelectivityData(selectivity, points);
+									},
+									unselect: function() {
+										// Get selected points
+										var points = scope.heatmap.getSelectedPoints();
+
+										// Remove unselected points from points
+										var pIndex = points.indexOf(this);
+										if (pIndex > -1 ) {
+											points.splice(pIndex, 1);
+										}
+
+										points = formatPoints(points);
+
+										// Give new selected countries to the service
+										DashboardService.setCountries(viewType, points);
+
+										// Set new selected points in Selectivity
+										setSelectivityData(selectivity, points);
+									}
+								}
+							};
+
+							// Add new series to the heatmap
+							scope.heatmap.addSeries(newSeries);
+
+							// Highcharts chart is initialized, create data for Selectivity dropdown
+							initializeSelectivity();
+						} else {
+							// Add new series to the heatmap
+							scope.heatmap.addSeries(newSeries);
+						}
+					} else {
+						// Heatmap already has a series, update it with new data
+						scope.heatmap.series[0].setData(response.data);
+
+						// In the new data, select the points that were selected before, if they exist
+						var prevSelectedCountries = $(selectivity).selectivity("value");
+						var heatmapCountries = scope.heatmap.series[0].data;
+
+						_.each(prevSelectedCountries, function(country) {
+							// Get the Highcharts point for this country
+							var countryPoint = _.findWhere(heatmapCountries, { "iso-a2": country });
+
+							// If the point value is not null, select it, otherwise deselect it
+							countryPoint.select(!_.isNull(countryPoint.value), true);
 						});
 
-						// Keep only code and name for each country
-						selectivityData = selectivityData.map(function(point) {
-							return {
-								id: point["iso-a2"],
-								text: point.name
-							}
-						});
-
-						// Sort countries by their names
-						selectivityData = _.sortBy(selectivityData, "text");
-
-						// Use jQuery to initialize Selectivity
-						var dropdownContainer = _.first(angular.element(elem[0].querySelector('.country-selection-container')));
-
-						selectivity = $(dropdownContainer).selectivity({
-							items: selectivityData,
-							multiple: true,
-							placeholder: 'Type to search a country'
-						});
-
-						// Add listener for when something in Selectivity is added or removed
-						$(selectivity).off("change").on("change", function(e) {
-							var points = scope.heatmap.series[0].data;
-
-							if (_.has(e, "added") && !_.isUndefined(e.added)) {
-								var countryToSelect = e.added.id;
-
-								var pointToSelect = _.findWhere(points, {
-									"iso-a2": countryToSelect
-								});
-
-								pointToSelect.select(true, true);
-							}
-
-							if (_.has(e, "removed") && !_.isUndefined(e.removed)) {
-								var countryToDeselect = e.removed.id;
-
-								var pointToDeselect = _.findWhere(points, {
-									"iso-a2": countryToDeselect
-								});
-
-								pointToDeselect.select(false, true);
-							}
+						// Update the available options in Selectivity
+						$(selectivity).selectivity("setOptions", {
+							items: getSelectivityItemsFromPoints()
 						});
 					}
 				};
