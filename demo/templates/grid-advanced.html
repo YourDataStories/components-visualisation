@@ -33,6 +33,7 @@
     </button>
     <div class="flex ag-fresh grid-container" yds-basket-btn></div>
     <div ng-if="showResultsNum == 'true'" class="grid-results-num-row">
-        Showing {{ loadedRows }}/{{ resultsNum }} results
+        <span ng-if="resultsNum > 0">Showing {{ loadedRows }}/{{ resultsNum }} results</span>
+        <span ng-if="resultsNum <= 0">No results found</span>
     </div>
 </div>

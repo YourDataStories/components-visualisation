@@ -403,13 +403,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                 // Extract needed variables from server response
                                 var responseData = response.data.response.docs;             // Get actual results
 
-                                // If there are no results, show empty grid
-                                if (_.isEmpty(responseData)) {
-                                    params.successCallback(responseData, 0);
-                                    return;
-                                }
-
-
                                 // Disable the export button if there are more than 5000 results
                                 scope.resultsNum = response.data.response.numFound;
                                 if (scope.resultsNum > 5000) {
@@ -422,6 +415,16 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                 var lastRow = response.data.response.start + parseInt(grid.pageSize);
                                 if (lastRow > scope.loadedRows) {
                                     scope.loadedRows = lastRow;
+
+                                    if (scope.loadedRows > scope.resultsNum) {
+                                        scope.loadedRows = scope.resultsNum;
+                                    }
+                                }
+
+                                // If there are no results, show empty grid
+                                if (_.isEmpty(responseData)) {
+                                    params.successCallback(responseData, 0);
+                                    return;
                                 }
 
                                 // Create array with possible view names (view type of tab should always be preferred)
