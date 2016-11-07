@@ -334,7 +334,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 						});
 
 						// Add listener for when something in Selectivity is added or removed
-						$(selectivity).on("change", function(e) {
+						$(selectivity).off("change").on("change", function(e) {
 							var points = scope.heatmap.series[0].data;
 
 							if (_.has(e, "added") && !_.isUndefined(e.added)) {
