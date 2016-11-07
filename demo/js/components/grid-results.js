@@ -54,6 +54,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     elementH: scope.elementH
                 };
 
+                scope.loadedRows = 0;
                 var query = "";
                 var hasColDefs = false; // Indicates if the column definitions have been loaded for the grid
 
@@ -415,6 +416,12 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                     scope.exportBtnClass = "disabled";
                                 } else {
                                     scope.exportBtnClass = "";
+                                }
+
+                                // Set number of loaded rows
+                                var lastRow = response.data.response.start + parseInt(grid.pageSize);
+                                if (lastRow > scope.loadedRows) {
+                                    scope.loadedRows = lastRow;
                                 }
 
                                 // Create array with possible view names (view type of tab should always be preferred)
