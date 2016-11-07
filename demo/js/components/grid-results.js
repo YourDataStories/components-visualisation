@@ -279,32 +279,34 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                  * Export grid data to csv
                  */
                 scope.exportGrid = function() {
-                    getSearchQuery().then(function(searchQuery) {
-                        var query = searchQuery;
-                        var quickFilter = scope.quickFilterValue;
+                    if (scope.exportBtnClass != "disabled") {
+                        getSearchQuery().then(function (searchQuery) {
+                            var query = searchQuery;
+                            var quickFilter = scope.quickFilterValue;
 
-                        if (!_.isUndefined(quickFilter) && quickFilter.length > 0) {
-                            query = "(" + query + ") AND " + quickFilter;
-                        }
+                            if (!_.isUndefined(quickFilter) && quickFilter.length > 0) {
+                                query = "(" + query + ") AND " + quickFilter;
+                            }
 
-                        // Get facets from URL parameters
-                        var facets = $location.search()[paramPrefix + "fq"];
+                            // Get facets from URL parameters
+                            var facets = $location.search()[paramPrefix + "fq"];
 
-                        // If there are advanced search rules, get them and perform advanced search
-                        var rules = $location.search()[paramPrefix + "rules"];
+                            // If there are advanced search rules, get them and perform advanced search
+                            var rules = $location.search()[paramPrefix + "rules"];
 
-                        if (!_.isUndefined(rules)) {
-                            rules = JSURL.parse(rules);
-                        }
+                            if (!_.isUndefined(rules)) {
+                                rules = JSURL.parse(rules);
+                            }
 
-                        // Download the data as a CSV file from the server
-                        var viewType = grid.viewType;
-                        if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
-                            viewType = undefined;
-                        }
+                            // Download the data as a CSV file from the server
+                            var viewType = grid.viewType;
+                            if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
+                                viewType = undefined;
+                            }
 
-                        Data.downloadGridResultDataAsCsv(query, facets, rules, viewType, grid.lang);
-                    });
+                            Data.downloadGridResultDataAsCsv(query, facets, rules, viewType, grid.lang);
+                        });
+                    }
                 };
 
                 /**
@@ -399,6 +401,15 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                 if (_.isEmpty(responseData)) {
                                     params.successCallback(responseData, 0);
                                     return;
+                                }
+
+
+                                // Disable the export button if there are more than 5000 results
+                                var resultsNum = response.data.response.numFound;
+                                if (resultsNum > 5000) {
+                                    scope.exportBtnClass = "disabled";
+                                } else {
+                                    scope.exportBtnClass = "";
                                 }
 
                                 // Create array with possible view names (view type of tab should always be preferred)

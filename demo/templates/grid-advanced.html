@@ -27,7 +27,7 @@
         </div>
         <div style="clear: both"></div>
     </div>
-    <button type="button" class="btn btn-default btn-xs grid-export-btn"
+    <button type="button" class="btn btn-default btn-xs grid-export-btn" ng-class="exportBtnClass"
             ng-if="exporting == 'true'" ng-style="exportBtnPos" ng-click="exportGrid()">
         <span class="glyphicon glyphicon-save-file"></span>
     </button>
