@@ -36,6 +36,9 @@ angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout
 			//object containing the data for each different type of combobox
 			scope.comboboxData = {};
 
+			// Enable quick filtering because the advanced grid needs to show combo boxes
+			scope.quickFiltering = "true";
+
 			//check if project id attr is defined
 			if(angular.isUndefined(grid.projectId) || grid.projectId.trim()=="") {
 				scope.ydsAlert = "The YDS component is not properly initialized " +
