@@ -485,6 +485,12 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                             };
 
                             if (useGridApi == "false") {
+                                // If extra parameters have a "q" parameter, then use that as a query. This happens when
+                                // a grid is saved to the basket as a visualization and is then embedded
+                                if (_.has(extraParams, "q")) {
+                                    query = extraParams.q;
+                                }
+
                                 // Get the search query, and merge it with the quick filter if it's defined
                                 getSearchQuery().then(function(searchQuery) {
                                     var query = searchQuery;

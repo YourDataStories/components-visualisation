@@ -72,6 +72,21 @@
                 element-h="300">
         </yds-map>
 
+        <yds-grid-results
+                ng-switch-when="grid-results"
+                project-id="{{ projectId }}"
+                view-type="{{ viewType }}"
+                extra-params="extraParams"
+                page-size="50"
+                element-h="300"
+                view-in-dashboard="false"
+                col-resize="true"
+                add-to-basket="false"
+                exporting="false"
+                show-results-num="false"
+                lang="{{ lang }}">
+        </yds-grid-results>
+
         <yds-grid
                 ng-switch-when="grid"
                 project-id="{{ projectId }}"

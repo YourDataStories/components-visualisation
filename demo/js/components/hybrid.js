@@ -68,6 +68,13 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 
 						// Set visualization type so the ng-switch shows the component
 						scope.vizType = vizType.toLowerCase();
+
+						// If there is a q parameter and the visualisation type is grid, the use grid-results
+						if (_.has(scope.extraParams, "q") && scope.vizType == "grid") {
+							scope.vizType = "grid-results";
+
+							//todo: find visualisation type and add it as the details type for grid-results
+						}
 					};
 				}
 			}
