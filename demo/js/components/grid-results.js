@@ -168,13 +168,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 };
 
                 /**
-                 * function to handle grid's quick filtering
-                 */
-                scope.applyQuickFilter = function(input) {
-                    scope.gridOptions.api.setQuickFilter(input);
-                };
-
-                /**
                  * function to be called on destroy of the component
                  */
                 scope.$on("$destroy", function() {
@@ -194,6 +187,10 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 scope.applyComboFilters = function() {
                     var trimmedQFValue = scope.quickFilterValue.trim();
                     if (trimmedQFValue.length > 0) {
+                        // Reset loaded rows, because grid will reload the data
+                        scope.loadedRows = 0;
+
+                        // Visualize the grid
                         visualizeGrid(trimmedQFValue);
                     } else {
                         scope.clearComboFilters();
@@ -204,7 +201,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                  * Clears the quick filter
                  */
                 scope.clearComboFilters = function() {
-                    scope.applyQuickFilter("");
+                    scope.loadedRows = 0;
                     scope.quickFilterValue = "";
 
                     visualizeGrid();
