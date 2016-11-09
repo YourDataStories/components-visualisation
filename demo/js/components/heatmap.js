@@ -15,8 +15,8 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				legendHAlign: '@',      // Horizontal alignment of the chart legend (left, center, right)
 				legendLayout: '@',      // Layout of the chart legend (vertical, horizontal)
 
-				useYearRange: '@',      // If true will watch the selected year range of DashboardService to update map
-				dashboardId: '@',		// Optional, used for getting selected year range from DashboardService
+				useDashboardParams: '@',// If true, the heatmap will watch for DashboardService parameter changes
+				dashboardId: '@',		// Optional, used for getting parameters from DashboardService
 				countrySelection: '@',  // Allow selecting countries on the map
 
 				exporting: '@',         // Enable or disable the export of the chart
@@ -34,7 +34,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				var legendVAlign = scope.legendVAlign;
 				var legendHAlign = scope.legendHAlign;
 				var legendLayout = scope.legendLayout;
-				var useYearRange = scope.useYearRange;
+				var useDashboardParams = scope.useDashboardParams;
 				var dashboardId = scope.dashboardId;
 				var countrySelection = scope.countrySelection;
 				var noBorder = scope.noBorder;
@@ -47,8 +47,8 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				var elementId = "heatmap" + Data.createRandomId();
 				heatmapContainer[0].id = elementId;
 
-                // Year range will be saved to check if it actually changed before recreating the heatmap
-                var yearRange = [];
+                // Any extra parameters will be saved to check if something changed before refreshing the heatmap
+                var extraParams = {};
 
 				// Selectivity instance
 				var selectivity = null;
@@ -93,9 +93,9 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				if (_.isUndefined(legendLayout) || legendLayout.trim()=="")
 					legendLayout = "horizontal";
 
-				//check if useYearRange attr is defined, else assign default value
-				if (_.isUndefined(useYearRange) || useYearRange.trim()=="")
-                    useYearRange = "false";
+				//check if useDashboardParams attr is defined, else assign default value
+				if (_.isUndefined(useDashboardParams) || useDashboardParams.trim()=="")
+                    useDashboardParams = "false";
 
 				//check if dashboardId attr is defined, else assign default value
 				if (_.isUndefined(dashboardId) || dashboardId.trim()=="")
@@ -180,8 +180,9 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 					files: ['https://code.highcharts.com/mapdata/custom/world.js'],
 					cache: true
 				}).then(function() {
-					if (useYearRange == "true") {
+					if (useDashboardParams == "true") {
 						DashboardService.subscribeYearChanges(scope, createHeatmap);
+						DashboardService.subscribeSelectionChanges(scope, createHeatmap);
 					}
 
 					createHeatmap();
@@ -426,29 +427,16 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				 * Get extra parameters if needed, fetch data and call the function to render the heatmap component
 				 */
 				var createHeatmap = function() {
-					if (useYearRange == "true") {
-						// Get min/max selected years
-                        var minYear = DashboardService.getMinYear(dashboardId);
-                        var maxYear = DashboardService.getMaxYear(dashboardId);
+					// If the map should use variables from DashboardService, add them to extra params
+					if (useDashboardParams == "true") {
+						var newExtraParams = DashboardService.getApiOptions(dashboardId);
 
-						// Check if year range changed before continuing
-                        var newYearRange = [minYear, maxYear];
-                        if (_.isEqual(yearRange, newYearRange)) {
-                            // Year range is the same as before, so don't refresh heatmap
-                            // (should mean that a year range with a different dashboardId changed)
-                            return;
-                        } else {
-                            yearRange = newYearRange;
-                        }
-
-						// Get name of parameter that should be used to send year
-						var yearParam = DashboardService.getYearParamName(dashboardId);
-
-                        // Create extra parameters object with year
-						if (!_.isNaN(minYear) && !_.isNaN(maxYear)) {
-							var extraParams = {};
-
-							extraParams[yearParam] = "[" + minYear + " TO " + maxYear + "]";
+						// Check if any parameters changed before continuing
+						if (_.isEqual(extraParams, newExtraParams)) {
+							// Nothing changed, do not refresh heatmap
+							return;
+						} else {
+							extraParams = newExtraParams;
 						}
                     }
 
