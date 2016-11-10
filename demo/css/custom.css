@@ -939,9 +939,39 @@ a.accordion-toggle:focus, a.accordion-toggle:active {
     background-color: #5bc0de;
 }
 
-/* Rule to make Dashboard info component's labels gray (bootstrap's default) color */
+/* Labels in Dashboard info */
 .dashboard-info-container-default > yds-dashboard-updater > .dashboard-updater-container > yds-info > .yds-info-wrapper > .row > div[class*="col-md-"] > .label {
-    background-color: #939393;
+    padding: .2em 10px .3em;
+    display: block;
+    color: #333;
+    text-align: left;
+    background-color: #f2f6f9;
+    border-radius: 0;
+}
+
+/* Remove padding from top and bottom */
+.dashboard-info-container-default {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* Label row */
+.dashboard-info-container-default > yds-dashboard-updater > .dashboard-updater-container > yds-info > .yds-info-wrapper > div.row > .col-md-12:nth-child(odd) {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Info rows */
+.dashboard-info-container-default > yds-dashboard-updater > .dashboard-updater-container > yds-info > .yds-info-wrapper > div.row > .col-md-12:nth-child(even) {
+    padding: .2em 10px .3em;
+    line-height: 1.2em;
+}
+
+/* Style for heading to show text in 1 line */
+.dashboard-info-panel-heading {
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: center;
 }
 
 /* Panel with nav tabs CSS */
