@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" ng-controller="DashboardPilot1Controller">
     <div class="row">
         <div class="col-md-12">
             <h2>Contracts</h2>
@@ -73,17 +73,47 @@
         </div>
     </div>
 
-    <!--Dashboard Info box-->
-    <div class="row" style="padding-top: 20px">
-        <div class="col-md-12">
-            <div class="panel panel-info">
+    <!--Dashboard Visualization-->
+    <div class="row">
+        <div class="col-md-10" style="min-height: 600px">
+            <uib-tabset active="dashboardVisActiveTab">
+                <uib-tab index="$index" class="{{ 'tab-' + aggregateClasses[$index] }}" ng-repeat="type in aggregates track by $index" select="selectTab($index)">
+                    <uib-tab-heading>
+                        {{ aggregateTitles[$index] }}
+                    </uib-tab-heading>
+                    <yds-dashboard-visualization
+                            ng-if="dashboardVisActiveTab == $index"
+                            class="{{ 'content-' + aggregateClasses[$index] }}"
+                            project-id="none"
+                            dashboard-id="contract"
+                            type="{{ type }}"
+                            add-to-basket="true"
+                            element-h="460">
+                    </yds-dashboard-visualization>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+        <div class="col-md-2">
+            <yds-dashboard-updater
+                    ng-repeat="type in aggregates track by $index"
+                    ng-show="aggregateToShow == $index"
+                    type="aggregate"
+                    project-id="{{ projectId }}"
+                    dashboard-id="contract"
+                    view-type="{{ type }}"
+                    min-height="125"
+                    aggregate-show-button="false"
+                    aggregate-icon-size="3">
+            </yds-dashboard-updater>
+
+            <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Selected filters</h3>
+                    <h3 class="panel-title">Your selected filters</h3>
                 </div>
 
-                <div class="panel-body dashboard-info-container">
+                <div class="panel-body dashboard-info-container-default">
                     <yds-dashboard-updater
-                            type="info"
+                            type="info-vertical"
                             view-type="contract.filters.selected"
                             dashboard-id="contract"
                             min-height="90"
@@ -91,19 +121,6 @@
                     </yds-dashboard-updater>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!--Visualization-->
-    <div class="row">
-        <div class="col-md-12">
-            <!--Dashboard Visualization-->
-            <yds-dashboard-visualization
-                    project-id="none"
-                    dashboard-id="contract"
-                    add-to-basket="true"
-                    element-h="460">
-            </yds-dashboard-visualization>
         </div>
     </div>
 </div>

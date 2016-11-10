@@ -71,6 +71,17 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
                 "Sectors"
             ],
             width: 4
+        },
+        contract: {
+            types: [
+                "contract.seller.countries.all",
+                "contract.buyer.countries.all"
+            ],
+            titles: [
+                "Seller Countries",
+                "Buyer Countries"
+            ],
+            width: 6
         }
     };
 
