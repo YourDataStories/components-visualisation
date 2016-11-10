@@ -176,21 +176,20 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                 else
                     return false;
 
-                if (!_.isUndefined(searchParams.fq))
+                if (!_.isUndefined(searchParams.fq)) {
                     searchFilters.fq = searchParams.fq;
+
+                    // If only one facet is selected and it's a string, make it an array like the API expects
+                    if (_.isString(searchFilters.fq)) {
+                        searchFilters.fq = [ searchFilters.fq ];
+                    }
+                }
 
                 var resultHashObj = _.extend(searchFilters, {lang: scope.lang});
                 var resultsetUUID = Data.hashFromObject(resultHashObj);
 
                 //initialize the basket's modal reference;
                 var basketConfig = initializeBasketItem(resultsetUUID, "resultset");
-
-
-                if (!_.isUndefined(searchParams.q))
-                    searchFilters.q = searchParams.q;
-
-                if (!_.isUndefined(searchParams.fq))
-                    searchFilters.fq = searchParams.fq;
 
                 basketConfig.filters.push({
                     applied_to: "search",
