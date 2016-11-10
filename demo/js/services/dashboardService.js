@@ -75,11 +75,15 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         contract: {
             types: [
                 "contract.seller.countries.all",
-                "contract.buyer.countries.all"
+                "contract.buyer.countries.all",
+                "contract.sellers.all",
+                "contract.buyers.all"
             ],
             titles: [
                 "Seller Countries",
-                "Buyer Countries"
+                "Buyer Countries",
+                "Sellers",
+                "Buyers"
             ],
             width: 6
         }
