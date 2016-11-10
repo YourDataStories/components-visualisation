@@ -130,7 +130,13 @@ angular.module('yds').directive('ydsPie', ['Data', 'Filters', function(Data, Fil
                                 cursor: 'pointer',
                                 dataLabels: {
                                     enabled: true,
-                                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                    formatter: function() {
+                                        if (this.key.length > 45) {
+                                            this.key = this.key.substring(0, 45) + "…";
+                                        }
+
+                                        return this.key + ": " + this.percentage.toFixed(1) + "%";
+                                    },
                                     style: {
                                         color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
                                     }
