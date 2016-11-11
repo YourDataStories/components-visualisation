@@ -29,9 +29,8 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         }
     };
 
-    // Mapping of dashboardIds and parameter names that the API expects the selected
-    // year range to be sent at. For example for aid activities, the server expects
-    // the years in a parameter called "year"
+    // Mapping of dashboardIds and parameter names that the API expects the selected year range to be sent at.
+    // For example for aid activities, the server expects the years in a parameter called "year"
     var yearParamMapping = {
         aidactivity: "year",
         tradeactivity: "financialyear",
@@ -102,6 +101,23 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
             urlParamPrefix: "ta-",
             requestType: "tradeactivity.listitems.for.countries.and.period"
         }
+    };
+
+    /**
+     * Get a grid-result request type and find the concept for it (in the searchParams object)
+     * @param type      The request type
+     * @returns {*}     Type of request
+     */
+    var getProjectConceptForType = function(type) {
+        var concept = null;
+
+        _.each(searchParams, function(searchParam) {
+            if (searchParam.requestType == type) {
+                concept = searchParam.concept;
+            }
+        });
+
+        return concept;
     };
 
     /**
@@ -420,6 +436,7 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     };
 
     return {
+        getProjectConceptForType: getProjectConceptForType,
         getApiOptionsMapping: getApiOptionsMapping,
         getYearParamName: getYearParamName,
         getAggregates: getAggregates,

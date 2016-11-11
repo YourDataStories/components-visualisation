@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '$location',
-	function(Data, $http, $stateParams, $location){
+angular.module('yds').directive('ydsHybrid', ['Data', 'DashboardService', '$http', '$stateParams', '$location',
+	function(Data, DashboardService, $http, $stateParams, $location){
 	return {
 		restrict: 'E',
 		scope: {},
@@ -73,7 +73,14 @@ angular.module('yds').directive('ydsHybrid', ['Data', '$http', '$stateParams', '
 						if (_.has(scope.extraParams, "q") && scope.vizType == "grid") {
 							scope.vizType = "grid-results";
 
-							//todo: find visualisation type and add it as the details type for grid-results
+							// Find concept type and add it as the project details type for grid-results
+							var type = DashboardService.getProjectConceptForType(viewType);
+
+							if (!_.isNull(type)) {
+								scope.projectDetailsType = type;
+							} else {
+								scope.projectDetailsType = viewType;
+							}
 						}
 					};
 				}
