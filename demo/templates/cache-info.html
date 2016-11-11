@@ -12,11 +12,6 @@
 </div>
 <div class="row">
     <div class="col-md-6">
-        <!--Message box-->
-        <div class="alert alert-success" role="alert" ng-if="msg.length>0">
-            {{msg}}
-        </div>
-
         <!--Table with cache info-->
         <table class="table">
             <thead>
@@ -44,5 +39,10 @@
         <button class="btn btn-danger" ng-click="truncateCache('all')">
             <span class="glyphicon glyphicon-trash"></span> Truncate All
         </button>
+
+        <!--Message box-->
+        <div class="alert alert-success" style="margin-top: 20px" role="alert" ng-if="msg.length>0">
+            {{msg}}
+        </div>
     </div>
 </div>
