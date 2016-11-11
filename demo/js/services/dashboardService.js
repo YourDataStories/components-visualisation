@@ -100,6 +100,11 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
             concept: "TradeActivity",
             urlParamPrefix: "ta-",
             requestType: "tradeactivity.listitems.for.countries.and.period"
+        },
+        contract: {
+            concept: "Contract",
+            urlParamPrefix: "ct-",
+            requestType: "contract.listitems.for.countries.and.period"
         }
     };
 

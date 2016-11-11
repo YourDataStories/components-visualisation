@@ -123,4 +123,76 @@
             </div>
         </div>
     </div>
+
+    <!--What else can I do panel-->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left">What else can I do with the available data?</h3>
+                </div>
+
+                <div class="panel-body">
+                    <uib-tabset active="ctTab"
+                                template-url="templates/tabset-panel-success.html">
+                        <uib-tab heading="View Data" index="0">
+                            <p class="text-justify">The following table shows all Contracts for the selected seller and
+                                buyer countries that span the selected time period. You can obtain the same results
+                                through search: an example is provided on the
+                                <!--Because of extra scopes created by uib-tab we need
+                                to access the ctTab variable like this-->
+                                <a ng-click="$parent.$parent.ctTab = 1">search tab</a>.</p>
+
+                            <p class="text-justify">Each Contract has a set of related transactions and sectors.
+                                In order to see them, please select a Contract from the table below, and press its
+                                “View” button. The related transactions and sectors will be listed in a new page.</p>
+
+                            <!--Contract grid-->
+                            <yds-dashboard-updater
+                                    ng-if="ctTab == 0"
+                                    type="grid"
+                                    id="dashboard-contract-data-grid"
+                                    view-type="contract.listitems.for.countries.and.period"
+                                    dashboard-id="contract"
+                                    add-to-basket="true"
+                                    min-height="420"
+                                    lang="en">
+                            </yds-dashboard-updater>
+                        </uib-tab>
+
+                        <uib-tab heading="Search Data" index="1">
+                            <p class="text-justify">The following example shows how a detailed search can be performed
+                                in the YourDataStories platform, through the “Advanced Search”. The advanced search
+                                allows you to graphically create rules that filter specific properties. Auto-completion
+                                is also supported!</p>
+
+                            <div class="bs-callout bs-callout-success" style="margin-top: 0">
+                                <p class="text-justify">Select seller and buyer countries, change the time period, and
+                                    see how the rules are automatically generated. Instructions on
+                                    <a href="http://ydsdev.iit.demokritos.gr/YDS-docs/Tutorials/examples/advanced-search-usage">how to use Advanced Search</a>,
+                                    a guided tutorial on filtering with a specific sector, access to the
+                                    <a href="http://platform.yourdatastories.eu/content/tabbed-search">full search interface</a>.</p>
+                            </div>
+
+                            <yds-dashboard-updater
+                                    ng-if="ctTab == 1"
+                                    type="search"
+                                    dashboard-id="contract"
+                                    add-to-basket="true"
+                                    min-height="480"
+                                    lang="en">
+                            </yds-dashboard-updater>
+                        </uib-tab>
+
+                        <uib-tab heading="Visualize the data" index="2">
+                            <!--Workbench-->
+                            <yds-workbench
+                                    ng-if="ctTab == 2"
+                                    user-id="ydsUser"></yds-workbench>
+                        </uib-tab>
+                    </uib-tabset>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
