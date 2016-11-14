@@ -498,8 +498,14 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                         query = "(" + query + ") AND " + quickFilter;
                                     }
 
-                                    // Get facets from URL parameters
-                                    var facets = $location.search()[paramPrefix + "fq"];
+                                    // Try to find any selected facets
+                                    if (_.has(extraParams, "fq")) {
+                                        // If facets exist in extra params, get them from there
+                                        var facets = extraParams.fq;
+                                    } else {
+                                        // Get facets from URL parameters
+                                        var facets = $location.search()[paramPrefix + "fq"];
+                                    }
 
                                     // Try to find advanced search rules (if no rules are found, perform normal search)
                                     var rules = undefined;
