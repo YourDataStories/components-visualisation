@@ -69,7 +69,7 @@ app.directive('clipboard', ['$document', function(){
 }]);
 
 
-app.factory('Data', ['$http', '$q', '$window', 'YDS_CONSTANTS', function ($http, $q, $window, YDS_CONSTANTS) {
+app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANTS', function ($http, $q, $window, DashboardService, YDS_CONSTANTS) {
     var dataService = {};
 
     //function to convert date to timestamp
@@ -674,7 +674,10 @@ app.factory('Data', ['$http', '$q', '$window', 'YDS_CONSTANTS', function ($http,
         }, sortParams);
 
         if (!_.isUndefined(viewType) && viewType.length > 0) {
-            facets = mergeFacetsAndViewType(viewType, facets);
+            // Before merging viewType with facets, check that it's not a Dashboard type (if it is, ignore it)
+            if (_.isNull(DashboardService.getProjectConceptForType(viewType))) {
+                facets = mergeFacetsAndViewType(viewType, facets);
+            }
         }
 
         // Add facets to the parameters of the request
