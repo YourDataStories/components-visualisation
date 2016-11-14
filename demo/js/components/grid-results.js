@@ -501,23 +501,28 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                     // Get facets from URL parameters
                                     var facets = $location.search()[paramPrefix + "fq"];
 
-                                    // If there are advanced search rules, get them and perform advanced search
-                                    var rules = $location.search()[paramPrefix + "rules"];
-                                    if (!_.isUndefined(rules)) {
-                                        rules = JSURL.parse(rules);
+                                    // Try to find advanced search rules (if no rules are found, perform normal search)
+                                    var rules = undefined;
+                                    if (!_.isUndefined(extraParams) && _.has(extraParams, "rules")) {
+                                        // Extra params have rules in them, this happens when grid-results is embedded
+                                        rules = extraParams.rules;
+                                    } else {
+                                        // Extra params do not have rules, try to find rules in the URL parameters
+                                        rules = $location.search()[paramPrefix + "rules"];
 
-                                        Data.getGridResultDataAdvanced(query, facets, rules, grid.viewType, params.startRow, grid.pageSize, grid.lang, params.sortModel)
+                                        if (!_.isUndefined(rules)) {
+                                            // Parse the rules with JSURL
+                                            rules = JSURL.parse(rules);
+                                        }
+                                    }
+
+                                    if (_.isUndefined(rules)) {
+                                        // Perform normal search
+                                        Data.getGridResultData(query, facets, grid.viewType, params.startRow, grid.pageSize, grid.lang, params.sortModel)
                                             .then(gridResultDataSuccess, gridResultDataError);
                                     } else {
-                                        var viewType = "";
-                                        if (_.isUndefined(extraParams) || _.isEmpty(extraParams)) {
-                                            // If extra params do not exist, send view type as normal
-                                            // If they exist, the type will be already included in the query
-                                            viewType = grid.viewType;
-                                        }
-
-                                        // Perform normal search
-                                        Data.getGridResultData(query, facets, viewType, params.startRow, grid.pageSize, grid.lang, params.sortModel)
+                                        // Rules were found, do an advanced search
+                                        Data.getGridResultDataAdvanced(query, facets, rules, grid.viewType, params.startRow, grid.pageSize, grid.lang, params.sortModel)
                                             .then(gridResultDataSuccess, gridResultDataError);
                                     }
 

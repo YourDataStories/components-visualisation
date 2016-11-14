@@ -632,7 +632,7 @@ app.factory('Data', ['$http', '$q', '$window', 'YDS_CONSTANTS', function ($http,
             facets = [ facets, newFacet ];
         } else if (_.isUndefined(facets)) {
             // Facets is undefined, only facet is the view type
-            facets = newFacet;
+            facets = [ newFacet ];
         }
 
         return facets;
@@ -711,10 +711,6 @@ app.factory('Data', ['$http', '$q', '$window', 'YDS_CONSTANTS', function ($http,
 
         // Create facets array
         var fq = mergeFacetsAndViewType(viewType, facets);
-        if (!_.isArray(fq)) {
-            // The server expects fq to always be an array, so if it's a string we make it an array with 1 string in it
-            fq = [ fq ];
-        }
 
         var sortParams = formatAgGridSortParams(sortModel);
 
