@@ -419,21 +419,6 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
     };
 
     /**
-     * Formats a number, for example 14726.51 -> 14,726.51
-     * (credit: http://stackoverflow.com/a/20545587)
-     * @param n     The number to format
-     * @param dp    Number of decimal places the formatted number should have
-     * @returns {string}
-     */
-    var formatThousandsWithRounding = function(n, dp){
-        var w = n.toFixed(dp), k = w|0, b = n < 0 ? 1 : 0,
-            u = Math.abs(w-k), d = (''+u.toFixed(dp)).substr(2, dp),
-            s = ''+k, i = s.length, r = '';
-        while ( (i-=3) > b ) { r = ',' + s.substr(i, 3) + r; }
-        return s.substr(0, i + 3) + r + (d ? '.'+d: '');
-    };
-
-    /**
      * Formats an ISO-8601 date string to "DD/MM/YYYY" format
      * @param dateToFormat  ISO-8601 date string
      * @returns {string}    "DD/MM/YYYY" formatted date
@@ -472,7 +457,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
 
                     // Format the amount only if it's not empty, and doesn't contain dollar or euro sign
                     if (attrStr.length > 0) {
-                        attrValue = formatThousandsWithRounding(attrValue, 2);
+                        attrValue = attrValue.toLocaleString(undefined, { minimumFractionDigits: 2 });
 
                         // Try to find and add currency symbol
                         var lastTokenLength = _.last(attributeTokens).length;
