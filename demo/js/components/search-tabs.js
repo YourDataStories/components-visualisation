@@ -6,6 +6,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                 defaultTab: '@',        // Default tab to select when page loads
                 urlParamPrefix: '@',    // Prefix to add before all url parameters (optional)
                 watchRuleUrlParam: '@', // If Advanced Search should watch URL parameter for rule changes and apply them
+                viewInDashboard: '@',   // If true, the view button for each grid-results row will set the clicked value in DashboardService
                 hideTabs: '@',          // If true, tabs will be hidden and only the default tab will show
                 addToBasket: '@',       // If true, the grids will have an "add to basket" button
                 lang: '@'               // Language of component
