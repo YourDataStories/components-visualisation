@@ -3,7 +3,7 @@ angular.module('yds').directive('ydsMap', ['Data', function(Data){
         restrict: 'E',
         scope: {
             projectId: '@',     //id of the project that the data belong
-            viewType: '@',     //name of the array that contains the visualised data
+            viewType: '@',      //name of the array that contains the visualised data
             lang: '@',          //lang of the visualised data
 
             zoomControl: '@',   //enable or disable map's zoom control

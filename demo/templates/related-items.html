@@ -1,0 +1,42 @@
+<div class="related-items-container">
+    <uib-tabset>
+        <uib-tab heading="News">
+            <div class="related-items-list-container" ng-style="listContainerStyle">
+                <ul class="list-group">
+                    <a ng-repeat="item in data.news"
+                       href="{{ item.url }}"
+                       class="list-group-item"
+                       target="_blank">
+                        {{ item.title }}
+                    </a>
+                </ul>
+            </div>
+        </uib-tab>
+
+        <uib-tab heading="Blog posts">
+            <div class="related-items-list-container" ng-style="listContainerStyle">
+                <ul class="list-group">
+                    <a ng-repeat="item in data.blogs"
+                       href="{{ item.url }}"
+                       class="list-group-item"
+                       target="_blank">
+                        {{ item.title }}
+                    </a>
+                </ul>
+            </div>
+        </uib-tab>
+
+        <uib-tab heading="Tweets">
+            <div class="related-items-list-container" ng-style="listContainerStyle">
+                <ul class="list-group">
+                    <a ng-repeat="item in data.tweets"
+                       href="{{ item.url }}"
+                       class="list-group-item"
+                       target="_blank">
+                        {{ item.text }}
+                    </a>
+                </ul>
+            </div>
+        </uib-tab>
+    </uib-tabset>
+</div>

@@ -985,6 +985,11 @@ a.accordion-toggle:focus, a.accordion-toggle:active {
     margin-bottom: -1px;
 }
 
+/* Make list in Related Items component scroll */
+.related-items-list-container {
+    overflow: auto;
+}
+
 /********************************************************************/
 /*** PANEL WITH NAV-TABS PRIMARY ***/
 .with-nav-tabs.panel-primary .nav-tabs > li > a,

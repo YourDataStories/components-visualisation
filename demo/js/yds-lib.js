@@ -35,6 +35,7 @@ app.constant("YDS_CONSTANTS", {
     "API_AGGREGATE": "platform.yourdatastories.eu/api/json-ld/component/aggregate.tcl",
     "API_TYPE2SOLRQUERY": "platform.yourdatastories.eu/api/json-ld/component/type2solrquery.tcl",
     "API_TYPE2_ADVANCED_QUERY": "platform.yourdatastories.eu/api/json-ld/component/type2advancedquery.tcl",
+    "API_RELATED_ITEMS": "platform.yourdatastories.eu/api/json-ld/social/relateditems.tcl",
 
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search",
     "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search-el",
@@ -1009,6 +1010,60 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).success(function (data) {
             deferred.resolve(data);
         }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    /**
+     * Return related items of a specific type, for a specific project
+     * @param projectId     ID of project to return items for
+     * @param type          Type of related items to return (can be "news", "blog" or "tweet")
+     * @returns {promise|*|s|d}
+     */
+    dataService.getRelatedItems = function(projectId, type) {
+        var deferred = $q.defer();
+
+        var params = {
+            id: projectId,
+            type: type
+        };
+
+        $http({
+            method: 'GET',
+            url: "http://" + YDS_CONSTANTS.API_RELATED_ITEMS,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            params: params
+        }).then(function (response) {
+            // Transform the data to the format expected by the component
+            var formattedData = [];
+            var results = response.data.data.response.docs;
+
+            if (_.isArray(results)) {
+                switch (type) {
+                    case "news":
+                    case "blog":
+                        formattedData = results.map(function (item) {
+                            return {
+                                title: item.title,
+                                url: item.entry_url
+                            }
+                        });
+                        break;
+                    case "tweet":
+                        formattedData = results.map(function (item) {
+                            return {
+                                text: _.first(item.text),
+                                url: _.first(item.url)
+                            }
+                        });
+                        break;
+                }
+            }
+
+            deferred.resolve(formattedData);
+        }, function (error) {
             deferred.reject(error);
         });
 
