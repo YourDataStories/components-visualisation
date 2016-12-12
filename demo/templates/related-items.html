@@ -1,35 +1,18 @@
 <div class="related-items-container">
     <uib-tabset>
-        <uib-tab heading="News">
+        <uib-tab ng-repeat="tab in data track by $index" heading="{{ tab.title }}">
             <div class="related-items-list-container" ng-style="listContainerStyle">
-                <ul class="list-group">
-                    <a ng-repeat="item in data.news"
+                <ul ng-switch="tab.type" class="list-group">
+                    <!--News/Blog posts-->
+                    <a ng-switch-when="news" ng-repeat="item in tab.data"
                        href="{{ item.url }}"
                        class="list-group-item"
                        target="_blank">
-                        {{ item.title }}
+                        {{ item.text }}
                     </a>
-                </ul>
-            </div>
-        </uib-tab>
 
-        <uib-tab heading="Blog posts">
-            <div class="related-items-list-container" ng-style="listContainerStyle">
-                <ul class="list-group">
-                    <a ng-repeat="item in data.blogs"
-                       href="{{ item.url }}"
-                       class="list-group-item"
-                       target="_blank">
-                        {{ item.title }}
-                    </a>
-                </ul>
-            </div>
-        </uib-tab>
-
-        <uib-tab heading="Tweets">
-            <div class="related-items-list-container" ng-style="listContainerStyle">
-                <ul class="list-group">
-                    <a ng-repeat="item in data.tweets"
+                    <!--Tweets-->
+                    <a ng-switch-when="tweet" ng-repeat="item in tab.data"
                        href="{{ item.url }}"
                        class="list-group-item"
                        target="_blank">

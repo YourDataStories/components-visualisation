@@ -1046,7 +1046,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                     case "blog":
                         formattedData = results.map(function (item) {
                             return {
-                                title: item.title,
+                                text: item.title,
                                 url: item.entry_url
                             }
                         });

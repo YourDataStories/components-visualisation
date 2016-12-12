@@ -28,21 +28,33 @@ angular.module('yds').directive('ydsRelatedItems', ['Data',
                 };
 
                 scope.data = {
-                    news: [],
-                    blogs: [],
-                    tweets: []
+                    news: {
+                        title: "News",
+                        type: "news",
+                        data: []
+                    },
+                    blogs: {
+                        title: "Blog posts",
+                        type: "news",
+                        data: []
+                    },
+                    tweets: {
+                        title: "Tweets",
+                        type: "tweet",
+                        data: []
+                    }
                 };
 
                 Data.getRelatedItems(scope.projectId, "news").then(function(data) {
-                    scope.data.news = data;
+                    scope.data.news.data = data;
                 });
 
                 Data.getRelatedItems(scope.projectId, "blog").then(function(data) {
-                    scope.data.blogs = data;
+                    scope.data.blogs.data = data;
                 });
 
                 Data.getRelatedItems(scope.projectId, "tweet").then(function(data) {
-                    scope.data.tweets = data;
+                    scope.data.tweets.data = data;
                 });
             }
         };
