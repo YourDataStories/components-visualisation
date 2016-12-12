@@ -991,12 +991,12 @@ a.accordion-toggle:focus, a.accordion-toggle:active {
 }
 
 /* Remove border radius from list items */
-.related-news-item.list-group-item:first-child, .related-tweet-item.list-group-item:first-child {
+.related-news-item:first-child, .related-tweet-item:first-child {
     border-radius: 0;
     border-top: 0;
 }
 
-.related-news-item.list-group-item:last-child, .related-tweet-item.list-group-item:last-child {
+.related-news-item:last-child, .related-tweet-item:last-child {
     border-radius: 0;
 }
 

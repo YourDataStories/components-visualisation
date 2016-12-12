@@ -1,6 +1,10 @@
 <div class="related-items-container">
     <uib-tabset>
-        <uib-tab ng-repeat="tab in data track by $index" heading="{{ tab.title }}">
+        <uib-tab ng-repeat="tab in data track by $index">
+            <uib-tab-heading>
+                <i class="fa" ng-class="tab.icon" aria-hidden="true"></i>
+                {{ tab.title }}
+            </uib-tab-heading>
             <div class="related-items-list-container" ng-style="listContainerStyle">
                 <ul ng-switch="tab.type" class="list-group">
                     <!--News/Blog posts-->

@@ -31,16 +31,19 @@ angular.module('yds').directive('ydsRelatedItems', ['Data',
                     news: {
                         title: "News",
                         type: "news",
+                        icon: "fa-newspaper-o",
                         data: []
                     },
                     blogs: {
                         title: "Blog posts",
                         type: "news",
+                        icon: "fa-rss",
                         data: []
                     },
                     tweets: {
                         title: "Tweets",
                         type: "tweet",
+                        icon: "fa-twitter",
                         data: []
                     }
                 };
