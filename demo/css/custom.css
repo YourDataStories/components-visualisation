@@ -1001,8 +1001,13 @@ a.accordion-toggle:focus, a.accordion-toggle:active {
     border-top: 0;
 }
 
-.related-news-item:last-child, .related-tweet-item:last-child {
+a.list-group-item.load-more-button:last-child {
+    text-align: center;
     border-radius: 0;
+}
+
+a.list-group-item.load-more-button:hover > span.load-more-button-text {
+    text-decoration: underline;
 }
 
 /* Classes for chart loading animation container*/

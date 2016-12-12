@@ -1,12 +1,12 @@
 <div class="related-items-container">
     <uib-tabset>
-        <uib-tab ng-repeat="tab in data track by $index">
+        <uib-tab ng-repeat="tab in tabs track by $index">
             <uib-tab-heading>
                 <i class="fa" ng-class="tab.icon" aria-hidden="true"></i>
                 {{ tab.title }}
             </uib-tab-heading>
             <div class="related-items-list-container" ng-style="listContainerStyle">
-                <ul ng-switch="tab.type" class="list-group related-items-list">
+                <ul ng-switch="tab.viewType" class="list-group related-items-list">
                     <!--News/Blog posts-->
                     <a ng-switch-when="news" ng-repeat="item in tab.data"
                        href="{{ item.url }}"
@@ -21,6 +21,12 @@
                        class="list-group-item related-tweet-item"
                        target="_blank">
                         {{ item.text }}
+                    </a>
+
+                    <!--Load more button-->
+                    <a class="list-group-item load-more-button" ng-click="loadMore(tab.title)">
+                        <i ng-if="loading" class="fa fa-spinner fa-pulse fa-fw"></i>
+                        <span class="load-more-button-text">Load more</span>
                     </a>
                 </ul>
             </div>
