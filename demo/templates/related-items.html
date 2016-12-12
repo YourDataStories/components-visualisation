@@ -6,7 +6,7 @@
                 {{ tab.title }}
             </uib-tab-heading>
             <div class="related-items-list-container" ng-style="listContainerStyle">
-                <ul ng-switch="tab.type" class="list-group">
+                <ul ng-switch="tab.type" class="list-group related-items-list">
                     <!--News/Blog posts-->
                     <a ng-switch-when="news" ng-repeat="item in tab.data"
                        href="{{ item.url }}"

@@ -990,6 +990,11 @@ a.accordion-toggle:focus, a.accordion-toggle:active {
     overflow: auto;
 }
 
+/* Remove bottom margin from the list */
+.related-items-list {
+    margin-bottom: 0;
+}
+
 /* Remove border radius from list items */
 .related-news-item:first-child, .related-tweet-item:first-child {
     border-radius: 0;
