@@ -117,6 +117,9 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters',
                 if(_.isUndefined(grid.elementH) || _.isNaN(grid.elementH))
                     grid.elementH = 200 ;
 
+                // Show loading animation
+                scope.loading = true;
+
                 //set the id and the height of the grid component
                 gridContainer[0].id = grid.elementId;
 
@@ -226,11 +229,17 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters',
                         if (grid.filtering === "true" || grid.quickFiltering === "true") {
                             scope.gridOptions.api.addEventListener('afterFilterChanged', filterModifiedListener);
                         }
+
+                        // Remove loading animation
+                        scope.loading = false;
                     }, function(error){
                         if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
                             scope.ydsAlert = "An error has occurred, please check the configuration of the component";
                         else
                             scope.ydsAlert = error.message;
+
+                        // Remove loading animation
+                        scope.loading = false;
                     });
             }
         };

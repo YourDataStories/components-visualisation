@@ -75,6 +75,9 @@ angular.module('yds').directive('ydsPie', ['Data', 'Filters', function(Data, Fil
             if(_.isUndefined(titleSize) || titleSize.length == 0 || _.isNaN(titleSize))
                 titleSize = 18;
 
+            // Show loading animation
+            scope.loading = true;
+
             //set the height of the chart
             pieContainer[0].style.height = elementH + 'px';
 
@@ -151,11 +154,17 @@ angular.module('yds').directive('ydsPie', ['Data', 'Filters', function(Data, Fil
                     };
 
                     var chart = new Highcharts.Chart(options);
+
+                    // Remove loading animation
+                    scope.loading = false;
                 }, function(error) {
                     if (_.isNull(error) || _.isUndefined(error) || _.isUndefined(error.message))
                         scope.ydsAlert = "An error has occurred, please check the configuration of the component";
                     else
                         scope.ydsAlert = error.message;
+
+                    // Remove loading animation
+                    scope.loading = false;
                 });
         }
     };
