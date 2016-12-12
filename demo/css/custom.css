@@ -990,6 +990,16 @@ a.accordion-toggle:focus, a.accordion-toggle:active {
     overflow: auto;
 }
 
+/* Remove border radius from list items */
+.related-news-item.list-group-item:first-child, .related-tweet-item.list-group-item:first-child {
+    border-radius: 0;
+    border-top: 0;
+}
+
+.related-news-item.list-group-item:last-child, .related-tweet-item.list-group-item:last-child {
+    border-radius: 0;
+}
+
 /* Classes for chart loading animation container*/
 .loading-container {
     width: 100%;

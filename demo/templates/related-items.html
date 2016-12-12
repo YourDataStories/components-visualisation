@@ -6,7 +6,7 @@
                     <!--News/Blog posts-->
                     <a ng-switch-when="news" ng-repeat="item in tab.data"
                        href="{{ item.url }}"
-                       class="list-group-item"
+                       class="list-group-item related-news-item"
                        target="_blank">
                         {{ item.text }}
                     </a>
@@ -14,7 +14,7 @@
                     <!--Tweets-->
                     <a ng-switch-when="tweet" ng-repeat="item in tab.data"
                        href="{{ item.url }}"
-                       class="list-group-item"
+                       class="list-group-item related-tweet-item"
                        target="_blank">
                         {{ item.text }}
                     </a>
