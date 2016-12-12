@@ -78,6 +78,10 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function(Data, Fil
             // Get data and visualize bar
             Data.getProjectVis("bar", projectId, viewType, lang, extraParams)
                 .then(function (response) {
+                    // Check that the component has not been destroyed
+                    if (scope.$$destroyed)
+                        return;
+
                     var options = response.data;
 
                     // Add element ID to render the chart to in the options
@@ -101,7 +105,7 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function(Data, Fil
                         enabled: (exporting === "true")
                     };
 
-                    var chart = new Highcharts.Chart(options);
+                    new Highcharts.Chart(options);
 
                     // Remove loading animation
                     scope.loading = false;

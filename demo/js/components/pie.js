@@ -84,6 +84,10 @@ angular.module('yds').directive('ydsPie', ['Data', 'Filters', function(Data, Fil
             //get the pie data from the server
             Data.getProjectVis("pie", scope.projectId, viewType, lang, extraParams)
                 .then(function(response) {
+                    // Check that the component has not been destroyed
+                    if (scope.$$destroyed)
+                        return;
+
                     var pieData = response.data.data;
                     var pieSeries = response.data.series;
                     var pieTitleAttr = _.first(response.view).attribute;

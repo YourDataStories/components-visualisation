@@ -77,6 +77,10 @@ angular.module('yds').directive('ydsTreeMap', ['Data', 'Filters', function(Data,
 
             Data.getProjectVis("treemap", projectId, viewType, lang, extraParams)
                 .then(function (response) {
+                    // Check that the component has not been destroyed
+                    if (scope.$$destroyed)
+                        return;
+
                     var series = response.data;
                     var chartTitle = response.data.title;
                     chartTitle.style = {
