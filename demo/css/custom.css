@@ -1004,6 +1004,7 @@ a.accordion-toggle:focus, a.accordion-toggle:active {
 a.list-group-item.load-more-button:last-child {
     text-align: center;
     border-radius: 0;
+    cursor: pointer;
 }
 
 a.list-group-item.load-more-button:hover > span.load-more-button-text {
