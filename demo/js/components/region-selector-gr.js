@@ -211,7 +211,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                             activeDataLabelStyle: {
                                 color: '#FFFFFF',
                                 textDecoration: 'none',
-                                textOutline: '1px #000000'
+                                textShadow: '0px 1px 3px black'
                             },
                             drillUpButton: {
                                 relativeTo: 'spacingBox',
