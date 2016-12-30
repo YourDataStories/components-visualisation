@@ -80,7 +80,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                         $.each(mapData.features, function () {
                             drilldownData.push({
                                 name: this.properties.NAME_ENG,
-                                value: 0
+                                value: 1
                             });
                         });
 
@@ -142,8 +142,9 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                         } else {
                             data.push({
                                 code: code,
-                                value: 0
+                                value: 1
                             });
+                            console.warn(code + " does not exist in drilldownMap, something went wrong?");
                         }
                     });
 
@@ -155,6 +156,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                                 drillup: drillup
                             }
                         },
+                        legend: { enabled: false },
                         title: {
                             text: 'Greece'
                         },
@@ -173,7 +175,14 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                             enableMouseWheelZoom: true
                         },
                         colorAxis: {
-                            min: 0
+                            min: 1,
+                            type: "logarithmic",
+                            minColor: '#FFFFFF',
+                            maxColor: '#063798',
+                            stops: [
+                                [0, '#FFFFFF'],
+                                [1, '#063798']
+                            ]
                         },
                         series: [{
                             data: data,
