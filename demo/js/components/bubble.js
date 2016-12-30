@@ -22,11 +22,11 @@ angular.module('yds').directive('ydsBubble', ['YDS_CONSTANTS', 'Data', '$window'
         },
         templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/bubble.html',
         link: function (scope, element, attrs) {
-            var scatterContainer = angular.element(element[0].querySelector('.bubble-container'));
+            var bubbleContainer = angular.element(element[0].querySelector('.bubble-container'));
 
             //create a random id for the element that will render the plot
             var elementId = "bubble" + Data.createRandomId();
-            scatterContainer[0].id = elementId;
+            bubbleContainer[0].id = elementId;
 
             var projectId = scope.projectId;
             var viewType = scope.viewType;
@@ -68,7 +68,7 @@ angular.module('yds').directive('ydsBubble', ['YDS_CONSTANTS', 'Data', '$window'
                 titleSize = 18;
 
             //set the height of the plot
-            scatterContainer[0].style.height = elementH + 'px';
+            bubbleContainer[0].style.height = elementH + 'px';
 
             Data.getProjectVis("bubble", projectId, viewType, lang)
                 .then(function (response) {
