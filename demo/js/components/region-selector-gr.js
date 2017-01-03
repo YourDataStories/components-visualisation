@@ -161,7 +161,9 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                             enabled: true,
                             pointFormatter: function() {
                                 if (_.has(this, "selected") && this.selected == true) {
-                                    return "<b>" + this.name + "</b>: " + this.value + "<br/><b style='color: red'>(click again to drilldown)</b>";
+                                    return "<b>" + this.name + "</b>: " + this.value +
+                                        '<br/><span style="font-weight: bold; color: red">(click again to drilldown)' +
+                                        '</span>';
                                 } else {
                                     return "<b>" + this.name + "</b>: " + this.value;
                                 }
