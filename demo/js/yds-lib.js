@@ -36,7 +36,7 @@ app.constant("YDS_CONSTANTS", {
     "API_TYPE2SOLRQUERY": "platform.yourdatastories.eu/api/json-ld/component/type2solrquery.tcl",
     "API_TYPE2_ADVANCED_QUERY": "platform.yourdatastories.eu/api/json-ld/component/type2advancedquery.tcl",
     "API_RELATED_ITEMS": "platform.yourdatastories.eu/api/json-ld/social/relateditems.tcl",
-    "API_GEOJSON_GR": "ydsdev.iit.demokritos.gr/api/json-ld/geo/greece",
+    "API_GEOJSON_GR": "platform.yourdatastories.eu/api/json-ld/geo/greece",
 
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search",
     "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search-el",
