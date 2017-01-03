@@ -19,9 +19,8 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                 if(_.isUndefined(elementH) || _.isNaN(elementH))
                     elementH = 300;
 
-                // Declare objects used in the configuration of the map later
+                // Declare states of map points object, used in the configuration of the map later
                 var states = {
-                    // States of map points
                     hover: {
                         color: '#e5ed04'
                     },
@@ -65,7 +64,6 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                         chart.showLoading("Loading...");
 
                         Data.getGeoJSON("high", mapKey).then(function(response) {
-                            // Keep only the part of the map that we need
                             var mapData = response;
                             var drilldownData = [];
 
@@ -104,7 +102,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                     this.setTitle(null, {text: regionName});
                 };
 
-                // Get map of regions -> prefectures
+                // Declare object which shows how many prefectures are in each region of Greece
                 var drilldownMap = {
                     "GR.TS": 4,
                     "GR.AT": 4,
