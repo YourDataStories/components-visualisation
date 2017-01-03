@@ -19,6 +19,9 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                 if(_.isUndefined(elementH) || _.isNaN(elementH))
                     elementH = 300;
 
+                // Selectivity instance
+                var selectivity = null;
+
                 // Declare states of map points object, used in the configuration of the map later
                 var states = {
                     hover: {
@@ -145,7 +148,19 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                         }
                     });
 
-                    new Highcharts.mapChart(elementId, {
+                    new Highcharts.mapChart(elementId, getMapOptions(data, mapData));
+
+                    initializeSelectivity();
+                });
+
+                /**
+                 * Create and return the options for the highmaps chart
+                 * @param data
+                 * @param mapData
+                 * @returns {*}
+                 */
+                var getMapOptions = function(data, mapData) {
+                    return {
                         chart: {
                             height: elementH,
                             events: {
@@ -222,8 +237,22 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                                 }
                             }
                         }
+                    };
+                };
+
+                /**
+                 * Initialize Selectivity dropdown for region or prefecture selection
+                 */
+                var initializeSelectivity = function() {
+                    // Use jQuery to initialize Selectivity
+                    var dropdownContainer = _.first(angular.element(element[0].querySelector('.selectivity-container')));
+
+                    selectivity = $(dropdownContainer).selectivity({
+                        items: [],//getSelectivityItemsFromPoints(),
+                        multiple: true,
+                        placeholder: 'Type to search a region or prefecture'
                     });
-                });
+                };
             }
         };
     }
