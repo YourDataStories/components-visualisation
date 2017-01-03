@@ -49,6 +49,10 @@ ydsDemo.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 		url: '/dashboardp1',
 		templateUrl: 'templates-demo/dashboard-p1.html'
 	})
+	.state('public-works', {
+		url: '/public-works',
+		templateUrl: 'templates-demo/public-works.html'
+	})
 	.state('redirect', {
 		url: '/redirect',
 		template: '<div class="container"><h2>Redirecting...</h2></div>',
