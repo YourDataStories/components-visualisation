@@ -241,14 +241,171 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                 };
 
                 /**
+                 * Get the regions of a country with their prefectures and names, and return them
+                 * as an array of items for Selectivity.js
+                 * @param regions
+                 * @returns {Array}
+                 */
+                var getSelectivityItemsFromRegions = function(regions) {
+                    // Variable to hold the selectivity items
+                    var items = [];
+
+                    _.each(regions, function(region, key) {
+                        // Add the actual region to the items
+                        items.push({
+                            id: key,
+                            text: region.name
+                        });
+
+                        // Add the region's prefectures to the items
+                        _.each(region.prefectures, function(pref) {
+                            items.push({
+                                id: pref,
+                                text: pref
+                            });
+                        });
+                    });
+
+                    return items;
+                };
+
+                /**
                  * Initialize Selectivity dropdown for region or prefecture selection
                  */
                 var initializeSelectivity = function() {
+                    var regions = {
+                        "GR.TS": {
+                            name: "Thessalia",
+                            prefectures: [
+                                "N. MAGNISIAS",
+                                "N. KARDITSAS",
+                                "N. LARISAS",
+                                "N. TRIKALON"
+                            ]
+                        },
+                        "GR.AT": {
+                            name: "Attiki",
+                            prefectures: [
+                                "N. PIREOS KE NISON",
+                                "N. ANATOLIKIS ATTIKIS",
+                                "N. DYTIKIS ATTIKIS",
+                                "N. ATHINON"
+                            ]
+                        },
+                        "GR.GC": {
+                            name: "Sterea Ellada",
+                            prefectures: [
+                                "N. VIOTIAS",
+                                "N. EVVIAS",
+                                "N. EVRYTANIAS",
+                                "N. FOKIDAS",
+                                "N. FTHIOTIDAS"
+                            ]
+                        },
+                        "GR.MC": {
+                            name: "Kentriki Makedonia",
+                            prefectures: [
+                                "N. IMATHIAS",
+                                "N. THESSALONIKIS",
+                                "N. KILKIS",
+                                "N. PELLAS",
+                                "N. PIERIAS",
+                                "N. SERRON",
+                                "N. CHALKIDIKIS"
+                            ]
+                        },
+                        "GR.CR": {
+                            name: "Kriti",
+                            prefectures: [
+                                "N. CHANION",
+                                "N. IRAKLIOU",
+                                "N. LASITHIOU",
+                                "N. RETHYMNOU"
+                            ]
+                        },
+                        "GR.MT": {
+                            name: "Anatoliki Makedonia kai Thraki",
+                            prefectures: [
+                                "N. DRAMAS",
+                                "N. EVROU",
+                                "N. KAVALAS",
+                                "N. XANTHIS",
+                                "N. RODOPIS"
+                            ]
+                        },
+                        "GR.EP": {
+                            name: "Ipeiros",
+                            prefectures: [
+                                "N. ARTAS",
+                                "N. IOANNINON",
+                                "N. PREVEZAS",
+                                "N. THESPROTIAS"
+                            ]
+                        },
+                        "GR.II": {
+                            name: "Ionioi Nisoi",
+                            prefectures: [
+                                "N. KERKYRAS",
+                                "N. KEFALLONIAS",
+                                "N. LEFKADAS",
+                                "N. ZAKYNTHOU"
+                            ]
+                        },
+                        "GR.AN": {
+                            name: "Voreio Aigaio",
+                            prefectures: [
+                                "N. CHIOU",
+                                "N. SAMOU",
+                                "N. LESVOU"
+                            ]
+                        },
+                        "GR.PP": {
+                            name: "Peloponnisos",
+                            prefectures: [
+                                "N. ARKADIAS",
+                                "N. ARGOLIDAS",
+                                "N. KORINTHOU",
+                                "N. LAKONIAS",
+                                "N. MESSINIAS"
+                            ]
+                        },
+                        "GR.AS": {
+                            name: "Notio Aigaio",
+                            prefectures: [
+                                "N. KYKLADON",
+                                "N. DODEKANISON"
+                            ]
+                        },
+                        "GR.GW": {
+                            name: "Dytiki Ellada",
+                            prefectures: [
+                                "N. ACHAIAS",
+                                "N. ETOLOAKARNANIAS",
+                                "N. ILIAS"
+                            ]
+                        },
+                        "GR.MW": {
+                            name: "Dytiki Makedonia",
+                            prefectures: [
+                                "N. FLORINAS",
+                                "N. GREVENON",
+                                "N. KASTORIAS",
+                                "N. KOZANIS"
+                            ]
+                        },
+                        "GR.MA": {
+                            name: "Ayion Oros",
+                            prefectures: [
+                                "AGIO OROS"
+                            ]
+                        }
+                    };
+
                     // Use jQuery to initialize Selectivity
                     var dropdownContainer = _.first(angular.element(element[0].querySelector('.selectivity-container')));
 
                     selectivity = $(dropdownContainer).selectivity({
-                        items: [],//getSelectivityItemsFromPoints(),
+                        items: getSelectivityItemsFromRegions(regions),
                         multiple: true,
                         placeholder: 'Type to search a region or prefecture'
                     });
