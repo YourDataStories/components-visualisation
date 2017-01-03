@@ -34,6 +34,135 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                     }
                 };
 
+                // Declare object with regions
+                var regions = {
+                    "GR.TS": {
+                        name: "Thessalia",
+                        prefectures: [
+                            "N. MAGNISIAS",
+                            "N. KARDITSAS",
+                            "N. LARISAS",
+                            "N. TRIKALON"
+                        ]
+                    },
+                    "GR.AT": {
+                        name: "Attiki",
+                        prefectures: [
+                            "N. PIREOS KE NISON",
+                            "N. ANATOLIKIS ATTIKIS",
+                            "N. DYTIKIS ATTIKIS",
+                            "N. ATHINON"
+                        ]
+                    },
+                    "GR.GC": {
+                        name: "Sterea Ellada",
+                        prefectures: [
+                            "N. VIOTIAS",
+                            "N. EVVIAS",
+                            "N. EVRYTANIAS",
+                            "N. FOKIDAS",
+                            "N. FTHIOTIDAS"
+                        ]
+                    },
+                    "GR.MC": {
+                        name: "Kentriki Makedonia",
+                        prefectures: [
+                            "N. IMATHIAS",
+                            "N. THESSALONIKIS",
+                            "N. KILKIS",
+                            "N. PELLAS",
+                            "N. PIERIAS",
+                            "N. SERRON",
+                            "N. CHALKIDIKIS"
+                        ]
+                    },
+                    "GR.CR": {
+                        name: "Kriti",
+                        prefectures: [
+                            "N. CHANION",
+                            "N. IRAKLIOU",
+                            "N. LASITHIOU",
+                            "N. RETHYMNOU"
+                        ]
+                    },
+                    "GR.MT": {
+                        name: "Anatoliki Makedonia kai Thraki",
+                        prefectures: [
+                            "N. DRAMAS",
+                            "N. EVROU",
+                            "N. KAVALAS",
+                            "N. XANTHIS",
+                            "N. RODOPIS"
+                        ]
+                    },
+                    "GR.EP": {
+                        name: "Ipeiros",
+                        prefectures: [
+                            "N. ARTAS",
+                            "N. IOANNINON",
+                            "N. PREVEZAS",
+                            "N. THESPROTIAS"
+                        ]
+                    },
+                    "GR.II": {
+                        name: "Ionioi Nisoi",
+                        prefectures: [
+                            "N. KERKYRAS",
+                            "N. KEFALLONIAS",
+                            "N. LEFKADAS",
+                            "N. ZAKYNTHOU"
+                        ]
+                    },
+                    "GR.AN": {
+                        name: "Voreio Aigaio",
+                        prefectures: [
+                            "N. CHIOU",
+                            "N. SAMOU",
+                            "N. LESVOU"
+                        ]
+                    },
+                    "GR.PP": {
+                        name: "Peloponnisos",
+                        prefectures: [
+                            "N. ARKADIAS",
+                            "N. ARGOLIDAS",
+                            "N. KORINTHOU",
+                            "N. LAKONIAS",
+                            "N. MESSINIAS"
+                        ]
+                    },
+                    "GR.AS": {
+                        name: "Notio Aigaio",
+                        prefectures: [
+                            "N. KYKLADON",
+                            "N. DODEKANISON"
+                        ]
+                    },
+                    "GR.GW": {
+                        name: "Dytiki Ellada",
+                        prefectures: [
+                            "N. ACHAIAS",
+                            "N. ETOLOAKARNANIAS",
+                            "N. ILIAS"
+                        ]
+                    },
+                    "GR.MW": {
+                        name: "Dytiki Makedonia",
+                        prefectures: [
+                            "N. FLORINAS",
+                            "N. GREVENON",
+                            "N. KASTORIAS",
+                            "N. KOZANIS"
+                        ]
+                    },
+                    "GR.MA": {
+                        name: "Ayion Oros",
+                        prefectures: [
+                            "AGIO OROS"
+                        ]
+                    }
+                };
+
                 /**
                  * Callback for when drillup happens. Clears the selected points from the chart,
                  * and sets the chart's subtitle to empty
@@ -154,6 +283,42 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                 });
 
                 /**
+                 * Handles the selection of a region on the highmap
+                 */
+                var regionSelectionHandler = function(e) {
+                    var clickedPoint = e.target;
+
+                    // Get currently selected vales from Selectivity
+                    var selectedValues = $(selectivity).selectivity("data");
+
+                    // Find the name of the clicked point and add it to the selected values
+                    var item = regions[clickedPoint.code];  // this object contains a "name" attribute
+
+                    selectedValues.push({
+                        id: clickedPoint.code,
+                        text: item.name
+                    });
+
+                    // Set the new selected data in selectivity (do not trigger change event to prevent loop)
+                    $(selectivity).selectivity("data", selectedValues, {
+                        triggerChange: false
+                    });
+
+                    // Redraw selectivity to show the new selection
+                    $(selectivity).selectivity("rerenderSelection");
+
+                    // Redraw the chart to show updated tooltip for the selected point
+                    setTimeout(function() {
+                        clickedPoint.series.chart.redraw();
+                    }, 0);
+                };
+
+                var regionUnselectionHandler = function() {
+                    console.log("unselection");
+                    //todo
+                };
+
+                /**
                  * Create and return the options for the highmaps chart
                  * @param data
                  * @param mapData
@@ -214,12 +379,8 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                             states: states,
                             point: {
                                 events: {
-                                    select: function() {
-                                        var point = this;
-                                        setTimeout(function() {
-                                            point.series.chart.redraw();
-                                        }, 0);
-                                    }
+                                    select: regionSelectionHandler,
+                                    unselect: regionUnselectionHandler
                                 }
                             }
                         }],
@@ -273,134 +434,6 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                  * Initialize Selectivity dropdown for region or prefecture selection
                  */
                 var initializeSelectivity = function() {
-                    var regions = {
-                        "GR.TS": {
-                            name: "Thessalia",
-                            prefectures: [
-                                "N. MAGNISIAS",
-                                "N. KARDITSAS",
-                                "N. LARISAS",
-                                "N. TRIKALON"
-                            ]
-                        },
-                        "GR.AT": {
-                            name: "Attiki",
-                            prefectures: [
-                                "N. PIREOS KE NISON",
-                                "N. ANATOLIKIS ATTIKIS",
-                                "N. DYTIKIS ATTIKIS",
-                                "N. ATHINON"
-                            ]
-                        },
-                        "GR.GC": {
-                            name: "Sterea Ellada",
-                            prefectures: [
-                                "N. VIOTIAS",
-                                "N. EVVIAS",
-                                "N. EVRYTANIAS",
-                                "N. FOKIDAS",
-                                "N. FTHIOTIDAS"
-                            ]
-                        },
-                        "GR.MC": {
-                            name: "Kentriki Makedonia",
-                            prefectures: [
-                                "N. IMATHIAS",
-                                "N. THESSALONIKIS",
-                                "N. KILKIS",
-                                "N. PELLAS",
-                                "N. PIERIAS",
-                                "N. SERRON",
-                                "N. CHALKIDIKIS"
-                            ]
-                        },
-                        "GR.CR": {
-                            name: "Kriti",
-                            prefectures: [
-                                "N. CHANION",
-                                "N. IRAKLIOU",
-                                "N. LASITHIOU",
-                                "N. RETHYMNOU"
-                            ]
-                        },
-                        "GR.MT": {
-                            name: "Anatoliki Makedonia kai Thraki",
-                            prefectures: [
-                                "N. DRAMAS",
-                                "N. EVROU",
-                                "N. KAVALAS",
-                                "N. XANTHIS",
-                                "N. RODOPIS"
-                            ]
-                        },
-                        "GR.EP": {
-                            name: "Ipeiros",
-                            prefectures: [
-                                "N. ARTAS",
-                                "N. IOANNINON",
-                                "N. PREVEZAS",
-                                "N. THESPROTIAS"
-                            ]
-                        },
-                        "GR.II": {
-                            name: "Ionioi Nisoi",
-                            prefectures: [
-                                "N. KERKYRAS",
-                                "N. KEFALLONIAS",
-                                "N. LEFKADAS",
-                                "N. ZAKYNTHOU"
-                            ]
-                        },
-                        "GR.AN": {
-                            name: "Voreio Aigaio",
-                            prefectures: [
-                                "N. CHIOU",
-                                "N. SAMOU",
-                                "N. LESVOU"
-                            ]
-                        },
-                        "GR.PP": {
-                            name: "Peloponnisos",
-                            prefectures: [
-                                "N. ARKADIAS",
-                                "N. ARGOLIDAS",
-                                "N. KORINTHOU",
-                                "N. LAKONIAS",
-                                "N. MESSINIAS"
-                            ]
-                        },
-                        "GR.AS": {
-                            name: "Notio Aigaio",
-                            prefectures: [
-                                "N. KYKLADON",
-                                "N. DODEKANISON"
-                            ]
-                        },
-                        "GR.GW": {
-                            name: "Dytiki Ellada",
-                            prefectures: [
-                                "N. ACHAIAS",
-                                "N. ETOLOAKARNANIAS",
-                                "N. ILIAS"
-                            ]
-                        },
-                        "GR.MW": {
-                            name: "Dytiki Makedonia",
-                            prefectures: [
-                                "N. FLORINAS",
-                                "N. GREVENON",
-                                "N. KASTORIAS",
-                                "N. KOZANIS"
-                            ]
-                        },
-                        "GR.MA": {
-                            name: "Ayion Oros",
-                            prefectures: [
-                                "AGIO OROS"
-                            ]
-                        }
-                    };
-
                     // Use jQuery to initialize Selectivity
                     var dropdownContainer = _.first(angular.element(element[0].querySelector('.selectivity-container')));
 
