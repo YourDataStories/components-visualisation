@@ -36,6 +36,7 @@ app.constant("YDS_CONSTANTS", {
     "API_TYPE2SOLRQUERY": "platform.yourdatastories.eu/api/json-ld/component/type2solrquery.tcl",
     "API_TYPE2_ADVANCED_QUERY": "platform.yourdatastories.eu/api/json-ld/component/type2advancedquery.tcl",
     "API_RELATED_ITEMS": "platform.yourdatastories.eu/api/json-ld/social/relateditems.tcl",
+    "API_GEOJSON_GR": "ydsdev.iit.demokritos.gr/api/json-ld/geo/greece",
 
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search",
     "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search-el",
@@ -43,9 +44,6 @@ app.constant("YDS_CONSTANTS", {
     // "SEARCH_RESULTS_URL": "http://yds-lib.dev/#!/search",
     // "SEARCH_RESULTS_URL_EL": "http://yds-lib.dev/#!/search-el",
     // "SEARCH_RESULTS_URL_TABBED": "http://yds-lib.dev/#!/search-tabbed",
-
-    "LOW_DETAIL_GR_MAP": "ydsdev.iit.demokritos.gr/YDSComponents/lib/map_json/low_detail.min.json",
-    "HIGH_DETAIL_GR_MAP": "ydsdev.iit.demokritos.gr/YDSComponents/lib/map_json/high_detail.min.json",
 
     "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
     "API_EMBED": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/embed/",
@@ -1075,10 +1073,22 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         return deferred.promise;
     };
 
-    dataService.getGeoJSON = function(detailLevel) {
+    /**
+     * Get the GeoJSON for Greece, in high detail for a region or low detail for the entire country.
+     * @param detailLevel   Map detail level
+     * @param region        Region to get high detail map for
+     * @returns {promise|*|s|d}
+     */
+    dataService.getGeoJSON = function(detailLevel, region) {
         var deferred = $q.defer();
 
-        var url = "http://" + ((detailLevel == "high") ? YDS_CONSTANTS.HIGH_DETAIL_GR_MAP : YDS_CONSTANTS.LOW_DETAIL_GR_MAP);
+        var url = "http://" + YDS_CONSTANTS.API_GEOJSON_GR + "/";
+
+        if (detailLevel == "high") {
+            url += region + ".json";
+        } else {
+            url += "greece_low_detail.json";
+        }
 
         $http({
             method: 'GET',
@@ -1091,113 +1101,6 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         });
 
         return deferred.promise;
-    };
-
-    /**
-     * Returns an object which shows which prefectures are in each regional unit of Greece
-     * @returns {*}
-     */
-    dataService.getRegionToPrefectureMapGr = function() {
-        return {
-            // Main source: https://en.wikipedia.org/wiki/Regional_units_of_Greece
-            "GR.TS": [
-                // Thessalia
-                "N. MAGNISIAS",
-                "N. KARDITSAS",
-                "N. LARISAS",
-                "N. TRIKALON"
-            ],
-            "GR.AT": [
-                // Attiki
-                "N. PIREOS KE NISON",
-                "N. ANATOLIKIS ATTIKIS",
-                "N. DYTIKIS ATTIKIS",
-                "N. ATHINON"
-            ],
-            "GR.GC": [
-                // Sterea Ellada
-                "N. VIOTIAS",
-                "N. EVVIAS",
-                "N. EVRYTANIAS",
-                "N. FOKIDAS",
-                "N. FTHIOTIDAS"
-            ],
-            "GR.MC": [
-                // Kentriki Makedonia
-                "N. IMATHIAS",
-                "N. THESSALONIKIS",
-                "N. KILKIS",
-                "N. PELLAS",
-                "N. PIERIAS",
-                "N. SERRON",
-                "N. CHALKIDIKIS"
-            ],
-            "GR.CR": [
-                // Kriti
-                "N. CHANION",
-                "N. IRAKLIOU",
-                "N. LASITHIOU",
-                "N. RETHYMNOU"
-            ],
-            "GR.MT": [
-                // Anatoliki Makedonia kai Thraki
-                "N. DRAMAS",
-                "N. EVROU",
-                "N. KAVALAS",
-                "N. XANTHIS",
-                "N. RODOPIS"
-            ],
-            "GR.EP": [
-                // Ipeiros
-                "N. ARTAS",
-                "N. IOANNINON",
-                "N. PREVEZAS",
-                "N. THESPROTIAS"
-            ],
-            "GR.II": [
-                // Ionioi Nisoi
-                "N. KERKYRAS",
-                "N. KEFALLONIAS",
-                "N. LEFKADAS",
-                "N. ZAKYNTHOU"
-            ],
-            "GR.AN": [
-                // Voreio Aigaio
-                "N. CHIOU",
-                "N. SAMOU",
-                "N. LESVOU"
-            ],
-            "GR.PP": [
-                // Peloponnisos
-                "N. ARKADIAS",
-                "N. ARGOLIDAS",
-                "N. KORINTHOU",
-                "N. LAKONIAS",
-                "N. MESSINIAS"
-            ],
-            "GR.AS": [
-                // Notio Aigaio
-                "N. KYKLADON",
-                "N. DODEKANISON"
-            ],
-            "GR.GW": [
-                // Dytiki Ellada
-                "N. ACHAIAS",
-                "N. ETOLOAKARNANIAS",
-                "N. ILIAS"
-            ],
-            "GR.MW": [
-                // Dytiki Makedonia
-                "N. FLORINAS",
-                "N. GREVENON",
-                "N. KASTORIAS",
-                "N. KOZANIS"
-            ],
-            "GR.MA": [
-                // Ayion Oros
-                "AGIO OROS"
-            ]
-        };
     };
 
     return dataService;

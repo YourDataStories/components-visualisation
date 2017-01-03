@@ -20,8 +20,6 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                     elementH = 300;
 
                 // Declare objects used in the configuration of the map later
-                var highDetail = null;
-                var lowDetail = null;
                 var states = {
                     // States of map points
                     hover: {
@@ -66,69 +64,70 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                             regionName = e.point.name;
                         chart.showLoading("Loading...");
 
-                        // Keep only the part of the map that we need
-                        var mapData = _.clone(highDetail);
-                        var drilldownData = [];
+                        Data.getGeoJSON("high", mapKey).then(function(response) {
+                            // Keep only the part of the map that we need
+                            var mapData = response;
+                            var drilldownData = [];
 
-                        if (_.has(drilldownMap, mapKey)) {
-                            mapData.features = _.filter(mapData.features, function(item) {
-                                return _.contains(drilldownMap[mapKey], item.properties.NAME_ENG);
+                            // For each prefecture to display, create a value of 1 for it so it is colored
+                            $.each(mapData.features, function () {
+                                drilldownData.push({
+                                    name: this.properties.NAME_ENG,
+                                    value: 1
+                                });
                             });
-                        }
 
-                        // For each prefecture to display, create a value of 0 for it so it is colored
-                        $.each(mapData.features, function () {
-                            drilldownData.push({
-                                name: this.properties.NAME_ENG,
-                                value: 1
+                            // Hide loading and add series
+                            chart.hideLoading();
+                            chart.addSeriesAsDrilldown(e.point, {
+                                name: regionName,
+                                data: drilldownData,
+                                mapData: mapData,
+                                joinBy: ['NAME_ENG', "name"],
+                                keys: ['NAME_ENG', 'value'],
+                                allowPointSelect: true,
+                                dataLabels: {
+                                    enabled: true,
+                                    format: '{point.properties.NAME_ENG}'
+                                },
+                                tooltip: {
+                                    enabled: false,
+                                    pointFormatter: function() {
+                                        return "<b>" + this.properties.NAME_ENG + "</b>";
+                                    }
+                                },
+                                states: states
                             });
                         });
-
-                        // Hide loading and add series
-                        chart.hideLoading();
-                        chart.addSeriesAsDrilldown(e.point, {
-                            name: regionName,
-                            data: drilldownData,
-                            mapData: mapData,
-                            joinBy: ['NAME_ENG', "name"],
-                            keys: ['NAME_ENG', 'value'],
-                            allowPointSelect: true,
-                            dataLabels: {
-                                enabled: true,
-                                format: '{point.properties.NAME_ENG}'
-                            },
-                            tooltip: {
-                                enabled: false,
-                                pointFormatter: function() {
-                                    return "<b>" + this.properties.NAME_ENG + "</b>";
-                                }
-                            },
-                            states: states
-                        });
-
                     }
 
                     this.setTitle(null, {text: regionName});
                 };
 
                 // Get map of regions -> prefectures
-                var drilldownMap = Data.getRegionToPrefectureMapGr();
+                var drilldownMap = {
+                    "GR.TS": 4,
+                    "GR.AT": 4,
+                    "GR.GC": 5,
+                    "GR.MC": 7,
+                    "GR.CR": 4,
+                    "GR.MT": 5,
+                    "GR.EP": 4,
+                    "GR.II": 4,
+                    "GR.AN": 3,
+                    "GR.PP": 5,
+                    "GR.AS": 2,
+                    "GR.GW": 3,
+                    "GR.MW": 4,
+                    "GR.MA": 1
+                };
 
-                // Get both high and low detail Greece map
-                var promises = [
-                    Data.getGeoJSON("low"),
-                    Data.getGeoJSON("high")
-                ];
+                // Get low detail Greece map
+                Data.getGeoJSON("low", null).then(function(response) {
+                    Highcharts.maps["countries/gr-low-res"] = response;
 
-                $q.all(promises).then(function(results) {
-                    lowDetail = results[0];
-                    highDetail = results[1];
-
-                    Highcharts.maps["countries/gr-low-res"] = lowDetail;
-
-                    // Get low detail map data and
+                    // Get low detail map data
                     var mapData = Highcharts.geojson(Highcharts.maps['countries/gr-low-res']);
-
                     var data = [];
 
                     _.each(mapData, function (item) {
@@ -137,7 +136,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                         if (_.has(drilldownMap, code)) {
                             data.push({
                                 code: code,
-                                value: drilldownMap[code].length
+                                value: drilldownMap[code]
                             });
                         } else {
                             data.push({
@@ -164,7 +163,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                             enabled: true,
                             pointFormatter: function() {
                                 if (_.has(this, "selected") && this.selected == true) {
-                                    return "<b>" + this.name + "</b>: " + this.value + "<br/>(click again to drilldown)";
+                                    return "<b>" + this.name + "</b>: " + this.value + "<br/><b style='color: red'>(click again to drilldown)</b>";
                                 } else {
                                     return "<b>" + this.name + "</b>: " + this.value;
                                 }
@@ -172,7 +171,9 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                         },
                         mapNavigation: {
                             enabled: true,
-                            enableMouseWheelZoom: true
+                            enableMouseWheelZoom: true,
+                            enableDoubleClickZoomTo: false,
+                            enableDoubleClickZoom: false
                         },
                         colorAxis: {
                             min: 1,
