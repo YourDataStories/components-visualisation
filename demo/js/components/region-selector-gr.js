@@ -283,7 +283,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                 });
 
                 /**
-                 * Handles the selection of a region on the highmap
+                 * Handles the selection of a region on the Highmaps chart
                  */
                 var regionSelectionHandler = function(e) {
                     var clickedPoint = e.target;
@@ -313,9 +313,28 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                     }, 0);
                 };
 
-                var regionUnselectionHandler = function() {
-                    console.log("unselection");
-                    //todo
+                /**
+                 * Handle the unselection of a region on the Highmaps chart
+                 * @param e
+                 */
+                var regionUnselectionHandler = function(e) {
+                    var clickedPoint = e.target;
+
+                    // Get currently selected vales from Selectivity
+                    var selectedValues = $(selectivity).selectivity("data");
+
+                    // Remove the clicked point from the selected values
+                    selectedValues = _.reject(selectedValues, function(val) {
+                        return val.id == clickedPoint.code;
+                    });
+
+                    // Set the new selected data in selectivity (do not trigger change event to prevent loop)
+                    $(selectivity).selectivity("data", selectedValues, {
+                        triggerChange: false
+                    });
+
+                    // Redraw selectivity to show the new selection
+                    $(selectivity).selectivity("rerenderSelection");
                 };
 
                 /**
