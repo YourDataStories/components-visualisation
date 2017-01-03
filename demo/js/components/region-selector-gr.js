@@ -226,6 +226,12 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                                         return "<b>" + this.properties.NAME_ENG + "</b>";
                                     }
                                 },
+                                point: {
+                                    events: {
+                                        select: prefectureSelectionHandler,
+                                        unselect: prefectureUnselectionHandler
+                                    }
+                                },
                                 states: states
                             });
                         });
@@ -283,9 +289,12 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                 });
 
                 /**
-                 * Handles the selection of a region on the Highmaps chart
+                 * Selection handler for regions and prefectures. Uses the given function to create the new item
+                 * to give to selectivity to select
+                 * @param e         Highcharts event
+                 * @param newItem   Function to create a selectivity item
                  */
-                var regionSelectionHandler = function(e) {
+                var selectionHandler = function(e, newItem) {
                     var clickedPoint = e.target;
 
                     // Get currently selected vales from Selectivity
@@ -294,10 +303,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                     // Find the name of the clicked point and add it to the selected values
                     var item = regions[clickedPoint.code];  // this object contains a "name" attribute
 
-                    selectedValues.push({
-                        id: clickedPoint.code,
-                        text: item.name
-                    });
+                    selectedValues.push(newItem(clickedPoint, item));
 
                     // Set the new selected data in selectivity (do not trigger change event to prevent loop)
                     $(selectivity).selectivity("data", selectedValues, {
@@ -314,19 +320,19 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                 };
 
                 /**
-                 * Handle the unselection of a region on the Highmaps chart
-                 * @param e
+                 * Unselection handler for regions and prefectures. Uses the given function to remove the
+                 * unselected values from the Selectivity selection
+                 * @param e             Highcharts event
+                 * @param updateValues  Function that removes the unselected point from a list
                  */
-                var regionUnselectionHandler = function(e) {
-                    var clickedPoint = e.target;
+                var unselectionHandler = function(e, updateValues) {
+                    var pointToUnselect = e.target;
 
                     // Get currently selected vales from Selectivity
                     var selectedValues = $(selectivity).selectivity("data");
 
                     // Remove the clicked point from the selected values
-                    selectedValues = _.reject(selectedValues, function(val) {
-                        return val.id == clickedPoint.code;
-                    });
+                    selectedValues = updateValues(selectedValues, pointToUnselect);
 
                     // Set the new selected data in selectivity (do not trigger change event to prevent loop)
                     $(selectivity).selectivity("data", selectedValues, {
@@ -335,6 +341,55 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
 
                     // Redraw selectivity to show the new selection
                     $(selectivity).selectivity("rerenderSelection");
+                };
+
+                /**
+                 * Handles the selection of a region on the Highmaps chart
+                 */
+                var regionSelectionHandler = function(e) {
+                    selectionHandler(e, function(point, item) {
+                        return {
+                            id: point.code,
+                            text: item.name
+                        }
+                    });
+                };
+
+                /**
+                 * Handle the unselection of a region on the Highmaps chart
+                 * @param e
+                 */
+                var regionUnselectionHandler = function(e) {
+                    unselectionHandler(e, function(selectedValues, clickedPoint) {
+                        return _.reject(selectedValues, function(val) {
+                            return val.id == clickedPoint.code;
+                        });
+                    })
+                };
+
+                /**
+                 * Handle the selection of a prefecture
+                 * @param e
+                 */
+                var prefectureSelectionHandler = function(e) {
+                    selectionHandler(e, function(point, item) {
+                        return {
+                            id: point.NAME_ENG,
+                            text: point.NAME_ENG
+                        }
+                    });
+                };
+
+                /**
+                 * Handle the unselection of a prefecture
+                 * @param e
+                 */
+                var prefectureUnselectionHandler = function(e) {
+                    unselectionHandler(e, function(selectedValues, pointToUnselect) {
+                        return _.reject(selectedValues, function(val) {
+                            return val.id == pointToUnselect.NAME_ENG;
+                        });
+                    });
                 };
 
                 /**
