@@ -19,8 +19,12 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                 if(_.isUndefined(elementH) || _.isNaN(elementH))
                     elementH = 300;
 
-                // Selectivity instance
+                // Variables for Selectivity and Highmaps instances
                 var selectivity = null;
+                var chart = null;
+
+                // Boolean to indicate if the chart is drilled down or not
+                var drilledDown = false;
 
                 // Declare states of map points object, used in the configuration of the map later
                 var states = {
@@ -165,9 +169,11 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
 
                 /**
                  * Callback for when drillup happens. Clears the selected points from the chart,
-                 * and sets the chart's subtitle to empty. "this" refers to the Highcharts Chart
+                 * and sets the chart's subtitle to empty.
                  */
                 var drillup = function () {
+                    drilledDown = false;
+
                     // Get Selectivity selection data to remove any selected prefectures
                     var selData = $(selectivity).selectivity("data");
 
@@ -176,9 +182,14 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                         return _.has(regions, item.id);
                     });
 
-                    // Set new data to Selectivity and set the chart subtitle to empty
-                    $(selectivity).selectivity("data", selData);
+                    // Set new data to Selectivity without triggering change event and redraw it
+                    $(selectivity).selectivity("data", unique(selData), {
+                        triggerChange: false
+                    });
 
+                    $(selectivity).selectivity("rerenderSelection");
+
+                    // Set the chart's subtitle to empty
                     this.setTitle(null, {text: ''});
                 };
 
@@ -232,6 +243,8 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                                 },
                                 states: states
                             });
+
+                            drilledDown = true;
                         });
                     }
 
@@ -263,7 +276,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                         }
                     });
 
-                    new Highcharts.mapChart(elementId, getMapOptions(data, mapData));
+                    chart = new Highcharts.mapChart(elementId, getMapOptions(data, mapData));
 
                     initializeSelectivity();
                 });
@@ -286,7 +299,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                     selectedValues.push(newItem(clickedPoint, item));
 
                     // Set the new selected data in selectivity (do not trigger change event to prevent loop)
-                    $(selectivity).selectivity("data", selectedValues, {
+                    $(selectivity).selectivity("data", unique(selectedValues), {
                         triggerChange: false
                     });
 
@@ -315,7 +328,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                     selectedValues = updateValues(selectedValues, pointToUnselect);
 
                     // Set the new selected data in selectivity (do not trigger change event to prevent loop)
-                    $(selectivity).selectivity("data", selectedValues, {
+                    $(selectivity).selectivity("data", unique(selectedValues), {
                         triggerChange: false
                     });
 
@@ -370,6 +383,26 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                             return val.id == pointToUnselect.NAME_ENG;
                         });
                     });
+                };
+
+                /**
+                 * Gets an array of Selectivity points (with IDs) and returns a new one
+                 * that has each item only once.
+                 * @param arr
+                 * @returns {Array}
+                 */
+                var unique = function(arr) {
+                    var newArray = [];
+
+                    _.each(arr, function(item) {
+                        if (_.isUndefined(_.findWhere(newArray, {
+                                id: item.id
+                            }))) {
+                            newArray.push(item);
+                        }
+                    });
+
+                    return newArray;
                 };
 
                 /**
@@ -456,13 +489,10 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                 };
 
                 /**
-                 * Get the regions of a country with their prefectures and names, and return them
-                 * as an array of items for Selectivity.js
-                 * @param regions
-                 * @returns {Array}
+                 * Initialize Selectivity dropdown for region or prefecture selection
                  */
-                var getSelectivityItemsFromRegions = function(regions) {
-                    // Variable to hold the selectivity items
+                var initializeSelectivity = function() {
+                    // Create the available selection items for Selectivity
                     var items = [];
 
                     _.each(regions, function(region, key) {
@@ -481,20 +511,41 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                         });
                     });
 
-                    return items;
-                };
-
-                /**
-                 * Initialize Selectivity dropdown for region or prefecture selection
-                 */
-                var initializeSelectivity = function() {
                     // Use jQuery to initialize Selectivity
                     var dropdownContainer = _.first(angular.element(element[0].querySelector('.selectivity-container')));
 
                     selectivity = $(dropdownContainer).selectivity({
-                        items: getSelectivityItemsFromRegions(regions),
+                        items: items,
                         multiple: true,
                         placeholder: 'Type to search a region or prefecture'
+                    });
+
+                    // Set Selectivity selection change event handler
+                    $(selectivity).on("change", function(e) {
+                        var points = chart.series[0].data;
+
+                        // Check for added points
+                        if (_.has(e, "added") && !_.isUndefined(e.added)) {
+                            console.log("added",e.added);
+
+                            // Check if the point is a region
+                            if (_.has(regions, e.added.id) && !drilledDown) {
+                                var regionToSelect = e.added.id;
+
+                                var pointToSelect = _.findWhere(points, {
+                                    "code": regionToSelect
+                                });
+
+                                pointToSelect.select(true, true);
+                            } else if (drilledDown) {
+                                //todo
+                            }
+                        }
+
+                        // Check for removed points
+                        if (_.has(e, "removed") && !_.isUndefined(e.removed)) {
+                            console.log("removed",e.removed);
+                        }
                     });
                 };
             }
