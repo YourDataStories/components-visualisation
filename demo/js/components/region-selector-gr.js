@@ -168,10 +168,10 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                  * and sets the chart's subtitle to empty. "this" refers to the Highcharts Chart
                  */
                 var drillup = function () {
-                    // Remove any selected prefectures from Selectivity selection
+                    // Get Selectivity selection data to remove any selected prefectures
                     var selData = $(selectivity).selectivity("data");
 
-                    // Keep only regions (reject prefectures)
+                    // Filter the selection data to keep only regions
                     selData = _.filter(selData, function(item) {
                         return _.has(regions, item.id);
                     });
@@ -183,8 +183,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                 };
 
                 /**
-                 * Callback for when drilldown happens. Gets the drilled-down point, and creates the series that should
-                 * be shown based on the drilldownMap
+                 * Callback for when drilldown happens. Gets the prefectures for the drilled-down point from the API
                  * @param e
                  */
                 var drilldown = function (e) {
@@ -239,24 +238,6 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                     this.setTitle(null, {text: regionName});
                 };
 
-                // Declare object which shows how many prefectures are in each region of Greece
-                var drilldownMap = {
-                    "GR.TS": 4,
-                    "GR.AT": 4,
-                    "GR.GC": 5,
-                    "GR.MC": 7,
-                    "GR.CR": 4,
-                    "GR.MT": 5,
-                    "GR.EP": 4,
-                    "GR.II": 4,
-                    "GR.AN": 3,
-                    "GR.PP": 5,
-                    "GR.AS": 2,
-                    "GR.GW": 3,
-                    "GR.MW": 4,
-                    "GR.MA": 1
-                };
-
                 // Get low detail Greece map
                 Data.getGeoJSON("low", null).then(function(response) {
                     Highcharts.maps["countries/gr-low-res"] = response;
@@ -268,17 +249,17 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                     _.each(mapData, function (item) {
                         var code = item.properties.hasc;
                         item.drilldown = code;
-                        if (_.has(drilldownMap, code)) {
+                        if (_.has(regions, code)) {
                             data.push({
                                 code: code,
-                                value: drilldownMap[code]
+                                value: regions[code].prefectures.length
                             });
                         } else {
                             data.push({
                                 code: code,
                                 value: 1
                             });
-                            console.warn(code + " does not exist in drilldownMap, something went wrong?");
+                            console.warn(code + " does not exist in regions object, something went wrong?");
                         }
                     });
 
