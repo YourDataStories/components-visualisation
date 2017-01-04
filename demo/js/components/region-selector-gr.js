@@ -489,6 +489,32 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                 };
 
                 /**
+                 * Get a point ID and set its state to selected or unselected based on the
+                 * (boolean) select parameter. Uses the correct property for finding the
+                 * point in the Highmap series based on if the chart is drilled-down or not
+                 * @param select        Boolean, set to true if the point should be selected
+                 * @param pointId       ID of point to select/unselect
+                 */
+                var togglePoint = function(select, pointId) {
+                    var points = chart.series[0].data;
+
+                    // Use the correct "search" term to find the point
+                    var searchTerm = {};
+
+                    if (!drilledDown) {
+                        searchTerm.code = pointId;      // ID will be the code in the point object
+                    } else {
+                        searchTerm.NAME_ENG = pointId;  // ID will be the NAME_ENG property
+                    }
+
+                    var pointToSelect = _.findWhere(points, searchTerm);
+
+                    if (!_.isUndefined(pointToSelect)) {
+                        pointToSelect.select(select, true);
+                    }
+                };
+
+                /**
                  * Initialize Selectivity dropdown for region or prefecture selection
                  */
                 var initializeSelectivity = function() {
@@ -522,29 +548,14 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
 
                     // Set Selectivity selection change event handler
                     $(selectivity).on("change", function(e) {
-                        var points = chart.series[0].data;
-
-                        // Check for added points
+                        // Check for added point
                         if (_.has(e, "added") && !_.isUndefined(e.added)) {
-                            console.log("added",e.added);
-
-                            // Check if the point is a region
-                            if (_.has(regions, e.added.id) && !drilledDown) {
-                                var regionToSelect = e.added.id;
-
-                                var pointToSelect = _.findWhere(points, {
-                                    "code": regionToSelect
-                                });
-
-                                pointToSelect.select(true, true);
-                            } else if (drilledDown) {
-                                //todo
-                            }
+                            togglePoint(true, e.added.id);
                         }
 
-                        // Check for removed points
+                        // Check for removed point
                         if (_.has(e, "removed") && !_.isUndefined(e.removed)) {
-                            console.log("removed",e.removed);
+                            togglePoint(false, e.removed.id);
                         }
                     });
                 };
