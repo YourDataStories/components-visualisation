@@ -165,22 +165,21 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
 
                 /**
                  * Callback for when drillup happens. Clears the selected points from the chart,
-                 * and sets the chart's subtitle to empty
+                 * and sets the chart's subtitle to empty. "this" refers to the Highcharts Chart
                  */
                 var drillup = function () {
-                    var chart = this,
-                        points = [];
-                    setTimeout(function () {
-                        points = chart.getSelectedPoints();
+                    // Remove any selected prefectures from Selectivity selection
+                    var selData = $(selectivity).selectivity("data");
 
-                        Highcharts.each(points, function (p) {
-                            // unselect points from previous drilldown
-                            p.selected = false;
-                            p.setState('', true);
-                        });
-                    }, 0);
+                    // Keep only regions (reject prefectures)
+                    selData = _.filter(selData, function(item) {
+                        return _.has(regions, item.id);
+                    });
 
-                    chart.setTitle(null, {text: ''});
+                    // Set new data to Selectivity and set the chart subtitle to empty
+                    $(selectivity).selectivity("data", selData);
+
+                    this.setTitle(null, {text: ''});
                 };
 
                 /**
