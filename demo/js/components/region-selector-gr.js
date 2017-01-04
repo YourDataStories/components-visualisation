@@ -5,7 +5,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
             scope: {
                 elementH:'@'    // Height of the component in pixels
             },
-            templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/region-selector-gr.html',
+            templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/region-selector-gr.html',
             link: function (scope, element) {
                 var elementH = parseInt(scope.elementH);
 
@@ -189,6 +189,9 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
 
                     $(selectivity).selectivity("rerenderSelection");
 
+                    // After the drill up completes, select any regions from selectivity on the chart
+                    setTimeout(selectFromSelectivityToMap, 0);
+
                     // Set the chart's subtitle to empty
                     this.setTitle(null, {text: ''});
                 };
@@ -245,6 +248,9 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                             });
 
                             drilledDown = true;
+
+                            // Select any prefectures that are in Selectivity's selection on the chart
+                            selectFromSelectivityToMap();
                         });
                     }
 
@@ -512,6 +518,17 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                     if (!_.isUndefined(pointToSelect)) {
                         pointToSelect.select(select, true);
                     }
+                };
+
+                /**
+                 * Select any points that are selected in Selectivity, on the Highmaps chart.
+                 */
+                var selectFromSelectivityToMap = function() {
+                    var selectivityData = $(selectivity).selectivity("data");
+
+                    _.each(selectivityData, function(item) {
+                        togglePoint(true, item.id);
+                    });
                 };
 
                 /**
