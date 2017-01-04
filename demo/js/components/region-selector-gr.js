@@ -174,26 +174,11 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                 var drillup = function () {
                     drilledDown = false;
 
-                    // Get Selectivity selection data to remove any selected prefectures
-                    var selData = $(selectivity).selectivity("data");
-
-                    // Filter the selection data to keep only regions
-                    selData = _.filter(selData, function(item) {
-                        return _.has(regions, item.id);
-                    });
-
-                    // Set new data to Selectivity without triggering change event and redraw it
-                    $(selectivity).selectivity("data", unique(selData), {
-                        triggerChange: false
-                    });
-
-                    $(selectivity).selectivity("rerenderSelection");
-
                     // After the drill up completes, select any regions from selectivity on the chart
                     setTimeout(selectFromSelectivityToMap, 0);
 
                     // Set the chart's subtitle to empty
-                    this.setTitle(null, {text: ''});
+                    this.setTitle(null, {text: ""});
                 };
 
                 /**
