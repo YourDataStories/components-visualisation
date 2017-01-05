@@ -204,17 +204,20 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                             regionName = e.point.name;
                         chart.showLoading("Loading...");
 
-                        Data.getGeoJSON("high", mapKey).then(function(response) {
-                            var mapData = response;
-                            var drilldownData = [];
+                        $q.all([
+                            Data.getGeoJSON("high", mapKey),
+                            Data.getProjectVis("heatmap", "none", regionalUnitType, "en", {
+                                regions: mapKey
+                            })
+                        ]).then(function(results) {
+                            // Get higher detail map with prefectures
+                            var mapData = results[0];
 
-                            // For each prefecture to display, create a value of 1 for it so it is colored
-                            $.each(mapData.features, function () {
-                                drilldownData.push({
-                                    name: this.properties.NAME_ENG,
-                                    value: 1
-                                });
-                            });
+                            // Get data for the prefectures and the color axis
+                            var drilldownData = results[1].data;
+                            var colorAxis = _.find(results[1].view, function(view) {
+                                return _.has(view, "colorAxis");
+                            }).colorAxis;
 
                             // Hide loading and add series
                             chart.hideLoading();
@@ -222,17 +225,18 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                                 name: regionName,
                                 data: drilldownData,
                                 mapData: mapData,
-                                joinBy: ['NAME_ENG', "name"],
-                                keys: ['NAME_ENG', 'value'],
+                                joinBy: ["NAME_ENG", "code"],
+                                keys: ["NAME_ENG", "value"],
                                 allowPointSelect: true,
                                 dataLabels: {
                                     enabled: true,
                                     format: '{point.properties.NAME_ENG}'
                                 },
+                                colorAxis: colorAxis,
                                 tooltip: {
                                     enabled: false,
                                     pointFormatter: function() {
-                                        return "<b>" + this.properties.NAME_ENG + "</b>";
+                                        return "<b>" + this.properties.NAME_ENG + "</b>: " + this.value;
                                     }
                                 },
                                 point: {
