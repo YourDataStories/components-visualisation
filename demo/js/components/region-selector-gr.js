@@ -254,29 +254,21 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                     this.setTitle(null, {text: regionName});
                 };
 
-                // Get low detail Greece map
-                Data.getGeoJSON("low", null).then(function(response) {
-                    Highcharts.maps["countries/gr-low-res"] = response;
-
+                // Get low detail Greece map and number of items in each region
+                $q.all([
+                    Data.getGeoJSON("low", null),
+                    Data.getProjectVis("heatmap", "none", regionType, "en", undefined)
+                ]).then(function(results) {
                     // Get low detail map data
+                    Highcharts.maps["countries/gr-low-res"] = results[0];
                     var mapData = Highcharts.geojson(Highcharts.maps['countries/gr-low-res']);
-                    var data = [];
 
+                    // Get number of items in each region
+                    var data = results[1].data;
+
+                    // Add drilldown properties to the map data
                     _.each(mapData, function (item) {
-                        var code = item.properties.hasc;
-                        item.drilldown = code;
-                        if (_.has(regions, code)) {
-                            data.push({
-                                code: code,
-                                value: regions[code].prefectures.length
-                            });
-                        } else {
-                            data.push({
-                                code: code,
-                                value: 1
-                            });
-                            console.warn(code + " does not exist in regions object, something went wrong?");
-                        }
+                        item.drilldown = item.properties.hasc;
                     });
 
                     chart = new Highcharts.mapChart(elementId, getMapOptions(data, mapData));
