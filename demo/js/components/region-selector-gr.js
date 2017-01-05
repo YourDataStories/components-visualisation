@@ -263,15 +263,18 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                     Highcharts.maps["countries/gr-low-res"] = results[0];
                     var mapData = Highcharts.geojson(Highcharts.maps['countries/gr-low-res']);
 
-                    // Get number of items in each region
+                    // Get number of items in each region and the colorAxis
                     var data = results[1].data;
+                    var colorAxis = _.find(results[1].view, function(view) {
+                        return _.has(view, "colorAxis");
+                    }).colorAxis;
 
                     // Add drilldown properties to the map data
                     _.each(mapData, function (item) {
                         item.drilldown = item.properties.hasc;
                     });
 
-                    chart = new Highcharts.mapChart(elementId, getMapOptions(data, mapData));
+                    chart = new Highcharts.mapChart(elementId, getMapOptions(data, mapData, colorAxis));
 
                     initializeSelectivity();
                 });
@@ -404,9 +407,10 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                  * Create and return the options for the highmaps chart
                  * @param data
                  * @param mapData
+                 * @param colorAxis
                  * @returns {*}
                  */
-                var getMapOptions = function(data, mapData) {
+                var getMapOptions = function(data, mapData, colorAxis) {
                     return {
                         chart: {
                             height: elementH,
@@ -437,16 +441,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                             enableDoubleClickZoomTo: false,
                             enableDoubleClickZoom: false
                         },
-                        colorAxis: {
-                            min: 1,
-                            type: "logarithmic",
-                            minColor: '#FFFFFF',
-                            maxColor: '#063798',
-                            stops: [
-                                [0, '#FFFFFF'],
-                                [1, '#063798']
-                            ]
-                        },
+                        colorAxis: colorAxis,
                         series: [{
                             data: data,
                             mapData: mapData,
