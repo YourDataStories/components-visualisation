@@ -1,9 +1,28 @@
-<div class="container">
+<div class="container" ng-controller="PublicWorksController">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="text-center">
+                <button type="button" class="btn btn-lg btn-primary" ng-class="{'dashboard-btn-active': selector == 'location'}"
+                        ng-click="setSelector('location')">
+                    By Location
+                </button>
+                <button type="button" class="btn btn-lg btn-warning" ng-class="{'dashboard-btn-active': selector == 'organisation'}"
+                        ng-click="setSelector('organisation')">
+                    By Organisation
+                </button>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-6">
             <yds-region-selector-gr
+                    ng-if="selector == 'location'"
                     element-h="450">
             </yds-region-selector-gr>
+
+            <div ng-if="selector == 'organisation'">
+                Organisation selector here
+            </div>
         </div>
     </div>
 </div>
