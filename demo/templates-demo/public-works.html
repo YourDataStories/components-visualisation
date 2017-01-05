@@ -1,4 +1,5 @@
 <div class="container" ng-controller="PublicWorksController">
+    <!--Buttons for category selection-->
     <div class="row">
         <div class="col-md-12">
             <div class="text-center">
@@ -13,6 +14,8 @@
             </div>
         </div>
     </div>
+    
+    <!--Selectors-->
     <div class="row">
         <div class="col-md-6">
             <yds-region-selector-gr
@@ -24,6 +27,77 @@
 
             <div ng-if="selector == 'organisation'">
                 Organisation selector here
+            </div>
+        </div>
+    </div>
+
+    <!--What else can I do panel-->
+    <div class="row" style="margin-top: 20px">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left">What else can I do with the available data?</h3>
+                </div>
+
+                <div class="panel-body">
+                    <uib-tabset active="pwTab"
+                                template-url="templates/tabset-panel-success.html">
+                        <uib-tab heading="View Data" index="0">
+                            <p class="text-justify">The following table shows all Public Works for the selected filters.
+                                You can obtain the same results through search: an example is provided on the
+                                <!--Because of extra scopes created by uib-tab we need
+                                to access the pwTab variable like this-->
+                                <a ng-click="$parent.$parent.pwTab = 1">search tab</a>.</p>
+
+                            <p class="text-justify">Each Public Work has a set of related transactions and sectors.
+                                In order to see them, please select a Public Work from the table below, and press its
+                                “View” button. The related transactions and sectors will be listed in a new page.</p>
+
+                            <!--Public Works grid-->
+                            <yds-dashboard-updater
+                                    ng-if="pwTab == 0"
+                                    type="grid"
+                                    id="dashboard-public-works-data-grid"
+                                    view-type="publicproject.listitems.for.countries.and.period"
+                                    dashboard-id="public_project"
+                                    add-to-basket="true"
+                                    min-height="420"
+                                    lang="en">
+                            </yds-dashboard-updater>
+                        </uib-tab>
+
+                        <uib-tab heading="Search Data" index="1">
+                            <p class="text-justify">The following example shows how a detailed search can be performed
+                                in the YourDataStories platform, through the “Advanced Search”. The advanced search
+                                allows you to graphically create rules that filter specific properties. Auto-completion
+                                is also supported!</p>
+
+                            <div class="bs-callout bs-callout-success" style="margin-top: 0">
+                                <p class="text-justify">Select seller and buyer countries, change the time period, and
+                                    see how the rules are automatically generated. Instructions on
+                                    <a href="http://ydsdev.iit.demokritos.gr/YDS-docs/Tutorials/examples/advanced-search-usage">how to use Advanced Search</a>,
+                                    a guided tutorial on filtering with a specific sector, access to the
+                                    <a href="http://platform.yourdatastories.eu/content/tabbed-search">full search interface</a>.</p>
+                            </div>
+
+                            <yds-dashboard-updater
+                                    ng-if="pwTab == 1"
+                                    type="search"
+                                    dashboard-id="public_project"
+                                    add-to-basket="true"
+                                    min-height="480"
+                                    lang="en">
+                            </yds-dashboard-updater>
+                        </uib-tab>
+
+                        <uib-tab heading="Visualize the data" index="2">
+                            <!--Workbench-->
+                            <yds-workbench
+                                    ng-if="pwTab == 2"
+                                    user-id="ydsUser"></yds-workbench>
+                        </uib-tab>
+                    </uib-tabset>
+                </div>
             </div>
         </div>
     </div>

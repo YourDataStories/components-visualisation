@@ -26,6 +26,10 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         contract: {
             buyers: "contract.buyer.countries.all",
             sellers: "contract.seller.countries.all"
+        },
+        public_project: {
+            regions: "publicproject.regions.all",
+            regional_units: "publicproject.regional_units.all"
         }
     };
 
@@ -34,7 +38,8 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     var yearParamMapping = {
         aidactivity: "year",
         tradeactivity: "financialyear",
-        contract: "year"
+        contract: "year",
+        public_project: "year"
     };
 
     // View types of aggregates to show for each Dashboard section
@@ -107,6 +112,11 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
             concept: "Contract",
             urlParamPrefix: "ct-",
             requestType: "contract.listitems.for.countries.and.period"
+        },
+        public_project: {
+            concept: "PublicProject",
+            urlParamPrefix: "pw-",
+            requestType: "publicproject.listitems.for.countries.and.period"
         }
     };
 
@@ -184,7 +194,10 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
 
         // Initialize extraParams object with year range
         var apiOptions = {};
-        apiOptions[yearParam] = yearRange;
+
+        if (!_.isNull(minYear) && !_.isNull(maxYear)) {
+            apiOptions[yearParam] = yearRange;
+        }
 
         // Get countries to send with request from DashboardService
         _.each(apiOptionsMap, function(viewType, key) {

@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
-    function (Data, $q) {
+angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardService', '$q',
+    function (Data, DashboardService, $q) {
         return {
             restrict: 'E',
             scope: {
@@ -51,6 +51,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                 };
 
                 // Declare object with regions
+                //todo: get from API
                 var regions = {
                     "GR.TS": {
                         name: "Thessalia",
@@ -283,6 +284,30 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                     initializeSelectivity();
                 });
 
+                var updateDashboardServiceValues = function(newData) {
+                    // Filter selection into regions and prefectures
+                    var regionsFilter = function(item) {
+                        return _.has(regions, item.id);
+                    };
+
+                    var selectedRegions = _.filter(newData, regionsFilter);
+                    var selectedPrefectures = _.reject(newData, regionsFilter);
+
+                    var transformation = function(item) {
+                        return {
+                            code: item.id,
+                            value: item.name
+                        }
+                    };
+
+                    selectedRegions = selectedRegions.map(transformation);
+                    selectedPrefectures = selectedPrefectures.map(transformation);
+
+                    // Set in Dashboard Service
+                    DashboardService.setCountries(regionType, selectedRegions);
+                    DashboardService.setCountries(regionalUnitType, selectedPrefectures);
+                };
+
                 /**
                  * Selection handler for regions and prefectures. Uses the given function to create the new item
                  * to give to selectivity to select
@@ -299,9 +324,10 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                     var item = regions[clickedPoint.code];  // this object contains a "name" attribute
 
                     selectedValues.push(newItem(clickedPoint, item));
+                    selectedValues = unique(selectedValues);
 
                     // Set the new selected data in selectivity (do not trigger change event to prevent loop)
-                    $(selectivity).selectivity("data", unique(selectedValues), {
+                    $(selectivity).selectivity("data", selectedValues, {
                         triggerChange: false
                     });
 
@@ -312,6 +338,8 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                     setTimeout(function() {
                         clickedPoint.series.chart.redraw();
                     }, 0);
+
+                    updateDashboardServiceValues(selectedValues);
                 };
 
                 /**
@@ -328,14 +356,17 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
 
                     // Remove the clicked point from the selected values
                     selectedValues = updateValues(selectedValues, pointToUnselect);
+                    selectedValues = unique(selectedValues);
 
                     // Set the new selected data in selectivity (do not trigger change event to prevent loop)
-                    $(selectivity).selectivity("data", unique(selectedValues), {
+                    $(selectivity).selectivity("data", selectedValues, {
                         triggerChange: false
                     });
 
                     // Redraw selectivity to show the new selection
                     $(selectivity).selectivity("rerenderSelection");
+
+                    updateDashboardServiceValues(selectedValues);
                 };
 
                 /**
@@ -562,6 +593,8 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
                         if (_.has(e, "removed") && !_.isUndefined(e.removed)) {
                             togglePoint(false, e.removed.id);
                         }
+
+                        updateDashboardServiceValues($(selectivity).selectivity("data"));
                     });
                 };
             }
