@@ -3,19 +3,31 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', '$q',
         return {
             restrict: 'E',
             scope: {
-                elementH:'@'    // Height of the component in pixels
+                regionType: '@',        // Type used for getting the regions from the API
+                regionalUnitType: '@',  // Type used for getting the regional units from the API
+                elementH:'@'            // Height of the component in pixels
             },
             templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/region-selector-gr.html',
             link: function (scope, element) {
+                var regionType = scope.regionType;
+                var regionalUnitType = scope.regionalUnitType;
                 var elementH = parseInt(scope.elementH);
 
                 var regionSelContainer = angular.element(element[0].querySelector('.region-selector-container'));
 
-                //create a random id for the element that will render the plot
+                // Create a random id for the element that will render the plot
                 var elementId = "regionsel" + Data.createRandomId();
                 regionSelContainer[0].id = elementId;
 
-                //check if the component's height attr is defined, else assign default value
+                // Check that the regionType and regionalUnitType attributes are defined, else show error
+                if(_.isUndefined(regionType) || regionType.trim() == "" ||
+                    _.isUndefined(regionalUnitType) || regionalUnitType.trim() == "") {
+                    scope.ydsAlert = "The YDS component is not properly configured. " +
+                        "Please check the corresponding documentation section.";
+                    return false;
+                }
+
+                // Check if the component's height attr is defined, else assign default value
                 if(_.isUndefined(elementH) || _.isNaN(elementH))
                     elementH = 300;
 
