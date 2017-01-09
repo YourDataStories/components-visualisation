@@ -26,7 +26,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 var searchParams = {};
 
                 // Keep previous parameter values, to check if the component needs to be re-rendered
-                var prevParams = {};
+                var prevParams = null;
 
                 // If type is undefined, set default value
                 if (_.isUndefined(scope.type) || scope.type.trim() == "")
@@ -73,6 +73,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                         prevParams = _.clone(newParams);    // Keep current parameters to check equality later
                         scope.extraParams = newParams;      // Add new parameters to scope
 
+                        //noinspection FallThroughInSwitchStatementJS
                         switch(scope.type) {
                             case "aggregate":
                                 // Aggregates watch their extra params for changes, so do nothing
