@@ -49,7 +49,7 @@
     </div>
 
     <!--Dashboard Visualization-->
-    <div class="row">
+    <div class="row" style="margin-top: 10px">
         <div class="col-md-10" style="min-height: 600px">
             <uib-tabset active="dashboardVisActiveTab">
                 <uib-tab index="$index" class="{{ 'tab-' + aggregateClasses[$index] }}" ng-repeat="type in aggregates track by $index" select="selectTab($index)">
@@ -89,7 +89,7 @@
                 <div class="panel-body dashboard-info-container-default">
                     <yds-dashboard-updater
                             type="info-vertical"
-                            view-type="contract.filters.selected"
+                            view-type="publicproject.filters.selected"
                             dashboard-id="public_project"
                             min-height="90"
                             lang="en">

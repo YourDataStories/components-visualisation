@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsGrid', ['Data', 'Filters',
-    function(Data, Filters){
+angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService',
+    function(Data, Filters, DashboardService){
         return {
             restrict: 'E',
             scope: {
@@ -223,7 +223,8 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters',
                         if (allowSelection == "true") {
                             scope.gridOptions.rowSelection = "multiple";
                             scope.gridOptions.onSelectionChanged = function(e) {
-                                // console.log(e.selectedRows); <- currently selected rows
+                                // Set selected rows in DashboardService
+                                DashboardService.setGridSelection(selectionId, e.selectedRows);
                             }
                         }
 

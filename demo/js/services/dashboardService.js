@@ -2,11 +2,13 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     var countries = {};
     var yearRange = {};
     var selectedViewType = {};
+    var gridSeletion = {};
     var projectInfoType = "";
     var projectInfoId = "";
     var visualizationType = "";
 
     var notifySelectionChangeLock = false;
+    var notifyGridSelectionChangeLock = false;
     var notifyYearChangeLock = false;
     var notifyViewTypeChangeLock = false;
     var notifyProjectInfoChangeLock = false;
@@ -218,11 +220,24 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
             }
         });
 
+        if (dashboardId == "public_work") {
+            apiOptions.sellers = _.pluck(getGridSelection("sellers"), "name");
+            apiOptions.buyers = _.pluck(getGridSelection("buyers"), "name");
+        }
+
+        console.log("api options: ", apiOptions);//todo: remove this
         return apiOptions;
     };
 
     var subscribeSelectionChanges = function(scope, callback) {
         var unregister = $rootScope.$on('dashboard-service-change', callback);
+        scope.$on('$destroy', unregister);
+
+        return unregister;
+    };
+
+    var subscribeGridSelectionChanges = function(scope, callback) {
+        var unregister = $rootScope.$on('dashboard-grid-sel-change', callback);
         scope.$on('$destroy', unregister);
 
         return unregister;
@@ -265,6 +280,21 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         scope.$on('$destroy', unregister);
 
         return unregister;
+    };
+
+    /**
+     * Emit event to notify about a grid selection change
+     */
+    var notifyGridSelectionChange = function() {
+        if (!notifyGridSelectionChangeLock) {
+            notifyGridSelectionChangeLock = true;
+
+            $timeout(function() {
+                $rootScope.$emit('dashboard-grid-sel-change');
+
+                notifyGridSelectionChangeLock = false;
+            }, 150);
+        }
     };
 
     /**
@@ -328,6 +358,19 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
     };
 
     /**
+     * Set new grid selection for the given type
+     * @param type
+     * @param newSelection
+     */
+    var setGridSelection = function(type, newSelection) {
+        if (_.isUndefined(gridSeletion[type]) || !_.isEqual(gridSeletion[type], newSelection)) {
+            gridSeletion[type] = newSelection;
+
+            notifyGridSelectionChange();
+        }
+    };
+
+    /**
      * Set new selected countries for the given type
      * @param type          Type to set countries for
      * @param newCountries  Countries to set
@@ -347,6 +390,15 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
      */
     var getCountries = function(type) {
         return countries[type];
+    };
+
+    /**
+     * Get grid selection for a given type
+     * @param type
+     * @returns {*}
+     */
+    var getGridSelection = function(type) {
+        return gridSeletion[type];
     };
 
     /**
@@ -471,11 +523,14 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         getAggregates: getAggregates,
         getSearchParams: getSearchParams,
         getApiOptions: getApiOptions,
+        subscribeGridSelectionChanges: subscribeGridSelectionChanges,
         subscribeSelectionChanges: subscribeSelectionChanges,
         subscribeYearChanges: subscribeToYearChanges,
         subscribeViewTypeChanges: subscribeViewTypeChanges,
         subscribeProjectChanges: subscribeProjectChanges,
         setCountries: setCountries,
+        setGridSelection: setGridSelection,
+        getGridSelection: getGridSelection,
         getCountries: getCountries,
         clearCountries: clearCountries,
         setYearRange: setYearRange,
