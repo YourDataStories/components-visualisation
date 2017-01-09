@@ -14,22 +14,22 @@
         <div class="col-md-5">
             <!--Buyers-->
             <yds-dashboard-updater
-                    type="simple-grid"
+                    type="selection-grid"
                     project-id="none"
-                    view-type="publicproject.buyers.all"
+                    view-type="publicproject.filter.buyers.all"
                     dashboard-id="public_project"
-                    add-to-basket="true"
+                    selection-id="buyers"
                     min-height="225"
                     lang="el">
             </yds-dashboard-updater>
 
             <!--Sellers-->
             <yds-dashboard-updater
-                    type="simple-grid"
+                    type="selection-grid"
                     project-id="none"
-                    view-type="publicproject.sellers.all"
+                    view-type="publicproject.filter.sellers.all"
                     dashboard-id="public_project"
-                    add-to-basket="true"
+                    selection-id="sellers"
                     min-height="225"
                     lang="el">
             </yds-dashboard-updater>
@@ -45,6 +45,57 @@
                     vertical="true"
                     height="350">
             </yds-year-range>
+        </div>
+    </div>
+
+    <!--Dashboard Visualization-->
+    <div class="row">
+        <div class="col-md-10" style="min-height: 600px">
+            <uib-tabset active="dashboardVisActiveTab">
+                <uib-tab index="$index" class="{{ 'tab-' + aggregateClasses[$index] }}" ng-repeat="type in aggregates track by $index" select="selectTab($index)">
+                    <uib-tab-heading>
+                        {{ aggregateTitles[$index] }}
+                    </uib-tab-heading>
+                    <yds-dashboard-visualization
+                            ng-if="dashboardVisActiveTab == $index"
+                            class="{{ 'content-' + aggregateClasses[$index] }}"
+                            project-id="none"
+                            dashboard-id="public_project"
+                            type="{{ type }}"
+                            add-to-basket="true"
+                            element-h="460">
+                    </yds-dashboard-visualization>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+        <div class="col-md-2">
+            <yds-dashboard-updater
+                    ng-repeat="type in aggregates track by $index"
+                    ng-show="aggregateToShow == $index"
+                    type="aggregate"
+                    project-id="{{ projectId }}"
+                    dashboard-id="public_project"
+                    view-type="{{ type }}"
+                    min-height="125"
+                    aggregate-show-button="false"
+                    aggregate-icon-size="3">
+            </yds-dashboard-updater>
+
+            <div class="panel panel-default">
+                <div class="panel-heading dashboard-info-panel-heading">
+                    <h3 class="panel-title">Your selected filters</h3>
+                </div>
+
+                <div class="panel-body dashboard-info-container-default">
+                    <yds-dashboard-updater
+                            type="info-vertical"
+                            view-type="contract.filters.selected"
+                            dashboard-id="public_project"
+                            min-height="90"
+                            lang="en">
+                    </yds-dashboard-updater>
+                </div>
+            </div>
         </div>
     </div>
 

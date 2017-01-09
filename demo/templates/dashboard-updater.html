@@ -58,6 +58,22 @@
             lang="{{ lang }}">
     </yds-grid>
 
+    <yds-grid
+            ng-switch-when="selection-grid"
+            project-id="{{ projectId }}"
+            view-type="{{ viewType }}"
+            extra-params="extraParams"
+            add-to-basket="false"
+            exporting="false"
+            embeddable="false"
+            col-resize="true"
+            allow-selection="true"
+            selection-id="{{ selectionId }}"
+            dashboard-id="{{ dashboardId }}"
+            element-h="{{ minHeight }}"
+            lang="{{ lang }}">
+    </yds-grid>
+
     <yds-pie
             ng-switch-when="pie"
             project-id="{{ projectId }}"

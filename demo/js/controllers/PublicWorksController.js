@@ -3,6 +3,29 @@ angular.module('yds').controller('PublicWorksController', ['$scope', '$timeout',
         var scope = $scope;
 
         scope.showProjectInfo = false;
+        scope.aggregateToShow = 0;
+        scope.aggregateClasses = [];
+
+        scope.selectTab = function(tabIndex) {
+            scope.aggregateToShow = tabIndex;
+        };
+
+        // Get aggregates for sector
+        var aggregates = DashboardService.getAggregates("public_work");
+        scope.aggregateClass = "col-md-" + aggregates.width;
+
+        // Reset uib-tabset
+        scope.dashboardVisActiveTab = 0;
+
+        // Set classes for tabs
+        scope.aggregateClasses = [];
+        _.each(aggregates.types, function(aggregate) {
+            scope.aggregateClasses.push(aggregate.replace(/\./g , "-"));
+        });
+
+        // Set new aggregates
+        scope.aggregates = aggregates.types;
+        scope.aggregateTitles = aggregates.titles;
 
         // Subscribe to be notified of selected project changes
         DashboardService.subscribeProjectChanges(scope, function() {

@@ -92,6 +92,17 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
                 "CPVs"
             ],
             width: 6
+        },
+        public_work: {
+            types: [
+                "publicproject.buyers.all",
+                "publicproject.sellers.all",
+            ],
+            titles: [
+                "Buyers",
+                "Sellers"
+            ],
+            width: 6
         }
     };
 

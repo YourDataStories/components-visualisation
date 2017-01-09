@@ -12,6 +12,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 aggregateIconSize: '@',     // Aggregate icon size (used only if component shown is aggregate)
                 aggregateShowButton: '@',   // If true, the aggregate will show the "View details" button
                 addToBasket: '@',           // If true, will show basket button in the components that support it
+                selectionId: '@',           // ID for saving the selection for the specified dashboardId (used for grid)
                 enableAdvSearch: '@',       // Enable/disable advanced search in Search Tabs component (default: true)
                 lang: '@'                   // Language of component
             },

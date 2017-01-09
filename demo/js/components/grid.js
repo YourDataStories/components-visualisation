@@ -25,6 +25,10 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters',
                 exportBtnX: '@',        // X-axis position of the exporting button
                 exportBtnY: '@',        // Y-axis position of the exporting button
 
+                allowSelection: '@',    // Allow row selection
+                dashboardId: '@',       // Used for setting/getting parameters to/from DashboardService
+                selectionId: '@',       // ID for saving the selection for the specified dashboardId
+
                 embeddable: '@',        // Enable or disable the embedding of the component
                 embedBtnX: '@',         // X-axis position of the embed button
                 embedBtnY: '@',         // Y-axis position of the embed button
@@ -55,6 +59,9 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters',
                 };
 
                 var extraParams = scope.extraParams;
+                var allowSelection = scope.allowSelection;
+                var dashboardId = scope.dashboardId;
+                var selectionId = scope.selectionId;
 
                 // If extra params exist, add them to Filters
                 if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
@@ -116,6 +123,10 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters',
                 //check if the component's height attr is defined, else assign default value
                 if(_.isUndefined(grid.elementH) || _.isNaN(grid.elementH))
                     grid.elementH = 200 ;
+
+                //check if the allowSelection attr is defined, else assign default value
+                if(_.isUndefined(allowSelection) || (allowSelection!="true" && allowSelection!="false"))
+                    allowSelection = "false";
 
                 // Show loading animation
                 scope.loading = true;
@@ -195,6 +206,11 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters',
                             columnDefs = Data.prepareGridColumns(response.view);
                         }
 
+                        // If selection is enabled, add checkbox to the first column
+                        if (allowSelection == "true") {
+                            _.first(columnDefs).checkboxSelection = true;
+                        }
+
                         //Define the options of the grid component
                         scope.gridOptions = {
                             columnDefs: columnDefs,
@@ -202,6 +218,14 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters',
                             enableSorting: (grid.sorting === "true"),
                             enableFilter: (grid.filtering === "true")
                         };
+
+                        // If selection is enabled, add extra options for it in the gridOptions
+                        if (allowSelection == "true") {
+                            scope.gridOptions.rowSelection = "multiple";
+                            scope.gridOptions.onSelectionChanged = function(e) {
+                                console.log(e.selectedRows, "LUL CHANGED");
+                            }
+                        }
 
                         //If paging enabled set the required options to the grid configuration
                         if (grid.paging==="true") {
