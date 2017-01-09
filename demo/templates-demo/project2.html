@@ -1,4 +1,5 @@
 <div class="container">
+    <!--Map and title/description-->
     <div class="row">
         <div class="col-md-5">
             <yds-map
@@ -33,6 +34,61 @@
             <yds-aggregate
                     project-id="http://linkedeconomy.org/resource/PublicWork/216004"
                     view-type="publicproject.description"
+                    lang="el">
+            </yds-aggregate>
+        </div>
+    </div>
+
+    <!--Basic facts Aggregates-->
+    <div class="row">
+        <!--Basic facts text-->
+        <div class="col-md-12">
+            <h3 class="basic-facts-title">
+                Basic facts
+            </h3>
+        </div>
+
+        <!--Budget Aggregate-->
+        <div class="col-md-2">
+            <yds-aggregate
+                    project-id="http://linkedeconomy.org/resource/PublicWork/216004"
+                    view-type="publicproject.budget"
+                    lang="el">
+            </yds-aggregate>
+        </div>
+
+        <!--Spending Aggregate-->
+        <div class="col-md-2">
+            <yds-aggregate
+                    project-id="http://linkedeconomy.org/resource/PublicWork/216004"
+                    view-type="publicproject.spending"
+                    lang="el">
+            </yds-aggregate>
+        </div>
+
+        <!--Duration Aggregate-->
+        <div class="col-md-4">
+            <yds-aggregate
+                    project-id="http://linkedeconomy.org/resource/PublicWork/216004"
+                    view-type="publicproject.duration"
+                    lang="el">
+            </yds-aggregate>
+        </div>
+
+        <!--Completion Aggregate-->
+        <div class="col-md-2">
+            <yds-aggregate
+                    project-id="http://linkedeconomy.org/resource/PublicWork/216004"
+                    view-type="publicproject.completion"
+                    lang="el">
+            </yds-aggregate>
+        </div>
+
+        <!--Subproject count Aggregate-->
+        <div class="col-md-2">
+            <yds-aggregate
+                    project-id="http://linkedeconomy.org/resource/PublicWork/216004"
+                    view-type="publicproject.subprojects.count"
                     lang="el">
             </yds-aggregate>
         </div>
