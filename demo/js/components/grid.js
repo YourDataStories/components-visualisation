@@ -223,7 +223,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters',
                         if (allowSelection == "true") {
                             scope.gridOptions.rowSelection = "multiple";
                             scope.gridOptions.onSelectionChanged = function(e) {
-                                console.log(e.selectedRows, "LUL CHANGED");
+                                // console.log(e.selectedRows); <- currently selected rows
                             }
                         }
 
