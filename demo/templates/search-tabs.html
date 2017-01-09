@@ -13,21 +13,22 @@
         <!-- Description of concept -->
         <yds-concept-description
                 ng-if="hideTabs != 'true'"
-                concept-id="{{tab.id}}"
-                lang="{{lang}}">
+                concept-id="{{ tab.id }}"
+                lang="{{ lang }}">
         </yds-concept-description>
 
         <!-- Search bar -->
         <div class="row">
             <div style="padding-top: 20px" class="col-md-12">
                 <yds-search
-                        lang="{{lang}}"
-                        url-param-prefix="{{urlParamPrefix}}"
-                        watch-rule-url-param="{{watchRuleUrlParam}}"
+                        lang="{{ lang }}"
+                        url-param-prefix="{{ urlParamPrefix }}"
+                        watch-rule-url-param="{{ watchRuleUrlParam }}"
                         max-suggestions="15"
                         tabbed="true"
-                        concept="{{tab.concept}}"
-                        concept-id="{{tab.id}}">
+                        enable-adv-search="{{ enableAdvSearch }}"
+                        concept="{{ tab.concept }}"
+                        concept-id="{{ tab.id }}">
                 </yds-search>
             </div>
         </div>
@@ -36,16 +37,16 @@
         <yds-grid-results
                 ng-class="flexClass"
                 project-id="none"
-                view-type="{{tab.concept}}"
+                view-type="{{ tab.concept }}"
                 sorting="true"
-                lang="{{lang}}"
-                url-param-prefix="{{urlParamPrefix}}"
-                view-in-dashboard="{{viewInDashboard}}"
+                lang="{{ lang }}"
+                url-param-prefix="{{ urlParamPrefix }}"
+                view-in-dashboard="{{ viewInDashboard }}"
                 quick-filtering="true"
                 element-h="450"
                 col-resize="true"
                 page-size="50"
-                add-to-basket="{{addToBasket}}"
+                add-to-basket="{{ addToBasket }}"
                 basket-btn-x="400"
                 basket-btn-y="0"
                 exporting="true"

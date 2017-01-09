@@ -9,6 +9,7 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 				maxSuggestions: '@',	// Maximum suggestions to show in typeahead popup
 				standalone: '@',		// If search component is standalone
 				tabbed: '@',			// If search component is used in tabbed search (so it needs to use different URL)
+                enableAdvSearch:'@',	// Set to false to disable advanced search (defaults to true)
 				concept: '@',			// Concept for adv. search, used by QB for restoring rules from url parameters
 				conceptId: '@'			// Concept id, used by advanced search for getting query builder rules
 			},
@@ -23,11 +24,6 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 
 				var paramPrefix = scope.urlParamPrefix;
 
-				// If search should watch URL parameters, it means it will change automatically, so make it visible
-				if (scope.watchRuleUrlParam == "true") {
-                    scope.searchOptions.advancedVisible = true;
-                }
-
 				// Make advanced search visible if rules are defined in the URL
 				if (!_.isUndefined($location.search()[paramPrefix + "rules"]) && scope.concept == $location.search()[paramPrefix + "tab"]) {
 					scope.searchOptions.advancedVisible = true;
@@ -38,6 +34,12 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 				// Check if the search is tabbed or not and use the correct url for requests (it defaults to not tabbed)
 				if (_.isUndefined(scope.tabbed) || (scope.tabbed != "true" && scope.tabbed != "false")) {
 					scope.tabbed = "false";
+				}
+
+				// Check if enableAdvSearch is defined else use default value
+				if (_.isUndefined(scope.enableAdvSearch) || (scope.enableAdvSearch != "true" && scope.enableAdvSearch != "false")) {
+					// If Search is tabbed enable advanced search by default, or disable it if
+					scope.enableAdvSearch = scope.tabbed;
 				}
 
 				// If no url parameter prefix is defined or it is only whitespace, use no parameter prefix
@@ -57,6 +59,11 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 						scope.placeholder = "Search for...";
 						scope.searchBtnText = "Search";
 				}
+
+                // If search should watch URL parameters, it means it will change automatically, so make it visible
+                if (scope.watchRuleUrlParam == "true" && scope.enableAdvSearch == "true") {
+                    scope.searchOptions.advancedVisible = true;
+                }
 
 				// Check if max suggestions attribute is defined, else assign default value
 				if (_.isUndefined(scope.maxSuggestions) || scope.maxSuggestions.trim() == "") {

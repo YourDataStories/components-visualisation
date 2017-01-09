@@ -12,6 +12,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 aggregateIconSize: '@',     // Aggregate icon size (used only if component shown is aggregate)
                 aggregateShowButton: '@',   // If true, the aggregate will show the "View details" button
                 addToBasket: '@',           // If true, will show basket button in the components that support it
+                enableAdvSearch: '@',       // Enable/disable advanced search in Search Tabs component (default: true)
                 lang: '@'                   // Language of component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/dashboard-updater.html',
@@ -47,6 +48,10 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 // If aggregateShowButton is undefined, set default value
                 if (_.isUndefined(scope.aggregateShowButton) || (scope.aggregateShowButton != "true" && scope.aggregateShowButton != "false"))
                     scope.aggregateShowButton = "true";
+
+                // If enableAdvSearch is undefined, set default value
+                if (_.isUndefined(scope.enableAdvSearch) || (scope.enableAdvSearch != "true" && scope.enableAdvSearch != "false"))
+                    scope.enableAdvSearch = "true";
 
                 // If dashboardId is undefined, set default value
                 if (_.isUndefined(dashboardId) || dashboardId.trim() == "") {
@@ -91,13 +96,15 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                                 }
 
                                 // Make request to get rules for QueryBuilder
-                                Data.getQueryBuilderRules(requestType, scope.extraParams).then(function(response) {
-                                    var paramPrefix = searchParams.urlParamPrefix;
-                                    var newRules = JSURL.stringify(response.data);
+                                if (scope.enableAdvSearch == "true") {
+                                    Data.getQueryBuilderRules(requestType, scope.extraParams).then(function(response) {
+                                        var paramPrefix = searchParams.urlParamPrefix;
+                                        var newRules = JSURL.stringify(response.data);
 
-                                    // Set rules URL parameter with the new rules so QueryBuilder can update itself
-                                    $location.search(paramPrefix + "rules", newRules);
-                                });
+                                        // Set rules URL parameter with the new rules so QueryBuilder can update itself
+                                        $location.search(paramPrefix + "rules", newRules);
+                                    });
+                                }
 
                                 break;
                             case "grid":

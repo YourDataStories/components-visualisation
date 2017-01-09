@@ -8,6 +8,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                 watchRuleUrlParam: '@', // If Advanced Search should watch URL parameter for rule changes and apply them
                 viewInDashboard: '@',   // If true, the view button for each grid-results row will set the clicked value in DashboardService
                 hideTabs: '@',          // If true, tabs will be hidden and only the default tab will show
+                enableAdvSearch: '@',   // Enable/disable advanced search
                 addToBasket: '@',       // If true, the grids will have an "add to basket" button
                 lang: '@'               // Language of component
             },
@@ -32,6 +33,10 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                 // check if the language attr is defined, else assign default value
                 if(_.isUndefined(scope.lang) || scope.lang.trim()=="")
                     scope.lang = "en";
+
+                // If enableAdvSearch is undefined, set default value
+                if (_.isUndefined(scope.enableAdvSearch) || (scope.enableAdvSearch != "true" && scope.enableAdvSearch != "false"))
+                    scope.enableAdvSearch = "true";
 
                 // if no url parameter prefix is defined or it is only whitespace, use not parameter prefix
                 if (_.isUndefined(paramPrefix) || (paramPrefix.trim()=="" && paramPrefix.length > 0)) {
