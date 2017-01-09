@@ -195,9 +195,7 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         // Initialize extraParams object with year range
         var apiOptions = {};
 
-        if (!_.isNull(minYear) && !_.isNull(maxYear)) {
-            apiOptions[yearParam] = yearRange;
-        }
+        apiOptions[yearParam] = yearRange;
 
         // Get countries to send with request from DashboardService
         _.each(apiOptionsMap, function(viewType, key) {

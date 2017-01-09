@@ -27,7 +27,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 var searchParams = {};
 
                 // Keep previous parameter values, to check if the component needs to be re-rendered
-                var prevParams = null;
+                var prevParams = {};
 
                 // If type is undefined, set default value
                 if (_.isUndefined(scope.type) || scope.type.trim() == "")

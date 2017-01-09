@@ -587,6 +587,15 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
 
         params.type = type;
 
+        // Remove any string values that contain "null"
+        params = _.omit(params, function(param) {
+            if (_.isString(param)) {
+                return param.indexOf("null") != -1;
+            } else {
+                return false;
+            }
+        });
+
         $http({
             method: "GET",
             url: "http://" + YDS_CONSTANTS.API_TYPE2SOLRQUERY,
