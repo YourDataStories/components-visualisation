@@ -3,11 +3,6 @@ angular.module('yds').controller('PublicWorksController', ['$scope', '$timeout',
         var scope = $scope;
 
         scope.showProjectInfo = false;
-        scope.selector = "location";
-
-        scope.setSelector = function(selector) {
-            scope.selector = selector;
-        };
 
         // Subscribe to be notified of selected project changes
         DashboardService.subscribeProjectChanges(scope, function() {

@@ -1,33 +1,50 @@
 <div class="container" ng-controller="PublicWorksController">
-    <!--Buttons for category selection-->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="text-center">
-                <button type="button" class="btn btn-lg btn-primary" ng-class="{'dashboard-btn-active': selector == 'location'}"
-                        ng-click="setSelector('location')">
-                    By Location
-                </button>
-                <button type="button" class="btn btn-lg btn-warning" ng-class="{'dashboard-btn-active': selector == 'organisation'}"
-                        ng-click="setSelector('organisation')">
-                    By Organisation
-                </button>
-            </div>
-        </div>
-    </div>
-    
     <!--Selectors-->
     <div class="row">
-        <div class="col-md-6">
+        <!--Region selector column-->
+        <div class="col-md-5">
             <yds-region-selector-gr
-                    ng-if="selector == 'location'"
                     region-type="publicproject.regions.all"
                     regional-unit-type="publicproject.regional_units.all"
                     element-h="450">
             </yds-region-selector-gr>
+        </div>
 
-            <div ng-if="selector == 'organisation'">
-                Organisation selector here
-            </div>
+        <!--Grid column-->
+        <div class="col-md-5">
+            <!--Buyers-->
+            <yds-dashboard-updater
+                    type="simple-grid"
+                    project-id="none"
+                    view-type="publicproject.buyers.all"
+                    dashboard-id="public_project"
+                    add-to-basket="true"
+                    min-height="225"
+                    lang="en">
+            </yds-dashboard-updater>
+
+            <!--Sellers-->
+            <yds-dashboard-updater
+                    type="simple-grid"
+                    project-id="none"
+                    view-type="publicproject.sellers.all"
+                    dashboard-id="public_project"
+                    add-to-basket="true"
+                    min-height="225"
+                    lang="en">
+            </yds-dashboard-updater>
+        </div>
+
+        <!--Year selection slider-->
+        <div class="col-md-2">
+            <yds-year-range
+                    title="Time Period for Public Works"
+                    dashboard-id="public_project"
+                    min-year="1997"
+                    max-year="2018"
+                    vertical="true"
+                    height="350">
+            </yds-year-range>
         </div>
     </div>
 
