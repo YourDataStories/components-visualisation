@@ -191,8 +191,8 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                 var drillup = function () {
                     drilledDown = false;
 
-                    // After the drill up completes, select any regions from selectivity on the chart
-                    setTimeout(selectFromSelectivityToMap, 0);
+                    // After the drill up completes, refresh the map because the selection might have changed
+                    setTimeout(updateHeatmap, 0);
 
                     // Set the chart's subtitle to empty
                     this.setTitle(null, {text: ""});
