@@ -9,6 +9,9 @@ ydsDemo.controller('OrganisationController', ['$scope', '$location', function($s
 	// Set base URL variable
 	$scope.baseUrl = "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect";
 
+	// Set language
+	$scope.lang = "en";
+
 	// Get project ID from url parameters
 	var projectId = $location.search().id;
 	if (_.isUndefined(projectId) || projectId.length == 0) {

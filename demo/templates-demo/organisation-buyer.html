@@ -2,19 +2,19 @@
     <div class="row">
         <div class="col-md-12">
             <yds-aggregate project-id="{{ projectId }}"
-                           view-type="organisation.contract.buyer.title"
+                           view-type="publicproject.buyer.name"
                            element-h="60"
                            base-url="{{ baseUrl }}"
-                           lang="en">
+                           lang="{{ lang }}">
             </yds-aggregate>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-4">
-            <yds-related-items
-                    project-id="{{ projectId }}"
-                    element-h="300">
-            </yds-related-items>
-        </div>
-    </div>
+    <!--<div class="row">-->
+        <!--<div class="col-md-4">-->
+            <!--<yds-related-items-->
+                    <!--project-id="{{ projectId }}"-->
+                    <!--element-h="300">-->
+            <!--</yds-related-items>-->
+        <!--</div>-->
+    <!--</div>-->
 </div>
