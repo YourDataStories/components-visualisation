@@ -38,6 +38,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
 
                 // Boolean to indicate if the chart is drilled down or not
                 var drilledDown = false;
+                var drilldownRegion = "";
 
                 // Declare states of map points object, used in the configuration of the map later
                 var states = {
@@ -204,13 +205,17 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                         var chart = this,
                             mapKey = e.point.drilldown,
                             regionName = e.point.name;
+
+                        drilldownRegion = mapKey;
+
                         chart.showLoading("Loading...");
+
+                        var extraParams = DashboardService.getApiOptions("public_project"); //todo: make attribute
+                        extraParams.regions = mapKey;
 
                         $q.all([
                             Data.getGeoJSON("high", mapKey),
-                            Data.getProjectVis("heatmap", "none", regionalUnitType, "en", {
-                                regions: mapKey
-                            })
+                            Data.getProjectVis("heatmap", "none", regionalUnitType, "en", extraParams)
                         ]).then(function(results) {
                             // Get higher detail map with prefectures
                             var mapData = results[0];
@@ -262,7 +267,16 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
 
                 var updateHeatmap = function() {
                     if (drilledDown) {
-                        console.log("is drilled down, refresh not implemented yet");
+                        // Get data for this region to update it
+                        console.log("ned to update data for ", drilldownRegion);
+
+                        var extraParams = DashboardService.getApiOptions("public_project"); //todo: make attribute
+                        extraParams.regions = drilldownRegion;
+
+                        Data.getProjectVis("heatmap", "none", regionalUnitType, "en", extraParams)
+                            .then(function(response) {
+                                _.first(chart.series).setData(response.data);
+                            });
                     } else {
                         createHeatmap();
                     }

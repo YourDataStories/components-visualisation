@@ -221,8 +221,11 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         });
 
         if (dashboardId == "public_project") {
-            apiOptions.sellers = _.pluck(getGridSelection("sellers"), "name").join(",");
-            apiOptions.buyers = _.pluck(getGridSelection("buyers"), "name").join(",");
+            if (!_.isEmpty(getGridSelection("sellers")))
+                apiOptions.sellers = _.pluck(getGridSelection("sellers"), "name").join(",");
+
+            if (!_.isEmpty(getGridSelection("buyers")))
+                apiOptions.buyers = _.pluck(getGridSelection("buyers"), "name").join(",");
         }
 
         return apiOptions;
