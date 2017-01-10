@@ -201,7 +201,18 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                  */
                 var createGrid = function() {
                     // Get data and visualize grid
-                    Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang, scope.extraParams)
+                    var extraParams = scope.extraParams;
+
+                    // If extra params contains null value, prevent grid creation
+                    var prevent = false;
+                    _.each(extraParams, function(param) {
+                        if (_.isString(param) && param.indexOf("null") != -1)
+                            prevent = true;
+                    });
+                    if (prevent)
+                        return;
+
+                    Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang, extraParams)
                         .then(function(response) {
                             var rawData = [];
                             var columnDefs = [];
