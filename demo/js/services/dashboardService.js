@@ -220,12 +220,11 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
             }
         });
 
-        if (dashboardId == "public_work") {
-            apiOptions.sellers = _.pluck(getGridSelection("sellers"), "name");
-            apiOptions.buyers = _.pluck(getGridSelection("buyers"), "name");
+        if (dashboardId == "public_project") {
+            apiOptions.sellers = _.pluck(getGridSelection("sellers"), "name").join(",");
+            apiOptions.buyers = _.pluck(getGridSelection("buyers"), "name").join(",");
         }
 
-        console.log("api options: ", apiOptions);//todo: remove this
         return apiOptions;
     };
 
@@ -363,11 +362,9 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
      * @param newSelection
      */
     var setGridSelection = function(type, newSelection) {
-        if (_.isUndefined(gridSeletion[type]) || !_.isEqual(gridSeletion[type], newSelection)) {
-            gridSeletion[type] = newSelection;
+        gridSeletion[type] = newSelection;
 
-            notifyGridSelectionChange();
-        }
+        notifyGridSelectionChange();
     };
 
     /**

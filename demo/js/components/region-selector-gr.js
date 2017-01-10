@@ -14,6 +14,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                 var elementH = parseInt(scope.elementH);
 
                 var regionSelContainer = angular.element(element[0].querySelector('.region-selector-container'));
+                var initialized = false;
 
                 // Create a random id for the element that will render the plot
                 var elementId = "regionsel" + Data.createRandomId();
@@ -259,18 +260,41 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                     this.setTitle(null, {text: regionName});
                 };
 
-                // Get low detail Greece map and number of items in each region
-                $q.all([
-                    Data.getGeoJSON("low", null),
-                    Data.getProjectVis("heatmap", "none", regionType, "en", undefined)
-                ]).then(function(results) {
-                    // Get low detail map data
-                    Highcharts.maps["countries/gr-low-res"] = results[0];
+                var updateHeatmap = function() {
+                    if (drilledDown) {
+                        console.log("is drilled down, refresh not implemented yet");
+                    } else {
+                        createHeatmap();
+                    }
+                };
+
+                // Get low resolution map of Greece to initialize map
+                Data.getGeoJSON("low", null).then(function(response) {
+                    // Give map to highcharts
+                    Highcharts.maps["countries/gr-low-res"] = response;
+
+                    // Subscribe to changes
+                    DashboardService.subscribeGridSelectionChanges(scope, updateHeatmap);
+                    DashboardService.subscribeYearChanges(scope, updateHeatmap);
+
+                    // Initialize heatmap
+                    createHeatmap();
+                });
+
+                var createHeatmap = function() {
+                    var extraParams = DashboardService.getApiOptions("public_project");    //todo: make this an attribute
+
+                    // Get number of items in each region
+                    Data.getProjectVis("heatmap", "none", regionType, "en", extraParams).then(visualizeHeatmap);
+                };
+
+                var visualizeHeatmap = function(results) {
+                    // Create new series to add to heatmap
                     var mapData = Highcharts.geojson(Highcharts.maps['countries/gr-low-res']);
 
                     // Get number of items in each region and the colorAxis
-                    var data = results[1].data;
-                    var colorAxis = _.find(results[1].view, function(view) {
+                    var data = results.data;
+                    var colorAxis = _.find(results.view, function(view) {
                         return _.has(view, "colorAxis");
                     }).colorAxis;
 
@@ -279,10 +303,24 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                         item.drilldown = item.properties.hasc;
                     });
 
-                    chart = new Highcharts.mapChart(elementId, getMapOptions(data, mapData, colorAxis));
+                    // If chart is not initialized, initialize it
+                    if (!initialized) {
+                        // Initialize heatmap (without a series)
+                        chart = new Highcharts.mapChart(elementId, getMapOptions(colorAxis));
+
+                        initialized = true;
+                    } else {
+                        // Remove series
+                        while(chart.series.length > 0)
+                            chart.series[0].remove(true);
+                    }
+
+                    // chart = new Highcharts.mapChart(elementId, getMapOptions(data, mapData, colorAxis));
+                    var series = getSeries(mapData, data);
+                    chart.addSeries(series);
 
                     initializeSelectivity();
-                });
+                };
 
                 var updateDashboardServiceValues = function(newData) {
                     // Filter selection into regions and prefectures
@@ -439,13 +477,39 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                 };
 
                 /**
-                 * Create and return the options for the highmaps chart
-                 * @param data
+                 * Return the series for the regions map (not drilled down)
                  * @param mapData
+                 * @param data
+                 * @returns {*}
+                 */
+                var getSeries = function(mapData, data) {
+                    return {
+                        data: data,
+                        mapData: mapData,
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.properties.name}'
+                        },
+                        joinBy: ['hasc', 'code'],
+                        keys: ['hasc', 'value'],
+                        name: "Regions of Greece",
+                        allowPointSelect: true,
+                        states: states,
+                        point: {
+                            events: {
+                                select: regionSelectionHandler,
+                                unselect: regionUnselectionHandler
+                            }
+                        }
+                    };
+                };
+
+                /**
+                 * Create and return the options for the highmaps chart
                  * @param colorAxis
                  * @returns {*}
                  */
-                var getMapOptions = function(data, mapData, colorAxis) {
+                var getMapOptions = function(colorAxis) {
                     return {
                         chart: {
                             height: elementH,
@@ -477,25 +541,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                             enableDoubleClickZoom: false
                         },
                         colorAxis: colorAxis,
-                        series: [{
-                            data: data,
-                            mapData: mapData,
-                            dataLabels: {
-                                enabled: true,
-                                format: '{point.properties.name}'
-                            },
-                            joinBy: ['hasc', 'code'],
-                            keys: ['hasc', 'value'],
-                            name: "Regions of Greece",
-                            allowPointSelect: true,
-                            states: states,
-                            point: {
-                                events: {
-                                    select: regionSelectionHandler,
-                                    unselect: regionUnselectionHandler
-                                }
-                            }
-                        }],
+                        series: [],
                         drilldown: {
                             activeDataLabelStyle: {
                                 color: '#FFFFFF',
