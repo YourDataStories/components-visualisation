@@ -81,8 +81,9 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
 
                         //noinspection FallThroughInSwitchStatementJS
                         switch(scope.type) {
+                            case "selection-grid":
                             case "aggregate":
-                                // Aggregates watch their extra params for changes, so do nothing
+                                // Aggregates and selection grid watch their extra params for changes, so do nothing
                                 break;
                             case "search":
                                 if (!initialized) {
@@ -133,6 +134,10 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 // Subscribe to be notified of changes in selected countries and year range
                 DashboardService.subscribeSelectionChanges(scope, updateExtraParams);
                 DashboardService.subscribeYearChanges(scope, updateExtraParams);
+
+                if (scope.type == "selection-grid") {
+                    DashboardService.subscribeGridSelectionChanges(scope, updateExtraParams);
+                }
 
                 // Get initial info
                 updateExtraParams();

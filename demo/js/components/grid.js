@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService',
-    function(Data, Filters, DashboardService){
+angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService', '$timeout',
+    function(Data, Filters, DashboardService, $timeout){
         return {
             restrict: 'E',
             scope: {
@@ -62,6 +62,9 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                 var allowSelection = scope.allowSelection;
                 var dashboardId = scope.dashboardId;
                 var selectionId = scope.selectionId;
+
+                // If selection is enabled, this will be used to reselect rows after refreshing the grid data
+                var selection = [];
 
                 // If extra params exist, add them to Filters
                 if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
@@ -192,80 +195,125 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                     }
                 });
 
-                // Get data and visualize grid
-                Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang, extraParams)
-                    .then(function(response) {
-                        var rawData = [];
-                        var columnDefs = [];
+                /**
+                 * Create the grid
+                 */
+                var createGrid = function() {
+                    // Get data and visualize grid
+                    Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang, scope.extraParams)
+                        .then(function(response) {
+                            var rawData = [];
+                            var columnDefs = [];
 
-                        if (response.success == false || response.view.length==0) {
-                            console.log('an error has occurred');
-                            return false;
-                        } else {
-                            rawData = Data.prepareGridData(response.data, response.view);
-                            columnDefs = Data.prepareGridColumns(response.view);
-                        }
-
-                        // If selection is enabled, add checkbox to the first column
-                        if (allowSelection == "true") {
-                            _.first(columnDefs).checkboxSelection = true;
-                        }
-
-                        //Define the options of the grid component
-                        scope.gridOptions = {
-                            columnDefs: columnDefs,
-                            enableColResize: (grid.colResize === "true"),
-                            enableSorting: (grid.sorting === "true"),
-                            enableFilter: (grid.filtering === "true")
-                        };
-
-                        // If selection is enabled, add extra options for it in the gridOptions
-                        if (allowSelection == "true") {
-                            scope.gridOptions.rowSelection = "multiple";
-                            scope.gridOptions.onSelectionChanged = function(e) {
-                                // Set selected rows in DashboardService
-                                DashboardService.setGridSelection(selectionId, e.selectedRows);
+                            if (response.success == false || response.view.length==0) {
+                                console.log('an error has occurred');
+                                return false;
+                            } else {
+                                rawData = Data.prepareGridData(response.data, response.view);
+                                columnDefs = Data.prepareGridColumns(response.view);
                             }
-                        }
 
-                        //If paging enabled set the required options to the grid configuration
-                        if (grid.paging==="true") {
-                            var localDataSource = {
-                                rowCount: parseInt(rawData.length),    // not setting the row count, infinite paging will be used
-                                pageSize: parseInt(pageSize),           // changing to number, as scope keeps it as a string
-                                getRows: function (params) {
-                                    var rowsThisPage = rawData.slice(params.startRow, params.endRow);
-                                    var lastRow = -1;
-                                    if (rawData.length <= params.endRow) {
-                                        lastRow = rawData.length;
-                                    }
-                                    params.successCallback(rowsThisPage, lastRow);
-                                }
+                            // If selection is enabled, add checkbox to the first column
+                            if (allowSelection == "true") {
+                                _.first(columnDefs).checkboxSelection = true;
+                            }
+
+                            //Define the options of the grid component
+                            scope.gridOptions = {
+                                columnDefs: columnDefs,
+                                enableColResize: (grid.colResize === "true"),
+                                enableSorting: (grid.sorting === "true"),
+                                enableFilter: (grid.filtering === "true")
                             };
 
-                            scope.gridOptions.datasource = localDataSource;
-                        } else {
-                            scope.gridOptions.rowData = rawData;
+                            // If selection is enabled, add extra options for it in the gridOptions
+                            if (allowSelection == "true") {
+                                scope.gridOptions.rowSelection = "multiple";
+                                scope.gridOptions.onSelectionChanged = function(e) {
+                                    // Set selected rows in DashboardService
+                                    DashboardService.setGridSelection(selectionId, e.selectedRows);
+                                    selection = e.selectedRows;
+                                }
+                            }
+
+                            //If paging enabled set the required options to the grid configuration
+                            if (grid.paging==="true") {
+                                var localDataSource = {
+                                    rowCount: parseInt(rawData.length),    // not setting the row count, infinite paging will be used
+                                    pageSize: parseInt(pageSize),           // changing to number, as scope keeps it as a string
+                                    getRows: function (params) {
+                                        var rowsThisPage = rawData.slice(params.startRow, params.endRow);
+                                        var lastRow = -1;
+                                        if (rawData.length <= params.endRow) {
+                                            lastRow = rawData.length;
+                                        }
+                                        params.successCallback(rowsThisPage, lastRow);
+                                    }
+                                };
+
+                                scope.gridOptions.datasource = localDataSource;
+                            } else {
+                                scope.gridOptions.rowData = rawData;
+                            }
+
+                            new agGrid.Grid(gridContainer[0], scope.gridOptions);
+
+                            //If filtering is enabled, register function to watch for filter updates
+                            if (grid.filtering === "true" || grid.quickFiltering === "true") {
+                                scope.gridOptions.api.addEventListener('afterFilterChanged', filterModifiedListener);
+                            }
+
+                            // Remove loading animation
+                            scope.loading = false;
+
+                            // Select any points that were previously selected
+                            if (allowSelection == "true" && !_.isEmpty(selection)) {
+                                scope.gridOptions.api.forEachNode(function(node) {
+                                    // Check if this node is in the selection
+                                    var result = _.findWhere(selection, {
+                                        name: node.data.name
+                                    });
+
+                                    if (!_.isUndefined(result)) {
+                                        // The node was selected before, so select it again
+                                        scope.gridOptions.api.selectNode(node, true);
+                                    }
+                                });
+                            }
+                        }, function(error) {
+                            if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
+                                scope.ydsAlert = "An error has occurred, please check the configuration of the component";
+                            else
+                                scope.ydsAlert = error.message;
+
+                            // Remove loading animation
+                            scope.loading = false;
+                        });
+                };
+
+                // Watch for changes in extra parameters and update the grid
+                if (allowSelection == "true") {
+                    scope.$watch("extraParams", function(newValue, oldValue) {
+                        if (!_.isEqual(newValue, oldValue)) {
+                            $timeout(function() {
+                                // If the grid exists, get current selection and destroy the grid
+                                if (_.has(scope.gridOptions, "api")) {
+                                    selection = scope.gridOptions.api.getSelectedRows();
+
+                                    scope.gridOptions.api.destroy();
+                                }
+
+                                // Show loading animation and hide any errors
+                                scope.loading = true;
+                                scope.ydsAlert = "";
+
+                                createGrid();
+                            });
                         }
-
-                        new agGrid.Grid(gridContainer[0], scope.gridOptions);
-
-                        //If filtering is enabled, register function to watch for filter updates
-                        if (grid.filtering === "true" || grid.quickFiltering === "true") {
-                            scope.gridOptions.api.addEventListener('afterFilterChanged', filterModifiedListener);
-                        }
-
-                        // Remove loading animation
-                        scope.loading = false;
-                    }, function(error){
-                        if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
-                            scope.ydsAlert = "An error has occurred, please check the configuration of the component";
-                        else
-                            scope.ydsAlert = error.message;
-
-                        // Remove loading animation
-                        scope.loading = false;
                     });
+                } else {
+                    createGrid();
+                }
             }
         };
     }

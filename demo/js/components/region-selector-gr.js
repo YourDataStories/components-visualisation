@@ -270,8 +270,6 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                 var updateHeatmap = function() {
                     if (drilledDown) {
                         // Get data for this region to update it
-                        console.log("ned to update data for ", drilldownRegion);
-
                         var extraParams = DashboardService.getApiOptions(dashboardId);
                         extraParams.regions = drilldownRegion;
 
