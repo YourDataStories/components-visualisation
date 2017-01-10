@@ -5,12 +5,14 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
             scope: {
                 regionType: '@',        // Type used for getting the regions from the API
                 regionalUnitType: '@',  // Type used for getting the regional units from the API
+                dashboardId: '@',       // Dashboard ID to use for getting parameters from DashboardService
                 elementH:'@'            // Height of the component in pixels
             },
             templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/region-selector-gr.html',
             link: function (scope, element) {
                 var regionType = scope.regionType;
                 var regionalUnitType = scope.regionalUnitType;
+                var dashboardId = scope.dashboardId;
                 var elementH = parseInt(scope.elementH);
 
                 var regionSelContainer = angular.element(element[0].querySelector('.region-selector-container'));
@@ -210,7 +212,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
 
                         chart.showLoading("Loading...");
 
-                        var extraParams = DashboardService.getApiOptions("public_project"); //todo: make attribute
+                        var extraParams = DashboardService.getApiOptions(dashboardId);
                         extraParams.regions = mapKey;
 
                         $q.all([
@@ -270,7 +272,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                         // Get data for this region to update it
                         console.log("ned to update data for ", drilldownRegion);
 
-                        var extraParams = DashboardService.getApiOptions("public_project"); //todo: make attribute
+                        var extraParams = DashboardService.getApiOptions(dashboardId);
                         extraParams.regions = drilldownRegion;
 
                         Data.getProjectVis("heatmap", "none", regionalUnitType, "en", extraParams)
@@ -296,7 +298,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                 });
 
                 var createHeatmap = function() {
-                    var extraParams = DashboardService.getApiOptions("public_project");    //todo: make this an attribute
+                    var extraParams = DashboardService.getApiOptions(dashboardId);
 
                     // Get number of items in each region
                     Data.getProjectVis("heatmap", "none", regionType, "en", extraParams).then(visualizeHeatmap);
