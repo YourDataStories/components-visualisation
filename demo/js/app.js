@@ -96,7 +96,7 @@ ydsDemo.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 		templateUrl: 'templates-demo/contract-ted.html',
 		controller: function($scope) {
 			// Set project ID and base URL variables
-			$scope.projectId = "http://linkedeconomy.org/resource/Contract/AwardNotice/2007112809/2006604";
+			$scope.projectId = "http://linkedeconomy.org/resource/Contract/AwardNotice/2006149088/1800713";
 			$scope.baseUrl = "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect";
 		}
 	})
