@@ -8,6 +8,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 addToBasket: '@',   // If true, the save to basket button will appear in visualizations
                 disableColor: '@',  // If true, the component will ignore the color of the selected aggregate type
                 type: '@',          // View type of component. If not set, will get it from DashboardService
+                lang: '@',          // Language of charts
                 elementH: '@'       // Height of component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + 'templates/dashboard-visualization.html',
