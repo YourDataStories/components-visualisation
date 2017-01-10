@@ -278,6 +278,9 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                         Data.getProjectVis("heatmap", "none", regionalUnitType, "en", extraParams)
                             .then(function(response) {
                                 _.first(chart.series).setData(response.data);
+
+                                // Reselect previously selected points
+                                selectFromSelectivityToMap();
                             });
                     } else {
                         createHeatmap();
@@ -325,6 +328,8 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                         chart = new Highcharts.mapChart(elementId, getMapOptions(colorAxis));
 
                         initialized = true;
+
+                        initializeSelectivity();
                     } else {
                         // Remove series
                         while(chart.series.length > 0)
@@ -335,7 +340,8 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                     var series = getSeries(mapData, data);
                     chart.addSeries(series);
 
-                    initializeSelectivity();
+                    // Reselect previously selected points
+                    selectFromSelectivityToMap();
                 };
 
                 var updateDashboardServiceValues = function(newData) {
