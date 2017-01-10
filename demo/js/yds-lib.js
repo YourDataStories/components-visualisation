@@ -436,6 +436,34 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         return ((dd < 10) ? "0" : "") + dd + "/" + ((mm < 10) ? "0" : "") + mm + "/" + yyyy;
     };
 
+    /**
+     * Like deepObjSearch, but for each attribute token checks also if it is an array, and if it is
+     * it tries to get the values for all items in it and return them separated with commas. Does not search arrays.
+     * @param item
+     * @param attribute
+     * @returns {*}
+     */
+    var arraySearch = function(item, attribute) {
+        var tokens = attribute.split(".");
+
+        var itemPart = item[_.first(tokens)];
+
+        if (_.isArray(itemPart)) {
+            // It is array
+            var str = "";
+            _.each(itemPart, function(item) {
+                var attrStr = _.rest(tokens, 1).join(".");
+                str += arraySearch(item, attrStr) + ", ";
+            });
+
+            // Return the total string, removing last comma
+            return str.substring(0, str.length - 2);
+        } else if (_.isString(itemPart)) {
+            // It is string, return as is
+            return itemPart;
+        }
+    };
+
     dataService.prepareGridData = function(newData, newView) {
         for (var i = 0; i < newData.length; i++) {
             _.each(newView, function(viewVal) {
@@ -445,6 +473,11 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                 if (_.isUndefined(attrValue) || (_.isString(attrValue) && attrValue.trim().length == 0)) {
                     // If the attribute is empty, maybe it is a nested attribute, so try deep object search
                     attrValue = dataService.deepObjSearch(newData[i], viewVal.attribute);
+                }
+
+                if (_.isUndefined(attrValue) && viewVal.attribute.length > 0) {
+                    // Value still undefined, as a last resort try to look for arrays in each attribute token
+                    attrValue = arraySearch(newData[i], viewVal.attribute);
                 }
 
                 // If the column type is year, date or amount of money, format it accordingly
