@@ -16,7 +16,7 @@ ydsDemo.controller('OrganisationController', ['$scope', '$location', function($s
 	var projectId = $location.search().id;
 	if (_.isUndefined(projectId) || projectId.length == 0) {
 		// Set default project ID to be able to display the page
-		projectId = "http://linkedeconomy.org/resource/Organization/TED_730";
+		projectId = "http://linkedeconomy.org/resource/Organization/997687930";
 
 		console.warn("No project ID in URL parameters: using default ID");
 	}
