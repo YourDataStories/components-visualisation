@@ -135,7 +135,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 DashboardService.subscribeSelectionChanges(scope, updateExtraParams);
                 DashboardService.subscribeYearChanges(scope, updateExtraParams);
 
-                if (scope.type == "selection-grid") {
+                if (scope.type == "selection-grid" || dashboardId == "public_project") {
                     DashboardService.subscribeGridSelectionChanges(scope, updateExtraParams);
                 }
 
