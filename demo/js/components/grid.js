@@ -65,6 +65,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
 
                 // If selection is enabled, this will be used to reselect rows after refreshing the grid data
                 var selection = [];
+                var preventUpdate = false;
 
                 // If extra params exist, add them to Filters
                 if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
@@ -233,6 +234,9 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                                     // Set selected rows in DashboardService
                                     DashboardService.setGridSelection(selectionId, e.selectedRows);
                                     selection = e.selectedRows;
+
+                                    // Prevent next grid update
+                                    preventUpdate = true;
                                 }
                             }
 
@@ -277,6 +281,8 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                                     if (!_.isUndefined(result)) {
                                         // The node was selected before, so select it again
                                         scope.gridOptions.api.selectNode(node, true);
+
+                                        preventUpdate = false;
                                     }
                                 });
                             }
@@ -293,9 +299,12 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
 
                 // Watch for changes in extra parameters and update the grid
                 if (allowSelection == "true") {
-                    scope.$watch("extraParams", function(newValue, oldValue) {
-                        if (!_.isEqual(newValue, oldValue)) {
-                            $timeout(function() {
+                    scope.$watch("extraParams", function (newValue, oldValue) {
+                        // Check if the grid should update (ignoring the grid's own selections)
+                        var shouldUpdate = !_.isEqual(newValue, oldValue) && !preventUpdate;
+
+                        if (shouldUpdate) {
+                            $timeout(function () {
                                 // If the grid exists, get current selection and destroy the grid
                                 if (_.has(scope.gridOptions, "api")) {
                                     selection = scope.gridOptions.api.getSelectedRows();
@@ -310,10 +319,12 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                                 createGrid();
                             });
                         }
+
+                        preventUpdate = false;
                     });
-                } else {
-                    createGrid();
                 }
+
+                createGrid();
             }
         };
     }
