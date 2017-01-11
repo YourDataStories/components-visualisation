@@ -10,39 +10,33 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <yds-aggregate project-id="{{ projectId }}"
                            view-type="organisation.country"
-                           element-h="60"
+                           element-h="74"
                            base-url="{{ baseUrl }}"
                            lang="{{ lang }}">
             </yds-aggregate>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <yds-aggregate project-id="{{ projectId }}"
                            view-type="organisation.address"
-                           element-h="60"
+                           element-h="74"
                            base-url="{{ baseUrl }}"
                            lang="{{ lang }}">
             </yds-aggregate>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <yds-aggregate project-id="{{ projectId }}"
                            view-type="organisation.VAT"
-                           element-h="60"
-                           base-url="{{ baseUrl }}"
-                           lang="{{ lang }}">
-            </yds-aggregate>
-        </div>
-        <div class="col-md-3">
-            <yds-aggregate project-id="{{ projectId }}"
-                           view-type="organisation.projects.count"
-                           element-h="60"
+                           element-h="74"
                            base-url="{{ baseUrl }}"
                            lang="{{ lang }}">
             </yds-aggregate>
         </div>
     </div>
+
+    <!--Visualisation-->
     <div class="row">
         <div class="col-md-12">
             <yds-dashboard-visualization
@@ -54,6 +48,22 @@
             </yds-dashboard-visualization>
         </div>
     </div>
+
+    <!--Aggregates-->
+    <div class="row">
+        <div class="col-md-4">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="organisation.projects.count"
+                           element-h="60"
+                           dashboard-id="organisation"
+                           set-on-init="true"
+                           base-url="{{ baseUrl }}"
+                           lang="{{ lang }}">
+            </yds-aggregate>
+        </div>
+    </div>
+
+    <!--Grid-->
     <div class="row">
         <div class="col-md-12">
             <yds-grid
@@ -64,12 +74,4 @@
             </yds-grid>
         </div>
     </div>
-    <!--<div class="row">-->
-        <!--<div class="col-md-4">-->
-            <!--<yds-related-items-->
-                    <!--project-id="{{ projectId }}"-->
-                    <!--element-h="300">-->
-            <!--</yds-related-items>-->
-        <!--</div>-->
-    <!--</div>-->
 </div>
