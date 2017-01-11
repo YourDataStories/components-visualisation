@@ -43,4 +43,25 @@
             </yds-aggregate>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12">
+            <yds-dashboard-visualization
+                    project-id="{{ projectId }}"
+                    dashboard-id="organisation"
+                    disable-color="true"
+                    add-to-basket="false"
+                    element-h="400">
+            </yds-dashboard-visualization>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <yds-grid
+                    project-id="{{ projectId }}"
+                    view-type="organisation.projects.nsrf"
+                    element-h="300"
+                    lang="{{ lang }}">
+            </yds-grid>
+        </div>
+    </div>
 </div>
