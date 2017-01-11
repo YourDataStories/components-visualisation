@@ -109,6 +109,23 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                                 }
 
                                 break;
+                            case "simple-grid":
+                                // Remove string values that contain null from the parameters
+                                scope.extraParams = _.omit(scope.extraParams, function(param) {
+                                    if (_.isString(param) && param.indexOf("null") != -1)
+                                        return true;
+                                    else
+                                        return false;
+                                });
+
+                                // Re-render component
+                                var type = scope.type;  // Save current type
+                                scope.type = "";        // Make type empty to hide component
+
+                                $timeout(function() {
+                                    scope.type = type;  // At end of digest show component again
+                                });
+                                break;
                             case "grid":
                                 if (!initialized) {
                                     // Get concept from DashboardService so "view" button will work correctly
