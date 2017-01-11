@@ -11,6 +11,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 showViewBtn: '@',   // If true, will show the "view details" button in the layouts where it is available
                 setOnInit: '@',     // If true, will set this aggregate's view type in DashboardService on init
                 elementH: '@',      // Minimum height of Aggregate
+                maxHeight: '@',     // Max height (if exceeded will scroll). Currently works on "title" layout
                 baseUrl: '@',       // Base URL to send to API (optional)
                 extraParams: '='    // Extra parameters to send
             },
@@ -22,6 +23,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 var lang = scope.lang;
                 var setOnInit = scope.setOnInit;
                 var elementH = parseInt(scope.elementH);
+                var maxHeight = parseInt(scope.maxHeight);
                 var iconSize = scope.iconSize;
                 var baseUrl = scope.baseUrl;
 
@@ -55,6 +57,14 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 // If elementH is undefined, set default value
                 if (_.isUndefined(elementH) || _.isNaN(elementH))
                     elementH = 140;
+
+                // If maxHeight is not undefined, set the CSS style needed to scroll when content exceeds it
+                if (!_.isUndefined(maxHeight) && !_.isNaN(maxHeight)) {
+                    scope.scrollStyle = {
+                        "max-height": maxHeight + "px",
+                        "overflow-y": "auto"
+                    };
+                }
 
                 var getAggregateData = function() {
                     var params = scope.extraParams;
