@@ -73,7 +73,36 @@
                     project-id="{{ projectId }}"
                     dashboard-id="organisation_amounts"
                     disable-color="true"
-                    add-to-basket="true"
+                    add-to-basket="false"
+                    lang="{{ lang }}"
+                    element-h="400">
+            </yds-dashboard-visualization>
+        </div>
+    </div>
+
+    <!--Aggregates - TOP-->
+    <div class="row">
+        <div class="col-md-4">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="organisation.buyers.top"
+                           element-h="60"
+                           dashboard-id="organisation_top"
+                           set-on-init="true"
+                           base-url="{{ baseUrl }}"
+                           lang="{{ lang }}">
+            </yds-aggregate>
+        </div>
+    </div>
+
+    <!--Visualisation - TOP-->
+    <div class="row">
+        <div class="col-md-12">
+            <yds-dashboard-visualization
+                    project-id="{{ projectId }}"
+                    dashboard-id="organisation_top"
+                    disable-color="true"
+                    add-to-basket="false"
+                    lang="{{ lang }}"
                     element-h="400">
             </yds-dashboard-visualization>
         </div>
