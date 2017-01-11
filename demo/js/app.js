@@ -20,7 +20,7 @@ ydsDemo.controller('OrganisationController', ['$scope', '$location', function($s
 
 		// For seller set different ID
         if ($location.path() == "/organisation-seller") {
-			projectId = "http://linkedeconomy.org/resource/Organization/11197-S";
+			projectId = "http://linkedeconomy.org/resource/Organization/099878514";
 		}
 
 		console.warn("No project ID in URL parameters: using default ID");
