@@ -1154,3 +1154,7 @@ a.aggregate_link_dark:hover {
 .dashboard-btn-active {
     border-width: 5px;
 }
+
+.aggregate-organisation-buyers-top, .aggregate-organisation-categories-top {
+    min-height: 190px;
+}
