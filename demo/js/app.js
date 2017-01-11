@@ -5,29 +5,36 @@ ydsDemo.run(function($rootScope, $location) {
 });
 
 // Controller to set base URL and project ID in Organisation buyer & seller demo pages
-ydsDemo.controller('OrganisationController', ['$scope', '$location', function($scope, $location) {
-	// Set base URL variable
-	$scope.baseUrl = "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect";
+ydsDemo.controller('OrganisationController', ['$scope', '$location', 'DashboardService',
+	function($scope, $location, DashboardService) {
+		// Set base URL variable
+		$scope.baseUrl = "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect";
 
-	// Set language
-	$scope.lang = "el";
+		// Set language
+		$scope.lang = "el";
 
-	// Get project ID from url parameters
-	var projectId = $location.search().id;
-	if (_.isUndefined(projectId) || projectId.length == 0) {
-		// Set default project ID to be able to display the page
-		projectId = "http://linkedeconomy.org/resource/Organization/997687930";
+		// Set view type for the "timeline" Dashboard Visualisation component
+		DashboardService.setViewType("organisation_timeline", {
+			type: "organisation.contracts.decisions.over.date"
+		});
 
-		// For seller set different ID
-        if ($location.path() == "/organisation-seller") {
-			projectId = "http://linkedeconomy.org/resource/Organization/099878514";
+		// Get project ID from url parameters
+		var projectId = $location.search().id;
+		if (_.isUndefined(projectId) || projectId.length == 0) {
+			// Set default project ID to be able to display the page
+			projectId = "http://linkedeconomy.org/resource/Organization/997687930";
+
+			// For seller set different ID
+			if ($location.path() == "/organisation-seller") {
+				projectId = "http://linkedeconomy.org/resource/Organization/099878514";
+			}
+
+			console.warn("No project ID in URL parameters: using default ID");
 		}
 
-		console.warn("No project ID in URL parameters: using default ID");
+		$scope.projectId = projectId;
 	}
-
-	$scope.projectId = projectId;
-}]);
+]);
 
 ydsDemo.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 	$urlRouterProvider.otherwise('/search');
