@@ -9,6 +9,40 @@
             </yds-aggregate>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-3">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="organisation.country"
+                           element-h="60"
+                           base-url="{{ baseUrl }}"
+                           lang="{{ lang }}">
+            </yds-aggregate>
+        </div>
+        <div class="col-md-3">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="organisation.address"
+                           element-h="60"
+                           base-url="{{ baseUrl }}"
+                           lang="{{ lang }}">
+            </yds-aggregate>
+        </div>
+        <div class="col-md-3">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="organisation.VAT"
+                           element-h="60"
+                           base-url="{{ baseUrl }}"
+                           lang="{{ lang }}">
+            </yds-aggregate>
+        </div>
+        <div class="col-md-3">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="organisation.projects.count"
+                           element-h="60"
+                           base-url="{{ baseUrl }}"
+                           lang="{{ lang }}">
+            </yds-aggregate>
+        </div>
+    </div>
     <!--<div class="row">-->
         <!--<div class="col-md-4">-->
             <!--<yds-related-items-->
