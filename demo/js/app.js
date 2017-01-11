@@ -13,11 +13,6 @@ ydsDemo.controller('OrganisationController', ['$scope', '$location', 'DashboardS
 		// Set language
 		$scope.lang = "el";
 
-		// Set view type for the "timeline" Dashboard Visualisation component
-		DashboardService.setViewType("organisation_timeline", {
-			type: "organisation.contracts.decisions.over.date"
-		});
-
 		// Get project ID from url parameters
 		var projectId = $location.search().id;
 		if (_.isUndefined(projectId) || projectId.length == 0) {

@@ -42,15 +42,16 @@
     <!--Timeline-->
     <div class="row">
         <div class="col-md-12">
-            <!--organisation.contracts.decisions.over.date-->
-            <yds-dashboard-visualization
+            <yds-bubble
                     project-id="{{ projectId }}"
-                    dashboard-id="organisation_timeline"
-                    disable-color="true"
-                    add-to-basket="false"
-                    lang="{{ lang }}"
-                    element-h="400">
-            </yds-dashboard-visualization>
+                    view-type="organisation.contracts.decisions.over.date"
+                    element-h="400"
+                    add-to-basket="true"
+                    basket-btn-x="40"
+                    embeddable="true"
+                    exporting="true"
+                    lang="{{ lang }}">
+            </yds-bubble>
         </div>
     </div>
 
