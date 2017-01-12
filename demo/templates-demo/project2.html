@@ -155,12 +155,14 @@
         </div>
 
         <!--Financial decisions Aggregate-->
-        <div class="col-md-2">
+        <div class="col-md-3">
             <yds-aggregate
                     project-id="http://linkedeconomy.org/resource/PublicWork/216004"
                     view-type="publicproject.decisions.financial"
                     icon-size="3"
                     element-h="140"
+                    dashboard-id="diavgeia_details"
+                    set-on-init="true"
                     base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
                     lang="el">
             </yds-aggregate>
@@ -173,13 +175,14 @@
                     view-type="publicproject.decisions.non_financial"
                     icon-size="3"
                     element-h="140"
+                    dashboard-id="diavgeia_details"
                     base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
                     lang="el">
             </yds-aggregate>
         </div>
 
         <!--Related Subprojects Aggregate-->
-        <div class="col-md-3">
+        <div class="col-md-2">
             <yds-aggregate
                     project-id="http://linkedeconomy.org/resource/PublicWork/216004"
                     view-type="publicproject.diavgeia.related.subprojects"
@@ -205,6 +208,21 @@
         <!--Diavgeia logo-->
         <div class="col-md-2">
             <img src="img/diavgeia_all_logo.png" style="width: 100%">
+        </div>
+    </div>
+
+    <!--Details-->
+    <div class="row">
+        <div class="col-md-12">
+            <yds-dashboard-visualization
+                    project-id="http://linkedeconomy.org/resource/PublicWork/216004"
+                    dashboard-id="diavgeia_details"
+                    disable-color="true"
+                    add-to-basket="false"
+                    default-chart="grid"
+                    lang="el"
+                    element-h="400">
+            </yds-dashboard-visualization>
         </div>
     </div>
 
