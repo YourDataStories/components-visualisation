@@ -6,7 +6,7 @@ ydsDemo.run(function($rootScope, $location) {
 
 // Controller to set base URL and project ID in Organisation buyer & seller demo pages
 ydsDemo.controller('OrganisationController', ['$scope', '$location', 'DashboardService',
-	function($scope, $location, DashboardService) {
+	function($scope, $location) {
 		// Set base URL variable
 		$scope.baseUrl = "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect";
 

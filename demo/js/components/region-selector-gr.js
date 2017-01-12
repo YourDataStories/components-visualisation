@@ -239,7 +239,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                                 allowPointSelect: true,
                                 dataLabels: {
                                     enabled: true,
-                                    format: '{point.properties.NAME_ENG}'
+                                    format: '{point.NAME_ENG}'
                                 },
                                 colorAxis: colorAxis,
                                 tooltip: {
