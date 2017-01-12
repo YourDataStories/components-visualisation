@@ -7,6 +7,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 dashboardId: '@',   // ID used for getting selected year range from DashboardService
                 addToBasket: '@',   // If true, the save to basket button will appear in visualizations
                 disableColor: '@',  // If true, the component will ignore the color of the selected aggregate type
+                defaultChart: '@',  // Chart to show on initialization of the component. Default is "bar".
                 type: '@',          // View type of component. If not set, will get it from DashboardService
                 lang: '@',          // Language of charts
                 elementH: '@'       // Height of component
@@ -15,6 +16,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
             link: function (scope) {
                 var dashboardId = scope.dashboardId;
                 var disableColor = scope.disableColor;
+                var defaultChart = scope.defaultChart;
                 var type = scope.type;
 
                 // Check if the component's height attribute is defined, else assign default value
@@ -28,6 +30,11 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 // If disableColor is undefined, show error
                 if (_.isUndefined(disableColor) || (disableColor != "true" && disableColor != "false"))
                     disableColor = "false";
+
+                // If defaultChart is undefined, show bar chart
+                if (_.isUndefined(defaultChart)) {
+                    defaultChart = "bar";
+                }
 
                 // Set minimum height of details panel body
                 scope.panelBodyStyle = {
@@ -49,7 +56,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                  */
                 var updateVisualization = function() {
                     if (updateVis) {
-                        var selectedVis = "bar";
+                        var selectedVis = defaultChart;
                         if (scope.selectedVis.length > 0) {
                             selectedVis = scope.selectedVis;
                         }
