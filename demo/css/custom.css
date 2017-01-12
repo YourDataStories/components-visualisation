@@ -1156,7 +1156,7 @@ a.aggregate_link_dark:hover {
 }
 
 /* Aggregate styles for Organisation Seller page */
-.aggregate-organisation-buyers-top, .aggregate-organisation-categories-top {
+.aggregate-organisation-buyers-top, .aggregate-organisation-categories-top, .aggregate-organisation-payments-top {
     min-height: 190px;
 }
 
