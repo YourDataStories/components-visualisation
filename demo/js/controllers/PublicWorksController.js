@@ -26,6 +26,8 @@ angular.module('yds').controller('PublicWorksController', ['$scope', '$timeout',
         // Set new aggregates
         scope.aggregates = aggregates.types;
         scope.aggregateTitles = aggregates.titles;
+		
+	scope.infoPopoverUrl = ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + "templates-demo/publicworks-info.html";
 
         // Subscribe to be notified of selected project changes
         DashboardService.subscribeProjectChanges(scope, function() {
