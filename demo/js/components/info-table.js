@@ -39,31 +39,47 @@ angular.module('yds').directive('ydsInfoTable', ['Data', 'Translations', '$sce',
             Data.getProjectVis("info", projectId, viewType, lang, extraParams)
                 .then(function (response) {
                     _.each(response.view, function(infoValue){
-                        if (infoValue.type=="url") {
-                            scope.info[infoValue.header] = {
-                                value: $sce.trustAsHtml(Data.deepObjSearch(response.data, infoValue.attribute)),
-                                type: infoValue.type
-                            };
-                        } else if (infoValue.type=="country_code_name_array") {
-                            var countries = Data.deepObjSearch(response.data, infoValue.attribute);
+                        switch(infoValue.type) {
+                            case "url":
+                                // Find URL & value
+                                var url = Data.deepObjSearch(response.data, infoValue.url);
+                                var val = Data.deepObjSearch(response.data, infoValue.attribute);
 
-                            // Create string with all countries and their flag htmls
-                            var countriesStr = "";
-                            _.each(countries, function(country) {
-                                countriesStr += country.code + " " + country.name + ", ";
-                            });
+                                scope.info[infoValue.header] = {
+                                    value: $sce.trustAsHtml("<a href='" + url + "' target='_blank'>" + val + "</a>"),
+                                    type: infoValue.type
+                                };
+                                break;
+                            case "country_code_name_array":
+                                var countries = Data.deepObjSearch(response.data, infoValue.attribute);
 
-                            countriesStr = countriesStr.slice(0, -2);
+                                // Create string with all countries and their flag htmls
+                                var countriesStr = "";
+                                _.each(countries, function(country) {
+                                    countriesStr += country.code + " " + country.name + ", ";
+                                });
 
-                            scope.info[infoValue.header] = {
-                                value: $sce.trustAsHtml(countriesStr),
-                                type: infoValue.type
-                            };
-                        } else {
-                            scope.info[infoValue.header] = {
-                                value: Data.deepObjSearch(response.data, infoValue.attribute),
-                                type: infoValue.type
-                            };
+                                countriesStr = countriesStr.slice(0, -2);
+
+                                scope.info[infoValue.header] = {
+                                    value: $sce.trustAsHtml(countriesStr),
+                                    type: infoValue.type
+                                };
+                                break;
+                            case "year":
+                                var val = Data.deepObjSearch(response.data, infoValue.attribute);
+
+                                scope.info[infoValue.header] = {
+                                    value: new Date(val).getFullYear(),
+                                    type: infoValue.type
+                                };
+                                break;
+                            default:
+                                scope.info[infoValue.header] = {
+                                    value: Data.deepObjSearch(response.data, infoValue.attribute),
+                                    type: infoValue.type
+                                };
+                                break;
                         }
 
                         if (_.isArray(scope.info[infoValue.header].value))
