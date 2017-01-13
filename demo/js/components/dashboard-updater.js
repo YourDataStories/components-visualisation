@@ -14,6 +14,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 addToBasket: '@',           // If true, will show basket button in the components that support it
                 selectionId: '@',           // ID for saving the selection for the specified dashboardId (used for grid)
                 enableAdvSearch: '@',       // Enable/disable advanced search in Search Tabs component (default: true)
+                baseUrl: '@',               // Base URL to send to API (used for selection grid)
                 lang: '@'                   // Language of component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/dashboard-updater.html',
