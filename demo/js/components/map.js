@@ -32,6 +32,9 @@ angular.module('yds').directive('ydsMap', ['Data', function(Data){
             var zoomControl = scope.zoomControl;
             var elementH = scope.elementH;
 
+            // When the points are more than the number here, clustering will be used
+            var clusterThreshold = 100;
+
             //check if the projectId is defined, else stop the process
             if (_.isUndefined(projectId) || projectId.trim()=="") {
                 scope.ydsAlert = "The YDS component is not properly configured." +
@@ -100,38 +103,52 @@ angular.module('yds').directive('ydsMap', ['Data', function(Data){
                     var routePath = _.rest(routePointsView.attribute.split("."), 1).join(".");
                     var routeTitlePath = _.rest(routeTitleView.attribute.split("."), 1).join(".");
 
+                    var routes = response.data.routes;
+
+                    // Check if we should cluster the markers (if # of routes exceeds the threshold)
+                    var shouldCluster = routes.length > clusterThreshold;
+                    var clusterGroup = L.markerClusterGroup();
+
                     //iterate through the different routes and visualize them on the map
-                    _.each(response.data.routes, function(routeObj) {
-                        //create a polyline layer which will contains the points of each route
+                    _.each(routes, function(routeObj) {
+                        //create a polyline layer which will contain the points of each route
                         var polyline = L.polyline([]);
-                        //create a featureGroup layer which will contains the polyline and the markers of the route
+                        //create a featureGroup layer which will contain the polyline and the markers of the route
                         var projectLayer = L.featureGroup([]);
                         //find the title and the points of each route based on the provided view
                         var route = Data.deepObjSearch(routeObj, routePath);
                         var routeTitle = Data.deepObjSearch(routeObj, routeTitlePath);
 
-                        //add the points of each route to the polyline layer
-                        _.each(route, function(routePoints){
-                            polyline.addLatLng([parseFloat(routePoints.lng), parseFloat(routePoints.lat)]);
-                        });
+                        if (shouldCluster && route.length == 1) {
+                            // If we should cluster and route length is 1, add the single marker to the cluster group
+                            clusterGroup.addLayer(makeMarker(routeTitle, _.first(route), mapPins.start));
+                        } else {
+                            //add the points of each route to the polyline layer
+                            _.each(route, function(routePoints){
+                                polyline.addLatLng([parseFloat(routePoints.lng), parseFloat(routePoints.lat)]);
+                            });
 
-                        //create the start marker of the route and add it to the featureGroup layer
-                        var startMarker = L.marker([parseFloat(_.first(route).lng), parseFloat(_.first(route).lat)],{ icon: mapPins.start });
-                        startMarker.bindPopup(routeTitle, { offset: new L.Point(0, -33) });
-                        projectLayer.addLayer(startMarker);
+                            //create the start marker of the route and add it to the featureGroup layer
+                            var startMarker = makeMarker(routeTitle, _.first(route), mapPins.start);
+                            projectLayer.addLayer(startMarker);
 
-                        //if the route has more than one point, create the start marker of the route and add it to the featureGroup layer
-                        if (route.length!=1) {
-                            var endMarker = L.marker([parseFloat(_.last(route).lng), parseFloat(_.last(route).lat)],{ icon: mapPins.end });
-                            endMarker.bindPopup(routeTitle, { offset: new L.Point(0, -33) });
-                            projectLayer.addLayer(endMarker);
+                            //if the route has more than one point, create the end marker of the route and add it to the featureGroup layer
+                            if (route.length!=1) {
+                                var endMarker = makeMarker(routeTitle, _.last(route), mapPins.end);
+                                projectLayer.addLayer(endMarker);
+                            }
+
+                            projectLayer.addLayer(polyline);
+                            allFeatureGroup.addLayer(projectLayer);
                         }
-                        
-                        projectLayer.addLayer(polyline);
-                        allFeatureGroup.addLayer(projectLayer);
                     });
 
+                    if (shouldCluster) {
+                        allFeatureGroup.addLayer(clusterGroup);
+                    }
+
                     allFeatureGroup.addTo(map);
+
                     // zoom the map to the layerGroup
                     map.fitBounds(allFeatureGroup.getBounds(), {
                         padding: new L.Point(21, 21)
@@ -143,6 +160,20 @@ angular.module('yds').directive('ydsMap', ['Data', function(Data){
                 else
                     scope.ydsAlert = error.message;
             });
+
+            /**
+             * Create a marker with a specific icon, which shows a popup with the specified
+             * title when clicked.
+             * @param title Title to show on popup
+             * @param point Point object
+             * @param icon  Icon to use for new point
+             */
+            var makeMarker = function(title, point, icon) {
+                var newMarker = L.marker([parseFloat(point.lng), parseFloat(point.lat)],{ icon: icon });
+                newMarker.bindPopup(title, { offset: new L.Point(0, -33) });
+
+                return newMarker;
+            }
         }
     };
 }]);
