@@ -4,10 +4,14 @@
             <h3 class="panel-title pull-left" style="padding-top: 7.5px;">Details</h3>
 
             <div class="btn-group btn-group-sm pull-right">
-                <button ng-click="selectVis('grid')" class="btn btn-default"><i class="fa fa-list-alt" aria-hidden="true"></i></button>
-                <button ng-click="selectVis('pie')" class="btn btn-default"><i class="fa fa-pie-chart" aria-hidden="true"></i></button>
-                <button ng-click="selectVis('bar')" class="btn btn-default"><i class="fa fa-bar-chart" aria-hidden="true"></i></button>
-                <button ng-click="selectVis('tree')" class="btn btn-default" style="max-width: 35px; max-height: 30px"><img src="fonts/ic_view_quilt_black_18px.svg"/></button>
+                <button ng-click="selectVis('grid')" class="btn btn-default" title="Grid View">
+                    <i class="fa fa-list-alt" aria-hidden="true"></i></button>
+                <button ng-click="selectVis('pie')" class="btn btn-default" title="Pie Chart">
+                    <i class="fa fa-pie-chart" aria-hidden="true"></i></button>
+                <button ng-click="selectVis('bar')" class="btn btn-default" title="Bar Chart">
+                    <i class="fa fa-bar-chart" aria-hidden="true"></i></button>
+                <button ng-click="selectVis('tree')" class="btn btn-default" style="max-width: 35px; max-height: 30px" title="Treemap Chart">
+                    <img src="fonts/ic_view_quilt_black_18px.svg"/></button>
             </div>
         </div>
         <div class="panel-body" ng-style="panelBodyStyle">
