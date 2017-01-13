@@ -14,12 +14,13 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 addToBasket: '@',           // If true, will show basket button in the components that support it
                 selectionId: '@',           // ID for saving the selection for the specified dashboardId (used for grid)
                 enableAdvSearch: '@',       // Enable/disable advanced search in Search Tabs component (default: true)
-                baseUrl: '@',               // Base URL to send to API (used for selection grid)
+                baseUrl: '@',               // Base URL to send to API
                 lang: '@'                   // Language of component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/dashboard-updater.html',
             link: function (scope) {
                 var dashboardId = scope.dashboardId;
+                var baseUrl = scope.baseUrl;
                 var minHeight = parseInt(scope.minHeight);
                 scope.showInfo = false;
 
@@ -79,6 +80,13 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                     if (!_.isEqual(prevParams, newParams)) {
                         prevParams = _.clone(newParams);    // Keep current parameters to check equality later
                         scope.extraParams = newParams;      // Add new parameters to scope
+
+                        // Add base URL to the extra params
+                        if (!_.isUndefined(baseUrl) && baseUrl.length > 0) {
+                            scope.extraParams = _.extend({
+                                baseurl: baseUrl
+                            }, scope.extraParams);
+                        }
 
                         //noinspection FallThroughInSwitchStatementJS
                         switch(scope.type) {

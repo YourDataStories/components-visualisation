@@ -10,6 +10,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 defaultChart: '@',  // Chart to show on initialization of the component. Default is "bar".
                 type: '@',          // View type of component. If not set, will get it from DashboardService
                 lang: '@',          // Language of charts
+                baseUrl: '@',       // Base URL to send to API
                 elementH: '@'       // Height of component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + 'templates/dashboard-visualization.html',
