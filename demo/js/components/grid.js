@@ -59,7 +59,6 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                 };
 
                 var extraParams = scope.extraParams;
-                var baseUrl = scope.baseUrl;
                 var allowSelection = scope.allowSelection;
                 var dashboardId = scope.dashboardId;
                 var selectionId = scope.selectionId;
