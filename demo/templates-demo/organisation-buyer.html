@@ -44,7 +44,7 @@
         <div class="col-md-12">
             <yds-bubble
                     project-id="{{ projectId }}"
-                    view-type="organisation.contracts.decisions.over.date"
+                    view-type="organisation.buyer.contracts.decisions.over.date"
                     element-h="400"
                     add-to-basket="true"
                     basket-btn-x="40"
@@ -59,7 +59,7 @@
     <div class="row">
         <div class="col-md-offset-2 col-md-4">
             <yds-aggregate project-id="{{ projectId }}"
-                           view-type="organisation.projects.nsrf"
+                           view-type="organisation.buyer.projects.nsrf"
                            element-h="60"
                            dashboard-id="organisation_amounts"
                            set-on-init="true"
@@ -69,7 +69,7 @@
         </div>
         <div class="col-md-4">
             <yds-aggregate project-id="{{ projectId }}"
-                           view-type="organisation.payments.diavgeia"
+                           view-type="organisation.buyer.payments.diavgeia"
                            element-h="60"
                            dashboard-id="organisation_amounts"
                            base-url="{{ baseUrl }}"
@@ -97,7 +97,7 @@
     <div class="row">
         <div class="col-md-4">
             <yds-aggregate project-id="{{ projectId }}"
-                           view-type="organisation.buyers.top"
+                           view-type="organisation.buyer.buyers.top"
                            dashboard-id="organisation_top"
                            set-on-init="true"
                            base-url="{{ baseUrl }}"
@@ -106,7 +106,7 @@
         </div>
         <div class="col-md-4">
             <yds-aggregate project-id="{{ projectId }}"
-                           view-type="organisation.categories.top"
+                           view-type="organisation.buyer.categories.top"
                            dashboard-id="organisation_top"
                            base-url="{{ baseUrl }}"
                            lang="{{ lang }}">
@@ -114,7 +114,7 @@
         </div>
         <div class="col-md-4">
             <yds-aggregate project-id="{{ projectId }}"
-                           view-type="organisation.payments.top"
+                           view-type="organisation.buyer.payments.top"
                            dashboard-id="organisation_top"
                            base-url="{{ baseUrl }}"
                            lang="{{ lang }}">
