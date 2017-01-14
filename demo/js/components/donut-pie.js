@@ -80,6 +80,21 @@ angular.module('yds').directive('ydsDonutPie', ['Data', 'Filters', function(Data
                         enabled: (exporting === "true")
                     };
 
+                    // Add selection events to all series
+                    _.each(options.series, function(series) {
+                        series.allowPointSelect = true;
+                        series.point = {
+                            events: {
+                                select: function(e) {
+                                    console.log("selection", e);
+                                },
+                                unselect: function(e) {
+                                    console.log("unselect", e);
+                                }
+                            }
+                        }
+                    });
+
                     new Highcharts.Chart(options);
 
                     // Remove loading animation
