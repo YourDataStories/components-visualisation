@@ -1161,27 +1161,30 @@ a.aggregate_link_dark:hover {
 }
 
 .aggregate-organisation-payments-diavgeia, .aggregate-organisation-projects-nsrf, .aggregate-organisation-buyers-top,
-.aggregate-organisation-categories-top, .aggregate-organisation-payments-top {
+.aggregate-organisation-categories-top, .aggregate-organisation-payments-top,
+.aggregate-organisation-buyer-projects-nsrf, .aggregate-organisation-buyer-payments-diavgeia,
+.aggregate-organisation-buyer-sellers-top, .aggregate-organisation-buyer-categories-top,
+.aggregate-organisation-buyer-payments-top {
     color: #fff;
     border: 0;
 }
 
-.aggregate-organisation-projects-nsrf {
+.aggregate-organisation-projects-nsrf, .aggregate-organisation-buyer-projects-nsrf {
     background: #F79700;
 }
 
-.aggregate-organisation-payments-diavgeia {
+.aggregate-organisation-payments-diavgeia, .aggregate-organisation-buyer-payments-diavgeia {
     background: #EA402F;
 }
 
-.aggregate-organisation-buyers-top {
+.aggregate-organisation-buyers-top, .aggregate-organisation-buyer-sellers-top {
     background: #5AAF4B;
 }
 
-.aggregate-organisation-categories-top {
+.aggregate-organisation-categories-top, .aggregate-organisation-buyer-categories-top {
     background: #90C341;
 }
 
-.aggregate-organisation-payments-top {
+.aggregate-organisation-payments-top, .aggregate-organisation-buyer-payments-top {
     background: rgb(124, 194, 69);
 }
