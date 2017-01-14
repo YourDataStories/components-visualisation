@@ -1,4 +1,4 @@
-angular.module('yds').directive('ydsDonutBar', ['Data', 'Filters', function(Data, Filters) {
+angular.module('yds').directive('ydsDonutPie', ['Data', 'Filters', function(Data, Filters) {
     return {
         restrict: 'E',
         scope: {
@@ -11,12 +11,12 @@ angular.module('yds').directive('ydsDonutBar', ['Data', 'Filters', function(Data
             exporting: '@',     //enable or disable the export of the chart
             elementH: '@'       //set the height of the component
         },
-        templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/bar.html',
-        link: function (scope, element, attrs) {
-            var barContainer = angular.element(element[0].querySelector('.bar-container'));
+        templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/pie.html',
+        link: function (scope, element) {
+            var barContainer = angular.element(element[0].querySelector('.pie-container'));
 
             //create a random id for the element that will render the chart
-            var elementId = "bar" + Data.createRandomId();
+            var elementId = "pie" + Data.createRandomId();
             barContainer[0].id = elementId;
 
             var projectId = scope.projectId;
@@ -48,7 +48,7 @@ angular.module('yds').directive('ydsDonutBar', ['Data', 'Filters', function(Data
 
             //check if the exporting attr is defined, else assign default value
             if(_.isUndefined(exporting) || (exporting!="true" && exporting!="false"))
-                exporting = "true";
+                exporting = "false";
 
             //check if the component's height attr is defined, else assign default value
             if(_.isUndefined(elementH) || _.isNaN(elementH))
