@@ -32,6 +32,10 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         public_project: {
             regions: "publicproject.regions.all",
             regional_units: "publicproject.regional_units.all"
+        },
+        comparison: {
+            country1: "contract.comparison.countryA.countries.all",
+            country2: "contract.comparison.countryB.countries.all"
         }
     };
 
@@ -41,7 +45,8 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         aidactivity: "year",
         tradeactivity: "financialyear",
         contract: "year",
-        public_project: "year"
+        public_project: "year",
+        comparison: "year"
     };
 
     // View types of aggregates to show for each Dashboard section
@@ -98,7 +103,7 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         public_work: {
             types: [
                 "publicproject.buyers.all",
-                "publicproject.sellers.all",
+                "publicproject.sellers.all"
             ],
             titles: [
                 "Buyers",

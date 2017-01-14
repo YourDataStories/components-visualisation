@@ -63,6 +63,10 @@ ydsDemo.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 		url: '/public-works',
 		templateUrl: 'templates-demo/public-works.html'
 	})
+	.state('country-comparison', {
+		url: '/country-comparison',
+		templateUrl: 'templates-demo/country-comparison.html'
+	})
 	.state('redirect', {
 		url: '/redirect',
 		template: '<div class="container"><h2>Redirecting...</h2></div>',

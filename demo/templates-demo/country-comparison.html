@@ -1,0 +1,69 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Country Comparison</h2>
+        </div>
+    </div>
+    <!--Maps-->
+    <div class="row">
+        <div class="col-md-5">
+            <!--Heatmap for Country A selection-->
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Country 1</h3>
+                </div>
+                <div class="panel-body">
+                    <yds-heatmap
+                            project-id="none"
+                            view-type="contract.comparison.countryA.countries.all"
+                            color-axis="true"
+                            color-type="logarithmic"
+                            legend="true"
+                            legend-v-align="bottom"
+                            use-dashboard-params="true"
+                            dashboard-id="comparison"
+                            country-selection="true"
+                            no-border="true"
+                            exporting="false"
+                            element-h="350"></yds-heatmap>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <!--Heatmap for Country B selection-->
+            <div class="panel panel-default panel-benefactor">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Country 2</h3>
+                </div>
+                <div class="panel-body">
+                    <yds-heatmap
+                            project-id="none"
+                            view-type="contract.comparison.countryB.countries.all"
+                            color-axis="true"
+                            color-type="logarithmic"
+                            legend="true"
+                            legend-v-align="bottom"
+                            use-dashboard-params="true"
+                            dashboard-id="comparison"
+                            country-selection="true"
+                            no-border="true"
+                            exporting="false"
+                            element-h="350"></yds-heatmap>
+                </div>
+            </div>
+        </div>
+
+        <!--Year selection slider-->
+        <div class="col-md-2">
+            <yds-year-range
+                    title="Time Period for Comparison"
+                    dashboard-id="comparison"
+                    min-year="1997"
+                    max-year="2018"
+                    vertical="true"
+                    height="350">
+            </yds-year-range>
+        </div>
+    </div>
+</div>
