@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" ng-controller="ProjectController">
     <!--Map and title/description-->
     <div class="row">
         <div class="col-md-5">
@@ -238,6 +238,63 @@
                     exporting="true"
                     lang="el">
             </yds-bubble>
+        </div>
+    </div>
+
+    <!--4 Detail visualisations-->
+    <div class="row">
+        <!--publicproject.diavgeia.decisions.financial.per.type-->
+        <div class="col-md-6">
+            <yds-dashboard-visualization
+                    project-id="http://linkedeconomy.org/resource/PublicWork/216004"
+                    dashboard-id="publicproject_diavgeia_decisions_financial_per_type"
+                    disable-color="true"
+                    add-to-basket="true"
+                    default-chart="pie"
+                    lang="el"
+                    element-h="400">
+            </yds-dashboard-visualization>
+        </div>
+
+        <!--publicproject.diavgeia.decisions.non_financial.per.type-->
+        <div class="col-md-6">
+            <yds-dashboard-visualization
+                    project-id="http://linkedeconomy.org/resource/PublicWork/216004"
+                    dashboard-id="publicproject_diavgeia_decisions_non_financial_per_type"
+                    disable-color="true"
+                    add-to-basket="true"
+                    default-chart="pie"
+                    lang="el"
+                    element-h="400">
+            </yds-dashboard-visualization>
+        </div>
+    </div>
+
+    <div class="row">
+        <!--publicproject.subprojects.per.title-->
+        <div class="col-md-6">
+            <yds-dashboard-visualization
+                    project-id="http://linkedeconomy.org/resource/PublicWork/216004"
+                    dashboard-id="publicproject_subprojects_per_title"
+                    disable-color="true"
+                    add-to-basket="true"
+                    default-chart="pie"
+                    lang="el"
+                    element-h="400">
+            </yds-dashboard-visualization>
+        </div>
+
+        <!--publicproject.sellers.per.name-->
+        <div class="col-md-6">
+            <yds-dashboard-visualization
+                    project-id="http://linkedeconomy.org/resource/PublicWork/216004"
+                    dashboard-id="publicproject_sellers_per_name"
+                    disable-color="true"
+                    add-to-basket="true"
+                    default-chart="pie"
+                    lang="el"
+                    element-h="400">
+            </yds-dashboard-visualization>
         </div>
     </div>
 
