@@ -72,11 +72,6 @@ angular.module('yds').directive('ydsDonutBar', ['Data', 'Filters', function(Data
                     // Add element ID to render the chart to in the options
                     options.chart.renderTo = elementId;
 
-                    // Set title size in options
-                    options.title.style = {
-                        fontSize: titleSize + "px"
-                    };
-
                     // Set exporting options
                     options.exporting = {
                         buttons: {
