@@ -64,9 +64,6 @@ angular.module('yds').directive('ydsDonutPie', ['Data', 'Filters', function(Data
 
                     var options = response.data;
 
-                    // Add element ID to render the chart to in the options
-                    options.chart.renderTo = elementId;
-
                     // Set exporting options
                     options.exporting = {
                         buttons: {
@@ -98,7 +95,7 @@ angular.module('yds').directive('ydsDonutPie', ['Data', 'Filters', function(Data
                         }
                     });
 
-                    new Highcharts.Chart(options);
+                    new Highcharts.Chart(elementId, options);
 
                     // Remove loading animation
                     scope.loading = false;
