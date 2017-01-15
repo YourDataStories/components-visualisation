@@ -1,6 +1,312 @@
 <div ng-controller="ProjectInfoController">
     <h2>Public Project Details</h2>
-    <yds-info
-            project-id="{{ projectId }}">
-    </yds-info>
+    <!--Map and title/description-->
+    <div class="row">
+        <div class="col-md-5">
+            <yds-map
+                    lang="el"
+                    project-id="{{ projectId }}"
+                    add-to-basket="true"
+                    basket-btn-x="65"
+                    basket-btn-y="12"
+                    embeddable="true"
+                    embed-btn-x="20"
+                    embed-btn-y="12"
+                    element-h="415"
+                    popover-pos="left">
+            </yds-map>
+
+        </div>
+        <div class="col-md-7">
+            <yds-aggregate
+                    project-id="{{ projectId }}"
+                    view-type="publicproject.title"
+                    element-h="60"
+                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                    lang="el">
+            </yds-aggregate>
+
+            <yds-aggregate
+                    project-id="{{ projectId }}"
+                    view-type="publicproject.buyer.sellers"
+                    element-h="60"
+                    max-height="150"
+                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                    lang="el">
+            </yds-aggregate>
+
+            <yds-aggregate
+                    project-id="{{ projectId }}"
+                    view-type="publicproject.description"
+                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                    lang="el">
+            </yds-aggregate>
+        </div>
+    </div>
+
+    <!--Basic facts Aggregates-->
+    <div class="row">
+        <!--Basic facts text-->
+        <div class="col-md-12">
+            <h3 class="project-section-title">
+                Basic facts
+            </h3>
+        </div>
+
+        <!--Budget Aggregate-->
+        <div class="col-md-2">
+            <yds-aggregate
+                    project-id="{{ projectId }}"
+                    view-type="publicproject.budget"
+                    icon-size="3"
+                    element-h="140"
+                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                    lang="el">
+            </yds-aggregate>
+        </div>
+
+        <!--Spending Aggregate-->
+        <div class="col-md-2">
+            <yds-aggregate
+                    project-id="{{ projectId }}"
+                    view-type="publicproject.spending"
+                    icon-size="3"
+                    element-h="140"
+                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                    lang="el">
+            </yds-aggregate>
+        </div>
+
+        <!--Completion Aggregate-->
+        <div class="col-md-2">
+            <yds-aggregate
+                    project-id="{{ projectId }}"
+                    view-type="publicproject.completion"
+                    icon-size="3"
+                    element-h="140"
+                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                    lang="el">
+            </yds-aggregate>
+        </div>
+
+        <!--Duration Aggregate-->
+        <div class="col-md-2">
+            <yds-aggregate
+                    project-id="{{ projectId }}"
+                    view-type="publicproject.duration"
+                    icon-size="3"
+                    element-h="140"
+                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                    lang="el">
+            </yds-aggregate>
+        </div>
+
+        <!--Subproject count Aggregate-->
+        <div class="col-md-2">
+            <yds-aggregate
+                    project-id="{{ projectId }}"
+                    view-type="publicproject.subprojects.count"
+                    icon-size="3"
+                    element-h="140"
+                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                    lang="el">
+            </yds-aggregate>
+        </div>
+
+        <!--ESPA logo-->
+        <div class="col-md-2">
+            <img src="img/ESPA.gr.jpg" style="width: 100%">
+        </div>
+    </div>
+
+    <!--Subprojects-->
+    <div class="row">
+        <!--Subprojects text-->
+        <div class="col-md-12">
+            <h3 class="project-section-title">
+                Subprojects
+            </h3>
+        </div>
+
+        <!--Subprojects grid-->
+        <div class="col-md-12">
+            <yds-grid
+                    project-id="{{ projectId }}"
+                    view-type="publicproject.related.subprojects"
+                    sorting="true"
+                    lang="el"
+                    filtering="true"
+                    quick-filtering="true"
+                    element-h="300"
+                    col-resize="true"
+                    add-to-basket="true"
+                    basket-btn-x="525"
+                    basket-btn-y="0">
+            </yds-grid>
+        </div>
+    </div>
+
+    <!--From transparency portal-->
+    <div class="row" style="margin-top: 20px">
+        <!--From transparency portal text-->
+        <div class="col-md-12">
+            <h3 class="project-section-title">
+                From transparency portal
+            </h3>
+        </div>
+
+        <!--Financial decisions Aggregate-->
+        <div class="col-md-3">
+            <yds-aggregate
+                    project-id="{{ projectId }}"
+                    view-type="publicproject.decisions.financial"
+                    icon-size="3"
+                    element-h="140"
+                    dashboard-id="diavgeia_details"
+                    set-on-init="true"
+                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                    lang="el">
+            </yds-aggregate>
+        </div>
+
+        <!--Non financial decisions Aggregate-->
+        <div class="col-md-3">
+            <yds-aggregate
+                    project-id="{{ projectId }}"
+                    view-type="publicproject.decisions.non_financial"
+                    icon-size="3"
+                    element-h="140"
+                    dashboard-id="diavgeia_details"
+                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                    lang="el">
+            </yds-aggregate>
+        </div>
+
+        <!--Related Subprojects Aggregate-->
+        <div class="col-md-2">
+            <yds-aggregate
+                    project-id="{{ projectId }}"
+                    view-type="publicproject.diavgeia.related.subprojects"
+                    icon-size="3"
+                    element-h="140"
+                    dashboard-id="diavgeia_details"
+                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                    lang="el">
+            </yds-aggregate>
+        </div>
+
+        <!--Last update Aggregate-->
+        <div class="col-md-2">
+            <yds-aggregate
+                    project-id="{{ projectId }}"
+                    view-type="publicproject.diavgeia.last_update"
+                    icon-size="3"
+                    element-h="140"
+                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                    lang="el">
+            </yds-aggregate>
+        </div>
+
+        <!--Diavgeia logo-->
+        <div class="col-md-2">
+            <img src="img/diavgeia_all_logo.png" style="width: 100%">
+        </div>
+    </div>
+
+    <!--Details-->
+    <div class="row">
+        <div class="col-md-12">
+            <yds-dashboard-visualization
+                    project-id="{{ projectId }}"
+                    dashboard-id="diavgeia_details"
+                    disable-color="true"
+                    add-to-basket="true"
+                    default-chart="grid"
+                    lang="el"
+                    element-h="400">
+            </yds-dashboard-visualization>
+        </div>
+    </div>
+
+    <!--Bubble chart with diavgeia decisions over date-->
+    <div class="row">
+        <div class="col-md-12">
+            <yds-bubble
+                    project-id="{{ projectId }}"
+                    view-type="publicproject.diavgeia.decisions.financial.over.date"
+                    element-h="400"
+                    embeddable="true"
+                    exporting="true"
+                    lang="el">
+            </yds-bubble>
+        </div>
+    </div>
+
+    <!--4 Detail visualisations-->
+    <div class="row" ng-controller="ProjectController">
+        <!--publicproject.diavgeia.decisions.financial.per.type-->
+        <div class="col-md-6">
+            <yds-dashboard-visualization
+                    project-id="{{ projectId }}"
+                    dashboard-id="publicproject_diavgeia_decisions_financial_per_type"
+                    disable-color="true"
+                    add-to-basket="true"
+                    default-chart="pie"
+                    lang="el"
+                    element-h="400">
+            </yds-dashboard-visualization>
+        </div>
+
+        <!--publicproject.diavgeia.decisions.non_financial.per.type-->
+        <div class="col-md-6">
+            <yds-dashboard-visualization
+                    project-id="{{ projectId }}"
+                    dashboard-id="publicproject_diavgeia_decisions_non_financial_per_type"
+                    disable-color="true"
+                    add-to-basket="true"
+                    default-chart="pie"
+                    lang="el"
+                    element-h="400">
+            </yds-dashboard-visualization>
+        </div>
+
+        <!--publicproject.subprojects.per.title-->
+        <div class="col-md-6">
+            <yds-dashboard-visualization
+                    project-id="{{ projectId }}"
+                    dashboard-id="publicproject_subprojects_per_title"
+                    disable-color="true"
+                    add-to-basket="true"
+                    default-chart="pie"
+                    lang="el"
+                    element-h="400">
+            </yds-dashboard-visualization>
+        </div>
+
+        <!--publicproject.sellers.per.name-->
+        <div class="col-md-6">
+            <yds-dashboard-visualization
+                    project-id="{{ projectId }}"
+                    dashboard-id="publicproject_sellers_per_name"
+                    disable-color="true"
+                    add-to-basket="true"
+                    default-chart="pie"
+                    lang="el"
+                    element-h="400">
+            </yds-dashboard-visualization>
+        </div>
+    </div>
+
+    <!--Map-->
+    <div class="row">
+        <div class="col-md-12">
+            <yds-map
+                    project-id="{{ projectId }}"
+                    view-type="subsidy.all"
+                    lang="el"
+                    element-h="300">
+            </yds-map>
+        </div>
+    </div>
+
 </div>
