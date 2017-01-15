@@ -83,14 +83,17 @@ angular.module('yds').directive('ydsDonutPie', ['Data', 'Filters', function(Data
                     // Add selection events to all series
                     _.each(options.series, function(series) {
                         series.allowPointSelect = true;
-                        series.point = {
-                            events: {
-                                select: function(e) {
-                                    console.log("selection", e);
-                                },
-                                unselect: function(e) {
-                                    console.log("unselect", e);
-                                }
+
+                        if (!_.has(series, "point")) {
+                            series.point = {};
+                        }
+
+                        series.point.events = {
+                            select: function(e) {
+                                console.log("selection", e);
+                            },
+                            unselect: function(e) {
+                                console.log("unselect", e);
                             }
                         }
                     });
