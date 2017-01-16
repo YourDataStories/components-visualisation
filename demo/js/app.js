@@ -10,31 +10,36 @@ ydsDemo.controller('OrganisationController', ['$scope', '$location', 'DashboardS
 		// Set base URL variable
 		$scope.baseUrl = "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect";
 
-		// Set language
-		$scope.lang = "el";
-
 		// Get project ID from url parameters
 		var projectId = $location.search().id;
-		if (_.isUndefined(projectId) || projectId.length == 0) {
-			var path = $location.path();
+		var path = $location.path();
 
-			// Set default project ID to be able to display the page
-			switch(path) {
-				case "/organisation-buyer":
-                    projectId = "http://linkedeconomy.org/resource/Organization/997687930";
-                    break;
-				case "/organisation-seller":
-                    projectId = "http://linkedeconomy.org/resource/Organization/099878514";
-                    break;
-				case "/organisation-buyer-ted":
-                    projectId = "none";
-					break;
-				case "/organisation-seller-ted":
-                    projectId = "http://linkedeconomy.org/resource/Organization/TEDS_3732149";
-					break;
-			}
+		// Set page parameters depending on which page is shown
+		switch(path) {
+			case "/organisation-buyer":
+				$scope.lang = "el";
 
-			console.warn("No project ID in URL parameters: using default ID");
+				// Set default project ID if it is undefined
+				projectId = projectId || "http://linkedeconomy.org/resource/Organization/997687930";
+				break;
+			case "/organisation-seller":
+				$scope.lang = "el";
+
+                // Set default project ID if it is undefined
+                projectId = projectId || "http://linkedeconomy.org/resource/Organization/099878514";
+				break;
+			case "/organisation-buyer-ted":
+				$scope.lang = "en";
+
+                // Set default project ID if it is undefined
+                projectId = projectId || "none";
+				break;
+			case "/organisation-seller-ted":
+				$scope.lang = "en";
+
+                // Set default project ID if it is undefined
+                projectId = projectId || "http://linkedeconomy.org/resource/Organization/TEDS_3732149";
+				break;
 		}
 
 		$scope.projectId = projectId;
