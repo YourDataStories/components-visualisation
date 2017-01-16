@@ -230,12 +230,13 @@
     </div>
 
     <!--4 Detail visualisations-->
-    <div class="row" ng-controller="ProjectController">
+    <div class="row">
         <!--publicproject.diavgeia.decisions.financial.per.type-->
         <div class="col-md-6">
             <yds-dashboard-visualization
                     project-id="{{ projectId }}"
                     dashboard-id="publicproject_diavgeia_decisions_financial_per_type"
+                    type="publicproject.diavgeia.decisions.financial.per.type"
                     disable-color="true"
                     add-to-basket="true"
                     default-chart="pie"
@@ -249,6 +250,7 @@
             <yds-dashboard-visualization
                     project-id="{{ projectId }}"
                     dashboard-id="publicproject_diavgeia_decisions_non_financial_per_type"
+                    type="publicproject.diavgeia.decisions.non_financial.per.type"
                     disable-color="true"
                     add-to-basket="true"
                     default-chart="pie"
@@ -256,12 +258,15 @@
                     element-h="400">
             </yds-dashboard-visualization>
         </div>
+    </div>
 
+    <div class="row">
         <!--publicproject.subprojects.per.title-->
         <div class="col-md-6">
             <yds-dashboard-visualization
                     project-id="{{ projectId }}"
                     dashboard-id="publicproject_subprojects_per_title"
+                    type="publicproject.subprojects.per.title"
                     disable-color="true"
                     add-to-basket="true"
                     default-chart="pie"
@@ -275,6 +280,7 @@
             <yds-dashboard-visualization
                     project-id="{{ projectId }}"
                     dashboard-id="publicproject_sellers_per_name"
+                    type="publicproject.sellers.per.name"
                     disable-color="true"
                     add-to-basket="true"
                     default-chart="pie"
