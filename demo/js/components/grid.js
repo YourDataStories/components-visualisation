@@ -231,6 +231,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                             if (!_.isUndefined(result)) {
                                 // The node was selected before, so select it again
                                 scope.gridOptions.api.selectNode(node, true);
+                                scope.gridOptions.api.ensureNodeVisible(node);
                             }
 
                             preventUpdate = false;
