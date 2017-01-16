@@ -26,6 +26,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                 exportBtnY: '@',        // Y-axis position of the exporting button
 
                 allowSelection: '@',    // Allow row selection
+                selectionType: '@',     // Selection type ("single" or "multiple")
                 dashboardId: '@',       // Used for setting/getting parameters to/from DashboardService
                 selectionId: '@',       // ID for saving the selection for the specified dashboardId
 
@@ -60,6 +61,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
 
                 var extraParams = scope.extraParams;
                 var allowSelection = scope.allowSelection;
+                var selectionType = scope.selectionType;
                 var dashboardId = scope.dashboardId;
                 var selectionId = scope.selectionId;
 
@@ -131,6 +133,10 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                 //check if the allowSelection attr is defined, else assign default value
                 if(_.isUndefined(allowSelection) || (allowSelection!="true" && allowSelection!="false"))
                     allowSelection = "false";
+
+                //check if the selectionType attr is defined, else assign default value
+                if(_.isUndefined(selectionType) || (selectionType!="single" && selectionType!="multiple"))
+                    selectionType = "multiple";
 
                 // Show loading animation
                 scope.loading = true;
@@ -269,7 +275,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
 
                             // If selection is enabled, add extra options for it in the gridOptions
                             if (allowSelection == "true") {
-                                scope.gridOptions.rowSelection = "multiple";
+                                scope.gridOptions.rowSelection = selectionType;
                                 scope.gridOptions.onSelectionChanged = function(e) {
                                     // Set selected rows in DashboardService
                                     DashboardService.setGridSelection(selectionId, e.selectedRows);
