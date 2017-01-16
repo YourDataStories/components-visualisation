@@ -204,7 +204,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                  */
                 var selectRows = function(selection) {
                     // Deselect previously selected rows
-                    if (dashboardId.indexOf("comparison") != -1)
+                    if (dashboardId.indexOf("comparison") != -1 && !preventUpdate)
                         scope.gridOptions.api.deselectAll();
 
                     // Select new rows
@@ -275,9 +275,8 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                                     DashboardService.setGridSelection(selectionId, e.selectedRows);
                                     selection = e.selectedRows;
 
-                                    // Prevent next grid update if dashboard ID does not contain "comparison"
-                                    // (in the country comparison dashboard, we don't need to prevent any updates)
-                                    preventUpdate = (dashboardId.indexOf("comparison") == -1);
+                                    // Prevent next grid update
+                                    preventUpdate = true;
                                 }
                             }
 
