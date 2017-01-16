@@ -1,23 +1,24 @@
-angular.module('yds').directive('ydsDonutPie', ['Data', 'Filters', function(Data, Filters) {
+angular.module('yds').directive('ydsDonutPie', ['Data', 'DashboardService', function(Data, DashboardService) {
     return {
         restrict: 'E',
         scope: {
-            projectId: '@',     //id of the project that the data belong
-            viewType: '@',      //name of the array that contains the visualised data
-            lang: '@',          //lang of the visualised data
+            projectId: '@',     // Id of the project that the data belong
+            viewType: '@',      // Name of the array that contains the visualised data
+            lang: '@',          // Lang of the visualised data
 
-            extraParams: '=',   //extra attributes to pass to the API, if needed
+            extraParams: '=',   // Extra attributes to pass to the API, if needed
+            selectionId: '@',   // ID for saving the selection for the specified dashboardId
 
-            exporting: '@',     //enable or disable the export of the chart
-            elementH: '@'       //set the height of the component
+            exporting: '@',     // Enable or disable the export of the chart
+            elementH: '@'       // Set the height of the component
         },
         templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/pie.html',
         link: function (scope, element) {
-            var barContainer = angular.element(element[0].querySelector('.pie-container'));
+            var pieContainer = angular.element(element[0].querySelector('.pie-container'));
 
             //create a random id for the element that will render the chart
             var elementId = "pie" + Data.createRandomId();
-            barContainer[0].id = elementId;
+            pieContainer[0].id = elementId;
 
             var projectId = scope.projectId;
             var viewType = scope.viewType;
@@ -25,6 +26,8 @@ angular.module('yds').directive('ydsDonutPie', ['Data', 'Filters', function(Data
             var exporting = scope.exporting;
             var elementH = scope.elementH;
             var extraParams = scope.extraParams;
+            var dashboardId = scope.dashboardId;
+            var selectionId = scope.selectionId;
 
             //check if the projectId and the viewType attr is defined, else stop the process
             if (_.isUndefined(projectId) || projectId.trim()=="") {
@@ -53,7 +56,7 @@ angular.module('yds').directive('ydsDonutPie', ['Data', 'Filters', function(Data
             scope.loading = true;
 
             //set the height of the chart
-            barContainer[0].style.height = elementH + 'px';
+            pieContainer[0].style.height = elementH + 'px';
 
             // Get data and visualize bar
             Data.getProjectVis("pie", projectId, viewType, lang, extraParams)
@@ -87,10 +90,14 @@ angular.module('yds').directive('ydsDonutPie', ['Data', 'Filters', function(Data
 
                         series.point.events = {
                             select: function(e) {
-                                console.log("selection", e);
+                                // Set the selected point as selected in DashboardService (in an array)
+                                DashboardService.setGridSelection(selectionId, [
+                                    e.target
+                                ]);
                             },
                             unselect: function(e) {
-                                console.log("unselect", e);
+                                // Set the selection as empty array as only a single item should be selected at a time
+                                DashboardService.setGridSelection(selectionId, []);
                             }
                         }
                     });
