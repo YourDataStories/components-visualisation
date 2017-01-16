@@ -16,12 +16,22 @@ ydsDemo.controller('OrganisationController', ['$scope', '$location', 'DashboardS
 		// Get project ID from url parameters
 		var projectId = $location.search().id;
 		if (_.isUndefined(projectId) || projectId.length == 0) {
-			// Set default project ID to be able to display the page
-			projectId = "http://linkedeconomy.org/resource/Organization/997687930";
+			var path = $location.path();
 
-			// For seller set different ID
-			if ($location.path() == "/organisation-seller") {
-				projectId = "http://linkedeconomy.org/resource/Organization/099878514";
+			// Set default project ID to be able to display the page
+			switch(path) {
+				case "/organisation-buyer":
+                    projectId = "http://linkedeconomy.org/resource/Organization/997687930";
+                    break;
+				case "/organisation-seller":
+                    projectId = "http://linkedeconomy.org/resource/Organization/099878514";
+                    break;
+				case "/organisation-buyer-ted":
+                    projectId = "none";
+					break;
+				case "/organisation-seller-ted":
+                    projectId = "none";
+					break;
 			}
 
 			console.warn("No project ID in URL parameters: using default ID");
@@ -76,11 +86,17 @@ ydsDemo.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 
 			if (_.has(urlParams, "type")) {
 				switch(urlParams.type) {
-					case "TED.Organisation.Buyer":
+					case "Organisation.Buyer":
 						$location.path("/organisation-buyer");
 						break;
-					case "TED.Organisation.Seller":
+					case "Organisation.Seller":
 						$location.path("/organisation-seller");
+						break;
+					case "TED.Organisation.Buyer":
+						$location.path("/organisation-buyer-ted");
+						break;
+					case "TED.Organisation.Seller":
+						$location.path("/organisation-seller-ted");
 						break;
 				}
 			}
@@ -122,6 +138,16 @@ ydsDemo.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 	.state('organisation-seller', {
 		url: '/organisation-seller',
 		templateUrl: 'templates-demo/organisation-seller.html',
+		controller: 'OrganisationController'
+	})
+	.state('organisation-buyer-ted', {
+		url: '/organisation-buyer-ted',
+		templateUrl: 'templates-demo/organisation-buyer-ted.html',
+		controller: 'OrganisationController'
+	})
+	.state('organisation-seller-ted', {
+		url: '/organisation-seller-ted',
+		templateUrl: 'templates-demo/organisation-seller-ted.html',
 		controller: 'OrganisationController'
 	})
 	.state('map', {
