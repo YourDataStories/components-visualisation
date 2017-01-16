@@ -36,6 +36,12 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         comparison: {
             country1: "contract.comparison.countryA.countries.all",
             country2: "contract.comparison.countryB.countries.all"
+        },
+        comparison1: {
+            country1: "contract.comparison.countryA.countries.all"
+        },
+        comparison2: {
+            country2: "contract.comparison.countryB.countries.all"
         }
     };
 
@@ -46,7 +52,9 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         tradeactivity: "financialyear",
         contract: "year",
         public_project: "year",
-        comparison: "year"
+        comparison: "year",
+        comparison1: "year",
+        comparison2: "year"
     };
 
     // View types of aggregates to show for each Dashboard section
@@ -225,12 +233,30 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
             }
         });
 
-        if (dashboardId == "public_project") {
-            if (!_.isEmpty(getGridSelection("sellers")))
-                apiOptions.sellers = _.pluck(getGridSelection("sellers"), "id").join(",");
+        switch(dashboardId) {
+            case "public_project":
+                if (!_.isEmpty(getGridSelection("sellers")))
+                    apiOptions.sellers = _.pluck(getGridSelection("sellers"), "id").join(",");
 
-            if (!_.isEmpty(getGridSelection("buyers")))
-                apiOptions.buyers = _.pluck(getGridSelection("buyers"), "id").join(",");
+                if (!_.isEmpty(getGridSelection("buyers")))
+                    apiOptions.buyers = _.pluck(getGridSelection("buyers"), "id").join(",");
+                break;
+            case "comparison":
+                if (!_.isEmpty(getGridSelection("cpv1")))
+                    apiOptions.cpv1 = _.pluck(getGridSelection("cpv1"), "id").join(",");
+
+                if (!_.isEmpty(getGridSelection("cpv2")))
+                    apiOptions.cpv2 = _.pluck(getGridSelection("cpv2"), "id").join(",");
+
+                break;
+            case "comparison1":
+                // Add year from "comparison" dashboardId
+                apiOptions.year = "[" + getMinYear("comparison") + " TO " + getMaxYear("comparison") + "]";
+                break;
+            case "comparison2":
+                // Add year from "comparison" dashboardId
+                apiOptions.year = "[" + getMinYear("comparison") + " TO " + getMaxYear("comparison") + "]";
+                break;
         }
 
         return apiOptions;

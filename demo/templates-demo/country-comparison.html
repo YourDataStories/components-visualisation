@@ -21,7 +21,7 @@
                             legend="true"
                             legend-v-align="bottom"
                             use-dashboard-params="true"
-                            dashboard-id="comparison"
+                            dashboard-id="comparison1"
                             country-selection="true"
                             no-border="true"
                             exporting="false"
@@ -46,7 +46,7 @@
                             legend="true"
                             legend-v-align="bottom"
                             use-dashboard-params="true"
-                            dashboard-id="comparison"
+                            dashboard-id="comparison2"
                             country-selection="true"
                             no-border="true"
                             exporting="false"
@@ -75,7 +75,7 @@
             <yds-dashboard-updater
                     type="donut-pie"
                     view-type="contract.comparison.CPVs.for.countries.and.period"
-                    dashboard-id="comparison"
+                    dashboard-id="comparison1"
                     min-height="450"
                     lang="en">
             </yds-dashboard-updater>
@@ -84,7 +84,7 @@
             <yds-dashboard-updater
                     type="donut-pie"
                     view-type="contract.comparison.CPVs.for.countries.and.period"
-                    dashboard-id="comparison"
+                    dashboard-id="comparison2"
                     min-height="450"
                     lang="en">
             </yds-dashboard-updater>
@@ -98,8 +98,8 @@
                     type="selection-grid"
                     project-id="none"
                     view-type="contract.comparison.CPVs.for.countries.and.period"
-                    dashboard-id="comparison"
-                    selection-id="country1"
+                    dashboard-id="comparison1"
+                    selection-id="cpv1"
                     min-height="400"
                     lang="en">
             </yds-dashboard-updater>
@@ -109,11 +109,25 @@
                     type="selection-grid"
                     project-id="none"
                     view-type="contract.comparison.CPVs.for.countries.and.period"
-                    dashboard-id="comparison"
-                    selection-id="country2"
+                    dashboard-id="comparison2"
+                    selection-id="cpv2"
                     min-height="400"
                     lang="en">
             </yds-dashboard-updater>
         </div>
     </div>
+
+    <!--<div class="row">-->
+        <!--<div class="col-md-12">-->
+            <!--&lt;!&ndash;Test chart&ndash;&gt;-->
+            <!--<yds-dashboard-updater-->
+                    <!--type="simple-grid"-->
+                    <!--project-id="none"-->
+                    <!--view-type="test.chart"-->
+                    <!--dashboard-id="comparison"-->
+                    <!--min-height="300"-->
+                    <!--lang="en">-->
+            <!--</yds-dashboard-updater>-->
+        <!--</div>-->
+    <!--</div>-->
 </div>
