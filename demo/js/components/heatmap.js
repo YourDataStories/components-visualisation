@@ -19,6 +19,8 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				dashboardId: '@',		// Optional, used for getting parameters from DashboardService
 				countrySelection: '@',  // Allow selecting countries on the map
 
+				europeOnly: '@',		// If true, the heatmap will show a map of Europe instead of the entire world
+
 				exporting: '@',         // Enable or disable the export of the chart
 				noBorder: '@',			// If true, the component will have no border
 				elementH: '@'		    // Set the height of the component
@@ -40,6 +42,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				var noBorder = scope.noBorder;
 				var exporting = scope.exporting;
 				var elementH = scope.elementH;
+				var europeOnly = scope.europeOnly;
 
 				var heatmapContainer = angular.element(elem[0].querySelector('.heatmap-container'));
 
@@ -113,6 +116,10 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				if(_.isUndefined(exporting) || (exporting!="true" && exporting!="false"))
 					exporting = "true";
 
+				//check if the europeOnly attr is defined, else assign default value
+				if(_.isUndefined(europeOnly) || (europeOnly!="true" && europeOnly!="false"))
+                    europeOnly = "false";
+
 				//check if the component's height attr is defined, else assign default value
 				if(_.isUndefined(elementH) || _.isNaN(elementH))
 					elementH = 300;
@@ -177,7 +184,8 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 
 				// Load map data from highcharts and create the heatmap
 				$ocLazyLoad.load ({
-					files: ['https://code.highcharts.com/mapdata/custom/world.js'],
+					files: ['https://code.highcharts.com/mapdata/custom/world.js',
+							'https://code.highcharts.com/mapdata/custom/europe.js'],
 					cache: true
 				}).then(function() {
 					if (useDashboardParams == "true") {
@@ -291,10 +299,15 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 					}
 
 					if (_.isEmpty(scope.heatmap.series)) {
+						var mapData = Highcharts.maps['custom/world'];
+						if (europeOnly == "true") {
+                            mapData = Highcharts.maps['custom/europe'];
+						}
+
 						// Create new series object
 						var newSeries = {
 							name: 'Country',
-							mapData: Highcharts.maps['custom/world'],
+							mapData: mapData,
 							data: response.data,
 							mapZoom: 2,
 							joinBy: ['iso-a2', 'code'],
