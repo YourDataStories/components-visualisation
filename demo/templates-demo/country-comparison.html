@@ -31,6 +31,18 @@
             </div>
         </div>
 
+        <!--Year selection slider-->
+        <div class="col-md-2">
+            <yds-year-range
+                    title="Time Period for Comparison"
+                    dashboard-id="comparison"
+                    min-year="1997"
+                    max-year="2018"
+                    vertical="true"
+                    height="350">
+            </yds-year-range>
+        </div>
+
         <div class="col-md-5">
             <!--Heatmap for Country B selection-->
             <div class="panel panel-default panel-benefactor">
@@ -55,23 +67,11 @@
                 </div>
             </div>
         </div>
-
-        <!--Year selection slider-->
-        <div class="col-md-2">
-            <yds-year-range
-                    title="Time Period for Comparison"
-                    dashboard-id="comparison"
-                    min-year="1997"
-                    max-year="2018"
-                    vertical="true"
-                    height="350">
-            </yds-year-range>
-        </div>
     </div>
 
     <!--Sunbursts-->
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-6">
             <yds-dashboard-updater
                     type="donut-pie"
                     view-type="contract.comparison.CPVs.for.countries.and.period"
@@ -80,7 +80,7 @@
                     lang="en">
             </yds-dashboard-updater>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-6">
             <yds-dashboard-updater
                     type="donut-pie"
                     view-type="contract.comparison.CPVs.for.countries.and.period"
@@ -93,7 +93,7 @@
 
     <!--Selection grids-->
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-6">
             <yds-dashboard-updater
                     type="selection-grid"
                     project-id="none"
@@ -104,7 +104,7 @@
                     lang="en">
             </yds-dashboard-updater>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-6">
             <yds-dashboard-updater
                     type="selection-grid"
                     project-id="none"
