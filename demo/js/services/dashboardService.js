@@ -42,6 +42,12 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         },
         comparison2: {
             country2: "contract.comparison.countryB.countries.all"
+        },
+        comparison_details_1: {
+            country1: "contract.comparison.countryA.countries.all"
+        },
+        comparison_details_2: {
+            country2: "contract.comparison.countryB.countries.all"
         }
     };
 
@@ -54,7 +60,9 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
         public_project: "year",
         comparison: "year",
         comparison1: "year",
-        comparison2: "year"
+        comparison2: "year",
+        comparison_details_1: "year",
+        comparison_details_2: "year"
     };
 
     // View types of aggregates to show for each Dashboard section
@@ -257,8 +265,24 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
                 // Add year from "comparison" dashboardId
                 apiOptions.year = "[" + getMinYear("comparison") + " TO " + getMaxYear("comparison") + "]";
                 break;
-        }
+            case "comparison_details_1":
+                // Add CPV 1
+                if (!_.isEmpty(getGridSelection("cpv1")))
+                    apiOptions.cpv1 = _.pluck(getGridSelection("cpv1"), "id").join(",");
 
+                // Add year from "comparison" dashboardId
+                apiOptions.year = "[" + getMinYear("comparison") + " TO " + getMaxYear("comparison") + "]";
+                break;
+            case "comparison_details_2":
+                // Add CPV 2
+                if (!_.isEmpty(getGridSelection("cpv2")))
+                    apiOptions.cpv2 = _.pluck(getGridSelection("cpv2"), "id").join(",");
+
+                // Add year from "comparison" dashboardId
+                apiOptions.year = "[" + getMinYear("comparison") + " TO " + getMaxYear("comparison") + "]";
+                break;
+        }
+        console.log(dashboardId, apiOptions);
         return apiOptions;
     };
 
