@@ -21,18 +21,20 @@
                            lang="{{ lang }}">
             </yds-aggregate>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <yds-aggregate project-id="{{ projectId }}"
                            view-type="organisation.TED.contracts.count"
                            element-h="74"
+                           icon-size="3"
                            base-url="{{ baseUrl }}"
                            lang="{{ lang }}">
             </yds-aggregate>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <yds-aggregate project-id="{{ projectId }}"
                            view-type="organisation.TED.contracts.amount.total"
                            element-h="74"
+                           icon-size="3"
                            base-url="{{ baseUrl }}"
                            lang="{{ lang }}">
             </yds-aggregate>
@@ -41,9 +43,31 @@
             <yds-aggregate project-id="{{ projectId }}"
                            view-type="organisation.TED.contracts.categories.top"
                            element-h="74"
+                           icon-size="3"
                            base-url="{{ baseUrl }}"
                            lang="{{ lang }}">
             </yds-aggregate>
+        </div>
+        <div class="col-md-2">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="organisation.TED.contracts.buyer.top"
+                           element-h="74"
+                           icon-size="3"
+                           base-url="{{ baseUrl }}"
+                           lang="{{ lang }}">
+            </yds-aggregate>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+        </div>
+        <div class="col-md-6">
+            <yds-heatmap
+                project-id="none"
+                view-type="organisation.TED.contracts.buyer.countries.all"
+                element-h="350">
+            </yds-heatmap>
         </div>
     </div>
 </div>
