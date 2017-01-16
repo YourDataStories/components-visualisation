@@ -76,10 +76,10 @@ ydsDemo.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 
 			if (_.has(urlParams, "type")) {
 				switch(urlParams.type) {
-					case "Organisation.Buyer":
+					case "TED.Organisation.Buyer":
 						$location.path("/organisation-buyer");
 						break;
-					case "Organisation.Seller":
+					case "TED.Organisation.Seller":
 						$location.path("/organisation-seller");
 						break;
 				}
