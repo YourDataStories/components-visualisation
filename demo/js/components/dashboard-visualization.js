@@ -31,7 +31,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 }
 
                 // Check if the component's height attribute is defined, else assign default value
-                if (_.isUndefined(scope.title) || scope.title.trim() == "")
+                if (_.isUndefined(scope.elementH) || scope.elementH.trim() == "")
                     scope.elementH = 300;
 
                 // If dashboardId is undefined, show error
