@@ -30,6 +30,8 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                 dashboardId: '@',       // Used for setting/getting parameters to/from DashboardService
                 selectionId: '@',       // ID for saving the selection for the specified dashboardId
 
+                groupedData: '@',       // Set to true if the response from the API for your view type is grouped data
+
                 embeddable: '@',        // Enable or disable the embedding of the component
                 embedBtnX: '@',         // X-axis position of the embed button
                 embedBtnY: '@',         // Y-axis position of the embed button
@@ -64,6 +66,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                 var selectionType = scope.selectionType;
                 var dashboardId = scope.dashboardId;
                 var selectionId = scope.selectionId;
+                var groupedData = scope.groupedData;
 
                 // If selection is enabled, this will be used to reselect rows after refreshing the grid data
                 var selection = [];
@@ -133,6 +136,10 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                 //check if the allowSelection attr is defined, else assign default value
                 if(_.isUndefined(allowSelection) || (allowSelection!="true" && allowSelection!="false"))
                     allowSelection = "false";
+
+                //check if the groupedData attr is defined, else assign default value
+                if(_.isUndefined(groupedData) || (groupedData!="true" && groupedData!="false"))
+                    groupedData = "false";
 
                 //check if the selectionType attr is defined, else assign default value
                 if(_.isUndefined(selectionType) || (selectionType!="single" && selectionType!="multiple"))
@@ -256,8 +263,30 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                                 console.log('an error has occurred');
                                 return false;
                             } else {
-                                rawData = Data.prepareGridData(response.data, response.view);
+                                // Get column definitions
                                 columnDefs = Data.prepareGridColumns(response.view);
+
+                                // Get data for the grid
+                                if (groupedData == "true") {
+                                    // For grouped data, use API response directly, and make the first column definition
+                                    // use the group renderer
+                                    rawData = response.data;
+
+                                    var colToModify = _.first(columnDefs);
+                                    if (allowSelection == "true") {
+                                        colToModify = columnDefs[1];
+                                    }
+
+                                    colToModify.cellRenderer = {
+                                        renderer: 'group',
+                                        innerRenderer: function(params) {
+                                            return params.data.name;
+                                        }
+                                    };
+                                } else {
+                                    rawData = Data.prepareGridData(response.data, response.view);
+                                }
+
                             }
 
                             // If selection is enabled, add checkbox to the first column
@@ -270,7 +299,12 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                                 columnDefs: columnDefs,
                                 enableColResize: (grid.colResize === "true"),
                                 enableSorting: (grid.sorting === "true"),
-                                enableFilter: (grid.filtering === "true")
+                                enableFilter: (grid.filtering === "true"),
+                                rowsAlreadyGrouped: (groupedData === "true"),
+                                icons: {
+                                    groupExpanded: '<i class="fa fa-minus-square-o"/>',
+                                    groupContracted: '<i class="fa fa-plus-square-o"/>'
+                                }
                             };
 
                             // If selection is enabled, add extra options for it in the gridOptions

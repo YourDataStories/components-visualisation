@@ -16,6 +16,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 selectionType: '@',         // Selection type for grid (single or multiple)
                 enableAdvSearch: '@',       // Enable/disable advanced search in Search Tabs component (default: true)
                 baseUrl: '@',               // Base URL to send to API
+                groupedData: '@',           // Used for grid, set to true if the data from the API will be grouped
                 lang: '@'                   // Language of component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/dashboard-updater.html',
