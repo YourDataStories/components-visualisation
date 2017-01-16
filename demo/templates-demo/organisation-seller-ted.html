@@ -13,7 +13,7 @@
 
     <!--Organisation info aggregates-->
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <yds-aggregate project-id="{{ projectId }}"
                            view-type="organisation.country"
                            element-h="74"
@@ -21,7 +21,7 @@
                            lang="{{ lang }}">
             </yds-aggregate>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <yds-aggregate project-id="{{ projectId }}"
                            view-type="organisation.TED.contracts.count"
                            element-h="74"
@@ -29,9 +29,17 @@
                            lang="{{ lang }}">
             </yds-aggregate>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <yds-aggregate project-id="{{ projectId }}"
                            view-type="organisation.TED.contracts.amount.total"
+                           element-h="74"
+                           base-url="{{ baseUrl }}"
+                           lang="{{ lang }}">
+            </yds-aggregate>
+        </div>
+        <div class="col-md-3">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="organisation.TED.contracts.categories.top"
                            element-h="74"
                            base-url="{{ baseUrl }}"
                            lang="{{ lang }}">
