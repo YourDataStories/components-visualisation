@@ -282,7 +282,7 @@ angular.module('yds').service('DashboardService', function($rootScope, $timeout)
                 apiOptions.year = "[" + getMinYear("comparison") + " TO " + getMaxYear("comparison") + "]";
                 break;
         }
-        console.log(dashboardId, apiOptions);
+        // console.log(dashboardId, apiOptions);
         return apiOptions;
     };
 
