@@ -30,7 +30,7 @@ ydsDemo.controller('OrganisationController', ['$scope', '$location', 'DashboardS
                     projectId = "none";
 					break;
 				case "/organisation-seller-ted":
-                    projectId = "none";
+                    projectId = "http://linkedeconomy.org/resource/Organization/TEDS_3732149";
 					break;
 			}
 
