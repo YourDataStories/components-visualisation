@@ -96,7 +96,7 @@ angular.module('yds').directive('ydsDonutPie', ['Data', 'DashboardService', func
                                     e.target
                                 ]);
                             },
-                            unselect: function(e) {
+                            unselect: function() {
                                 // Set the selection as empty array as only a single item should be selected at a time
                                 DashboardService.setGridSelection(selectionId, []);
                             }
@@ -137,7 +137,7 @@ angular.module('yds').directive('ydsDonutPie', ['Data', 'DashboardService', func
                     // Deselect all points
                     _.each(chart.series, function(series) {
                         _.first(series.points).select(false, false);
-                    })
+                    });
                 }
             });
         }

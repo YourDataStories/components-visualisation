@@ -197,6 +197,35 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                 });
 
                 /**
+                 * Select the ones that are indicated in the selection parameter (matches them by their "id" attribute)
+                 * If the dashboardId attribute of the component contains "comparison", it deselects all previously
+                 * selected rows before selecting the new ones
+                 * @param selection Rows to select. Should be array of objects with "id" attributes in them.
+                 */
+                var selectRows = function(selection) {
+                    // Deselect previously selected rows
+                    if (dashboardId.indexOf("comparison") != -1)
+                        scope.gridOptions.api.deselectAll();
+
+                    // Select new rows
+                    if (!_.isEmpty(selection)) {
+                        scope.gridOptions.api.forEachNode(function(node) {
+                            // Check if this node is in the selection
+                            var result = _.findWhere(selection, {
+                                id: node.data.id
+                            });
+
+                            if (!_.isUndefined(result)) {
+                                // The node was selected before, so select it again
+                                scope.gridOptions.api.selectNode(node, true);
+                            }
+
+                            preventUpdate = false;
+                        });
+                    }
+                };
+
+                /**
                  * Create the grid
                  */
                 var createGrid = function() {
@@ -284,19 +313,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
 
                             // Select any points that were previously selected
                             if (allowSelection == "true" && !_.isEmpty(selection)) {
-                                scope.gridOptions.api.forEachNode(function(node) {
-                                    // Check if this node is in the selection
-                                    var result = _.findWhere(selection, {
-                                        name: node.data.name
-                                    });
-
-                                    if (!_.isUndefined(result)) {
-                                        // The node was selected before, so select it again
-                                        scope.gridOptions.api.selectNode(node, true);
-
-                                        preventUpdate = false;
-                                    }
-                                });
+                                selectRows(selection);
                             }
                         }, function(error) {
                             if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
@@ -309,8 +326,8 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                         });
                 };
 
-                // Watch for changes in extra parameters and update the grid
                 if (allowSelection == "true") {
+                    // Watch for changes in extra parameters and update the grid
                     scope.$watch("extraParams", function (newValue, oldValue) {
                         // Check if the grid should update (ignoring the grid's own selections)
                         var shouldUpdate = !_.isEqual(newValue, oldValue) && !preventUpdate;
@@ -333,6 +350,12 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                         }
 
                         preventUpdate = false;
+                    });
+
+                    // Watch for changes in the selection and select the appropriate rows
+                    DashboardService.subscribeGridSelectionChanges(scope, function() {
+                        var selection = DashboardService.getGridSelection(selectionId);
+                        selectRows(selection);
                     });
                 }
 
