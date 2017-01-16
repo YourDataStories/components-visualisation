@@ -246,8 +246,9 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                                     DashboardService.setGridSelection(selectionId, e.selectedRows);
                                     selection = e.selectedRows;
 
-                                    // Prevent next grid update
-                                    preventUpdate = true;
+                                    // Prevent next grid update if dashboard ID does not contain "comparison"
+                                    // (in the country comparison dashboard, we don't need to prevent any updates)
+                                    preventUpdate = (dashboardId.indexOf("comparison") == -1);
                                 }
                             }
 
