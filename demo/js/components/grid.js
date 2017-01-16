@@ -229,6 +229,14 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                             });
 
                             if (!_.isUndefined(result)) {
+                                // If the node we will select is in a group, we also need to expand its parent
+                                if (node.level > 0) {
+                                    node.parent.expanded = true;
+
+                                    // Call this so the grid will render the expanded group
+                                    scope.gridOptions.api.onGroupExpandedOrCollapsed();
+                                }
+
                                 // The node was selected before, so select it again
                                 scope.gridOptions.api.selectNode(node, true);
                                 scope.gridOptions.api.ensureNodeVisible(node);
