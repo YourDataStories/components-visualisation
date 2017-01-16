@@ -11,6 +11,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 type: '@',          // View type of component. If not set, will get it from DashboardService
                 lang: '@',          // Language of charts
                 baseUrl: '@',       // Base URL to send to API
+                title: '@',         // Title of component
                 elementH: '@'       // Height of component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + 'templates/dashboard-visualization.html',
@@ -20,8 +21,17 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 var defaultChart = scope.defaultChart;
                 var type = scope.type;
 
+                // Check if the component's title attribute is defined, else assign default value
+                if (_.isUndefined(scope.title)) {
+                    if (scope.lang == "el") {
+                        scope.title = "Λεπτομέρειες";
+                    } else {
+                        scope.title = "Details";
+                    }
+                }
+
                 // Check if the component's height attribute is defined, else assign default value
-                if (_.isUndefined(scope.elementH) || scope.elementH.trim() == "")
+                if (_.isUndefined(scope.title) || scope.title.trim() == "")
                     scope.elementH = 300;
 
                 // If dashboardId is undefined, show error
