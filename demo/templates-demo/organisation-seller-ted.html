@@ -75,13 +75,15 @@
 
     <div class="row">
         <div class="col-md-12">
-            <!--organisation.TED.contracts.listitems.for.seller-->
-            <yds-grid
+            <yds-grid-results
                     project-id="{{ projectId }}"
+                    project-details-type="Contract"
                     view-type="organisation.TED.contracts.listitems.for.seller"
-                    element-h="300"
-                    lang="{{ lang }}">
-            </yds-grid>
+                    use-grid-api="true"
+                    col-resize="true"
+                    lang="{{ lang }}"
+                    element-h="300">
+            </yds-grid-results>
         </div>
     </div>
 </div>
