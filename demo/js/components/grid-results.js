@@ -288,7 +288,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                             var quickFilter = scope.quickFilterValue;
 
                             if (!_.isUndefined(quickFilter) && quickFilter.length > 0) {
-                                query = "(" + query + ") AND " + quickFilter;
+                                query = "" + query + " AND " + quickFilter;
                             }
 
                             // Get facets from URL parameters
@@ -495,7 +495,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                 getSearchQuery().then(function(searchQuery) {
                                     var query = searchQuery;
                                     if (!_.isUndefined(quickFilter)) {
-                                        query = "(" + query + ") AND " + quickFilter;
+                                        query = "" + query + " AND " + quickFilter;
                                     }
 
                                     // Try to find any selected facets
