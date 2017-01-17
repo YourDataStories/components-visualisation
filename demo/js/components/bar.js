@@ -6,7 +6,7 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function(Data, Fil
             viewType: '@',      //name of the array that contains the visualised data
             lang: '@',          //lang of the visualised data
 
-            extraParams: '=',    //extra attributes to pass to the API, if needed
+            extraParams: '=',   //extra attributes to pass to the API, if needed
 
             exporting: '@',     //enable or disable the export of the chart
             elementH: '@',      //set the height of the component

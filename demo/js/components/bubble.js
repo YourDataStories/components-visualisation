@@ -6,6 +6,8 @@ angular.module('yds').directive('ydsBubble', ['YDS_CONSTANTS', 'Data', '$window'
             viewType: '@',      // Name of the array that contains the visualised data
             lang: '@',          // Lang of the visualised data
 
+            extraParams: '=',   // Extra attributes to pass to the API, if needed
+
             exporting: '@',     // Enable or disable the export of the plot
             elementH: '@',      // Set the height of the component
             titleSize: '@',     // The size of the chart's main title
@@ -35,6 +37,7 @@ angular.module('yds').directive('ydsBubble', ['YDS_CONSTANTS', 'Data', '$window'
             var elementH = scope.elementH;
             var titleSize = scope.titleSize;
             var legend = scope.legend;
+            var extraParams = scope.extraParams;
 
             //check if the projectId and the viewType attr is defined, else stop the process
             if (angular.isUndefined(projectId) || projectId.trim()=="") {
@@ -70,7 +73,7 @@ angular.module('yds').directive('ydsBubble', ['YDS_CONSTANTS', 'Data', '$window'
             //set the height of the plot
             bubbleContainer[0].style.height = elementH + 'px';
 
-            Data.getProjectVis("bubble", projectId, viewType, lang)
+            Data.getProjectVis("bubble", projectId, viewType, lang, extraParams)
                 .then(function (response) {
                     var options = response.data;
 
@@ -115,7 +118,7 @@ angular.module('yds').directive('ydsBubble', ['YDS_CONSTANTS', 'Data', '$window'
                     new Highcharts.Chart(options);
                 }, function (error) {
                     if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
-                        scope.ydsAlert = "An error was occurred, please check the configuration of the component";
+                        scope.ydsAlert = "An error has occurred, please check the configuration of the component";
                     else
                         scope.ydsAlert = error.message;
                 });

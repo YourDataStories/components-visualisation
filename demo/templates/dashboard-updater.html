@@ -123,6 +123,18 @@
             element-h="{{ minHeight }}">
     </yds-tree-map>
 
+    <yds-bubble
+            ng-switch-when="bubble"
+            project-id="{{ projectId }}"
+            view-type="{{ viewType }}"
+            add-to-basket="{{ addToBasket }}"
+            extra-params="extraParams"
+            embeddable="true"
+            embed-btn-x="40"
+            lang="{{ lang }}"
+            element-h="{{ minHeight }}">
+    </yds-bubble>
+
     <yds-search-tabs
             ng-switch-when="search"
             default-tab="{{ concept }}"
