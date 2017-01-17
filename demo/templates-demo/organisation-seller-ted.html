@@ -1,10 +1,18 @@
 <div class="container">
     <!--Title Aggregate-->
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-9">
             <yds-aggregate project-id="{{ projectId }}"
                            view-type="organisation.contract.seller.title"
-                           element-h="60"
+                           element-h="74"
+                           base-url="{{ baseUrl }}"
+                           lang="{{ lang }}">
+            </yds-aggregate>
+        </div>
+        <div class="col-md-3">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="organisation.country"
+                           element-h="74"
                            base-url="{{ baseUrl }}"
                            lang="{{ lang }}">
             </yds-aggregate>
@@ -15,25 +23,17 @@
     <div class="row">
         <div class="col-md-3">
             <yds-aggregate project-id="{{ projectId }}"
-                           view-type="organisation.country"
-                           element-h="74"
-                           base-url="{{ baseUrl }}"
-                           lang="{{ lang }}">
-            </yds-aggregate>
-        </div>
-        <div class="col-md-2">
-            <yds-aggregate project-id="{{ projectId }}"
                            view-type="organisation.TED.contracts.count"
-                           element-h="74"
+                           element-h="130"
                            icon-size="3"
                            base-url="{{ baseUrl }}"
                            lang="{{ lang }}">
             </yds-aggregate>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
             <yds-aggregate project-id="{{ projectId }}"
                            view-type="organisation.TED.contracts.amount.total"
-                           element-h="74"
+                           element-h="130"
                            icon-size="3"
                            base-url="{{ baseUrl }}"
                            lang="{{ lang }}">
@@ -42,16 +42,16 @@
         <div class="col-md-3">
             <yds-aggregate project-id="{{ projectId }}"
                            view-type="organisation.TED.contracts.categories.top"
-                           element-h="74"
+                           element-h="130"
                            icon-size="3"
                            base-url="{{ baseUrl }}"
                            lang="{{ lang }}">
             </yds-aggregate>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
             <yds-aggregate project-id="{{ projectId }}"
                            view-type="organisation.TED.contracts.buyer.top"
-                           element-h="74"
+                           element-h="130"
                            icon-size="3"
                            base-url="{{ baseUrl }}"
                            lang="{{ lang }}">
