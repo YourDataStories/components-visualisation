@@ -88,7 +88,7 @@
     </div>
 
     <div class="row">
-        <uib-tabset class="col-md-12">
+        <uib-tabset class="col-md-12" active="activeTab">
             <uib-tab heading="Notices">
                 <!--Grid-->
                 <div class="row">
@@ -107,7 +107,7 @@
 
                 <!--Bubble-->
                 <div class="row" style="margin-top: 20px">
-                    <div class="col-md-12">
+                    <div class="col-md-12" ng-if="activeTab == 0">
                         <yds-bubble
                                 project-id="{{ projectId }}"
                                 view-type="organisation.TED.buyer.notices.over.date"
@@ -140,7 +140,7 @@
 
                 <!--Bubble-->
                 <div class="row" style="margin-top: 20px">
-                    <div class="col-md-12">
+                    <div class="col-md-12" ng-if="activeTab == 1">
                         <yds-bubble
                                 project-id="{{ projectId }}"
                                 view-type="organisation.TED.buyer.contracts.over.date"
