@@ -59,6 +59,7 @@
         </div>
     </div>
 
+    <!--Barchart/Europe heatmap-->
     <div class="row">
         <div class="col-md-6">
         </div>
@@ -73,7 +74,8 @@
         </div>
     </div>
 
-    <div class="row">
+    <!--Grid-->
+    <div class="row" style="margin-top: 20px">
         <div class="col-md-12">
             <yds-grid-results
                     project-id="{{ projectId }}"
@@ -84,6 +86,22 @@
                     lang="{{ lang }}"
                     element-h="300">
             </yds-grid-results>
+        </div>
+    </div>
+
+    <!--Bubble-->
+    <div class="row" style="margin-top: 20px">
+        <div class="col-md-12">
+            <yds-bubble
+                    project-id="{{ projectId }}"
+                    view-type="organisation.TED.seller.contracts.over.date"
+                    element-h="400"
+                    add-to-basket="true"
+                    basket-btn-x="40"
+                    embeddable="true"
+                    exporting="true"
+                    lang="{{ lang }}">
+            </yds-bubble>
         </div>
     </div>
 </div>
