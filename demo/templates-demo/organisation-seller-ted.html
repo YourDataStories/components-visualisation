@@ -21,56 +21,63 @@
 
     <!--Organisation info aggregates-->
     <div class="row">
-        <div class="col-md-3">
-            <yds-aggregate project-id="{{ projectId }}"
-                           view-type="organisation.TED.contracts.count"
-                           element-h="130"
-                           icon-size="3"
-                           base-url="{{ baseUrl }}"
-                           lang="{{ lang }}">
-            </yds-aggregate>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <yds-aggregate project-id="{{ projectId }}"
+                                   view-type="organisation.TED.contracts.count"
+                                   element-h="130"
+                                   icon-size="3"
+                                   base-url="{{ baseUrl }}"
+                                   lang="{{ lang }}">
+                    </yds-aggregate>
+                </div>
+                <div class="col-md-6">
+                    <yds-aggregate project-id="{{ projectId }}"
+                                   view-type="organisation.TED.contracts.amount.total"
+                                   element-h="130"
+                                   icon-size="3"
+                                   base-url="{{ baseUrl }}"
+                                   lang="{{ lang }}">
+                    </yds-aggregate>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <yds-aggregate project-id="{{ projectId }}"
+                                   view-type="organisation.TED.contracts.categories.top"
+                                   element-h="140"
+                                   icon-size="3"
+                                   base-url="{{ baseUrl }}"
+                                   lang="{{ lang }}">
+                    </yds-aggregate>
+                </div>
+                <div class="col-md-6">
+                    <yds-aggregate project-id="{{ projectId }}"
+                                   view-type="organisation.TED.contracts.buyer.top"
+                                   element-h="140"
+                                   icon-size="3"
+                                   base-url="{{ baseUrl }}"
+                                   lang="{{ lang }}">
+                    </yds-aggregate>
+                </div>
+            </div>
         </div>
-        <div class="col-md-3">
-            <yds-aggregate project-id="{{ projectId }}"
-                           view-type="organisation.TED.contracts.amount.total"
-                           element-h="130"
-                           icon-size="3"
-                           base-url="{{ baseUrl }}"
-                           lang="{{ lang }}">
-            </yds-aggregate>
-        </div>
-        <div class="col-md-3">
-            <yds-aggregate project-id="{{ projectId }}"
-                           view-type="organisation.TED.contracts.categories.top"
-                           element-h="130"
-                           icon-size="3"
-                           base-url="{{ baseUrl }}"
-                           lang="{{ lang }}">
-            </yds-aggregate>
-        </div>
-        <div class="col-md-3">
-            <yds-aggregate project-id="{{ projectId }}"
-                           view-type="organisation.TED.contracts.buyer.top"
-                           element-h="130"
-                           icon-size="3"
-                           base-url="{{ baseUrl }}"
-                           lang="{{ lang }}">
-            </yds-aggregate>
+
+        <div class="col-md-6">
+            <yds-heatmap
+                    project-id="{{ projectId }}"
+                    view-type="organisation.TED.contracts.buyer.countries.all"
+                    element-h="350"
+                    europe-only="true"
+                    lang="{{ lang }}">
+            </yds-heatmap>
         </div>
     </div>
 
     <!--Barchart/Europe heatmap-->
     <div class="row">
         <div class="col-md-6">
-        </div>
-        <div class="col-md-6">
-            <yds-heatmap
-                project-id="{{ projectId }}"
-                view-type="organisation.TED.contracts.buyer.countries.all"
-                element-h="350"
-                europe-only="true"
-                lang="{{ lang }}">
-            </yds-heatmap>
         </div>
     </div>
 
