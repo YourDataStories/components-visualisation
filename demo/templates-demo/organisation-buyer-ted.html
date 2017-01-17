@@ -77,14 +77,19 @@
         </div>
 
         <div class="col-md-6">
-            <h4 class="text-center">Seller Countries</h4>
-            <yds-heatmap
-                    project-id="{{ projectId }}"
-                    view-type="organisation.TED.contracts.seller.countries.all"
-                    element-h="350"
-                    europe-only="true"
-                    lang="{{ lang }}">
-            </yds-heatmap>
+            <div class="panel panel-default">
+                <div class="panel-heading">Seller Countries</div>
+                <div class="panel-body">
+                    <yds-heatmap
+                            project-id="{{ projectId }}"
+                            view-type="organisation.TED.contracts.seller.countries.all"
+                            element-h="350"
+                            europe-only="true"
+                            no-border="true"
+                            lang="{{ lang }}">
+                    </yds-heatmap>
+                </div>
+            </div>
         </div>
     </div>
 
