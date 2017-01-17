@@ -536,7 +536,15 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                     saveParamsToFilters(query, facets, rules);
                                 });
                             } else {
-                                Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang, extraParams)
+                                var paramsToSend = _.clone(extraParams);
+                                if (_.isUndefined(paramsToSend)) {
+                                    paramsToSend = {};
+                                }
+
+                                paramsToSend.rows = grid.pageSize;
+                                paramsToSend.start = params.startRow;
+
+                                Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang, paramsToSend)
                                     .then(gridResultDataSuccess, gridResultDataError);
                             }
                         }
