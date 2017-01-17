@@ -32,7 +32,7 @@ ydsDemo.controller('OrganisationController', ['$scope', '$location', 'DashboardS
 				$scope.lang = "en";
 
                 // Set default project ID if it is undefined
-                projectId = projectId || "http://linkedeconomy.org/resource/Organization/TEDS_3732149";
+                projectId = projectId || "http://linkedeconomy.org/resource/Organization/TEDB_840910";
 				break;
 			case "/organisation-seller-ted":
 				$scope.lang = "en";
