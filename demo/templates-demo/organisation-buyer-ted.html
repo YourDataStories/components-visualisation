@@ -87,34 +87,76 @@
         </div>
     </div>
 
-    <!--Grid-->
-    <div class="row" style="margin-top: 20px">
-        <div class="col-md-12">
-            <yds-grid-results
-                    project-id="{{ projectId }}"
-                    project-details-type="Contract"
-                    view-type="organisation.TED.contracts.listitems.for.buyer"
-                    use-grid-api="true"
-                    col-resize="true"
-                    lang="{{ lang }}"
-                    element-h="300">
-            </yds-grid-results>
-        </div>
+    <div class="row">
+        <uib-tabset class="col-md-12">
+            <uib-tab heading="Notices">
+                <!--Grid-->
+                <div class="row">
+                    <div class="col-md-12">
+                        <yds-grid-results
+                                project-id="{{ projectId }}"
+                                project-details-type="Contract"
+                                view-type="organisation.TED.notices.listitems.for.buyer"
+                                use-grid-api="true"
+                                col-resize="true"
+                                lang="{{ lang }}"
+                                element-h="300">
+                        </yds-grid-results>
+                    </div>
+                </div>
+
+                <!--Bubble-->
+                <div class="row" style="margin-top: 20px">
+                    <div class="col-md-12">
+                        <yds-bubble
+                                project-id="{{ projectId }}"
+                                view-type="organisation.TED.buyer.notices.over.date"
+                                element-h="400"
+                                add-to-basket="true"
+                                basket-btn-x="40"
+                                embeddable="true"
+                                exporting="true"
+                                lang="{{ lang }}">
+                        </yds-bubble>
+                    </div>
+                </div>
+            </uib-tab>
+
+            <uib-tab heading="Award Notices">
+                <!--Grid-->
+                <div class="row">
+                    <div class="col-md-12">
+                        <yds-grid-results
+                                project-id="{{ projectId }}"
+                                project-details-type="Contract"
+                                view-type="organisation.TED.contracts.listitems.for.buyer"
+                                use-grid-api="true"
+                                col-resize="true"
+                                lang="{{ lang }}"
+                                element-h="300">
+                        </yds-grid-results>
+                    </div>
+                </div>
+
+                <!--Bubble-->
+                <div class="row" style="margin-top: 20px">
+                    <div class="col-md-12">
+                        <yds-bubble
+                                project-id="{{ projectId }}"
+                                view-type="organisation.TED.buyer.contracts.over.date"
+                                element-h="400"
+                                add-to-basket="true"
+                                basket-btn-x="40"
+                                embeddable="true"
+                                exporting="true"
+                                lang="{{ lang }}">
+                        </yds-bubble>
+                    </div>
+                </div>
+            </uib-tab>
+        </uib-tabset>
     </div>
 
-    <!--Bubble-->
-    <div class="row" style="margin-top: 20px">
-        <div class="col-md-12">
-            <yds-bubble
-                    project-id="{{ projectId }}"
-                    view-type="organisation.TED.buyer.contracts.over.date"
-                    element-h="400"
-                    add-to-basket="true"
-                    basket-btn-x="40"
-                    embeddable="true"
-                    exporting="true"
-                    lang="{{ lang }}">
-            </yds-bubble>
-        </div>
-    </div>
+
+
 </div>
