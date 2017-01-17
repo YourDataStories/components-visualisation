@@ -64,10 +64,24 @@
         </div>
         <div class="col-md-6">
             <yds-heatmap
-                project-id="none"
+                project-id="{{ projectId }}"
                 view-type="organisation.TED.contracts.buyer.countries.all"
-                element-h="350">
+                element-h="350"
+                europe-only="true"
+                lang="{{ lang }}">
             </yds-heatmap>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <!--organisation.TED.contracts.listitems.for.seller-->
+            <yds-grid
+                    project-id="{{ projectId }}"
+                    view-type="organisation.TED.contracts.listitems.for.seller"
+                    element-h="300"
+                    lang="{{ lang }}">
+            </yds-grid>
         </div>
     </div>
 </div>
