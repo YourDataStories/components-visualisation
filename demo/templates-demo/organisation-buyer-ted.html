@@ -41,7 +41,7 @@
         <div class="col-md-4">
             <yds-aggregate project-id="{{ projectId }}"
                            view-type="organisation.TED.buyer.contracts.amount.total"
-                           element-h="140"
+                           element-h="130"
                            icon-size="3"
                            base-url="{{ baseUrl }}"
                            lang="{{ lang }}">
@@ -53,7 +53,7 @@
     <div class="row">
         <div class="col-md-6">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-offset-2 col-md-9">
                     <yds-aggregate project-id="{{ projectId }}"
                                    view-type="organisation.TED.buyer.contracts.categories.top"
                                    element-h="140"
@@ -64,7 +64,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-offset-2 col-md-9">
                     <yds-aggregate project-id="{{ projectId }}"
                                    view-type="organisation.TED.buyer.contracts.seller.top"
                                    element-h="140"
@@ -77,13 +77,13 @@
         </div>
 
         <div class="col-md-6">
-            <!--<yds-heatmap-->
-                    <!--project-id="{{ projectId }}"-->
-                    <!--view-type="organisation.TED.contracts.buyer.countries.all"-->
-                    <!--element-h="350"-->
-                    <!--europe-only="true"-->
-                    <!--lang="{{ lang }}">-->
-            <!--</yds-heatmap>-->
+            <yds-heatmap
+                    project-id="{{ projectId }}"
+                    view-type="organisation.TED.contracts.seller.countries.all"
+                    element-h="350"
+                    europe-only="true"
+                    lang="{{ lang }}">
+            </yds-heatmap>
         </div>
     </div>
 </div>
