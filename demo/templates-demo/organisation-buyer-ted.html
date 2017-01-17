@@ -1,3 +1,89 @@
 <div class="container">
-    <h2>TED Buyer</h2>
+    <!--Title Aggregate-->
+    <div class="row">
+        <div class="col-md-9">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="organisation.contract.buyer.title"
+                           element-h="74"
+                           base-url="{{ baseUrl }}"
+                           lang="{{ lang }}">
+            </yds-aggregate>
+        </div>
+        <div class="col-md-3">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="organisation.country"
+                           element-h="74"
+                           base-url="{{ baseUrl }}"
+                           lang="{{ lang }}">
+            </yds-aggregate>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="organisation.TED.buyer.notices.count"
+                           element-h="130"
+                           icon-size="3"
+                           base-url="{{ baseUrl }}"
+                           lang="{{ lang }}">
+            </yds-aggregate>
+        </div>
+        <div class="col-md-4">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="organisation.TED.buyer.contracts.count"
+                           element-h="130"
+                           icon-size="3"
+                           base-url="{{ baseUrl }}"
+                           lang="{{ lang }}">
+            </yds-aggregate>
+        </div>
+        <div class="col-md-4">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="organisation.TED.buyer.contracts.amount.total"
+                           element-h="140"
+                           icon-size="3"
+                           base-url="{{ baseUrl }}"
+                           lang="{{ lang }}">
+            </yds-aggregate>
+        </div>
+    </div>
+
+    <!--Organisation info aggregates & heatmap-->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <yds-aggregate project-id="{{ projectId }}"
+                                   view-type="organisation.TED.buyer.contracts.categories.top"
+                                   element-h="140"
+                                   icon-size="3"
+                                   base-url="{{ baseUrl }}"
+                                   lang="{{ lang }}">
+                    </yds-aggregate>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <yds-aggregate project-id="{{ projectId }}"
+                                   view-type="organisation.TED.buyer.contracts.seller.top"
+                                   element-h="140"
+                                   icon-size="3"
+                                   base-url="{{ baseUrl }}"
+                                   lang="{{ lang }}">
+                    </yds-aggregate>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <!--<yds-heatmap-->
+                    <!--project-id="{{ projectId }}"-->
+                    <!--view-type="organisation.TED.contracts.buyer.countries.all"-->
+                    <!--element-h="350"-->
+                    <!--europe-only="true"-->
+                    <!--lang="{{ lang }}">-->
+            <!--</yds-heatmap>-->
+        </div>
+    </div>
 </div>
