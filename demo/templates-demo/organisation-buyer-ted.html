@@ -86,4 +86,19 @@
             </yds-heatmap>
         </div>
     </div>
+
+    <!--Grid-->
+    <div class="row" style="margin-top: 20px">
+        <div class="col-md-12">
+            <yds-grid-results
+                    project-id="{{ projectId }}"
+                    project-details-type="Contract"
+                    view-type="organisation.TED.contracts.listitems.for.buyer"
+                    use-grid-api="true"
+                    col-resize="true"
+                    lang="{{ lang }}"
+                    element-h="300">
+            </yds-grid-results>
+        </div>
+    </div>
 </div>
