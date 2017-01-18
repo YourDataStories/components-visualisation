@@ -686,6 +686,9 @@ rzslider.vertical .rz-pointer {
 .bs-callout-primary { border-left-color: #428bca; }
 .bs-callout-primary h4 { color: #428bca; }
 
+.bs-callout-info {
+	border-left-color: #47B2E8;
+}
 
 /***************************************/
 /******* AG-GRID CUSTOMIZATION *********/
@@ -870,15 +873,12 @@ a.accordion-toggle:focus, a.accordion-toggle:active {
     position: relative;
     width: 70px;
     height: 57px;
-
     margin-right: 35px;
-
     /* Center text horizontally and vertically */
     text-align: center;
     color: #333;
     vertical-align: middle;
     line-height: 57px;
-
     /* Make the box be over the child element */
     z-index: 0;
 }
@@ -901,7 +901,6 @@ a.accordion-toggle:focus, a.accordion-toggle:active {
     -ms-transform: rotate(45deg); /* IE 9 */
     -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
     transform: rotate(45deg);
-
     /* Make child be below parent element so text is visible */
     z-index: -1;
 }
@@ -912,7 +911,6 @@ a.accordion-toggle:focus, a.accordion-toggle:active {
     background-color: #F3FFF3;
     border-color: #50A150;
 }
-
 .btn-green:hover {
     color: #F3FFF3;
     background-color: #50A150;
@@ -929,7 +927,6 @@ a.accordion-toggle:focus, a.accordion-toggle:active {
     border-left-color: #50A150;
     background-color: #F3FFF3;
 }
-
 .bs-callout-success h4 {
     color: #50A150;
 }
@@ -1122,7 +1119,6 @@ a.list-group-item.load-more-button:hover > span.load-more-button-text {
 a.aggregate_link_bright, a.aggregate_link_bright:visited {
     color: #fff;
 }
-
 a.aggregate_link_bright:hover {
     color: #e4e4e4;
 }
@@ -1131,7 +1127,6 @@ a.aggregate_link_bright:hover {
 a.aggregate_link_dark, a.aggregate_link_dark:visited {
     color: #333;
 }
-
 a.aggregate_link_dark:hover {
     color: #333;
 }
