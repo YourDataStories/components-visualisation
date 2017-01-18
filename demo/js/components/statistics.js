@@ -14,7 +14,9 @@ angular.module('yds').directive('ydsStatistics', ['Data', '$interval', function(
 			var updateStatistics = function() {
 				_.each(scope.statistics.stats, function(value, key) {
 					if (scope.statistics.stats[key] < scope.statistics.statsLimit[key])
-						scope.statistics.stats[key]++;
+					{
+						scope.statistics.stats[key] = scope.statistics.stats[key]<300 ? scope.statistics.stats[key]+1 : scope.statistics.stats[key]+20000;
+					}
 				});
 			};
 
