@@ -8,6 +8,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                 lang: '@',              // Lang of the visualised data
 
                 extraParams: '=',       // Extra attributes to pass to the API, if needed
+                baseUrl: '@',           // Base URL to send to API (optional)
 
                 sorting: '@',           // Enable or disable array sorting, values: true, false
                 filtering: '@',         // Enable or disable array filtering, values: true, false
@@ -62,6 +63,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                 };
 
                 var extraParams = scope.extraParams;
+                var baseUrl = scope.baseUrl;
                 var allowSelection = scope.allowSelection;
                 var selectionType = scope.selectionType;
                 var dashboardId = scope.dashboardId;
@@ -253,6 +255,14 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                 var createGrid = function() {
                     // Get data and visualize grid
                     var extraParams = scope.extraParams;
+
+                    if (!_.isUndefined(baseUrl)) {
+                        if (_.isUndefined(extraParams)) {
+                            extraParams = {};
+                        }
+
+                        extraParams.baseurl = baseUrl;
+                    }
 
                     // If extra params contains null value, prevent grid creation
                     var prevent = false;
