@@ -46,8 +46,8 @@ app.constant("YDS_CONSTANTS", {
     // "SEARCH_RESULTS_URL_TABBED": "http://yds-lib.dev/#!/search-tabbed",
 
     "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
-    "API_EMBED": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/embed/",
-    "BASKET_URL": "http://ydsdev.iit.demokritos.gr:8085/YDSAPI/yds/basket/"
+    "API_EMBED": "http://dev.yourdatastories.eu/api/tomcat/YDSAPI/yds/embed/",
+    "BASKET_URL": "http://dev.yourdatastories.eu/api/tomcat/YDSAPI/yds/basket/"
 });
 
 app.directive('clipboard', ['$document', function(){
