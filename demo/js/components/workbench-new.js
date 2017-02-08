@@ -23,19 +23,46 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     scope.lang = "en";
 
                 var editorOptions = {
-                    features: "import templates customize export"
+                    features: "import templates customize export",
+                    importer: {
+                        options: "plugins",
+                        plugins: [
+                            "BasketImport"
+                        ]
+                    }
                 };
 
                 // Load the required CSS & JS files for the Editor
-                $ocLazyLoad.load([
-                    "css/highcharts-editor.min.css",
-                    "lib/highcharts-editor.js"
-                ]).then(function () {
+                $ocLazyLoad.load({
+                    files: [
+                        "css/highcharts-editor.min.css",
+                        "lib/highcharts-editor.js"
+                    ],
+                    cache: true
+                }).then(function () {
+                    // Add plugin for basket import
+                    addBasketImportPlugin();
+
                     // Start the Highcharts Editor
                     highed.ready(function () {
                         highed.Editor(editorContainer[0], editorOptions);
                     });
                 });
+
+                /**
+                 * Install the Basket Import plugin for Highcharts Editor
+                 */
+                var addBasketImportPlugin = function() {
+                    highed.plugins.import.install('BasketImport', {
+                        description: "Standard Basket Import",
+                        treatAs: 'csv',
+                        fetchAs: 'text',
+                        filter: function (data, options, fn) {
+                            //todo: do things
+                            fn(wasInvalid, data);
+                        }
+                    });
+                }
             }
         }
     }
