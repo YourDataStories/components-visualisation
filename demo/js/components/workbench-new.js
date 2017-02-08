@@ -22,6 +22,10 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 if (_.isUndefined(scope.lang) || scope.lang.trim() == "")
                     scope.lang = "en";
 
+                var editorOptions = {
+                    features: "import templates customize export"
+                };
+
                 // Load the required CSS & JS files for the Editor
                 $ocLazyLoad.load([
                     "css/highcharts-editor.min.css",
@@ -29,7 +33,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 ]).then(function () {
                     // Start the Highcharts Editor
                     highed.ready(function () {
-                        highed.Editor(editorContainer[0]);
+                        highed.Editor(editorContainer[0], editorOptions);
                     });
                 });
             }
