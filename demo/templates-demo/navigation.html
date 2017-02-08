@@ -112,10 +112,22 @@
                 <span class="glyphicon glyphicon-hdd" aria-hidden="true"></span>
                 Cache Management</a>
             </li>
-            <li ui-sref-active="active" class="active"><a ui-sref="workbench">
-                <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
-                Workbench</a>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span> Workbench <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li ui-sref-active="active" class="active"><a ui-sref="workbench">
+                        <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
+                        Workbench</a>
+                    </li>
+                    <li ui-sref-active="active" class="active"><a ui-sref="workbench-new">
+                        <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
+                        Workbench (New)</a>
+                    </li>
+                </ul>
             </li>
+
         </ul>
     </div>
 </div>
