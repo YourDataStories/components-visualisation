@@ -22,6 +22,9 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 if (_.isUndefined(scope.lang) || scope.lang.trim() == "")
                     scope.lang = "en";
 
+                // Set user ID in the Basket service so the modal can access it
+                Basket.setUserId(scope.userId);
+
                 var editorOptions = {
                     features: "import templates customize export",
                     importer: {
