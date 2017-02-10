@@ -1183,3 +1183,8 @@ a.aggregate_link_dark:hover {
 .aggregate-organisation-payments-top, .aggregate-organisation-buyer-payments-top {
     background: rgb(124, 194, 69);
 }
+
+/* Make Highcharts Editor taller */
+.highcharts-editor-container {
+    height: 700px;
+}
