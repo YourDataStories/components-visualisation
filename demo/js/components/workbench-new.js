@@ -18,6 +18,9 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     return false;
                 }
 
+                // Variable to keep the selected item in
+                var selectedItem = null;
+
                 //check if the language attr is defined, else assign default value
                 if (_.isUndefined(scope.lang) || scope.lang.trim() == "")
                     scope.lang = "en";
@@ -66,7 +69,8 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                                 // Compile the template which will show all the items with ng-repeat
                                 var templateHtml =
                                     "<div class='list-group'>" +
-                                        "<div ng-repeat='item in libraryItems' class='list-group-item workbench-library-item'>" +
+                                        "<div ng-repeat='item in libraryItems' class='list-group-item workbench-library-item'" +
+                                            "ng-click='selectItem(item)'>" +
                                             "<b>{{ item.title }}</b><br/>" +
                                             "<b>Tags: </b><span ng-repeat='tag in item.tags'>{{tag}}{{$last ? '' : ', '}}</span>" +
                                         "</div>" +
@@ -79,6 +83,11 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                             });
                     });
                 });
+
+                scope.selectItem = function(item) {
+                    console.log(item);
+                    selectedItem = item;
+                };
 
                 /**
                  * Install the Library Import plugin for Highcharts Editor
