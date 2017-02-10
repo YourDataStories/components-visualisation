@@ -1188,3 +1188,8 @@ a.aggregate_link_dark:hover {
 .highcharts-editor-container {
     height: 700px;
 }
+
+/* Decrease bottom padding of workbench library items list */
+.workbench-library-item {
+    padding-bottom: 5px;
+}

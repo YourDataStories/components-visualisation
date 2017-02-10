@@ -64,7 +64,13 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                                 // console.log(scope.libraryItems);
 
                                 // Compile the template which will show all the items with ng-repeat
-                                var templateHtml = "<div ng-repeat='item in libraryItems'>{{ item.title }}</div>";
+                                var templateHtml =
+                                    "<div class='list-group'>" +
+                                        "<div ng-repeat='item in libraryItems' class='list-group-item workbench-library-item'>" +
+                                            "<b>{{ item.title }}</b><br/>" +
+                                            "<b>Tags: </b><span ng-repeat='tag in item.tags'>{{tag}}{{$last ? '' : ', '}}</span>" +
+                                        "</div>" +
+                                    "</div>";
 
                                 var compiledList = $compile(templateHtml)(scope);
 
