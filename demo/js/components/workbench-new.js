@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '$uibModal', 'Data', 'Basket',
-    function ($ocLazyLoad, $timeout, $uibModal, Data, Basket) {
+angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '$compile', '$uibModal', 'Data', 'Basket',
+    function ($ocLazyLoad, $timeout, $compile, $uibModal, Data, Basket) {
         return {
             restrict: 'E',
             scope: {
@@ -30,7 +30,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     importer: {
                         options: "plugins",
                         plugins: [
-                            "BasketImport"
+                            "My Library"
                         ]
                     }
                 };
@@ -49,18 +49,47 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     // Start the Highcharts Editor
                     highed.ready(function () {
                         highed.Editor(editorContainer[0], editorOptions);
+
+                        // Get div which contains the parameters of our plugin
+                        var divResults = $(".highed-plugin-details").children(".highed-customizer-table");
+
+                        // Replace the parameters table with a span that says "Loading"
+                        $(divResults).replaceWith("<span id='library_item_loading_span'>Loading Library Items...</span>");
+
+                        // Get basket items to show in a list
+                        Basket.getBasketItems(scope.userId, "dataset")
+                            .then(function(response) {
+                                // Get items from response and put them in scope
+                                scope.libraryItems = response.items;
+                                // console.log(scope.libraryItems);
+
+                                // Compile the template which will show all the items with ng-repeat
+                                var templateHtml = "<div ng-repeat='item in libraryItems'>{{ item.title }}</div>";
+
+                                var compiledList = $compile(templateHtml)(scope);
+
+                                // Replace the loading span with the compiled list of items
+                                $("#library_item_loading_span").replaceWith(compiledList);
+                            });
                     });
                 });
 
                 /**
-                 * Install the Basket Import plugin for Highcharts Editor
+                 * Install the Library Import plugin for Highcharts Editor
                  */
                 var addBasketImportPlugin = function() {
-                    highed.plugins.import.install('BasketImport', {
-                        description: "Standard Basket Import",
+                    highed.plugins.import.install('My Library', {
+                        description: "Select an item from the library to import to the chart",
                         treatAs: "csv",
                         suppressURL: true,
                         fetchAs: false,
+                        options: {
+                            val1: {
+                                type: 'string',
+                                label: 'String value',
+                                default: 'a string 1234'
+                            }
+                        },
                         request: function(url, options, fn) {
                             // Show modal and give it function to call with data
                             openModal(fn);
