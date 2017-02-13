@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '$compile', '$uibModal', 'Data', 'Basket',
-    function ($ocLazyLoad, $timeout, $compile, $uibModal, Data, Basket) {
+angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '$compile', '$templateRequest', '$uibModal', 'Data', 'Basket',
+    function ($ocLazyLoad, $timeout, $compile, $templateRequest, $uibModal, Data, Basket) {
         return {
             restrict: 'E',
             scope: {
@@ -19,7 +19,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 }
 
                 // Variable to keep the selected item in
-                var selectedItem = null;
+                scope.selectedItem = null;
 
                 //check if the language attr is defined, else assign default value
                 if (_.isUndefined(scope.lang) || scope.lang.trim() == "")
@@ -69,39 +69,32 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                                     return item;
                                 });
 
-                                // Compile the template which will show all the items with ng-repeat
-                                var templateHtml =
-                                    "<div class='list-group'>" +
-                                        "<div ng-repeat='item in libraryItems' class='list-group-item workbench-library-item'" +
-                                            "ng-click='selectItem(item)' " +
-                                            "ng-class=\"{'workbench-library-item-selected':item.selected}\">" +
-                                            "<b>{{ item.title }}</b><br/>" +
-                                            "<b>Tags: </b><span ng-repeat='tag in item.tags'>{{tag}}{{$last ? '' : ', '}}</span>" +
-                                        "</div>" +
-                                    "</div>";
+                                // Get the template which will show all the items, compile and add it ot the page
+                                $templateRequest("templates/workbench/library-list-template.html").then(function(html){
+                                    var template = angular.element(html);
 
-                                var compiledList = $compile(templateHtml)(scope);
+                                    $("#library_item_loading_span").replaceWith(template);
 
-                                // Replace the loading span with the compiled list of items
-                                $("#library_item_loading_span").replaceWith(compiledList);
+                                    $compile(template)(scope);
+                                });
                             });
                     });
                 });
 
                 scope.selectItem = function(item) {
                     // Deselect previous item
-                    if (!_.isNull(selectedItem)) {
-                        selectedItem.selected = false;
+                    if (!_.isNull(scope.selectedItem)) {
+                        scope.selectedItem.selected = false;
 
                         // If the same item was clicked, do not select it again
-                        if (item.basket_item_id == selectedItem.basket_item_id) {
-                            selectedItem = null;
+                        if (item.basket_item_id == scope.selectedItem.basket_item_id) {
+                            scope.selectedItem = null;
                             return;
                         }
                     }
 
                     // Select new item
-                    selectedItem = item;
+                    scope.selectedItem = item;
                     item.selected = true;
 
                     // console.log(item);

@@ -1,0 +1,16 @@
+<div class="list-group">
+    <div ng-repeat="item in libraryItems"
+         class="list-group-item workbench-library-item"
+         ng-class="{'workbench-library-item-selected' : item.selected}"
+         ng-click="selectItem(item)">
+        <b>{{ item.title }}</b><br/>
+        <b>Tags: </b><span ng-repeat="tag in item.tags">{{ tag }}{{ $last ? "" : ", " }}</span>
+    </div>
+</div>
+
+<p ng-if='selectedItem != null'>
+    Press the import button to create a chart with:<br/><b>{{selectedItem.title}}</b>
+</p>
+<p ng-if='selectedItem == null'>
+    Please select an item and press the import button.<br/>
+</p>
