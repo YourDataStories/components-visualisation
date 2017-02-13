@@ -1193,3 +1193,8 @@ a.aggregate_link_dark:hover {
 .workbench-library-item {
     padding-bottom: 5px;
 }
+
+.workbench-library-item-selected {
+    background-color: #9b9b9b;
+    color: white;
+}

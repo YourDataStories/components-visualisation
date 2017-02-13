@@ -64,13 +64,17 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                             .then(function(response) {
                                 // Get items from response and put them in scope
                                 scope.libraryItems = response.items;
-                                // console.log(scope.libraryItems);
+                                _.map(scope.libraryItems, function(item) {
+                                    item.selected = false;
+                                    return item;
+                                });
 
                                 // Compile the template which will show all the items with ng-repeat
                                 var templateHtml =
                                     "<div class='list-group'>" +
                                         "<div ng-repeat='item in libraryItems' class='list-group-item workbench-library-item'" +
-                                            "ng-click='selectItem(item)'>" +
+                                            "ng-click='selectItem(item)' " +
+                                            "ng-class=\"{'workbench-library-item-selected':item.selected}\">" +
                                             "<b>{{ item.title }}</b><br/>" +
                                             "<b>Tags: </b><span ng-repeat='tag in item.tags'>{{tag}}{{$last ? '' : ', '}}</span>" +
                                         "</div>" +
@@ -85,8 +89,22 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 });
 
                 scope.selectItem = function(item) {
-                    console.log(item);
+                    // Deselect previous item
+                    if (!_.isNull(selectedItem)) {
+                        selectedItem.selected = false;
+
+                        // If the same item was clicked, do not select it again
+                        if (item.basket_item_id == selectedItem.basket_item_id) {
+                            selectedItem = null;
+                            return;
+                        }
+                    }
+
+                    // Select new item
                     selectedItem = item;
+                    item.selected = true;
+
+                    // console.log(item);
                 };
 
                 /**
@@ -95,7 +113,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 var addBasketImportPlugin = function() {
                     highed.plugins.import.install('My Library', {
                         description: "Select an item from the library to import to the chart",
-                        treatAs: "csv",
+                        treatAs: "json",
                         suppressURL: true,
                         fetchAs: false,
                         options: {
