@@ -22,6 +22,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 scope.selectedItem = null;
 
                 var editor = null;
+                var allViews = null;
                 scope.viewsLoaded = false;
 
                 //check if the language attr is defined, else assign default value
@@ -70,16 +71,16 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
 
                         // Get basket items to show in a list
                         Basket.getBasketItems(scope.userId, "dataset")
-                            .then(function(response) {
+                            .then(function (response) {
                                 // Get items from response and put them in scope
                                 scope.libraryItems = response.items;
-                                _.map(scope.libraryItems, function(item) {
+                                _.map(scope.libraryItems, function (item) {
                                     item.selected = false;
                                     return item;
                                 });
 
                                 // Get the template which will show all the items, compile and add it ot the page
-                                $templateRequest("templates/workbench/library-list-template.html").then(function(html){
+                                $templateRequest("templates/workbench/library-list-template.html").then(function (html) {
                                     var template = angular.element(html);
 
                                     $("#library_item_loading_span").replaceWith(template);
@@ -90,7 +91,10 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     });
                 });
 
-                scope.createChart = function() {
+                /**
+                 * Add data to the chart depending on the selection that has been made in the view/axes selection tab
+                 */
+                scope.createChart = function () {
                     // todo: Import real data to chart
                     editor.chart.data.settings({
                         "chart": {},
@@ -104,7 +108,21 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     });
                 };
 
-                scope.selectItem = function(item) {
+                /**
+                 * Update the scope object which holds the selected view, when a view is selected from the drop down
+                 * @param viewName  Name of view that was selected
+                 */
+                scope.selectView = function (viewName) {
+                    scope.selectedViewObj = _.findWhere(allViews, {type: viewName});
+                    // console.log("selecting view", viewName, scope.selectedViewObj);
+                };
+
+                /**
+                 * Toggle the selected state of a Library item and update the available visualisations for the selected
+                 * items
+                 * @param item  Clicked item
+                 */
+                scope.selectItem = function (item) {
                     // Deselect previous item
                     if (!_.isNull(scope.selectedItem)) {
                         scope.selectedItem.selected = false;
@@ -123,11 +141,14 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     // Get available views and axes for this item
                     Workbench.getAvailableVisualisations("en", [
                         item.basket_item_id
-                    ]).then(function(response) {
+                    ]).then(function (response) {
+                        // Keep view data to use for drop downs later
+                        allViews = response.data;
+
                         // Add available views to the scope
                         scope.availableViews = _.pluck(response.data, "type");
                         scope.viewsLoaded = true;
-                    }, function(error) {
+                    }, function (error) {
                         console.error(error.message);
                         scope.viewsLoaded = false;
                     });
@@ -136,7 +157,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 /**
                  * Install the Library Import plugin for Highcharts Editor
                  */
-                var addBasketImportPlugin = function() {
+                var addBasketImportPlugin = function () {
                     highed.plugins.import.install('My Library', {
                         description: "Select an item from the library to import to the chart",
                         treatAs: "json",
@@ -148,7 +169,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                                 label: 'String value'
                             }
                         },
-                        request: function(url, options, fn) {
+                        request: function (url, options, fn) {
                             // do nothing (the import button is hidden so this should not be called, ever)
                         }
                     });
