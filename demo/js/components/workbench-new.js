@@ -21,6 +21,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 // Variable to keep the selected item in
                 scope.selectedItem = null;
 
+                var editor = null;
                 scope.viewsLoaded = false;
 
                 //check if the language attr is defined, else assign default value
@@ -56,13 +57,16 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
 
                     // Start the Highcharts Editor
                     highed.ready(function () {
-                        highed.YDSEditor(editorContainer[0], editorOptions, scope);
+                        editor = highed.YDSEditor(editorContainer[0], editorOptions, scope);
 
                         // Get div which contains the parameters of our plugin
                         var divResults = $(".highed-plugin-details").children(".highed-customizer-table");
 
                         // Replace the parameters table with a span that says "Loading"
                         $(divResults).replaceWith("<span id='library_item_loading_span'>Loading Library Items...</span>");
+
+                        // Hide the import button
+                        $(".highed-imp-button").hide();
 
                         // Get basket items to show in a list
                         Basket.getBasketItems(scope.userId, "dataset")
@@ -86,6 +90,20 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     });
                 });
 
+                scope.createChart = function() {
+                    // todo: Import real data to chart
+                    editor.chart.data.settings({
+                        "chart": {},
+                        "title": {
+                            "text": "Imported Chart"
+                        },
+                        "series": [{
+                            "name": "Amount (€)",
+                            "data": [15.3, 25.6, 10.15]
+                        }]
+                    });
+                };
+
                 scope.selectItem = function(item) {
                     // Deselect previous item
                     if (!_.isNull(scope.selectedItem)) {
@@ -101,8 +119,6 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     // Select new item
                     scope.selectedItem = item;
                     item.selected = true;
-
-                    // console.log(item);
 
                     // Get available views and axes for this item
                     Workbench.getAvailableVisualisations("en", [
@@ -133,26 +149,8 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                             }
                         },
                         request: function(url, options, fn) {
-                            // Show modal and give it function to call with data
-                            openModal(fn);
+                            // do nothing (the import button is hidden so this should not be called, ever)
                         }
-                    });
-                };
-
-                var openModal = function (fn) {
-                    var modalInstance = $uibModal.open({
-                        animation: true,
-                        ariaLabelledBy: "modal-title",
-                        ariaDescribedBy: "modal-body",
-                        templateUrl: "templates/workbench/workbench-modal.html",
-                        controller: "WorkbenchModalController"
-                    });
-
-                    // Process result of modal
-                    modalInstance.result.then(function (data) {
-                        fn(false, data.chartConfig);
-                    }, function () {
-                        console.log("Modal dismissed at: " + new Date());
                     });
                 };
             }

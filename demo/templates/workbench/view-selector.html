@@ -1,8 +1,6 @@
 <div class="workbench-view-selector-container">
     <!--View/axes selector-->
     <div ng-if="viewsLoaded && selectedItem != null">
-        <h4>Views loaded!</h4>
-
         <!--View selection-->
         <div class="row">
             <div class="form-group col-md-10 col-md-offset-1">
@@ -12,8 +10,15 @@
                         ng-model="selectedView"
                         ng-change="selectView(selectedView)"
                         ng-options="item as item for item in availableViews">
-                    <option value="">Please select a valid dataset</option>
+                    <option value="">Please select a view</option>
                 </select>
+            </div>
+        </div>
+
+        <!--Create chart button-->
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <button type="button" class="btn btn-primary btn-lg" ng-click="createChart()">Create chart</button>
             </div>
         </div>
     </div>
