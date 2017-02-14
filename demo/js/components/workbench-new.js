@@ -107,11 +107,12 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     // Get available views and axes for this item
                     Workbench.getAvailableVisualisations("en", [
                         item.basket_item_id
-                    ]).then(function(data) {
-                        // console.log(data);
-                        //todo: add views to the scope
+                    ]).then(function(response) {
+                        // Add available views to the scope
+                        scope.availableViews = _.pluck(response.data, "type");
                         scope.viewsLoaded = true;
                     }, function(error) {
+                        console.error(error.message);
                         scope.viewsLoaded = false;
                     });
                 };

@@ -2,10 +2,26 @@
     <!--View/axes selector-->
     <div ng-if="viewsLoaded && selectedItem != null">
         <h4>Views loaded!</h4>
+
+        <!--View selection-->
+        <div class="row">
+            <div class="form-group col-md-10 col-md-offset-1">
+                <label for="available-views">Select a view type:</label>
+                <select class="form-control"
+                        id="available-views"
+                        ng-model="selectedView"
+                        ng-change="selectView(selectedView)"
+                        ng-options="item as item for item in availableViews">
+                    <option value="">Please select a valid dataset</option>
+                </select>
+            </div>
+        </div>
     </div>
 
     <!--Alert for when views are not loaded-->
     <div ng-if="viewsLoaded == false || selectedItem == null">
-        <div uib-alert class="alert-warning"><span class="glyphicon glyphicon-warning-sign"></span> Please select one or more Library items in the Import tab!</div>
+        <div uib-alert class="alert-warning"><span class="glyphicon glyphicon-warning-sign"></span> Please select one or
+            more Library items in the Import tab!
+        </div>
     </div>
 </div>

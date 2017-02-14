@@ -5,11 +5,13 @@ angular.module('yds').service('ydsEditorService', ['$compile', '$templateRequest
          * @param scope     Scope to use for template
          */
         var createViewSelector = function (parent, scope) {
-            //todo: create view selector in given "parent" dom element
             $templateRequest("templates/workbench/view-selector.html").then(function (html) {
                 var template = angular.element(html);
 
+                // Add element as a child to the parent
                 $(parent).append(template);
+
+                // Compile the element
                 $compile(template)(scope);
             });
         };
