@@ -173,6 +173,37 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 };
 
                 /**
+                 * Filter function for the Y axis comboboxes (filters out axes that have already been selected in other
+                 * comboboxes)
+                 * @param index         Index of combobox to filter for
+                 * @returns {Function}  Filter
+                 */
+                scope.yAxisComboboxFilter = function (index) {
+                    return function (item) {
+                        var attrSelected = false;
+                        var chartAxisY = scope.axisYConfig;
+                        var axisYConfig = _.clone(chartAxisY);
+
+                        // If the filtered attribute is already selected, return it
+                        if (axisYConfig[index].selected != null && axisYConfig[index].selected.attribute == item.attribute)
+                            return item;
+
+                        // Else search if the attribute is selected in one of the other compoboxes
+                        axisYConfig.splice(index, 1);
+                        if (axisYConfig.length > 0) {
+                            var existingCombos = _.where(_.pluck(axisYConfig, 'selected'), {attribute: item.attribute});
+
+                            if (existingCombos.length > 0)
+                                attrSelected = true;
+                        }
+
+                        // If the attribute is not selected in none of the comboboxes return it as available
+                        if (!attrSelected)
+                            return item;
+                    };
+                };
+
+                /**
                  * Toggle the selected state of a Library item and update the available visualisations for the selected
                  * items
                  * @param item  Clicked item
