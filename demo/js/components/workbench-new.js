@@ -127,8 +127,48 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                             x: axes["axis-x"],
                             y: axes["axis-y"]
                         };
+
+                        // Initialize/reset selected Y axes
+                        scope.axisYConfig = [{
+                            selected: "",
+                            options: scope.axes.y
+                        }];
                     } else {
                         scope.axes = undefined;
+                    }
+                };
+
+                /**
+                 * Add a new combobox for Y axis selection
+                 * @returns {boolean}
+                 */
+                scope.addAxisY = function () {
+                    // Check if there is any combobox with default value
+                    var nonSelectedCombo = _.where(scope.axisYConfig, {selected: ""});
+
+                    // If there is an empty combobox or the number of comboboxes is equal with the number
+                    // of line axes, stop the execution of the function
+                    if (nonSelectedCombo.length > 0 || scope.axisYConfig.length > 5 ||
+                        scope.axisYConfig.length == scope.axes.y.length) {
+                        return false;
+                    } else {
+                        // Create a new combobox with default values and append it to the combobox array
+                        var newCombo = {
+                            selected: "",
+                            options: scope.axes.y
+                        };
+
+                        scope.axisYConfig.push(newCombo);
+                    }
+                };
+
+                /**
+                 * Remove the Y axis specified by the given index
+                 * @param index Index of Y axis to remove
+                 */
+                scope.removeAxisY = function (index) {
+                    if (scope.axisYConfig.length > 1) {
+                        scope.axisYConfig.splice(index, 1);
                     }
                 };
 
