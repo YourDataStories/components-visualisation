@@ -15,6 +15,21 @@
             </div>
         </div>
 
+        <!--X axis selection-->
+        <div class="row" ng-if="axes != undefined && axes.x.length > 0">
+            <div class="col-md-offset-1 col-md-10">
+                <div class="form-group">
+                    <label>X Axis:</label>
+                    <select class="form-control"
+                            ng-model="selectedAxisX"
+                            ng-options="item as item.label for item in axes.x"
+                            ng-disabled="axes.x.length==1">
+                        <option value="">Choose...</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
         <!--Create chart button-->
         <div class="row">
             <div class="col-md-12 text-center">

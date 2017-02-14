@@ -113,8 +113,23 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                  * @param viewName  Name of view that was selected
                  */
                 scope.selectView = function (viewName) {
-                    scope.selectedViewObj = _.findWhere(allViews, {type: viewName});
-                    // console.log("selecting view", viewName, scope.selectedViewObj);
+                    // Get the view object
+                    var view = _.findWhere(allViews, {type: viewName});
+
+                    // Get axes from the generic view object
+                    var axes = _.findWhere(view.values, {
+                        component: "generic"
+                    });
+
+                    // Add axes to the scope if the generic view object exists
+                    if (_.has(axes, "axis-x") && _.has(axes, "axis-y")) {
+                        scope.axes = {
+                            x: axes["axis-x"],
+                            y: axes["axis-y"]
+                        };
+                    } else {
+                        scope.axes = undefined;
+                    }
                 };
 
                 /**
