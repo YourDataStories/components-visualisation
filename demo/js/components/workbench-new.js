@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '$compile', '$templateRequest', '$uibModal', 'Data', 'Basket',
-    function ($ocLazyLoad, $timeout, $compile, $templateRequest, $uibModal, Data, Basket) {
+angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '$compile', '$templateRequest', '$uibModal', 'Data', 'Basket', 'ydsEditorService',
+    function ($ocLazyLoad, $timeout, $compile, $templateRequest, $uibModal, Data, Basket, ydsEditorService) {
         return {
             restrict: 'E',
             scope: {
@@ -29,7 +29,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 Basket.setUserId(scope.userId);
 
                 var editorOptions = {
-                    features: "import templates customize export",
+                    features: "import view templates customize export",
                     importer: {
                         options: "plugins",
                         plugins: [
@@ -46,12 +46,15 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     ],
                     cache: true
                 }).then(function () {
+                    // Add the YDS editor to the Highcharts Editor
+                    ydsEditorService.registerEditor();
+
                     // Add plugin for basket import
                     addBasketImportPlugin();
 
                     // Start the Highcharts Editor
                     highed.ready(function () {
-                        highed.Editor(editorContainer[0], editorOptions);
+                        highed.YDSEditor(editorContainer[0], editorOptions);
 
                         // Get div which contains the parameters of our plugin
                         var divResults = $(".highed-plugin-details").children(".highed-customizer-table");
@@ -112,8 +115,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                         options: {
                             val1: {
                                 type: 'string',
-                                label: 'String value',
-                                default: 'a string 1234'
+                                label: 'String value'
                             }
                         },
                         request: function(url, options, fn) {
@@ -134,8 +136,6 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
 
                     // Process result of modal
                     modalInstance.result.then(function (data) {
-                        // console.log(data);
-
                         fn(false, data.chartConfig);
                     }, function () {
                         console.log("Modal dismissed at: " + new Date());
