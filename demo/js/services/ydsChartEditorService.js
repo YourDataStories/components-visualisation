@@ -1,12 +1,33 @@
-angular.module('yds').service('ydsEditorService', ['$compile', function ($compile) {
-        var createViewSelector = function (parent) {
-            // console.log(parent);
+angular.module('yds').service('ydsEditorService', ['$compile', '$templateRequest', function ($compile, $templateRequest) {
+        /**
+         * Create the content of the view/axes selection step in the Editor based of the view selector template
+         * @param parent    Element to put template in
+         * @param scope     Scope to use for template
+         */
+        var createViewSelector = function (parent, scope) {
             //todo: create view selector in given "parent" dom element
+            $templateRequest("templates/workbench/view-selector.html").then(function (html) {
+                var template = angular.element(html);
+
+                $(parent).append(template);
+                $compile(template)(scope);
+            });
         };
 
+        /**
+         * Registers the YDSEditor with the Highcharts Editor to make it available for use.
+         * This editor is based on Highchart Editor's main Editor.
+         */
         var registerYDSEditor = function () {
-            // Register the editor (based on the main highed.Editor)
-            highed.YDSEditor = function (parent, attributes) {
+            /**
+             * Create a YDS Editor
+             * @param parent            Parent DOM element to put Editor in
+             * @param attributes        Attributes of the Editor
+             * @param workbenchScope    Scope of the workbench component that creates this Editor. Used for the view selector template
+             * @returns {*}
+             * @constructor
+             */
+            highed.YDSEditor = function (parent, attributes, workbenchScope) {
                 var events = highed.events(),
 
                     properties = highed.merge({
@@ -49,7 +70,7 @@ angular.module('yds').service('ydsEditorService', ['$compile', function ($compil
                     dataTable = highed.DataTable(dataTableStep.body),
 
                     viewTypeStep = wizbar.addStep({title: "Axes"}),
-                    viewTypeSelector = createViewSelector(viewTypeStep.body),
+                    viewTypeSelector = createViewSelector(viewTypeStep.body, workbenchScope),
 
                     templateStep = wizbar.addStep({title: highed.getLocalizedStr('stepTemplates')}),
                     chartTemplateSelector = highed.ChartTemplateSelector(templateStep.body),

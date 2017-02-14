@@ -54,7 +54,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
 
                     // Start the Highcharts Editor
                     highed.ready(function () {
-                        highed.YDSEditor(editorContainer[0], editorOptions);
+                        highed.YDSEditor(editorContainer[0], editorOptions, scope);
 
                         // Get div which contains the parameters of our plugin
                         var divResults = $(".highed-plugin-details").children(".highed-customizer-table");
