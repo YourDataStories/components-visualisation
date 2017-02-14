@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '$compile', '$templateRequest', '$uibModal', 'Data', 'Basket', 'ydsEditorService',
-    function ($ocLazyLoad, $timeout, $compile, $templateRequest, $uibModal, Data, Basket, ydsEditorService) {
+angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '$compile', '$templateRequest', '$uibModal', 'Data', 'Basket', 'ydsEditorService', 'Workbench',
+    function ($ocLazyLoad, $timeout, $compile, $templateRequest, $uibModal, Data, Basket, ydsEditorService, Workbench) {
         return {
             restrict: 'E',
             scope: {
@@ -20,6 +20,8 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
 
                 // Variable to keep the selected item in
                 scope.selectedItem = null;
+
+                scope.viewsLoaded = false;
 
                 //check if the language attr is defined, else assign default value
                 if (_.isUndefined(scope.lang) || scope.lang.trim() == "")
@@ -101,6 +103,17 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     item.selected = true;
 
                     // console.log(item);
+
+                    // Get available views and axes for this item
+                    Workbench.getAvailableVisualisations("en", [
+                        item.basket_item_id
+                    ]).then(function(data) {
+                        // console.log(data);
+                        //todo: add views to the scope
+                        scope.viewsLoaded = true;
+                    }, function(error) {
+                        scope.viewsLoaded = false;
+                    });
                 };
 
                 /**

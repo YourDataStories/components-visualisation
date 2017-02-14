@@ -1198,3 +1198,7 @@ a.aggregate_link_dark:hover {
     background-color: #9b9b9b;
     color: white;
 }
+
+.workbench-view-selector-container {
+    padding: 20px;
+}

@@ -1,4 +1,11 @@
-<div>
-    <h3>View selector</h3>
-    <h4>Number of library items: {{libraryItems.length}}</h4>
+<div class="workbench-view-selector-container">
+    <!--View/axes selector-->
+    <div ng-if="viewsLoaded && selectedItem != null">
+        <h4>Views loaded!</h4>
+    </div>
+
+    <!--Alert for when views are not loaded-->
+    <div ng-if="viewsLoaded == false || selectedItem == null">
+        <div uib-alert class="alert-warning"><span class="glyphicon glyphicon-warning-sign"></span> Please select one or more Library items in the Import tab!</div>
+    </div>
 </div>
