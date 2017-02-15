@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '$compile', '$templateRequest', '$uibModal', 'Data', 'Basket', 'ydsEditorService', 'Workbench',
-    function ($ocLazyLoad, $timeout, $compile, $templateRequest, $uibModal, Data, Basket, ydsEditorService, Workbench) {
+angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '$compile', '$templateRequest', '$uibModal', 'Data', 'Basket', 'Workbench',
+    function ($ocLazyLoad, $timeout, $compile, $templateRequest, $uibModal, Data, Basket, Workbench) {
         return {
             restrict: 'E',
             scope: {
@@ -44,19 +44,18 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 $ocLazyLoad.load({
                     files: [
                         "css/highcharts-editor.min.css",
-                        "lib/highcharts-editor.js"
+                        "lib/highcharts-editor.js",
+                        "lib/yds-chart-editor.js"
                     ],
+                    serie: true,
                     cache: true
                 }).then(function () {
-                    // Add the YDS editor to the Highcharts Editor
-                    ydsEditorService.registerEditor();
-
                     // Add plugin for basket import
                     addBasketImportPlugin();
 
                     // Start the Highcharts Editor
                     highed.ready(function () {
-                        editor = highed.YDSEditor(editorContainer[0], editorOptions, scope);
+                        editor = highed.YDSEditor(editorContainer[0], editorOptions, createViewSelector);
 
                         // Get div which contains the parameters of our plugin
                         var divResults = $(".highed-plugin-details").children(".highed-customizer-table");
@@ -88,6 +87,22 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                             });
                     });
                 });
+
+                /**
+                 * Create the view selector inside a parent element, using the template
+                 * @param parent    Parent element to put view selector inside of
+                 */
+                var createViewSelector = function (parent) {
+                    $templateRequest("templates/workbench/view-selector.html").then(function (html) {
+                        var template = angular.element(html);
+
+                        // Add element as a child to the parent
+                        $(parent).append(template);
+
+                        // Compile the element
+                        $compile(template)(scope);
+                    });
+                };
 
                 /**
                  * Add data to the chart depending on the selection that has been made in the view/axes selection tab
