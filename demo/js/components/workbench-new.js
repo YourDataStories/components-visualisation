@@ -20,17 +20,15 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
 
                 // Variable to keep the selected item in
                 scope.selectedItem = null;
+                scope.viewsLoaded = false;
+                scope.selection = {};
 
                 var editor = null;
                 var allViews = null;
-                scope.viewsLoaded = false;
 
                 //check if the language attr is defined, else assign default value
                 if (_.isUndefined(scope.lang) || scope.lang.trim() == "")
                     scope.lang = "en";
-
-                // Set user ID in the Basket service so the modal can access it
-                Basket.setUserId(scope.userId);
 
                 var editorOptions = {
                     features: "import view templates customize export",
@@ -95,6 +93,16 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                  * Add data to the chart depending on the selection that has been made in the view/axes selection tab
                  */
                 scope.createChart = function () {
+                    // Get selected axes data
+                    var selection = {
+                        x: _.omit(scope.selection.x, "$$hashKey"),
+                        y: _.map(scope.selection.y, function (axis) {
+                            // Get only selection from axis configuration object, omitting blacklisted key
+                            return _.omit(axis.selected, "$$hashKey");
+                        })
+                    };
+
+                    // Create the chart
                     // todo: Import real data to chart
                     editor.chart.data.settings({
                         "chart": {},
@@ -129,7 +137,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                         };
 
                         // Initialize/reset selected Y axes
-                        scope.axisYConfig = [{
+                        scope.selection.y = [{
                             selected: "",
                             options: scope.axes.y
                         }];
@@ -144,12 +152,12 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                  */
                 scope.addAxisY = function () {
                     // Check if there is any combobox with default value
-                    var nonSelectedCombo = _.where(scope.axisYConfig, {selected: ""});
+                    var nonSelectedCombo = _.where(scope.selection.y, {selected: ""});
 
                     // If there is an empty combobox or the number of comboboxes is equal with the number
                     // of line axes, stop the execution of the function
-                    if (nonSelectedCombo.length > 0 || scope.axisYConfig.length > 5 ||
-                        scope.axisYConfig.length == scope.axes.y.length) {
+                    if (nonSelectedCombo.length > 0 || scope.selection.y.length > 5 ||
+                        scope.selection.y.length == scope.axes.y.length) {
                         return false;
                     } else {
                         // Create a new combobox with default values and append it to the combobox array
@@ -158,7 +166,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                             options: scope.axes.y
                         };
 
-                        scope.axisYConfig.push(newCombo);
+                        scope.selection.y.push(newCombo);
                     }
                 };
 
@@ -167,8 +175,8 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                  * @param index Index of Y axis to remove
                  */
                 scope.removeAxisY = function (index) {
-                    if (scope.axisYConfig.length > 1) {
-                        scope.axisYConfig.splice(index, 1);
+                    if (scope.selection.y.length > 1) {
+                        scope.selection.y.splice(index, 1);
                     }
                 };
 
@@ -181,7 +189,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 scope.yAxisComboboxFilter = function (index) {
                     return function (item) {
                         var attrSelected = false;
-                        var chartAxisY = scope.axisYConfig;
+                        var chartAxisY = scope.selection.y;
                         var axisYConfig = _.clone(chartAxisY);
 
                         // If the filtered attribute is already selected, return it

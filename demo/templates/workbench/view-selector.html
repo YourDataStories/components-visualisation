@@ -21,7 +21,7 @@
                 <div class="form-group">
                     <label>X Axis:</label>
                     <select class="form-control"
-                            ng-model="selectedAxisX"
+                            ng-model="selection.x"
                             ng-options="item as item.label for item in axes.x"
                             ng-disabled="axes.x.length==1">
                         <option value="">Choose...</option>
@@ -33,7 +33,7 @@
         <!--Y axis selection-->
         <div class="row" ng-if="axes != undefined && axes.y.length > 0">
             <div class="col-md-offset-1 col-md-10">
-                <div class="form-group" ng-repeat="axisY in axisYConfig track by $index">
+                <div class="form-group" ng-repeat="axisY in selection.y track by $index">
                     <label class="pull-left">Y Axis <span class="label label-success">{{ $index+1 }}</span></label>
                     <div class="form-group" style="margin-right: 100px">
                         <select class="form-control pull-left"
@@ -49,7 +49,7 @@
                     </button>
                     <button type="button"
                             class="btn btn-default pull-right"
-                            ng-disabled="axisYConfig.length<2"
+                            ng-disabled="selection.y.length<2"
                             ng-click="removeAxisY($index)">
                         <span class="glyphicon glyphicon-minus-sign"></span>
                     </button>
