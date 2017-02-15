@@ -19,7 +19,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 }
 
                 // Variable to keep the selected item in
-                scope.selectedItem = null;
+                scope.selectedItems = [];
                 scope.viewsLoaded = false;
                 scope.selection = {};
 
@@ -232,25 +232,21 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                  * @param item  Clicked item
                  */
                 scope.selectItem = function (item) {
-                    // Deselect previous item
-                    if (!_.isNull(scope.selectedItem)) {
-                        scope.selectedItem.selected = false;
-
-                        // If the same item was clicked, do not select it again
-                        if (item.basket_item_id == scope.selectedItem.basket_item_id) {
-                            scope.selectedItem = null;
-                            return;
-                        }
+                    if (item.selected == true) {
+                        // Remove item from selected items
+                        scope.selectedItems = _.without(scope.selectedItems, item);
+                    } else {
+                        // Add the item to the selected items
+                        scope.selectedItems.push(item);
                     }
 
-                    // Select new item
-                    scope.selectedItem = item;
-                    item.selected = true;
+                    // Toggle the item's selection state
+                    item.selected = !item.selected;
+
+                    var selectedItemIds = _.pluck(scope.selectedItems, "basket_item_id");
 
                     // Get available views and axes for this item
-                    Workbench.getAvailableVisualisations("en", [
-                        item.basket_item_id
-                    ]).then(function (response) {
+                    Workbench.getAvailableVisualisations(scope.lang, selectedItemIds).then(function (response) {
                         // Keep view data to use for drop downs later
                         allViews = response.data;
 
@@ -268,7 +264,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                  */
                 var addBasketImportPlugin = function () {
                     highed.plugins.import.install('My Library', {
-                        description: "Select an item from the library to import to the chart",
+                        description: "Select items from the Library to use them in the next steps.",
                         treatAs: "json",
                         suppressURL: true,
                         fetchAs: false,

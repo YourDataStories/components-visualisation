@@ -1192,11 +1192,11 @@ a.aggregate_link_dark:hover {
 /* Decrease bottom padding of workbench library items list */
 .workbench-library-item {
     padding-bottom: 5px;
+    border-color: #ababab;
 }
 
 .workbench-library-item-selected {
-    background-color: #9b9b9b;
-    color: white;
+    background-color: #e1e1e1;
 }
 
 .workbench-view-selector-container {

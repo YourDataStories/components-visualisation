@@ -1,6 +1,6 @@
 <div class="workbench-view-selector-container">
     <!--View/axes selector-->
-    <div ng-if="viewsLoaded && selectedItem != null">
+    <div ng-if="viewsLoaded && selectedItems.length > 0">
         <!--View selection-->
         <div class="row">
             <div class="form-group col-md-10 col-md-offset-1">
@@ -67,7 +67,7 @@
     </div>
 
     <!--Alert for when views are not loaded-->
-    <div ng-if="viewsLoaded == false || selectedItem == null">
+    <div ng-if="viewsLoaded == false || selectedItems.length == 0">
         <div uib-alert class="alert-warning"><span class="glyphicon glyphicon-warning-sign"></span> Please select one or
             more Library items in the Import tab!
         </div>
