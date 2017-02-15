@@ -93,6 +93,10 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                  * @param parent    Parent element to put view selector inside of
                  */
                 var createViewSelector = function (parent) {
+                    // Add class for making content scroll when it's too long to the parent
+                    angular.element(parent).addClass("view-selector-step-body");
+
+                    // Add content to the parent
                     $templateRequest("templates/workbench/view-selector.html").then(function (html) {
                         var template = angular.element(html);
 

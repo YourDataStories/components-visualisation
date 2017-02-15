@@ -1184,21 +1184,29 @@ a.aggregate_link_dark:hover {
     background: rgb(124, 194, 69);
 }
 
-/* Make Highcharts Editor taller */
+/* Make Highcharts Editor take up 75% of the viewport height */
 .highcharts-editor-container {
-    height: 700px;
+    height: 75vh;
 }
 
-/* Decrease bottom padding of workbench library items list */
+/* Show scrollbar in view/axes selection step of Workbench if content is too long */
+.view-selector-step-body {
+    /* !important because loading the Editor's CSS file after this one gives it priority... */
+    overflow: auto!important;
+}
+
+/* Workbench Library item style */
 .workbench-library-item {
     padding-bottom: 5px;
     border-color: #ababab;
 }
 
+/* Selected Workbench Library item style */
 .workbench-library-item-selected {
     background-color: #e1e1e1;
 }
 
+/* Add padding to view selector step container */
 .workbench-view-selector-container {
     padding: 20px;
 }
