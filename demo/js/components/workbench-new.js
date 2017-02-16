@@ -125,22 +125,10 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     // Get chart data
                     Workbench.getLineBarVis("generic", scope.chartConfig.selectedView, selection.x, selection.y,
                         _.pluck(scope.selectedItems, "basket_item_id"), scope.lang, false).then(function (response) {
-                        console.log(response);
+                        // Add data to chart
+                        editor.chart.data.settings(response.data);
                     }, function (error) {
                         console.error(error.message);
-                    });
-
-                    // Create the chart
-                    // todo: Import real data to chart
-                    editor.chart.data.settings({
-                        "chart": {},
-                        "title": {
-                            "text": "Imported Chart"
-                        },
-                        "series": [{
-                            "name": "Amount (€)",
-                            "data": [15.3, 25.6, 10.15]
-                        }]
                     });
                 };
 
