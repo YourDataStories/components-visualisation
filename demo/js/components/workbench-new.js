@@ -125,6 +125,9 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     // Get chart data
                     Workbench.getLineBarVis("generic", scope.chartConfig.selectedView, selection.x, selection.y,
                         _.pluck(scope.selectedItems, "basket_item_id"), scope.lang, false).then(function (response) {
+                        // Reset the chart preview
+                        editor.chart.new();
+
                         // Add data to chart
                         editor.chart.data.settings(response.data);
                     }, function (error) {
