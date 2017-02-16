@@ -153,6 +153,9 @@ angular.module('yds').factory('Workbench', [ 'YDS_CONSTANTS', '$q', '$http', 'Da
 				case "barchart":
 					visUrl = "http://" + YDS_CONSTANTS.API_INTERACTIVE_BAR;
 					break;
+				case "generic":
+					visUrl = "http://" + YDS_CONSTANTS.API_INTERACTIVE_GENERIC;
+					break
 			}
 
 			// If sparql parameter is true add parameter to the URL

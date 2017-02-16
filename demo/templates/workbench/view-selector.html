@@ -7,8 +7,8 @@
                 <label for="available-views">Select a view type:</label>
                 <select class="form-control"
                         id="available-views"
-                        ng-model="selectedView"
-                        ng-change="selectView(selectedView)"
+                        ng-model="chartConfig.selectedView"
+                        ng-change="selectView(chartConfig.selectedView)"
                         ng-options="item as item for item in availableViews">
                     <option value="">Please select a view</option>
                 </select>

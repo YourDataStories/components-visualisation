@@ -21,6 +21,7 @@ app.constant("YDS_CONSTANTS", {
     "API_INTERACTIVE_BAR": "platform.yourdatastories.eu/api/json-ld/component/barchart.tcl/interactive",
     "API_INTERACTIVE_LINE": "platform.yourdatastories.eu/api/json-ld/component/linechart.tcl/interactive",
     "API_INTERACTIVE_SCATTER": "platform.yourdatastories.eu/api/json-ld/component/scatterchart.tcl/interactive",
+    "API_INTERACTIVE_GENERIC": "platform.yourdatastories.eu/api/json-ld/component/genericchart.tcl",
     "API_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/search.tcl",
     "API_SEARCH_SUGGESTIONS": "platform.yourdatastories.eu/api/json-ld/component/suggest.tcl",
     "API_FILTER_SUGGESTIONS": "platform.yourdatastories.eu/api/json-ld/component/suggest_field.tcl",

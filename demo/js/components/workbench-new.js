@@ -22,6 +22,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 scope.selectedItems = [];
                 scope.viewsLoaded = false;
                 scope.selection = {};
+                scope.chartConfig = {};
 
                 var editor = null;
                 var allViews = null;
@@ -120,6 +121,14 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                             return _.omit(axis.selected, "$$hashKey");
                         })
                     };
+
+                    // Get chart data
+                    Workbench.getLineBarVis("generic", scope.chartConfig.selectedView, selection.x, selection.y,
+                        _.pluck(scope.selectedItems, "basket_item_id"), scope.lang, false).then(function (response) {
+                        console.log(response);
+                    }, function (error) {
+                        console.error(error.message);
+                    });
 
                     // Create the chart
                     // todo: Import real data to chart
