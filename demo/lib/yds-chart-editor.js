@@ -2,11 +2,12 @@
  * YDS Editor (modification of Highcharts Editor's normal editor)
  * @param parent                Parent DOM element to put Editor in
  * @param attributes            Attributes of the Editor
+ * @param createLibraryList     Function to call for creating the Library list tab content
  * @param createViewSelector    Function to call for creating the view/axes selection tab content
  * @returns {*}
  * @constructor
  */
-highed.YDSEditor = function (parent, attributes, createViewSelector) {
+highed.YDSEditor = function (parent, attributes, createLibraryList, createViewSelector) {
     var events = highed.events(),
 
         properties = highed.merge({
@@ -47,6 +48,9 @@ highed.YDSEditor = function (parent, attributes, createViewSelector) {
 
         dataTableStep = wizbar.addStep({title: highed.getLocalizedStr('stepData')}),
         dataTable = highed.DataTable(dataTableStep.body),
+
+        libraryListStep = wizbar.addStep({title: "Library"}),
+        libraryListSelector = createLibraryList(libraryListStep.body),
 
         viewTypeStep = wizbar.addStep({title: "Axes"}),
         viewTypeSelector = createViewSelector(viewTypeStep.body),

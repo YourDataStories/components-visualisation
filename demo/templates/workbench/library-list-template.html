@@ -1,10 +1,20 @@
-<!--Items list-->
-<div class="list-group">
-    <div ng-repeat="item in libraryItems"
-         class="list-group-item workbench-library-item"
-         ng-class="{'workbench-library-item-selected' : item.selected}"
-         ng-click="selectItem(item)">
-        <b>{{ item.title }}</b><br/>
-        <b>Tags: </b><span ng-repeat="tag in item.tags">{{ tag }}{{ $last ? "" : ", " }}</span>
+<div class="highed-plugin-details library-list-container">
+    <!--Title-->
+    <div class="highed-customizer-table-heading">
+        My Library
+    </div>
+    <div class="highed-imp-help">
+        Select items from the Library to use in the next steps.
+    </div>
+
+    <!--Items list-->
+    <div class="list-group">
+        <div ng-repeat="item in libraryItems"
+             class="list-group-item workbench-library-item"
+             ng-class="{'workbench-library-item-selected' : item.selected}"
+             ng-click="selectItem(item)">
+            <b>{{ item.title }}</b><br/>
+            <b>Tags: </b><span ng-repeat="tag in item.tags">{{ tag }}{{ $last ? "" : ", " }}</span>
+        </div>
     </div>
 </div>

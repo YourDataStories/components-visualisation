@@ -32,7 +32,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     scope.lang = "en";
 
                 var editorOptions = {
-                    features: "import view templates customize export",
+                    features: "library view templates customize export",
                     importer: {
                         options: "plugins",
                         plugins: [
@@ -51,41 +51,9 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     serie: true,
                     cache: true
                 }).then(function () {
-                    // Add plugin for basket import
-                    addBasketImportPlugin();
-
                     // Start the Highcharts Editor
                     highed.ready(function () {
-                        editor = highed.YDSEditor(editorContainer[0], editorOptions, createViewSelector);
-
-                        // Get div which contains the parameters of our plugin
-                        var divResults = $(".highed-plugin-details").children(".highed-customizer-table");
-
-                        // Replace the parameters table with a span that says "Loading"
-                        $(divResults).replaceWith("<span id='library_item_loading_span'>Loading Library Items...</span>");
-
-                        // Hide the import button
-                        $(".highed-imp-button").hide();
-
-                        // Get basket items to show in a list
-                        Basket.getBasketItems(scope.userId, "dataset")
-                            .then(function (response) {
-                                // Get items from response and put them in scope
-                                scope.libraryItems = response.items;
-                                _.map(scope.libraryItems, function (item) {
-                                    item.selected = false;
-                                    return item;
-                                });
-
-                                // Get the template which will show all the items, compile and add it ot the page
-                                $templateRequest("templates/workbench/library-list-template.html").then(function (html) {
-                                    var template = angular.element(html);
-
-                                    $("#library_item_loading_span").replaceWith(template);
-
-                                    $compile(template)(scope);
-                                });
-                            });
+                        editor = highed.YDSEditor(editorContainer[0], editorOptions, createLibraryList, createViewSelector);
                     });
                 });
 
@@ -107,6 +75,30 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                         // Compile the element
                         $compile(template)(scope);
                     });
+                };
+
+                var createLibraryList = function (parent) {
+                    $(parent).addClass("library-list-step-container");
+
+                    // Get basket items to show in a list
+                    Basket.getBasketItems(scope.userId, "dataset")
+                        .then(function (response) {
+                            // Get items from response and put them in scope
+                            scope.libraryItems = response.items;
+                            _.map(scope.libraryItems, function (item) {
+                                item.selected = false;
+                                return item;
+                            });
+
+                            // Get the template which will show all the items, compile and add it ot the page
+                            $templateRequest("templates/workbench/library-list-template.html").then(function (html) {
+                                var template = angular.element(html);
+
+                                $(parent).append(template);
+
+                                $compile(template)(scope);
+                            });
+                        });
                 };
 
                 /**
@@ -260,27 +252,6 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     }, function (error) {
                         console.error(error.message);
                         scope.viewsLoaded = false;
-                    });
-                };
-
-                /**
-                 * Install the Library Import plugin for Highcharts Editor
-                 */
-                var addBasketImportPlugin = function () {
-                    highed.plugins.import.install('My Library', {
-                        description: "Select items from the Library to use them in the next steps.",
-                        treatAs: "json",
-                        suppressURL: true,
-                        fetchAs: false,
-                        options: {
-                            val1: {
-                                type: 'string',
-                                label: 'String value'
-                            }
-                        },
-                        request: function (url, options, fn) {
-                            // do nothing (the import button is hidden so this should not be called, ever)
-                        }
                     });
                 };
             }
