@@ -32,13 +32,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     scope.lang = "en";
 
                 var editorOptions = {
-                    features: "library view templates customize export",
-                    importer: {
-                        options: "plugins",
-                        plugins: [
-                            "My Library"
-                        ]
-                    }
+                    features: "library view templates customize export"
                 };
 
                 // Load the required CSS & JS files for the Editor
