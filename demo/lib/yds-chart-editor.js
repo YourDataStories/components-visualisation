@@ -110,6 +110,14 @@ highed.YDSEditor = function (parent, attributes, createLibraryList, createViewSe
             dataImpStep.hide();
         }
 
+        if (!things.library) {
+            libraryListStep.hide();
+        }
+
+        if (!things.view) {
+            viewTypeStep.hide();
+        }
+
         if (!things.templates) {
             templateStep.hide();
         }
