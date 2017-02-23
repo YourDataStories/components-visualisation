@@ -1229,3 +1229,8 @@ a.aggregate_link_dark:hover {
 .workbench-view-selector-container {
     padding: 20px;
 }
+
+/* Rating buttons absolute positioning */
+.rating-buttons-container {
+    position: absolute;
+}
