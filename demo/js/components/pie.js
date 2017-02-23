@@ -97,6 +97,7 @@ angular.module('yds').directive('ydsPie', ['Data', 'Filters', function(Data, Fil
                     if (_.isUndefined(pieData) || !_.isArray(pieData) || _.isUndefined(pieSeries) || _.isUndefined(pieTitle)) {
                         scope.ydsAlert = "The YDS component is not properly configured. " +
                             "Please check the corresponding documentation section";
+                        scope.loading = false;
                         return false;
                     }
 
