@@ -1230,7 +1230,9 @@ a.aggregate_link_dark:hover {
     padding: 20px;
 }
 
-/* Rating buttons absolute positioning */
+/* Rating buttons styling */
 .rating-buttons-container {
     position: absolute;
+    cursor: pointer;
+    z-index: 999;
 }

@@ -12,7 +12,11 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 lang: '@',          // Language of charts
                 baseUrl: '@',       // Base URL to send to API
                 title: '@',         // Title of component
-                elementH: '@'       // Height of component
+                elementH: '@',      // Height of component
+
+                enableRating: '@',  // Enable rating buttons for this component
+                ratingBtnX: '@',    // X-axis position of the rating buttons
+                ratingBtnY: '@'     // Y-axis position of the rating buttons
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + 'templates/dashboard-visualization.html',
             link: function (scope) {

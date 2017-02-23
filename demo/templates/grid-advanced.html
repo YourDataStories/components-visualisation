@@ -31,7 +31,7 @@
             ng-if="exporting == 'true'" ng-style="exportBtnPos" ng-click="exportGrid()">
         <span class="glyphicon glyphicon-save-file"></span>
     </button>
-    <div class="flex ag-fresh grid-container" yds-basket-btn></div>
+    <div class="flex ag-fresh grid-container" yds-basket-btn yds-rating></div>
     <div ng-if="showResultsNum == 'true'" class="grid-results-num-row">
         <span ng-if="resultsNum > 0">Showing {{ loadedRows }}/{{ resultsNum }} results</span>
         <span ng-if="resultsNum <= 0">No results found</span>

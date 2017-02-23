@@ -16,10 +16,14 @@ angular.module('yds').directive('ydsMap', ['Data', function(Data){
             embeddable: '@',    //enable or disable the embedding of the component
             embedBtnX: '@',     //x-axis position of the embed button
             embedBtnY: '@',     //y-axis position of the embed button
-            popoverPos: '@'     //the side of the embed button from which the embed information window will appear
+            popoverPos: '@',    //the side of the embed button from which the embed information window will appear
+
+            enableRating: '@',  // Enable rating buttons for this component
+            ratingBtnX: '@',    // X-axis position of the rating buttons
+            ratingBtnY: '@'     // Y-axis position of the rating buttons
         },
         templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/map.html',
-        link: function(scope, element) {
+        link: function (scope, element) {
             var mapContainer = angular.element(element[0].querySelector('.map-container'));
 
             //create a random id for the element that will render the chart

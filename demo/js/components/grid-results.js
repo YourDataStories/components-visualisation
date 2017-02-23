@@ -27,7 +27,11 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
 
                 addToBasket: '@',       // Enable or disable "add to basket" functionality, values: true, false
                 basketBtnX: '@',        // X-axis position of the basket button
-                basketBtnY: '@'         // Y-axis position of the basket button
+                basketBtnY: '@',        // Y-axis position of the basket button
+
+                enableRating: '@',      // Enable rating buttons for this component
+                ratingBtnX: '@',        // X-axis position of the rating buttons
+                ratingBtnY: '@'         // Y-axis position of the rating buttons
             },
             templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/grid-advanced.html',
             link: function(scope, element) {

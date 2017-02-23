@@ -7,17 +7,24 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 projectId: '@',             // Project ID
                 viewType: '@',              // Type to give to component
                 dashboardId: '@',           // ID used for getting selected year range from DashboardService
-                minHeight: '@',             // Minimum height of this component's container
+
                 aggregateSetOnInit: '@',    // If the component shown is an aggregate, this indicates if it's the first
                 aggregateIconSize: '@',     // Aggregate icon size (used only if component shown is aggregate)
                 aggregateShowButton: '@',   // If true, the aggregate will show the "View details" button
+
                 addToBasket: '@',           // If true, will show basket button in the components that support it
                 selectionId: '@',           // ID for saving the selection for the specified dashboardId (used for grid)
                 selectionType: '@',         // Selection type for grid (single or multiple)
                 enableAdvSearch: '@',       // Enable/disable advanced search in Search Tabs component (default: true)
-                baseUrl: '@',               // Base URL to send to API
                 groupedData: '@',           // Used for grid, set to true if the data from the API will be grouped
-                lang: '@'                   // Language of component
+                baseUrl: '@',               // Base URL to send to API
+                lang: '@',                  // Language of component
+
+                minHeight: '@',             // Minimum height of this component's container
+
+                enableRating: '@',          // Enable rating buttons (not supported for all components)
+                ratingBtnX: '@',            // X-axis position of the rating buttons
+                ratingBtnY: '@'             // Y-axis position of the rating buttons
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/dashboard-updater.html',
             link: function (scope) {
