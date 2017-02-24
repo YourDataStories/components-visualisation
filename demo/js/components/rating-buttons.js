@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsRating', ['$templateRequest', '$compile', 'Data', 'Filters',
-    function ($templateRequest, $compile, Data, Filters) {
+angular.module('yds').directive('ydsRating', ['$templateRequest', '$compile', '$location', 'Data', 'Filters',
+    function ($templateRequest, $compile, $location, Data, Filters) {
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
@@ -93,6 +93,26 @@ angular.module('yds').directive('ydsRating', ['$templateRequest', '$compile', 'D
                         }
                     }
                 };
+
+                /**
+                 * Rate the chart with the specified number of stars
+                 * @param stars Number of stars to give to the chart
+                 */
+                scope.rateChart = function (stars) {
+                    console.log("Chart rating: " + stars + " stars");
+
+                    // Get parameters that were used to create the chart
+                    var chartParams = {
+                        chartType: visualisationType,
+                        pageUrl: $location.absUrl(),
+                        projectId: projectId,
+                        viewType: viewType,
+                        extraParams: scope.extraParams,
+                        lang: lang
+                    };
+
+                    console.log("Chart parameters:", chartParams);
+                }
             }
         }
     }

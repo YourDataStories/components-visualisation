@@ -1,7 +1,8 @@
 <div class="rating-buttons-container">
     <span ng-repeat="btn in ratingBtns track by $index"
           ng-mouseenter="mouseOverHandler($index, true)"
-          ng-mouseleave="mouseOverHandler($index, false)">
+          ng-mouseleave="mouseOverHandler($index, false)"
+          ng-click="rateChart($index + 1)">
         <i ng-class="{'fa-star-o': !btn.btnIconFill, 'fa-star': btn.btnIconFill}" class="fa" aria-hidden="true"></i>
     </span>
 </div>
