@@ -111,6 +111,11 @@ angular.module('yds').directive('ydsRating', ['$templateRequest', '$compile', '$
                         lang: lang
                     };
 
+                    // Remove undefined values from the object
+                    chartParams = _.omit(chartParams, function (value) {
+                        return _.isUndefined(value);
+                    });
+
                     console.log("Chart parameters:", chartParams);
                 }
             }
