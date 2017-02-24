@@ -63,36 +63,7 @@ angular.module('yds').directive('ydsRating', ['$templateRequest', '$compile', '$
 
                     // Add element as a child to the parent
                     element.parent().append(compiledTemplate);
-
-                    // Add start items to scope
-                    scope.ratingBtns = [
-                        {btnIconFill: false},
-                        {btnIconFill: false},
-                        {btnIconFill: false}
-                    ];
                 });
-
-                /**
-                 * Make rating (star) buttons filled when the mouse is over one of them, or make them empty
-                 * when the mouse leaves the buttons
-                 * @param btnIndex      Button index
-                 * @param mouseOnButton True if mouse entered the button, or false if it left
-                 */
-                scope.mouseOverHandler = function (btnIndex, mouseOnButton) {
-                    if (!mouseOnButton) {
-                        // Make all buttons empty
-                        _.each(scope.ratingBtns, function (btn) {
-                            btn.btnIconFill = false
-                        });
-                    } else {
-                        // Fill the buttons with index <= btnIndex
-                        var btnsToEnable = btnIndex + 1;
-
-                        for (var i = 0; i < btnsToEnable; i++) {
-                            scope.ratingBtns[i].btnIconFill = true;
-                        }
-                    }
-                };
 
                 /**
                  * Rate the chart with the specified number of stars
