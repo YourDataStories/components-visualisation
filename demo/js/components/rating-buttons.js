@@ -72,6 +72,11 @@ angular.module('yds').directive('ydsRating', ['$templateRequest', '$compile', '$
                 scope.rateChart = function (stars) {
                     console.log("Chart rating: " + stars + " stars");
 
+                    // If number of stars is undefined or not a number, abort
+                    if (_.isUndefined(stars) || !_.isNumber(stars)) {
+                        return;
+                    }
+
                     // Get parameters that were used to create the chart
                     var chartParams = {
                         chartType: visualisationType,
@@ -79,7 +84,8 @@ angular.module('yds').directive('ydsRating', ['$templateRequest', '$compile', '$
                         projectId: projectId,
                         viewType: viewType,
                         extraParams: scope.extraParams,
-                        lang: lang
+                        lang: lang,
+                        rating: stars
                     };
 
                     // Remove undefined values from the object
@@ -88,7 +94,7 @@ angular.module('yds').directive('ydsRating', ['$templateRequest', '$compile', '$
                     });
 
                     console.log("Chart parameters:", chartParams);
-                }
+                };
             }
         }
     }
