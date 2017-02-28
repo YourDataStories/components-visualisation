@@ -11,15 +11,17 @@ public class ChartRating {
     private String pageUrl;
     private String projectId;
     private String viewType;
+    private String userId;
     private String extraParams;
 
-    public ChartRating(int rating, String chartType, String lang, String pageUrl, String projectId, String viewType, String extraParams) {
+    public ChartRating(int rating, String chartType, String lang, String pageUrl, String projectId, String viewType, String userId, String extraParams) {
         this.rating = rating;
         this.chartType = chartType;
         this.lang = lang;
         this.pageUrl = pageUrl;
         this.projectId = projectId;
         this.viewType = viewType;
+        this.userId = userId;
         this.extraParams = extraParams;
     }
 
@@ -43,6 +45,7 @@ public class ChartRating {
     public static final String FLD_PAGEURL = "page_url";
     public static final String FLD_PROJECTID = "project_id";
     public static final String FLD_VIEWTYPE = "view_type";
+    public static final String FLD_USERID = "user_id";
     public static final String FLD_EXTRAPARAMS = "extra_params";
 
     /**
@@ -60,10 +63,19 @@ public class ChartRating {
             jsonObject.addProperty(ChartRating.FLD_PAGEURL, cr.getPageUrl());
             jsonObject.addProperty(ChartRating.FLD_PROJECTID, cr.getProjectId());
             jsonObject.addProperty(ChartRating.FLD_VIEWTYPE, cr.getViewType());
+            jsonObject.addProperty(ChartRating.FLD_USERID, cr.getUserId());
             jsonObject.addProperty(ChartRating.FLD_EXTRAPARAMS, cr.getExtraParams());
 
             return jsonObject;
         }
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public int getRating() {
