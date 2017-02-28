@@ -357,7 +357,7 @@ public class MongoAPIImpl implements YDSAPI {
         String extra_params = (String) dbo.get(ChartRating.FLD_EXTRAPARAMS);
         String page_url = (String) dbo.get(ChartRating.FLD_PAGEURL);
         String user_id = (String) dbo.get(ChartRating.FLD_USERID);
-        Integer rating = Integer.parseInt((String) dbo.get(ChartRating.FLD_RATING));
+        Integer rating = (Integer) dbo.get(ChartRating.FLD_RATING);
 
         // Return the new ChartRating
         return new ChartRating(
