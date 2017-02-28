@@ -48,6 +48,7 @@ app.constant("YDS_CONSTANTS", {
 
     "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
     "API_EMBED": "http://dev.yourdatastories.eu/api/tomcat/YDSAPI/yds/embed/",
+    "API_RATINGS": "http://dev.yourdatastories.eu/api/tomcat/YDSAPI/yds/rating/",
     "BASKET_URL": "http://dev.yourdatastories.eu/api/tomcat/YDSAPI/yds/basket/"
 });
 
@@ -140,6 +141,18 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         return source;
     };
 
+    /**
+     * Transform request parameters object to "x-www-form-urlencoded" format
+     * @param obj
+     * @returns {string}
+     */
+    var customRequestTransform = function (obj) {
+        var str = [];
+        for (var p in obj)
+            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        return str.join("&");
+    };
+
     dataService.getRoutePoints = function(start, end, via) {
         var deferred = $q.defer();
 
@@ -152,12 +165,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             method: 'POST',
             url: geoRouteUrl,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            transformRequest: function (obj) {
-                var str = [];
-                for (var p in obj)
-                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                return str.join("&");
-            },
+            transformRequest: customRequestTransform,
             data: { geoData: angular.toJson(inputData) }
         }).success(function (data) {
             deferred.resolve(data);
@@ -175,12 +183,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             method: 'POST',
             url: geoRouteUrl+"/save/"+projectId,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            transformRequest: function (obj) {
-                var str = [];
-                for (var p in obj)
-                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                return str.join("&");
-            },
+            transformRequest: customRequestTransform,
             data: {
                 geoData: angular.toJson(geoObj)
             }
@@ -216,12 +219,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             method: 'POST',
             url: YDS_CONSTANTS.API_EMBED + "save",
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            transformRequest: function (obj) {
-                var str = [];
-                for (var p in obj)
-                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                return str.join("&");
-            },
+            transformRequest: customRequestTransform,
             data: {
                 "project_id": projectId,
                 "facets": JSON.stringify(facets),
@@ -247,6 +245,29 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).success(function (data) {
             deferred.resolve(data);
         }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    /**
+     * Save a user's rating
+     * @param params
+     * @returns {*|promise|s|d}
+     */
+    dataService.saveRating = function(params) {
+        var deferred = $q.defer();
+
+        $http({
+            method: "POST",
+            url: YDS_CONSTANTS.API_RATINGS + "save",
+            headers: {"Content-Type": "application/x-www-form-urlencoded"},
+            transformRequest: customRequestTransform,
+            data: params
+        }).then(function(response) {
+            deferred.resolve(response.data);
+        }, function(error) {
             deferred.reject(error);
         });
 
