@@ -3,6 +3,7 @@ package gr.demokritos.iit.ydsapi.model;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
+import java.util.Objects;
 
 public class ChartRating {
     private int rating;
@@ -26,6 +27,63 @@ public class ChartRating {
     }
 
     public ChartRating() {
+    }
+
+    public String toJSON() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder
+                .registerTypeAdapter(ChartRating.class, new ChartRatingSerializer())
+                .disableHtmlEscaping()
+                .setPrettyPrinting();
+        Gson gson = gsonBuilder.create();
+
+        return gson.toJson(this);
+    }
+
+    /**
+     * We want only these specific fields to uniquely identify a {@link ChartRating}
+     *
+     * @return  Hashcode
+     */
+    @Override
+    public int hashCode() {
+        int hash = 3;
+
+        hash = 17 * hash + Objects.hashCode(this.chartType);
+        hash = 17 * hash + Objects.hashCode(this.pageUrl);
+        hash = 17 * hash + Objects.hashCode(this.projectId);
+        hash = 17 * hash + Objects.hashCode(this.viewType);
+        hash = 17 * hash + Objects.hashCode(this.userId);
+        hash = 17 * hash + Objects.hashCode(this.extraParams);
+
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ChartRating other = (ChartRating) obj;
+        if (!Objects.equals(this.chartType, other.chartType)) {
+            return false;
+        }
+        if (!Objects.equals(this.pageUrl, other.pageUrl)) {
+            return false;
+        }
+        if (!Objects.equals(this.projectId, other.projectId)) {
+            return false;
+        }
+        if (!Objects.equals(this.viewType, other.viewType)) {
+            return false;
+        }
+        if (!Objects.equals(this.userId, other.userId)) {
+            return false;
+        }
+        return Objects.equals(this.extraParams, other.extraParams);
     }
 
     public JsonElement toJSONElement() {
