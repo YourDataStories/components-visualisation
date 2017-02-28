@@ -83,7 +83,7 @@ angular.module('yds').directive('ydsRating', ['$templateRequest', '$compile', '$
                         page_url: $location.absUrl(),
                         project_id: projectId,
                         view_type: viewType,
-                        extra_params: scope.extraParams,
+                        extra_params: JSON.stringify(scope.extraParams),
                         lang: lang,
                         user_id: "ydsUser",
                         rating: stars
