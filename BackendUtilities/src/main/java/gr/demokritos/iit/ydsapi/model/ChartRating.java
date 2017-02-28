@@ -43,7 +43,7 @@ public class ChartRating {
     /**
      * We want only these specific fields to uniquely identify a {@link ChartRating}
      *
-     * @return  Hashcode
+     * @return Hashcode
      */
     @Override
     public int hashCode() {
@@ -122,7 +122,18 @@ public class ChartRating {
             jsonObject.addProperty(ChartRating.FLD_PROJECTID, cr.getProjectId());
             jsonObject.addProperty(ChartRating.FLD_VIEWTYPE, cr.getViewType());
             jsonObject.addProperty(ChartRating.FLD_USERID, cr.getUserId());
-            jsonObject.addProperty(ChartRating.FLD_EXTRAPARAMS, cr.getExtraParams());
+
+            // Try to parse the extra parameters as a JSON object
+            try {
+                jsonObject.add(ChartRating.FLD_EXTRAPARAMS,
+                        new JsonParser()
+                                .parse(cr.getExtraParams())
+                                .getAsJsonObject()
+                );
+            } catch (Exception ex) {
+                // Put the extraParams in the response as a String since the parsing failed
+                jsonObject.addProperty(ChartRating.FLD_EXTRAPARAMS, cr.getExtraParams());
+            }
 
             return jsonObject;
         }
