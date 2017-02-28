@@ -1,42 +1,22 @@
 package gr.demokritos.iit.ydsapi.storage;
 
 import com.google.common.base.Objects;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
-import com.mongodb.QueryBuilder;
-import com.mongodb.ServerAddress;
-import com.mongodb.WriteResult;
-import com.mongodb.util.JSON;
-import gr.demokritos.iit.ydsapi.model.BFilter;
-import gr.demokritos.iit.ydsapi.model.BasketItem;
-import gr.demokritos.iit.ydsapi.model.BasketItem.BasketType;
-import gr.demokritos.iit.ydsapi.model.Embedding;
-import gr.demokritos.iit.ydsapi.model.ComponentType;
-import gr.demokritos.iit.ydsapi.model.YDSFacet;
-import gr.demokritos.iit.ydsapi.util.Configuration;
-import gr.demokritos.iit.ydsapi.util.ResourceUtil;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import org.bson.types.ObjectId;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import java.util.Set;
+import com.mongodb.*;
+import com.mongodb.util.JSON;
+import gr.demokritos.iit.ydsapi.model.*;
+import gr.demokritos.iit.ydsapi.model.BasketItem.BasketType;
+import gr.demokritos.iit.ydsapi.util.Configuration;
+import gr.demokritos.iit.ydsapi.util.ResourceUtil;
+import org.bson.types.ObjectId;
+
+import java.net.UnknownHostException;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 /**
- *
  * @author George K. <gkiom@iit.demokritos.gr>
  */
 public class MongoAPIImpl implements YDSAPI {
@@ -58,7 +38,7 @@ public class MongoAPIImpl implements YDSAPI {
      * reverse insertion order sorting mark
      */
     private static final DBObject REVERSED_INSERTION_ORDER = new BasicDBObject("$natural", -1);
-    
+
     public synchronized static YDSAPI getInstance() {
         if (instance == null) {
             instance = new MongoAPIImpl();
@@ -339,6 +319,91 @@ public class MongoAPIImpl implements YDSAPI {
         return removed;
     }
 
+    @Override
+    public List<ChartRating> getRatings(String user_id) {
+        if (user_id == null || user_id.trim().isEmpty()) {
+            return Collections.EMPTY_LIST;
+        }
+
+        user_id = user_id.trim();
+
+        DBCollection col = db.getCollection(COL_RATINGS);
+        DBCursor curs;
+
+        List<ChartRating> res = new ArrayList<>();
+
+        // Find items for this user (no cache implemented here yet...)
+        curs = col.find(QueryBuilder.start(ChartRating.FLD_USERID).is(user_id).get());
+
+        // Order by reverse insertion order
+        curs = curs.sort(REVERSED_INSERTION_ORDER);
+
+        while (curs.hasNext()) {
+            DBObject dbo = curs.next();
+
+            res.add(extractChartRating(dbo));
+        }
+        // Here we would add the "res" list to the cache...
+
+        // Return the list
+        return res;
+    }
+
+    private ChartRating extractChartRating(DBObject dbo) {
+        String chart_type = (String) dbo.get(ChartRating.FLD_CHARTTYPE);
+        String project_id = (String) dbo.get(ChartRating.FLD_PROJECTID);
+        String view_type = (String) dbo.get(ChartRating.FLD_VIEWTYPE);
+        String lang = (String) dbo.get(ChartRating.FLD_LANG);
+        String extra_params = (String) dbo.get(ChartRating.FLD_EXTRAPARAMS);
+        String page_url = (String) dbo.get(ChartRating.FLD_PAGEURL);
+        String user_id = (String) dbo.get(ChartRating.FLD_USERID);
+        Integer rating = Integer.parseInt((String) dbo.get(ChartRating.FLD_RATING));
+
+        // Return the new ChartRating
+        return new ChartRating(
+                rating,
+                chart_type,
+                lang,
+                page_url,
+                project_id,
+                view_type,
+                user_id,
+                extra_params
+        );
+    }
+
+    @Override
+    public String saveRating(ChartRating rating) {
+        DBCollection col = db.getCollection(COL_RATINGS);
+        String jsonRating = rating.toJSON();
+        int rtng_hashcode = rating.hashCode();
+
+        DBObject storable = (DBObject) JSON.parse(jsonRating);
+        storable.put(FLD_HASHCODE, rtng_hashcode);
+
+        WriteResult wr = col.update(
+                QueryBuilder.start(FLD_HASHCODE).is(rtng_hashcode).get(),
+                storable,
+                true,
+                false
+        );
+
+        Object upserted_id = wr.getUpsertedId();
+        String id;
+
+        if (upserted_id == null) {
+            id = ((ObjectId) col.findOne(
+                    new BasicDBObject(FLD_HASHCODE, rtng_hashcode)).get("_id"))
+                    .toHexString();
+        } else {
+            id = upserted_id.toString();
+        }
+
+        // Here we would clear the user's cache, if there...
+
+        return id;
+    }
+
     private BasketItem extractBasketItem(DBObject dbo) {
         ObjectId _id;
         try {
@@ -420,7 +485,6 @@ public class MongoAPIImpl implements YDSAPI {
     /**
      * tries to generate required indexes for performance. Useful for new
      * installations
-     *
      */
     private void ensureIndexes() {
         DBCollection col = db.getCollection(COL_BASKETS);
