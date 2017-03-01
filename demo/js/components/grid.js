@@ -38,9 +38,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                 embedBtnY: '@',         // Y-axis position of the embed button
                 popoverPos: '@',        // The side of the embed button from which the embed  window will appear
 
-                enableRating: '@',      // Enable rating buttons for this component
-                ratingBtnX: '@',        // X-axis position of the rating buttons
-                ratingBtnY: '@'         // Y-axis position of the rating buttons
+                enableRating: '@'       // Enable rating buttons for this component
             },
             templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/grid.html',
             link: function(scope, element, attrs) {

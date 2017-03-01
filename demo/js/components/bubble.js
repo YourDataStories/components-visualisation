@@ -22,9 +22,7 @@ angular.module('yds').directive('ydsBubble', ['YDS_CONSTANTS', 'Data', '$window'
             embedBtnY: '@',     // Y-axis position of the embed button
             popoverPos: '@',    // The side of the embed button from which the embed information window will appear
 
-            enableRating: '@',  // Enable rating buttons for this component
-            ratingBtnX: '@',    // X-axis position of the rating buttons
-            ratingBtnY: '@'     // Y-axis position of the rating buttons
+            enableRating: '@'   // Enable rating buttons for this component
         },
         templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/bubble.html',
         link: function (scope, element, attrs) {

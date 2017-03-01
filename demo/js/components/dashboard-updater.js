@@ -22,9 +22,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
 
                 minHeight: '@',             // Minimum height of this component's container
 
-                enableRating: '@',          // Enable rating buttons (not supported for all components)
-                ratingBtnX: '@',            // X-axis position of the rating buttons
-                ratingBtnY: '@'             // Y-axis position of the rating buttons
+                enableRating: '@'           // Enable rating buttons (not supported for all components)
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/dashboard-updater.html',
             link: function (scope) {

@@ -56,17 +56,11 @@ angular.module('yds').directive('ydsRating', ['$templateRequest', '$compile', '$
                 }
 
                 // Add rating buttons to the chart
-                var ratingBtnX = scope.ratingBtnX || 100;
-                var ratingBtnY = scope.ratingBtnY || 15;
-
                 $templateRequest("templates/rating-buttons.html").then(function (html) {
                     var template = angular.element(html);
 
                     // Compile the element
                     var compiledTemplate = $compile(template)(scope);
-                    compiledTemplate.css("top", ratingBtnY + "px");
-                    compiledTemplate.css("left", ratingBtnX + "px");
-
 
                     // Add element as a child to the parent
                     element.parent().append(compiledTemplate);
