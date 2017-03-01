@@ -90,7 +90,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 
 				//check if legendVAlign attr is defined, else assign default value
 				if (_.isUndefined(legendHAlign) || legendHAlign.trim()=="")
-					legendHAlign = "center";
+					legendHAlign = "left";
 
 				//check if legendLayout attr is defined, else assign default value
 				if (_.isUndefined(legendLayout) || legendLayout.trim()=="")
