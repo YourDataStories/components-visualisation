@@ -259,6 +259,11 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
     dataService.saveRating = function(params) {
         var deferred = $q.defer();
 
+        // Remove undefined values from the parameters
+        params = _.omit(params, function (value) {
+            return _.isUndefined(value);
+        });
+
         $http({
             method: "POST",
             url: YDS_CONSTANTS.API_RATINGS + "save",

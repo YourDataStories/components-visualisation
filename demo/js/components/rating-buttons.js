@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsRating', ['$templateRequest', '$compile', '$location', 'Data', 'Filters',
-    function ($templateRequest, $compile, $location, Data, Filters) {
+angular.module('yds').directive('ydsRating', ['$templateRequest', '$compile', '$location', 'Data', 'Basket',
+    function ($templateRequest, $compile, $location, Data, Basket) {
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
@@ -48,6 +48,13 @@ angular.module('yds').directive('ydsRating', ['$templateRequest', '$compile', '$
                     return false;
                 }
 
+                // Get user ID from Basket service
+                var userId = Basket.getUserId();
+                if (_.isUndefined(userId) || userId.trim().length == 0) {
+                    console.warn("Username not set: using default \"ydsUser\"");
+                    userId = "ydsUser";
+                }
+
                 // Add rating buttons to the chart
                 var ratingBtnX = scope.ratingBtnX || 100;
                 var ratingBtnY = scope.ratingBtnY || 15;
@@ -70,31 +77,24 @@ angular.module('yds').directive('ydsRating', ['$templateRequest', '$compile', '$
                  * @param stars Number of stars to give to the chart
                  */
                 scope.rateChart = function (stars) {
-                    // console.log("Chart rating: " + stars + " stars");
-
                     // If number of stars is undefined or not a number, abort
                     if (_.isUndefined(stars) || !_.isNumber(stars)) {
                         return;
                     }
 
-                    // Get parameters that were used to create the chart
+                    // Get parameters that were used to create the chart and the rating
                     var chartParams = {
                         chart_type: visualisationType,
                         page_url: $location.absUrl(),
                         project_id: projectId,
                         view_type: viewType,
-                        extra_params: JSON.stringify(scope.extraParams),
+                        extra_params: _.isEmpty(scope.extraParams) ? undefined : JSON.stringify(scope.extraParams),
                         lang: lang,
-                        user_id: "ydsUser",
+                        user_id: userId,
                         rating: stars
                     };
 
-                    // Remove undefined values from the object
-                    chartParams = _.omit(chartParams, function (value) {
-                        return _.isUndefined(value);
-                    });
-
-                    // console.log("Chart parameters:", chartParams);
+                    // Save rating
                     Data.saveRating(chartParams);
                 };
             }
