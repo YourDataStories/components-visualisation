@@ -14,9 +14,7 @@ angular.module('yds').directive('ydsDashboardVisualizationGridBubble', ['Dashboa
                 title: '@',         // Title of component
                 elementH: '@',      // Height of component
 
-                enableRating: '@',  // Enable rating buttons for this component
-                ratingBtnX: '@',    // X-axis position of the rating buttons
-                ratingBtnY: '@'     // Y-axis position of the rating buttons
+                enableRating: '@'   // Enable rating buttons for this component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + 'templates/dashboard-visualisation-grid-bubble.html',
             link: function (scope) {
