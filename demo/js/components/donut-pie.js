@@ -73,8 +73,8 @@ angular.module('yds').directive('ydsDonutPie', ['Data', 'DashboardService', func
                         buttons: {
                             contextButton: {
                                 symbol: 'url(' + ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'img/fa-download-small.png)',
-                                symbolX: 12,
-                                symbolY: 12
+                                symbolX: 19,
+                                symbolY: 19
                             }
                         },
 

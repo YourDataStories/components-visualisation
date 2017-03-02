@@ -99,8 +99,8 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function(Data, Fil
                         buttons: {
                             contextButton: {
                                 symbol: 'url(' + ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'img/fa-download-small.png)',
-                                symbolX: 12,
-                                symbolY: 12
+                                symbolX: 19,
+                                symbolY: 19
                             }
                         },
 
