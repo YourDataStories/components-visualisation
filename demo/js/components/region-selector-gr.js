@@ -565,8 +565,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                         drilldown: {
                             activeDataLabelStyle: {
                                 color: '#FFFFFF',
-                                textDecoration: 'none',
-                                textShadow: '0px 1px 3px black'
+                                textDecoration: 'none'
                             },
                             drillUpButton: {
                                 relativeTo: 'spacingBox',
