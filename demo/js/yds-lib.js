@@ -954,6 +954,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                 break;
             case "map":
                 visualizationUrl="http://" + YDS_CONSTANTS.API_MAP;
+                params.baseurl = YDS_CONSTANTS.PROJECT_DETAILS_URL;
                 break;
             case "heatmap":
                 visualizationUrl="http://"+ YDS_CONSTANTS.API_HEATMAP;
