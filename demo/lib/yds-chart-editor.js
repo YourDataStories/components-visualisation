@@ -367,6 +367,8 @@ highed.YDSEditor = function (parent, attributes, createLibraryList, createViewSe
     //Public interface
     return {
         on: events.on,
+        /* Template Selector access, in case we need to do something with it from outside the editor */
+        templateSelector: chartTemplateSelector,
         /* Force a resize of the editor */
         resize: resize,
         /* Get embeddable javascript */

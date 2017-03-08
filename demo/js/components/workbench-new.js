@@ -27,6 +27,14 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 var editor = null;
                 var allViews = null;
 
+                // Variable to keep last template. Default template is basic line chart.
+                var lastTemplate = {
+                    title: "Line chart",
+                    config: {
+                        "chart--type": "line"
+                    }
+                };
+
                 //check if the language attr is defined, else assign default value
                 if (_.isUndefined(scope.lang) || scope.lang.trim() == "")
                     scope.lang = "en";
@@ -49,7 +57,30 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     highed.ready(function () {
                         editor = highed.YDSEditor(editorContainer[0], editorOptions, createLibraryList, createViewSelector);
                     });
+
+                    // Listen for template selection event
+                    editor.templateSelector.on("Select", templateSelectionHandler);
+                    // editor.chart.on("ChartChangeLately", chartChangeHandler);
                 });
+
+                var templateSelectionHandler = function (template) {
+                    // Save the template to remember it in case the chart is exported
+                    lastTemplate = template;
+
+                    // Gather parameters
+                    var params = {
+                        template_name: template.title,
+                        template_type: template.config["chart--type"],
+                        concept: scope.chartConfig.selectedView,
+                        user_id: scope.userId,
+                        weight: 1.0
+                    };
+
+                    // todo: Send parameters to personalisation server
+                    if (!_.isUndefined(params.concept)) {
+                        console.log(params);
+                    }
+                };
 
                 /**
                  * Create the view selector inside a parent element, using the template
