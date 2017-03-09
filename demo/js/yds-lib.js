@@ -153,6 +153,16 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         return str.join("&");
     };
 
+    /**
+     * Get the ID of a Highcharts Editor template, based on its configuration
+     * @param template
+     * @returns {*}
+     */
+    dataService.getTemplateId = function (template) {
+        // Stringify the template's configuration, and return its MD5
+        return calcMD5(JSON.stringify(template.config));
+    };
+
     dataService.getRoutePoints = function(start, end, via) {
         var deferred = $q.defer();
 

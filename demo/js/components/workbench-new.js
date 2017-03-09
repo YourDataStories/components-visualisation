@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '$compile', '$templateRequest', '$uibModal', 'Data', 'Basket', 'Workbench',
-    function ($ocLazyLoad, $timeout, $compile, $templateRequest, $uibModal, Data, Basket, Workbench) {
+angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '$compile', '$templateRequest', '$uibModal', 'Data', 'Basket', 'Workbench', 'Personalization',
+    function ($ocLazyLoad, $timeout, $compile, $templateRequest, $uibModal, Data, Basket, Workbench, Personalization) {
         return {
             restrict: 'E',
             scope: {
@@ -60,33 +60,34 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
 
                     // Listen for template selection event
                     editor.templateSelector.on("Select", templateSelectionHandler);
-                    // editor.chart.on("ChartChangeLately", chartChangeHandler);
+
+                    // Personalization service test
+                    // Personalization.getSuggestedTemplates(scope.userId, "test")
+                    //     .then(function (data) {
+                    //         console.log(data);
+                    //         //todo: show suggested templates as suggested in the page
+                    //     });
                 });
 
                 /**
-                 * Get the ID of a template, based on its configuration
-                 * @param template
+                 * Get the ID of the currently selected concept/view
                  * @returns {*}
                  */
-                var getTemplateId = function (template) {
-                    // Stringify the template's configuration, and return its MD5
-                    return calcMD5(JSON.stringify(template.config));
+                var getCurrentConceptId = function () {
+                    return _.findWhere(allViews, {type: scope.chartConfig.selectedView}).cid;
                 };
 
                 var templateSelectionHandler = function (template) {
                     // Get ID of template
-                    var templateId = getTemplateId(template);
+                    var templateId = Data.getTemplateId(template);
 
                     // Save the template's ID to remember it in case the chart is exported
                     lastTemplate = templateId;
 
-                    // Find the selected concept's ID
-                    var conceptId = _.findWhere(allViews, {type: scope.chartConfig.selectedView}).cid;
-
                     // Gather parameters
                     var params = {
                         template_id: templateId,
-                        concept: conceptId,
+                        concept: getCurrentConceptId(),
                         user_id: scope.userId,
                         weight: 1.0
                     };
@@ -119,7 +120,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
 
                 /**
                  * Create a list of the user's Library items inside a parent container
-                 * @param parent
+                 * @param parent    Parent element to put Library item list inside of
                  */
                 var createLibraryList = function (parent) {
                     $(parent).addClass("library-list-step-container");
