@@ -2,12 +2,13 @@
  * YDS Editor (modification of Highcharts Editor's normal editor)
  * @param parent                Parent DOM element to put Editor in
  * @param attributes            Attributes of the Editor
+ * @param suggestedTemplates    Object with the suggested templates for the template selector
  * @param createLibraryList     Function to call for creating the Library list tab content
  * @param createViewSelector    Function to call for creating the view/axes selection tab content
  * @returns {*}
  * @constructor
  */
-highed.YDSEditor = function (parent, attributes, createLibraryList, createViewSelector) {
+highed.YDSEditor = function (parent, attributes, suggestedTemplates, createLibraryList, createViewSelector) {
     var events = highed.events(),
 
         properties = highed.merge({
@@ -56,7 +57,7 @@ highed.YDSEditor = function (parent, attributes, createLibraryList, createViewSe
         viewTypeSelector = createViewSelector(viewTypeStep.body),
 
         templateStep = wizbar.addStep({title: highed.getLocalizedStr('stepTemplates')}),
-        chartTemplateSelector = highed.ChartTemplateSelector(templateStep.body),
+        chartTemplateSelector = highed.YDSChartTemplateSelector(templateStep.body, suggestedTemplates),
 
         chartContainer = highed.dom.cr('div', 'highed-box-size highed-chart-container'),
         chartPreview = highed.ChartPreview(chartContainer, {

@@ -24,6 +24,11 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 scope.selection = {};
                 scope.chartConfig = {};
 
+                // Object to keep suggested templates in
+                var suggestedTemplates = {
+                    templates: []
+                };
+
                 var editor = null;
                 var allViews = null;
 
@@ -48,6 +53,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     files: [
                         "css/highcharts-editor.min.css",
                         "lib/highcharts-editor.js",
+                        "lib/yds-chart-template-selector.js",
                         "lib/yds-chart-editor.js"
                     ],
                     serie: true,
@@ -55,20 +61,21 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 }).then(function () {
                     // Start the Highcharts Editor
                     highed.ready(function () {
-                        editor = highed.YDSEditor(editorContainer[0], editorOptions, createLibraryList, createViewSelector);
+                        editor = highed.YDSEditor(editorContainer[0], editorOptions, suggestedTemplates, createLibraryList, createViewSelector);
                     });
 
                     // Listen for template selection event
                     editor.templateSelector.on("Select", templateSelectionHandler);
 
                     // Personalization service test
-                    // Personalization.getSuggestedTemplates(scope.userId, "test")
-                    //     .then(function (data) {
-                    //         var templatesToHighlight = _.map(data, Personalization.getTemplateById);
-                    //
-                    //         console.log(templatesToHighlight);
-                    //         //todo: show suggested templates as suggested in the page
-                    //     });
+                    Personalization.getSuggestedTemplates(scope.userId, "test")
+                        .then(function (data) {
+                            // Add the suggested templates in the object
+                            suggestedTemplates.templates = _.map(data, Personalization.getTemplateById);
+
+                            // Redraw the template selector in order to actually highlight the templates
+                            editor.templateSelector.rebuild();
+                        });
                 });
 
                 /**

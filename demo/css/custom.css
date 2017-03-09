@@ -1242,3 +1242,9 @@ a.aggregate_link_dark:hover {
 .margin-bottom-30 {
     margin-bottom: 30px;
 }
+
+/* Temporary glow class for the Highcharts Editor template selector */
+.template-glow {
+    color: red!important;
+    border: 5px solid black!important;
+}
