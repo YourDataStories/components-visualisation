@@ -35,7 +35,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     }
                 };
 
-                //check if the language attr is defined, else assign default value
+                // Check if the language attr is defined, else assign default value
                 if (_.isUndefined(scope.lang) || scope.lang.trim() == "")
                     scope.lang = "en";
 
@@ -63,14 +63,26 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     // editor.chart.on("ChartChangeLately", chartChangeHandler);
                 });
 
+                /**
+                 * Get the ID of a template, based on its configuration
+                 * @param template
+                 * @returns {*}
+                 */
+                var getTemplateId = function (template) {
+                    // Stringify the template's configuration, and return its MD5
+                    return calcMD5(JSON.stringify(template.config));
+                };
+
                 var templateSelectionHandler = function (template) {
-                    // Save the template to remember it in case the chart is exported
-                    lastTemplate = template;
+                    // Get ID of template
+                    var templateId = getTemplateId(template);
+
+                    // Save the template's ID to remember it in case the chart is exported
+                    lastTemplate = templateId;
 
                     // Gather parameters
                     var params = {
-                        template_name: template.title,
-                        template_type: template.config["chart--type"],
+                        template_id: templateId,
                         concept: scope.chartConfig.selectedView,
                         user_id: scope.userId,
                         weight: 1.0
