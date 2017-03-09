@@ -64,7 +64,9 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     // Personalization service test
                     // Personalization.getSuggestedTemplates(scope.userId, "test")
                     //     .then(function (data) {
-                    //         console.log(data);
+                    //         var templatesToHighlight = _.map(data, Personalization.getTemplateById);
+                    //
+                    //         console.log(templatesToHighlight);
                     //         //todo: show suggested templates as suggested in the page
                     //     });
                 });
@@ -74,7 +76,13 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                  * @returns {*}
                  */
                 var getCurrentConceptId = function () {
-                    return _.findWhere(allViews, {type: scope.chartConfig.selectedView}).cid;
+                    var result = _.findWhere(allViews, {type: scope.chartConfig.selectedView});
+
+                    if (!_.isUndefined(result)) {
+                        return result.cid;
+                    } else {
+                        return undefined;
+                    }
                 };
 
                 var templateSelectionHandler = function (template) {
