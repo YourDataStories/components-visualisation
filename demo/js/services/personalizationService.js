@@ -1,5 +1,21 @@
 angular.module('yds').factory('Personalization', ['$http', '$q', 'YDS_CONSTANTS', 'Data',
     function ($http, $q, YDS_CONSTANTS, Data) {
+        // Map which keeps the ID -> template mappings in order to be able to get a template object from its ID
+        var templateIdMap = {};
+
+        /**
+         * Get a template's object from its ID, using the map object which is created when getAllTemplateIDs() is ran
+         * @param templateId
+         * @returns {*}
+         */
+        var getTemplateById = function (templateId) {
+            if (_.has(templateIdMap, templateId)) {
+                return templateIdMap[templateId];
+            } else {
+                return -1;
+            }
+        };
+
         /**
          * Calculate and return the IDs of all available templates in the Highcharts Editor
          */
@@ -18,11 +34,25 @@ angular.module('yds').factory('Personalization', ['$http', '$q', 'YDS_CONSTANTS'
             templates = _.flatten(templates);
 
             // Get ID of each template
-            templates = _.map(templates, Data.getTemplateId);
+            templates = _.map(templates, function(template) {
+                // Get the ID
+                var id = Data.getTemplateId(template);
+
+                // Save the template to the ID -> template map for later reference
+                templateIdMap[id] = template;
+
+                return id;
+            });
 
             return templates;
         };
 
+        /**
+         * Get the suggested templates for a specific user and their selected concept
+         * @param userId        ID of user
+         * @param conceptId     ID of concept
+         * @returns {promise|*|d|s}
+         */
         var getSuggestedTemplates = function (userId, conceptId) {
             var deferred = $q.defer();
 
@@ -39,7 +69,8 @@ angular.module('yds').factory('Personalization', ['$http', '$q', 'YDS_CONSTANTS'
         };
 
         return {
-            getSuggestedTemplates: getSuggestedTemplates
+            getSuggestedTemplates: getSuggestedTemplates,
+            getTemplateById: getTemplateById
         }
     }
 ]);
