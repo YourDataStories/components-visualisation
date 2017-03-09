@@ -80,10 +80,13 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     // Save the template's ID to remember it in case the chart is exported
                     lastTemplate = templateId;
 
+                    // Find the selected concept's ID
+                    var conceptId = _.findWhere(allViews, {type: scope.chartConfig.selectedView}).cid;
+
                     // Gather parameters
                     var params = {
                         template_id: templateId,
-                        concept: scope.chartConfig.selectedView,
+                        concept: conceptId,
                         user_id: scope.userId,
                         weight: 1.0
                     };
@@ -114,6 +117,10 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     });
                 };
 
+                /**
+                 * Create a list of the user's Library items inside a parent container
+                 * @param parent
+                 */
                 var createLibraryList = function (parent) {
                     $(parent).addClass("library-list-step-container");
 
