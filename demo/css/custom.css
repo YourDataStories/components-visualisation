@@ -1243,8 +1243,9 @@ a.aggregate_link_dark:hover {
     margin-bottom: 30px;
 }
 
-/* Temporary glow class for the Highcharts Editor template selector */
-.template-glow {
-    color: red!important;
-    border: 5px solid black!important;
+/* Class for suggested templates in the Highcharts Editor */
+.highed-chart-template-preview.template-glow {
+    -webkit-box-shadow: 0 0 10px 3px rgba(0,130,222,0.6);
+    -moz-box-shadow: 0 0 10px 3px rgba(0,130,222,0.6);
+    box-shadow: 0 0 10px 3px rgba(0,130,222,0.6);
 }
