@@ -51,6 +51,12 @@ highed.YDSChartTemplateSelector = function (parent, suggestedTemplates) {
     function showTemplates(templateList, masterID) {
         templates.innerHTML = '';
 
+        // Class to add to the selected nodes
+        var suggestedClass = "template-glow";
+
+        // Boolean to remember if the previously selected node was suggested
+        var nodeWasSuggested = false;
+
         Object.keys(templateList).forEach(function (key) {
             var t = templateList[key],
                 node = highed.dom.cr('div', 'highed-chart-template-preview'),
@@ -73,7 +79,7 @@ highed.YDSChartTemplateSelector = function (parent, suggestedTemplates) {
 
             // If it is, add the glow class to it
             if (!_.isUndefined(result)) {
-                node.className += " template-glow";
+                node.className += " " + suggestedClass;
             }
 
             highed.dom.style(node, {
@@ -96,11 +102,28 @@ highed.YDSChartTemplateSelector = function (parent, suggestedTemplates) {
             });
 
             highed.dom.on(node, 'click', function () {
+                // Check if there was already a selected node
                 if (selected) {
+                    // Restore its class name
                     selected.node.className = 'highed-chart-template-preview';
+
+                    // Add the suggested class if it was suggested
+                    if (nodeWasSuggested) {
+                        selected.node.className += " " + suggestedClass;
+                    }
                 }
 
+                // If the clicked node contained the suggested class, then remember that it was suggested in order to
+                // restore the class if it is deselected later
+                nodeWasSuggested = node.className.indexOf(suggestedClass) != -1;
+
+                // Add the selected template class to this node
                 node.className = 'highed-chart-template-preview highed-chart-template-preview-selected';
+
+                // Also add the suggested class if it is suggested
+                if (nodeWasSuggested) {
+                    node.className += " " + suggestedClass;
+                }
 
                 selected = {
                     id: masterID + key + t.title,
