@@ -73,8 +73,8 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                             // Add the suggested templates in the object
                             suggestedTemplates.templates = _.map(data, Personalization.getTemplateById);
 
-                            // Redraw the template selector in order to actually highlight the templates
-                            editor.templateSelector.rebuild();
+                            // Select the first category again in order to highlight the suggested templates
+                            editor.templateSelector.reselectFirstCategory();
                         });
                 });
 

@@ -169,6 +169,13 @@ highed.YDSChartTemplateSelector = function (parent, suggestedTemplates) {
         list.selectFirst();
     }
 
+    /**
+     * Force the list to select the first category again, causing it to redraw the items inside of it
+     */
+    function reselectFirstCategory() {
+        list.selectFirst();
+    }
+
     list.on('Select', function (id) {
         showTemplates(highed.meta.chartTemplates[id].templates, id);
     });
@@ -180,6 +187,7 @@ highed.YDSChartTemplateSelector = function (parent, suggestedTemplates) {
     return {
         on: events.on,
         resize: resize,
-        rebuild: build
+        rebuild: build,
+        reselectFirstCategory: reselectFirstCategory
     };
 };
