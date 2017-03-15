@@ -124,6 +124,10 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 				if(_.isUndefined(elementH) || _.isNaN(elementH))
 					elementH = 300;
 
+				// Set cookie related variables
+                var cookieKey = viewType;   // Key of cookie for this heatmap
+                var firstLoad = true;       // Remember if it is the first load or not, to load countries from cookie
+
 				// Setup base heatmap options
 				var heatmapOptions = {
 					initialized: false,
@@ -327,7 +331,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 						};
 
 						if (countrySelection == "true") {
-							// Country selection enabled, set more properties to the series before adding it to heatmap
+                            // Country selection enabled, set more properties to the series before adding it to heatmap
 							newSeries.allowPointSelect = true;
 							newSeries.cursor = "pointer";
 
@@ -342,20 +346,20 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 							newSeries.point = {
 								events: {
 									select: function () {
-										// Get selected points
+                                        // Get selected points
 										var points = scope.heatmap.getSelectedPoints();
 										points.push(this);
 
 										points = formatPoints(points);
 
-										// Give new selected countries to the service
+										// Give new selected countries to the service (sets the cookie too)
 										DashboardService.setCountries(viewType, points);
 
 										// Set new selected points in Selectivity
 										setSelectivityData(selectivity, points);
 									},
 									unselect: function() {
-										// Get selected points
+                                        // Get selected points
 										var points = scope.heatmap.getSelectedPoints();
 
 										// Remove unselected points from points
@@ -366,7 +370,7 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 
 										points = formatPoints(points);
 
-										// Give new selected countries to the service
+										// Give new selected countries to the service (sets the cookie too)
 										DashboardService.setCountries(viewType, points);
 
 										// Set new selected points in Selectivity
@@ -405,7 +409,31 @@ angular.module('yds').directive('ydsHeatmap', ['Data', '$ocLazyLoad', 'Dashboard
 							items: getSelectivityItemsFromPoints()
 						});
 					}
-				};
+
+					if (firstLoad) {
+                        // On first load, restore selected countries from cookie
+                        var cookieCountries = DashboardService.getCookieObject(cookieKey);
+
+                        if (!_.isEmpty(cookieCountries)) {
+                            // Get points of heatmap
+                            var points = scope.heatmap.series[0].points;
+
+                            // For each cookie country, try to find it in the heatmap series and select it
+                            _.each(cookieCountries, function (point) {
+                                var pointToSelect = _.findWhere(points, {
+                                    "iso-a2": point.code
+                                });
+
+                                // Select the point if found (selected check not needed with firstLoad variable)
+                                if (!_.isUndefined(pointToSelect) && !pointToSelect.selected) {
+                                    pointToSelect.select(true, true);
+                                }
+                            });
+                        }
+
+                        firstLoad = false;
+                    }
+                };
 
 				/**
 				 * Get formatted points from the heatmap and add them as the selection in Selectivity

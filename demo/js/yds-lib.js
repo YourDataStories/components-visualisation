@@ -1,4 +1,4 @@
-var app = angular.module('yds', ['ui.bootstrap', 'rzModule', 'ui.checkbox', 'oc.lazyLoad', 'angularUtils.directives.dirDisqus', 'ngTextTruncate']);
+var app = angular.module('yds', ['ui.bootstrap', 'rzModule', 'ui.checkbox', 'oc.lazyLoad', 'angularUtils.directives.dirDisqus', 'ngTextTruncate', 'ngCookies']);
 
 var host="http://ydsdev.iit.demokritos.gr:8085";
 var geoRouteUrl = host+"/YDSAPI/yds/geo/route";
