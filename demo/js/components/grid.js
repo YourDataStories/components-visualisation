@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService', '$timeout',
-    function(Data, Filters, DashboardService, $timeout){
+angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService',
+    function (Data, Filters, DashboardService) {
         return {
             restrict: 'E',
             scope: {
@@ -40,8 +40,8 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
 
                 enableRating: '@'       // Enable rating buttons for this component
             },
-            templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/grid.html',
-            link: function(scope, element, attrs) {
+            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/grid.html',
+            link: function (scope, element, attrs) {
                 //reference the dom elements in which the yds-grid is rendered
                 var gridWrapper = angular.element(element[0].querySelector('.component-wrapper'));
                 var gridContainer = angular.element(element[0].querySelector('.grid-container'));
@@ -82,7 +82,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                 }
 
                 //check if project id or grid type are defined
-                if(_.isUndefined(grid.projectId) || grid.projectId.trim()=="") {
+                if (_.isUndefined(grid.projectId) || grid.projectId.trim() == "") {
                     scope.ydsAlert = "The YDS component is not properly initialized " +
                         "because the projectId or the viewType attribute aren't configured properly. " +
                         "Please check the corresponding documentation section";
@@ -90,63 +90,63 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                 }
 
                 //check if view-type attribute is empty and assign the default value
-                if(_.isUndefined(grid.viewType) || grid.viewType.trim()=="")
+                if (_.isUndefined(grid.viewType) || grid.viewType.trim() == "")
                     grid.viewType = "default";
 
                 //check if the language attr is defined, else assign default value
-                if(_.isUndefined(grid.lang) || grid.lang.trim()=="")
+                if (_.isUndefined(grid.lang) || grid.lang.trim() == "")
                     grid.lang = "en";
 
                 //check if the sorting attr is defined, else assign the default value
-                if(_.isUndefined(grid.sorting) || (grid.sorting!="true" && grid.sorting!="false"))
+                if (_.isUndefined(grid.sorting) || (grid.sorting != "true" && grid.sorting != "false"))
                     grid.sorting = "true";
 
                 //check if the filtering attr is defined, else assign the default value
-                if(_.isUndefined(grid.filtering) || (grid.filtering!="true" && grid.filtering!="false"))
+                if (_.isUndefined(grid.filtering) || (grid.filtering != "true" && grid.filtering != "false"))
                     grid.filtering = "false";
 
                 //check if the quick filtering attr is defined, else assign the default value
-                if(_.isUndefined(grid.quickFiltering) || (grid.quickFiltering!="true" && grid.quickFiltering!="false"))
+                if (_.isUndefined(grid.quickFiltering) || (grid.quickFiltering != "true" && grid.quickFiltering != "false"))
                     grid.quickFiltering = "false";
 
                 //check if the colResize attr is defined, else assign default value
-                if(_.isUndefined(grid.colResize) || (grid.colResize!="true" && grid.colResize!="false"))
+                if (_.isUndefined(grid.colResize) || (grid.colResize != "true" && grid.colResize != "false"))
                     grid.colResize = "false";
 
                 //check if the paging attr is defined, else assign default value
-                if(_.isUndefined(grid.paging) || (grid.paging!="true" && grid.paging!="false"))
+                if (_.isUndefined(grid.paging) || (grid.paging != "true" && grid.paging != "false"))
                     grid.paging = "false";
 
                 //check if the exporting attr is defined, else assign default value
-                if(_.isUndefined(grid.exporting) || (grid.exporting!="true" && grid.exporting!="false"))
+                if (_.isUndefined(grid.exporting) || (grid.exporting != "true" && grid.exporting != "false"))
                     grid.exporting = "false";
 
                 //check if the exportBtnX attr is defined, else assign default value
-                if(_.isUndefined(grid.exportBtnX) || _.isNaN(grid.exportBtnX))
+                if (_.isUndefined(grid.exportBtnX) || _.isNaN(grid.exportBtnX))
                     grid.exportBtnX = 0;
 
                 //check if the exportBtnY attr is defined, else assign default value
-                if(_.isUndefined(grid.exportBtnY) || _.isNaN(grid.exportBtnY))
+                if (_.isUndefined(grid.exportBtnY) || _.isNaN(grid.exportBtnY))
                     grid.exportBtnY = 0;
 
                 //check if the page size attr is defined, else assign default value
-                if(_.isUndefined(grid.pageSize) || _.isNaN(grid.pageSize))
+                if (_.isUndefined(grid.pageSize) || _.isNaN(grid.pageSize))
                     grid.pageSize = "100";
 
                 //check if the component's height attr is defined, else assign default value
-                if(_.isUndefined(grid.elementH) || _.isNaN(grid.elementH))
-                    grid.elementH = 200 ;
+                if (_.isUndefined(grid.elementH) || _.isNaN(grid.elementH))
+                    grid.elementH = 200;
 
                 //check if the allowSelection attr is defined, else assign default value
-                if(_.isUndefined(allowSelection) || (allowSelection!="true" && allowSelection!="false"))
+                if (_.isUndefined(allowSelection) || (allowSelection != "true" && allowSelection != "false"))
                     allowSelection = "false";
 
                 //check if the groupedData attr is defined, else assign default value
-                if(_.isUndefined(groupedData) || (groupedData!="true" && groupedData!="false"))
+                if (_.isUndefined(groupedData) || (groupedData != "true" && groupedData != "false"))
                     groupedData = "false";
 
                 //check if the selectionType attr is defined, else assign default value
-                if(_.isUndefined(selectionType) || (selectionType!="single" && selectionType!="multiple"))
+                if (_.isUndefined(selectionType) || (selectionType != "single" && selectionType != "multiple"))
                     selectionType = "multiple";
 
                 // Show loading animation
@@ -174,7 +174,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                  * function which is being registered to the FilterModified event
                  * when a filter is updated, it updates the filter obj of the component by using the Filters Service
                  */
-                var filterModifiedListener = function() {
+                var filterModifiedListener = function () {
                     var gridFilters = {};
 
                     //get all filters applied to the columns
@@ -191,21 +191,21 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                 /**
                  * function to handle grid's quick filtering
                  */
-                scope.applyQuickFilter = function(input) {
+                scope.applyQuickFilter = function (input) {
                     scope.gridOptions.api.setQuickFilter(input);
                 };
 
                 /**
                  * Export grid data to CSV and download it
                  */
-                scope.exportGrid = function() {
+                scope.exportGrid = function () {
                     scope.gridOptions.api.exportDataAsCsv();
                 };
 
                 /**
                  * function to be called on destroy of the component
                  */
-                scope.$on("$destroy", function() {
+                scope.$on("$destroy", function () {
                     //if the grid filtering is enabled remove the filter event listener
                     if (grid.filtering === "true" || grid.quickFiltering === "true") {
                         scope.gridOptions.api.removeEventListener('afterFilterChanged', filterModifiedListener);
@@ -219,14 +219,14 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                  * selected rows before selecting the new ones
                  * @param selection Rows to select. Should be array of objects with "id" attributes in them.
                  */
-                var selectRows = function(selection) {
+                var selectRows = function (selection) {
                     // Deselect previously selected rows
                     if (dashboardId.indexOf("comparison") != -1 && !preventUpdate)
                         scope.gridOptions.api.deselectAll();
 
                     // Select new rows
                     if (!_.isEmpty(selection)) {
-                        scope.gridOptions.api.forEachNode(function(node) {
+                        scope.gridOptions.api.forEachNode(function (node) {
                             // Check if this node is in the selection
                             var result = _.findWhere(selection, {
                                 id: node.data.id
@@ -254,9 +254,9 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                 /**
                  * Create the grid
                  */
-                var createGrid = function() {
+                var createGrid = function () {
                     // Get data and visualize grid
-                    var extraParams = scope.extraParams;
+                    var extraParams = _.clone(scope.extraParams);
 
                     if (!_.isUndefined(baseUrl)) {
                         if (_.isUndefined(extraParams)) {
@@ -268,7 +268,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
 
                     // If extra params contains null value, prevent grid creation
                     var prevent = false;
-                    _.each(extraParams, function(param) {
+                    _.each(extraParams, function (param) {
                         if (_.isString(param) && param.indexOf("null") != -1)
                             prevent = true;
                     });
@@ -276,14 +276,26 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                         return;
 
                     Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang, extraParams)
-                        .then(function(response) {
+                        .then(function (response) {
                             var rawData = [];
                             var columnDefs = [];
 
-                            if (response.success == false || response.view.length==0) {
+                            if (!_.isEqual(extraParams, scope.extraParams)) {
+                                // If the extra parameters that were sent with the request are NOT the same with the
+                                // current ones, abort grid creation (in case the request takes some time, and
+                                // parameters change in the meantime)
+                                return;
+                            } else if (response.success == false || response.view.length == 0) {
                                 console.log('an error has occurred');
                                 return false;
                             } else {
+                                // If the grid exists already, get current selection and destroy the grid
+                                if (_.has(scope.gridOptions, "api")) {
+                                    selection = scope.gridOptions.api.getSelectedRows();
+
+                                    scope.gridOptions.api.destroy();
+                                }
+
                                 // Get column definitions
                                 columnDefs = Data.prepareGridColumns(response.view);
 
@@ -300,7 +312,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
 
                                     colToModify.cellRenderer = {
                                         renderer: 'group',
-                                        innerRenderer: function(params) {
+                                        innerRenderer: function (params) {
                                             return params.data.name;
                                         }
                                     };
@@ -331,7 +343,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                             // If selection is enabled, add extra options for it in the gridOptions
                             if (allowSelection == "true") {
                                 scope.gridOptions.rowSelection = selectionType;
-                                scope.gridOptions.onSelectionChanged = function(e) {
+                                scope.gridOptions.onSelectionChanged = function (e) {
                                     // Set selected rows in DashboardService
                                     DashboardService.setGridSelection(selectionId, e.selectedRows);
                                     selection = e.selectedRows;
@@ -342,7 +354,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                             }
 
                             //If paging enabled set the required options to the grid configuration
-                            if (grid.paging==="true") {
+                            if (grid.paging === "true") {
                                 var localDataSource = {
                                     rowCount: parseInt(rawData.length),    // not setting the row count, infinite paging will be used
                                     pageSize: parseInt(pageSize),           // changing to number, as scope keeps it as a string
@@ -375,8 +387,8 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                             if (allowSelection == "true" && !_.isEmpty(selection)) {
                                 selectRows(selection);
                             }
-                        }, function(error) {
-                            if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
+                        }, function (error) {
+                            if (error == null || _.isUndefined(error) || _.isUndefined(error.message))
                                 scope.ydsAlert = "An error has occurred, please check the configuration of the component";
                             else
                                 scope.ydsAlert = error.message;
@@ -390,30 +402,19 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                     // Watch for changes in extra parameters and update the grid
                     scope.$watch("extraParams", function (newValue, oldValue) {
                         // Check if the grid should update (ignoring the grid's own selections)
-                        var shouldUpdate = !_.isEqual(newValue, oldValue) && !preventUpdate;
+                        if (!_.isEqual(newValue, oldValue) && !preventUpdate) {
+                            // Show loading animation and hide any errors
+                            scope.loading = true;
+                            scope.ydsAlert = "";
 
-                        if (shouldUpdate) {
-                            $timeout(function () {
-                                // If the grid exists, get current selection and destroy the grid
-                                if (_.has(scope.gridOptions, "api")) {
-                                    selection = scope.gridOptions.api.getSelectedRows();
-
-                                    scope.gridOptions.api.destroy();
-                                }
-
-                                // Show loading animation and hide any errors
-                                scope.loading = true;
-                                scope.ydsAlert = "";
-
-                                createGrid();
-                            });
+                            createGrid();
                         }
 
                         preventUpdate = false;
                     });
 
                     // Watch for changes in the selection and select the appropriate rows
-                    DashboardService.subscribeGridSelectionChanges(scope, function() {
+                    DashboardService.subscribeGridSelectionChanges(scope, function () {
                         var selection = DashboardService.getGridSelection(selectionId);
                         selectRows(selection);
                     });
