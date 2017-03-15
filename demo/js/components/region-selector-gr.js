@@ -6,9 +6,9 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                 regionType: '@',        // Type used for getting the regions from the API
                 regionalUnitType: '@',  // Type used for getting the regional units from the API
                 dashboardId: '@',       // Dashboard ID to use for getting parameters from DashboardService
-                elementH:'@'            // Height of the component in pixels
+                elementH: '@'           // Height of the component in pixels
             },
-            templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/region-selector-gr.html',
+            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/region-selector-gr.html',
             link: function (scope, element) {
                 var regionType = scope.regionType;
                 var regionalUnitType = scope.regionalUnitType;
@@ -23,7 +23,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                 regionSelContainer[0].id = elementId;
 
                 // Check that the regionType and regionalUnitType attributes are defined, else show error
-                if(_.isUndefined(regionType) || regionType.trim() == "" ||
+                if (_.isUndefined(regionType) || regionType.trim() == "" ||
                     _.isUndefined(regionalUnitType) || regionalUnitType.trim() == "") {
                     scope.ydsAlert = "The YDS component is not properly configured. " +
                         "Please check the corresponding documentation section.";
@@ -31,12 +31,16 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                 }
 
                 // Check if the component's height attr is defined, else assign default value
-                if(_.isUndefined(elementH) || _.isNaN(elementH))
+                if (_.isUndefined(elementH) || _.isNaN(elementH))
                     elementH = 300;
 
                 // Variables for Selectivity and Highmaps instances
                 var selectivity = null;
                 var chart = null;
+
+                // Cookie related variables
+                var cookieKey = regionType + "_" + regionalUnitType;
+                var firstLoad = true;
 
                 // Boolean to indicate if the chart is drilled down or not
                 var drilledDown = false;
@@ -203,7 +207,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                  * @param e
                  */
                 var drilldown = function (e) {
-                    if (!e.seriesOptions  && e.point.selected) {
+                    if (!e.seriesOptions && e.point.selected) {
                         var chart = this,
                             mapKey = e.point.drilldown,
                             regionName = e.point.name;
@@ -218,13 +222,13 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                         $q.all([
                             Data.getGeoJSON("high", mapKey),
                             Data.getProjectVis("heatmap", "none", regionalUnitType, "en", extraParams)
-                        ]).then(function(results) {
+                        ]).then(function (results) {
                             // Get higher detail map with prefectures
                             var mapData = results[0];
 
                             // Get data for the prefectures and the color axis
                             var drilldownData = results[1].data;
-                            var colorAxis = _.find(results[1].view, function(view) {
+                            var colorAxis = _.find(results[1].view, function (view) {
                                 return _.has(view, "colorAxis");
                             }).colorAxis;
 
@@ -244,7 +248,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                                 colorAxis: colorAxis,
                                 tooltip: {
                                     enabled: false,
-                                    pointFormatter: function() {
+                                    pointFormatter: function () {
                                         return "<b>" + this.properties.NAME_ENG + "</b>: " + this.value;
                                     }
                                 },
@@ -267,14 +271,14 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                     this.setTitle(null, {text: regionName});
                 };
 
-                var updateHeatmap = function() {
+                var updateHeatmap = function () {
                     if (drilledDown) {
                         // Get data for this region to update it
                         var extraParams = DashboardService.getApiOptions(dashboardId);
                         extraParams.regions = drilldownRegion;
 
                         Data.getProjectVis("heatmap", "none", regionalUnitType, "en", extraParams)
-                            .then(function(response) {
+                            .then(function (response) {
                                 _.first(chart.series).setData(response.data);
 
                                 // Reselect previously selected points
@@ -286,7 +290,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                 };
 
                 // Get low resolution map of Greece to initialize map
-                Data.getGeoJSON("low", null).then(function(response) {
+                Data.getGeoJSON("low", null).then(function (response) {
                     // Give map to highcharts
                     Highcharts.maps["countries/gr-low-res"] = response;
 
@@ -298,20 +302,20 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                     createHeatmap();
                 });
 
-                var createHeatmap = function() {
+                var createHeatmap = function () {
                     var extraParams = DashboardService.getApiOptions(dashboardId);
 
                     // Get number of items in each region
                     Data.getProjectVis("heatmap", "none", regionType, "en", extraParams).then(visualizeHeatmap);
                 };
 
-                var visualizeHeatmap = function(results) {
+                var visualizeHeatmap = function (results) {
                     // Create new series to add to heatmap
                     var mapData = Highcharts.geojson(Highcharts.maps['countries/gr-low-res']);
 
                     // Get number of items in each region and the colorAxis
                     var data = results.data;
-                    var colorAxis = _.find(results.view, function(view) {
+                    var colorAxis = _.find(results.view, function (view) {
                         return _.has(view, "colorAxis");
                     }).colorAxis;
 
@@ -330,28 +334,63 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                         initializeSelectivity();
                     } else {
                         // Remove series
-                        while(chart.series.length > 0)
+                        while (chart.series.length > 0)
                             chart.series[0].remove(true);
                     }
 
-                    // chart = new Highcharts.mapChart(elementId, getMapOptions(data, mapData, colorAxis));
                     var series = getSeries(mapData, data);
                     chart.addSeries(series);
 
+                    // On the first time the heatmap loads, select the regions/prefectures from cookies
+                    if (firstLoad) {
+                        // Select regions/prefectures from cookie, if it exists
+                        var cookieRegions = DashboardService.getCookieObject(cookieKey);
+
+                        if (!_.isEmpty(cookieRegions)) {
+                            // For prefectures, make the text the same as the ID
+                            cookieRegions.prefectures = _.map(cookieRegions.prefectures, function (item) {
+                                return {
+                                    id: item.code,
+                                    text: item.code
+                                }
+                            });
+
+                            // For regions, find their names from the regions variable
+                            cookieRegions.regions = _.map(cookieRegions.regions, function (item) {
+                                return {
+                                    id: item.code,
+                                    text: regions[item.code].name
+                                }
+                            });
+
+                            // Merge the two arrays into one
+                            cookieRegions = _.union(cookieRegions.regions, cookieRegions.prefectures);
+
+                            // Set the selection in selectivity (which will then be set to the map)
+                            $(selectivity).selectivity("data", cookieRegions, {
+                                triggerChange: false
+                            });
+
+                            // Redraw selectivity to show the new selection
+                            $(selectivity).selectivity("rerenderSelection");
+                        }
+
+                        firstLoad = false;
+                    }
                     // Reselect previously selected points
                     selectFromSelectivityToMap();
                 };
 
-                var updateDashboardServiceValues = function(newData) {
+                var updateDashboardServiceValues = function (newData) {
                     // Filter selection into regions and prefectures
-                    var regionsFilter = function(item) {
+                    var regionsFilter = function (item) {
                         return _.has(regions, item.id);
                     };
 
                     var selectedRegions = _.filter(newData, regionsFilter);
                     var selectedPrefectures = _.reject(newData, regionsFilter);
 
-                    var transformation = function(item) {
+                    var transformation = function (item) {
                         return {
                             code: item.id,
                             value: item.name
@@ -364,6 +403,12 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                     // Set in Dashboard Service
                     DashboardService.setCountries(regionType, selectedRegions);
                     DashboardService.setCountries(regionalUnitType, selectedPrefectures);
+
+                    // Set in cookies
+                    DashboardService.setCookieObject(cookieKey, {
+                        regions: selectedRegions,
+                        prefectures: selectedPrefectures
+                    });
                 };
 
                 /**
@@ -372,7 +417,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                  * @param e         Highcharts event
                  * @param newItem   Function to create a selectivity item
                  */
-                var selectionHandler = function(e, newItem) {
+                var selectionHandler = function (e, newItem) {
                     var clickedPoint = e.target;
 
                     // Get currently selected vales from Selectivity
@@ -393,7 +438,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                     $(selectivity).selectivity("rerenderSelection");
 
                     // Redraw the chart to show updated tooltip for the selected point
-                    setTimeout(function() {
+                    setTimeout(function () {
                         clickedPoint.series.chart.redraw();
                     }, 0);
 
@@ -406,7 +451,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                  * @param e             Highcharts event
                  * @param updateValues  Function that removes the unselected point from a list
                  */
-                var unselectionHandler = function(e, updateValues) {
+                var unselectionHandler = function (e, updateValues) {
                     var pointToUnselect = e.target;
 
                     // Get currently selected vales from Selectivity
@@ -430,8 +475,8 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                 /**
                  * Handles the selection of a region on the Highmaps chart
                  */
-                var regionSelectionHandler = function(e) {
-                    selectionHandler(e, function(point, item) {
+                var regionSelectionHandler = function (e) {
+                    selectionHandler(e, function (point, item) {
                         return {
                             id: point.code,
                             text: item.name
@@ -443,9 +488,9 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                  * Handle the unselection of a region on the Highmaps chart
                  * @param e
                  */
-                var regionUnselectionHandler = function(e) {
-                    unselectionHandler(e, function(selectedValues, clickedPoint) {
-                        return _.reject(selectedValues, function(val) {
+                var regionUnselectionHandler = function (e) {
+                    unselectionHandler(e, function (selectedValues, clickedPoint) {
+                        return _.reject(selectedValues, function (val) {
                             return val.id == clickedPoint.code;
                         });
                     })
@@ -455,8 +500,8 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                  * Handle the selection of a prefecture
                  * @param e
                  */
-                var prefectureSelectionHandler = function(e) {
-                    selectionHandler(e, function(point, item) {
+                var prefectureSelectionHandler = function (e) {
+                    selectionHandler(e, function (point, item) {
                         return {
                             id: point.NAME_ENG,
                             text: point.NAME_ENG
@@ -468,9 +513,9 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                  * Handle the unselection of a prefecture
                  * @param e
                  */
-                var prefectureUnselectionHandler = function(e) {
-                    unselectionHandler(e, function(selectedValues, pointToUnselect) {
-                        return _.reject(selectedValues, function(val) {
+                var prefectureUnselectionHandler = function (e) {
+                    unselectionHandler(e, function (selectedValues, pointToUnselect) {
+                        return _.reject(selectedValues, function (val) {
                             return val.id == pointToUnselect.NAME_ENG;
                         });
                     });
@@ -482,10 +527,10 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                  * @param arr
                  * @returns {Array}
                  */
-                var unique = function(arr) {
+                var unique = function (arr) {
                     var newArray = [];
 
-                    _.each(arr, function(item) {
+                    _.each(arr, function (item) {
                         if (_.isUndefined(_.findWhere(newArray, {
                                 id: item.id
                             }))) {
@@ -502,7 +547,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                  * @param data
                  * @returns {*}
                  */
-                var getSeries = function(mapData, data) {
+                var getSeries = function (mapData, data) {
                     return {
                         data: data,
                         mapData: mapData,
@@ -529,7 +574,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                  * @param colorAxis
                  * @returns {*}
                  */
-                var getMapOptions = function(colorAxis) {
+                var getMapOptions = function (colorAxis) {
                     return {
                         chart: {
                             height: elementH,
@@ -538,13 +583,13 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                                 drillup: drillup
                             }
                         },
-                        legend: { enabled: false },
+                        legend: {enabled: false},
                         title: {
                             text: 'Greece'
                         },
                         tooltip: {
                             enabled: true,
-                            pointFormatter: function() {
+                            pointFormatter: function () {
                                 if (_.has(this, "selected") && this.selected == true) {
                                     return "<b>" + this.name + "</b>: " + this.value +
                                         '<br/><span style="font-weight: bold; color: red">(click again to drilldown)' +
@@ -585,7 +630,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                  * @param select        Boolean, set to true if the point should be selected
                  * @param pointId       ID of point to select/unselect
                  */
-                var togglePoint = function(select, pointId) {
+                var togglePoint = function (select, pointId) {
                     var points = chart.series[0].data;
 
                     // Use the correct "search" term to find the point
@@ -607,10 +652,10 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                 /**
                  * Select any points that are selected in Selectivity, on the Highmaps chart.
                  */
-                var selectFromSelectivityToMap = function() {
+                var selectFromSelectivityToMap = function () {
                     var selectivityData = $(selectivity).selectivity("data");
 
-                    _.each(selectivityData, function(item) {
+                    _.each(selectivityData, function (item) {
                         togglePoint(true, item.id);
                     });
                 };
@@ -618,11 +663,11 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                 /**
                  * Initialize Selectivity dropdown for region or prefecture selection
                  */
-                var initializeSelectivity = function() {
+                var initializeSelectivity = function () {
                     // Create the available selection items for Selectivity
                     var items = [];
 
-                    _.each(regions, function(region, key) {
+                    _.each(regions, function (region, key) {
                         // Add the actual region to the items
                         items.push({
                             id: key,
@@ -630,7 +675,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                         });
 
                         // Add the region's prefectures to the items
-                        _.each(region.prefectures, function(pref) {
+                        _.each(region.prefectures, function (pref) {
                             items.push({
                                 id: pref,
                                 text: pref
@@ -648,7 +693,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                     });
 
                     // Set Selectivity selection change event handler
-                    $(selectivity).on("change", function(e) {
+                    $(selectivity).on("change", function (e) {
                         // Check for added point
                         if (_.has(e, "added") && !_.isUndefined(e.added)) {
                             togglePoint(true, e.added.id);
