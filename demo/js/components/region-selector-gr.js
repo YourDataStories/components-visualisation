@@ -439,7 +439,9 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
 
                     // Redraw the chart to show updated tooltip for the selected point
                     setTimeout(function () {
-                        clickedPoint.series.chart.redraw();
+                        if (_.has(clickedPoint, "series") && !_.isNull(clickedPoint.series)) {
+                            clickedPoint.series.chart.redraw();
+                        }
                     }, 0);
 
                     updateDashboardServiceValues(selectedValues);
