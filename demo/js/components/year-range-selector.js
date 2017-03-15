@@ -1,5 +1,5 @@
 angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
-    function($timeout, DashboardService) {
+    function ($timeout, DashboardService) {
         return {
             restrict: 'E',
             scope: {
@@ -10,7 +10,7 @@ angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
                 height: '@',        // Height of the slider (optional)
                 title: '@'          // Title to show above slider (optional)
             },
-            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/year-range-selector.html',
+            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/year-range-selector.html',
             link: function (scope, element, attrs) {
                 scope.initialized = false;
 
@@ -42,19 +42,24 @@ angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
                     }
                 }
 
+                // Set cookie key for this selector
+                var cookieKey = "year_" + dashboardId;
+
                 /**
                  * Update the year range in DashboardService
                  */
-                var updateYearRange = function() {
+                var updateYearRange = function () {
                     var minValue = scope.yearSlider.minValue;
                     var maxValue = scope.yearSlider.maxValue;
 
                     // Update selected years in DashboardService
                     DashboardService.setYearRange(dashboardId, minValue, maxValue);
-                };
 
-                // Set initial year selection in DashboardService
-                DashboardService.setYearRange(dashboardId, minYear, maxYear);
+                    DashboardService.setCookieObject(cookieKey, {
+                        minValue: minValue,
+                        maxValue: maxValue
+                    });
+                };
 
                 // Set slider options
                 scope.yearSlider = {
@@ -72,8 +77,23 @@ angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
                 // Show angular slider after options are set
                 scope.initialized = true;
 
+                // If there are any min/max years saved in a cookie, restore them
+                var cookieYears = DashboardService.getCookieObject(cookieKey);
+
+                if (!_.isEmpty(cookieYears)) {
+                    // Set values on the slider model to be shown on the page
+                    scope.yearSlider.minValue = cookieYears.minValue;
+                    scope.yearSlider.maxValue = cookieYears.maxValue;
+
+                    // Set selected year range to the one from the cookie
+                    DashboardService.setYearRange(dashboardId, cookieYears.minValue, cookieYears.maxValue);
+                } else {
+                    // Set initial year selection to be the entire range
+                    DashboardService.setYearRange(dashboardId, minYear, maxYear);
+                }
+
                 // Make sure to show the pointers in the correct places
-                $timeout(function(){
+                $timeout(function () {
                     scope.$broadcast('reCalcViewDimensions');
                 }, 50);
             }
