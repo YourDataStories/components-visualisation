@@ -170,6 +170,10 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                     }
                 }
 
+                // Set cookie variables
+                var cookieKey = grid.viewType + "_" + dashboardId;
+                var firstLoad = true;
+
                 /**
                  * function which is being registered to the FilterModified event
                  * when a filter is updated, it updates the filter obj of the component by using the Filters Service
@@ -348,6 +352,9 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                                     DashboardService.setGridSelection(selectionId, e.selectedRows);
                                     selection = e.selectedRows;
 
+                                    // Save selection to cookies too
+                                    DashboardService.setCookieObject(cookieKey, e.selectedRows);
+
                                     // Prevent next grid update
                                     preventUpdate = true;
                                 }
@@ -382,6 +389,19 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
 
                             // Remove loading animation
                             scope.loading = false;
+
+                            // At first load of grid, check if there are any cookies with a selection for this grid
+                            if (firstLoad) {
+                                var cookieSel = DashboardService.getCookieObject(cookieKey);
+
+                                if (!_.isEmpty(cookieSel)) {
+                                    // Add selection from cookie to the selection variable, so the rows will be selected
+                                    // below if selection is enabled
+                                    selection = cookieSel;
+                                }
+
+                                firstLoad = false;
+                            }
 
                             // Select any points that were previously selected
                             if (allowSelection == "true" && !_.isEmpty(selection)) {
