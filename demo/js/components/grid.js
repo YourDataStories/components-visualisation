@@ -174,6 +174,8 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                 var cookieKey = grid.viewType + "_" + dashboardId;
                 var firstLoad = true;
 
+                var preventSelectionEvent = false;
+
                 /**
                  * function which is being registered to the FilterModified event
                  * when a filter is updated, it updates the filter obj of the component by using the Filters Service
@@ -225,8 +227,12 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                  */
                 var selectRows = function (selection) {
                     // Deselect previously selected rows
-                    if (dashboardId.indexOf("comparison") != -1 && !preventUpdate)
+                    if (dashboardId.indexOf("comparison") != -1 && !preventUpdate) {
+                        // Prevent the next selection event from doing anything (because deselectAll() will fire it)
+                        preventSelectionEvent = true;
+
                         scope.gridOptions.api.deselectAll();
+                    }
 
                     // Select new rows
                     if (!_.isEmpty(selection)) {
@@ -281,49 +287,48 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
 
                     Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang, extraParams)
                         .then(function (response) {
-                            var rawData = [];
-                            var columnDefs = [];
-
+                            // Check for conditions in which the grid creation should be stopped
                             if (!_.isEqual(extraParams, scope.extraParams)) {
                                 // If the extra parameters that were sent with the request are NOT the same with the
                                 // current ones, abort grid creation (in case the request takes some time, and
                                 // parameters change in the meantime)
                                 return;
                             } else if (response.success == false || response.view.length == 0) {
-                                console.log('an error has occurred');
+                                console.error("An error has occurred!");
                                 return false;
-                            } else {
-                                // If the grid exists already, get current selection and destroy the grid
-                                if (_.has(scope.gridOptions, "api")) {
-                                    selection = scope.gridOptions.api.getSelectedRows();
+                            }
 
-                                    scope.gridOptions.api.destroy();
+                            // If the grid exists already, get current selection and destroy the grid
+                            if (_.has(scope.gridOptions, "api")) {
+                                selection = scope.gridOptions.api.getSelectedRows();
+
+                                scope.gridOptions.api.destroy();
+                            }
+
+                            // Get column definitions
+                            var columnDefs = Data.prepareGridColumns(response.view);
+
+                            // Get data for the grid
+                            var rawData = [];
+
+                            if (groupedData == "true") {
+                                // For grouped data, use API response directly, and make the first column definition
+                                // use the group renderer
+                                rawData = response.data;
+
+                                var colToModify = _.first(columnDefs);
+                                if (allowSelection == "true") {
+                                    colToModify = columnDefs[1];
                                 }
 
-                                // Get column definitions
-                                columnDefs = Data.prepareGridColumns(response.view);
-
-                                // Get data for the grid
-                                if (groupedData == "true") {
-                                    // For grouped data, use API response directly, and make the first column definition
-                                    // use the group renderer
-                                    rawData = response.data;
-
-                                    var colToModify = _.first(columnDefs);
-                                    if (allowSelection == "true") {
-                                        colToModify = columnDefs[1];
+                                colToModify.cellRenderer = {
+                                    renderer: 'group',
+                                    innerRenderer: function (params) {
+                                        return params.data.name;
                                     }
-
-                                    colToModify.cellRenderer = {
-                                        renderer: 'group',
-                                        innerRenderer: function (params) {
-                                            return params.data.name;
-                                        }
-                                    };
-                                } else {
-                                    rawData = Data.prepareGridData(response.data, response.view);
-                                }
-
+                                };
+                            } else {
+                                rawData = Data.prepareGridData(response.data, response.view);
                             }
 
                             // If selection is enabled, add checkbox to the first column
@@ -348,6 +353,13 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                             if (allowSelection == "true") {
                                 scope.gridOptions.rowSelection = selectionType;
                                 scope.gridOptions.onSelectionChanged = function (e) {
+                                    // Ignore event if grid is loading, or it's marked to be skipped
+                                    if (scope.loading || preventSelectionEvent) {
+                                        preventSelectionEvent = false;
+
+                                        return;
+                                    }
+
                                     // Set selected rows in DashboardService
                                     DashboardService.setGridSelection(selectionId, e.selectedRows);
                                     selection = e.selectedRows;
@@ -408,8 +420,8 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                                 selectRows(selection);
                             }
                         }, function (error) {
-                            if (error == null || _.isUndefined(error) || _.isUndefined(error.message))
-                                scope.ydsAlert = "An error has occurred, please check the configuration of the component";
+                            if (_.isNull(error) || _.isUndefined(error) || _.isUndefined(error.message))
+                                scope.ydsAlert = "An error has occurred, please check the configuration of the component.";
                             else
                                 scope.ydsAlert = error.message;
 
