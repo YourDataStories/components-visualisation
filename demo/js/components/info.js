@@ -89,7 +89,7 @@ angular.module('yds').directive('ydsInfo', ['Data', 'Translations', '$sce', func
                     }
                     
                     if (_.isArray(scope.info[infoValue.header].value))
-                        scope.info[infoValue.header].value = scope.info[infoValue.header].value.join()
+                        scope.info[infoValue.header].value = scope.info[infoValue.header].value.join(", ");
                 });
             }, function (error) {
                 if (error==null || _.isUndefined(error) || _.isUndefined(error.message))
