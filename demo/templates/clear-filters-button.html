@@ -1,5 +1,5 @@
 <div class="component-wrapper">
-    <button type="button" class="btn btn-primary" ng-click="clearFilters()">
+    <button type="button" ng-disabled="disableBtn" class="btn btn-primary" ng-click="clearFilters()">
         <span ng-if="lang != 'el'">Clear selected filters</span>
         <span ng-if="lang == 'el'">Καθαρισμός φίλτρων</span>
     </button>

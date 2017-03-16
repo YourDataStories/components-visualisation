@@ -155,6 +155,43 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
             }
         };
 
+        // The cookie keys that are created in each Dashboard
+        var dashboardCookies = {
+            contract: [
+                "contract.buyer.countries.all",
+                "contract.seller.countries.all",
+                "year_contract"
+            ],
+            comparison: [
+                "contract.comparison.CPVs.for.countries.and.period_comparison1",
+                "contract.comparison.CPVs.for.countries.and.period_comparison2",
+                "contract.comparison.countryA.countries.all",
+                "contract.comparison.countryB.countries.all",
+                "year_comparison"
+            ],
+            public_project: [
+                "publicproject.filter.buyers.all_public_project",
+                "publicproject.filter.sellers.all_public_project",
+                "publicproject.regions.all_publicproject.regional_units.all",
+                "year_public_project"
+            ]
+        };
+
+        /**
+         * For a given dashboardId, return true if there are cookies for that dashboard
+         * @param dashboardId
+         * @returns {*}
+         */
+        var dashboardIdHasCookies = function (dashboardId) {
+            return _.has(dashboardCookies, dashboardId);
+        };
+
+        var clearDashboardCookies = function (dashboardId) {
+            var cookieKeys = dashboardCookies[dashboardId];
+            console.log("Clearing cookies:", cookieKeys);
+            //todo
+        };
+
         /**
          * Get the value of a cookie as an object
          * @param key
@@ -629,7 +666,9 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
             setVisType: setVisType,
 
             getCookieObject: getCookieObject,
-            setCookieObject: setCookieObject
+            setCookieObject: setCookieObject,
+            dashboardIdHasCookies: dashboardIdHasCookies,
+            clearDashboardCookies: clearDashboardCookies
         };
     }]
 );
