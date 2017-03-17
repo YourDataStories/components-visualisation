@@ -6,10 +6,16 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-10">
             <p class="text-justify">This dashboard allows you to explore data related to official development assistance
                 (ODA) provided by donor countries (such as the Netherlands) to developing countries all over the world
                 (such as Zimbabwe).</p>
+        </div>
+        <div class="col-md-2">
+            <yds-clear-filters-button
+                    dashboard-id="{{ selectedSector }}"
+                    lang="en">
+            </yds-clear-filters-button>
         </div>
     </div>
 

@@ -157,6 +157,16 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
 
         // The cookie keys that are created in each Dashboard
         var dashboardCookies = {
+            aidactivity: [
+                "aidactivity.benefactor.countries.all",
+                "aidactivity.beneficiary.countries.all",
+                "year_aidactivity"
+            ],
+            tradeactivity: [
+                "tradeactivity.hasdestination.countries.all",
+                "tradeactivity.hasorigin.countries.all",
+                "year_tradeactivity"
+            ],
             contract: [
                 "contract.buyer.countries.all",
                 "contract.seller.countries.all",
