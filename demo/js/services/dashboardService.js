@@ -186,10 +186,17 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
             return _.has(dashboardCookies, dashboardId);
         };
 
+        /**
+         * Clear the cookies for a specified Dashboard. The cookies to clear for each Dashboard are specified in the
+         * "dashboardCookies" variable above.
+         * @param dashboardId
+         */
         var clearDashboardCookies = function (dashboardId) {
+            // Get cookies for the specified Dashboard
             var cookieKeys = dashboardCookies[dashboardId];
-            console.log("Clearing cookies:", cookieKeys);
-            //todo
+
+            // Remove the cookies
+            _.map(cookieKeys, $cookies.remove);
         };
 
         /**

@@ -1,5 +1,5 @@
-angular.module("yds").directive("ydsClearFiltersButton", ["DashboardService",
-    function (DashboardService) {
+angular.module("yds").directive("ydsClearFiltersButton", ["DashboardService", "$window",
+    function (DashboardService, $window) {
         return {
             restrict: "E",
             scope: {
@@ -20,7 +20,11 @@ angular.module("yds").directive("ydsClearFiltersButton", ["DashboardService",
                  * Clear the filters for the specified Dashboard
                  */
                 scope.clearFilters = function () {
+                    // Clear saved cookies for this dashboard
                     DashboardService.clearDashboardCookies(scope.dashboardId);
+
+                    // Reload the page
+                    $window.location.reload();
                 }
             }
         };
