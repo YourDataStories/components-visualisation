@@ -210,6 +210,27 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
         };
 
         /**
+         * Get the saved cookies for a specific Dashboard
+         * @param dashboardId
+         * @returns {{}}
+         */
+        var getDashboardCookies = function (dashboardId) {
+            var cookiesToSave = dashboardCookies[dashboardId];
+            var cookies = {};
+
+            // Add cookie values to the cookies variable
+            _.each(cookiesToSave, function (cookieKey) {
+                var value = $cookies.getObject(cookieKey);
+
+                if (!_.isUndefined(value)) {
+                    cookies[cookieKey] = value;
+                }
+            });
+
+            return cookies;
+        };
+
+        /**
          * Get the value of a cookie as an object
          * @param key
          * @returns {*|Object}
@@ -685,7 +706,8 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
             getCookieObject: getCookieObject,
             setCookieObject: setCookieObject,
             dashboardIdHasCookies: dashboardIdHasCookies,
-            clearDashboardCookies: clearDashboardCookies
+            clearDashboardCookies: clearDashboardCookies,
+            getDashboardCookies: getDashboardCookies
         };
     }]
 );

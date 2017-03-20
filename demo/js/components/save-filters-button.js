@@ -19,10 +19,11 @@ angular.module("yds").directive("ydsSaveFiltersButton", ["DashboardService",
                 scope.disableBtn = !DashboardService.dashboardIdHasCookies(scope.dashboardId);
 
                 /**
-                 * Clear the filters for the specified Dashboard
+                 * Save the filters for the specified Dashboard to the Library
                  */
                 scope.saveFilters = function () {
-                    console.log("Save filters");
+                    var cookiesObj = DashboardService.getDashboardCookies(scope.dashboardId);
+                    console.log("Save filters", cookiesObj);
                     //todo
                 }
             }
