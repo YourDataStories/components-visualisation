@@ -6,12 +6,18 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 public class DashboardConfig {
+    private final String userId;
     private final String title;
     private final String cookiesObject;
 
-    public DashboardConfig(String title, String cookiesObject) {
+    public DashboardConfig(String user_id, String title, String cookiesObject) {
+        this.userId = user_id;
         this.title = title;
         this.cookiesObject = cookiesObject;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 
     public String getTitle() {
@@ -52,6 +58,7 @@ public class DashboardConfig {
     @Override
     public int hashCode() {
         int hash = 3;
+
         hash = 17 * hash + Objects.hashCode(this.title);
         hash = 17 * hash + Objects.hashCode(this.cookiesObject);
         return hash;
@@ -72,6 +79,7 @@ public class DashboardConfig {
         return Objects.equals(this.cookiesObject, other.cookiesObject);
     }
 
+    public static final String FLD_USERID = "userId";
     public static final String FLD_TITLE = "title";
     public static final String FLD_PARAMS = "parameters";
 
@@ -83,7 +91,8 @@ public class DashboardConfig {
         public JsonElement serialize(DashboardConfig dc, Type type, JsonSerializationContext jsc) {
             final JsonObject jsonObject = new JsonObject();
 
-            // Add title
+            // Add userId & title
+            jsonObject.addProperty(DashboardConfig.FLD_USERID, dc.getUserId());
             jsonObject.addProperty(DashboardConfig.FLD_TITLE, dc.getTitle());
 
             // Add parameters. Should be a JSON object, so we always parse it
