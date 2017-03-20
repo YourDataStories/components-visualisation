@@ -407,6 +407,47 @@ public class MongoAPIImpl implements YDSAPI {
         return id;
     }
 
+    @Override
+    public List getDashboardConfigurations(String user_id) {
+        if (user_id == null || user_id.trim().isEmpty()) {
+            return Collections.EMPTY_LIST;
+        }
+
+        user_id = user_id.trim();
+
+        DBCollection col = db.getCollection(COL_DASHBOARDCONFIGS);
+        DBCursor curs;
+
+        List<DashboardConfig> res = new ArrayList<>();
+
+        // Find items for this user
+        curs = col.find(QueryBuilder.start(DashboardConfig.FLD_USERID).is(user_id).get());
+
+        // Order by reverse insertion order
+        curs = curs.sort(REVERSED_INSERTION_ORDER);
+
+        while (curs.hasNext()) {
+            DBObject dbo = curs.next();
+
+            res.add(extractDashboardConfig(dbo));
+        }
+
+        return res;
+    }
+
+    private DashboardConfig extractDashboardConfig(DBObject dbo) {
+        String userId = (String) dbo.get(DashboardConfig.FLD_USERID);
+        String title = (String) dbo.get(DashboardConfig.FLD_TITLE);
+        String params = (String) dbo.get(DashboardConfig.FLD_PARAMS);
+
+        return new DashboardConfig(userId, title, params);
+    }
+
+    @Override
+    public String saveDashboardConfiguration(DashboardConfig config) {
+        return null;
+    }
+
     private BasketItem extractBasketItem(DBObject dbo) {
         ObjectId _id;
         try {

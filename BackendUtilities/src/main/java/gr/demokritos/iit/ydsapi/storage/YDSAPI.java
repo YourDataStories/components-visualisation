@@ -18,6 +18,7 @@ public interface YDSAPI {
     static String COL_EMBEDDINGS = "embeddings";
     static String COL_BASKETS = "baskets";
     static String COL_RATINGS = "ratings";
+    static String COL_DASHBOARDCONFIGS = "dashboardconfigs";
     static String FLD_HASHCODE = "hashcode";
     static String USER_ID_PUBLIC = "public";
 
@@ -100,4 +101,20 @@ public interface YDSAPI {
      * @return Hashcode of newly saved rating
      */
     String saveRating(ChartRating rating);
+
+    /**
+     * Get the saved Dashboard configurations of a user.
+     *
+     * @param user_id
+     * @return
+     */
+    List getDashboardConfigurations(String user_id);
+
+    /**
+     * Save a Dashboard configuration
+     *
+     * @param config
+     * @return
+     */
+    String saveDashboardConfiguration(DashboardConfig config);
 }

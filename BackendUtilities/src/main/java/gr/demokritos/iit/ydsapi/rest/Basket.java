@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- *
  * @author George K. <gkiom@iit.demokritos.gr>
  */
 @Path("yds/basket/")
@@ -65,31 +64,55 @@ public class Basket {
             @QueryParam("basket_type") String basket_type
     ) {
         YDSAPI api = MongoAPIImpl.getInstance();
-        List<BasketItem> baskets;
-        BasketListLoadResponse blr;
         LOG.info(String.format("user_id: %s", user_id));
         LOG.info(String.format("basket_type: %s", basket_type));
-        try {
-            baskets = api.getBasketItems(
-                    user_id,
-                    basket_type == null
-                            ? BasketType.ALL
-                            : BasketType.valueOf(basket_type.toUpperCase())
-            );
-            LOG.info(String.format("baskets size: %d", baskets.size()));
-            blr = new BasketListLoadResponse(baskets);
-        } catch (Exception ex) {
-            blr = new BasketListLoadResponse(
-                    null,
-                    Status.ERROR,
-                    ex.getMessage() != null ? ex.getMessage() : ex.toString()
-            );
+
+        if (basket_type.equals("dashboard")) {
+            // Type Dashboard has a different type of items which aren't visualisations or datasets
+            List<DashboardConfig> items;
+            DashboardConfigListLoadResponse dclr;
+            try {
+                items = api.getDashboardConfigurations(user_id);
+                LOG.info(String.format("baskets size: %d", items.size()));
+                dclr = new DashboardConfigListLoadResponse(items);
+            } catch (Exception ex) {
+                dclr = new DashboardConfigListLoadResponse(
+                        Status.ERROR,
+                        ex.getMessage() != null ? ex.getMessage() : ex.toString(),
+                        null
+                );
+            }
+
+            return Response.status(
+                    dclr.getStatus() == Status.OK || dclr.getStatus() == Status.NOT_EXISTS
+                            ? Response.Status.OK
+                            : Response.Status.INTERNAL_SERVER_ERROR
+            ).entity(dclr.toJSON()).build();
+        } else {
+            List<BasketItem> baskets;
+            BasketListLoadResponse blr;
+            try {
+                baskets = api.getBasketItems(
+                        user_id,
+                        basket_type == null
+                                ? BasketType.ALL
+                                : BasketType.valueOf(basket_type.toUpperCase())
+                );
+                LOG.info(String.format("baskets size: %d", baskets.size()));
+                blr = new BasketListLoadResponse(baskets);
+            } catch (Exception ex) {
+                blr = new BasketListLoadResponse(
+                        null,
+                        Status.ERROR,
+                        ex.getMessage() != null ? ex.getMessage() : ex.toString()
+                );
+            }
+            return Response.status(
+                    blr.getStatus() == Status.OK || blr.getStatus() == Status.NOT_EXISTS
+                            ? Response.Status.OK
+                            : Response.Status.INTERNAL_SERVER_ERROR
+            ).entity(blr.toJSON()).build();
         }
-        return Response.status(
-                blr.getStatus() == Status.OK || blr.getStatus() == Status.NOT_EXISTS
-                        ? Response.Status.OK
-                        : Response.Status.INTERNAL_SERVER_ERROR
-        ).entity(blr.toJSON()).build();
     }
 
     @Path("getUserCharts")
@@ -239,8 +262,8 @@ public class Basket {
         try {
             bskt = api.getBasketItem(basket_item_id);
             rlr = new RetrieveLoadResponse(
-                    true, 
-                    bskt == null ? Status.NOT_EXISTS.toString().toLowerCase() : Status.OK.toString().toLowerCase(), 
+                    true,
+                    bskt == null ? Status.NOT_EXISTS.toString().toLowerCase() : Status.OK.toString().toLowerCase(),
                     bskt);
             res = r.status(Response.Status.OK).entity(rlr.toJSON()).build();
         } catch (Exception ex) {
