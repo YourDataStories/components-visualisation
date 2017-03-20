@@ -106,15 +106,15 @@ public interface YDSAPI {
      * Get the saved Dashboard configurations of a user.
      *
      * @param user_id
-     * @return
+     * @return Dashboard configurations
      */
-    List getDashboardConfigurations(String user_id);
+    List<DashboardConfig> getDashboardConfigurations(String user_id);
 
     /**
      * Save a Dashboard configuration
      *
      * @param config
-     * @return
+     * @return Hashcode of newly saved configuration
      */
     String saveDashboardConfiguration(DashboardConfig config);
 }

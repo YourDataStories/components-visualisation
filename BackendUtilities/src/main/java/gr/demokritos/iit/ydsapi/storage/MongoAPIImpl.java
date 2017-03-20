@@ -408,7 +408,7 @@ public class MongoAPIImpl implements YDSAPI {
     }
 
     @Override
-    public List getDashboardConfigurations(String user_id) {
+    public List<DashboardConfig> getDashboardConfigurations(String user_id) {
         if (user_id == null || user_id.trim().isEmpty()) {
             return Collections.EMPTY_LIST;
         }
