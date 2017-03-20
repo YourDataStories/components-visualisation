@@ -137,7 +137,7 @@ public class DashboardConfig {
             final String userId = jsonObject.get(DashboardConfig.FLD_USERID).getAsString();
             final String dashboard = jsonObject.get(DashboardConfig.FLD_DASHBOARD).getAsString();
             final String title = jsonObject.get(DashboardConfig.FLD_TITLE).getAsString();
-            final String params = jsonObject.get(DashboardConfig.FLD_PARAMS).getAsString();
+            final String params = jsonObject.get(DashboardConfig.FLD_PARAMS).getAsJsonObject().toString();
 
             return new DashboardConfig(userId, dashboard, title, params);
         }
