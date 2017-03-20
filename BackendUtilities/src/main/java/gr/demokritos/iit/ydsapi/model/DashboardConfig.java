@@ -7,13 +7,31 @@ import java.util.Objects;
 
 public class DashboardConfig {
     private final String userId;
+    private final String dashboard;
     private final String title;
     private final String cookiesObject;
 
-    public DashboardConfig(String user_id, String title, String cookiesObject) {
+    public DashboardConfig(String user_id, String dashboard, String title, String cookiesObject) {
         this.userId = user_id;
+        this.dashboard = dashboard;
         this.title = title;
         this.cookiesObject = cookiesObject;
+    }
+
+    public DashboardConfig(String jsonDashboardConfig) {
+        DashboardConfig dc = new GsonBuilder()
+                .registerTypeAdapter(DashboardConfig.class, new DashboardConfigDeserializer())
+                .create()
+                .fromJson(jsonDashboardConfig, getClass());
+
+        this.userId = dc.getUserId();
+        this.dashboard = dc.getDashboard();
+        this.title = dc.getTitle();
+        this.cookiesObject = dc.getCookiesObject();
+    }
+
+    public String getDashboard() {
+        return dashboard;
     }
 
     public String getUserId() {
@@ -58,7 +76,7 @@ public class DashboardConfig {
     @Override
     public int hashCode() {
         int hash = 3;
-
+        hash = 17 * hash + Objects.hashCode(this.dashboard);
         hash = 17 * hash + Objects.hashCode(this.title);
         hash = 17 * hash + Objects.hashCode(this.cookiesObject);
         return hash;
@@ -73,6 +91,9 @@ public class DashboardConfig {
             return false;
         }
         final DashboardConfig other = (DashboardConfig) obj;
+        if (!Objects.equals(this.dashboard, other.dashboard)) {
+            return false;
+        }
         if (!Objects.equals(this.title, other.title)) {
             return false;
         }
@@ -80,6 +101,7 @@ public class DashboardConfig {
     }
 
     public static final String FLD_USERID = "userId";
+    public static final String FLD_DASHBOARD = "dashboard";
     public static final String FLD_TITLE = "title";
     public static final String FLD_PARAMS = "parameters";
 
@@ -91,8 +113,8 @@ public class DashboardConfig {
         public JsonElement serialize(DashboardConfig dc, Type type, JsonSerializationContext jsc) {
             final JsonObject jsonObject = new JsonObject();
 
-            // Add userId & title
             jsonObject.addProperty(DashboardConfig.FLD_USERID, dc.getUserId());
+            jsonObject.addProperty(DashboardConfig.FLD_DASHBOARD, dc.getDashboard());
             jsonObject.addProperty(DashboardConfig.FLD_TITLE, dc.getTitle());
 
             // Add parameters. Should be a JSON object, so we always parse it
@@ -100,6 +122,24 @@ public class DashboardConfig {
                     .parse(dc.getCookiesObject())
                     .getAsJsonObject());
             return jsonObject;
+        }
+    }
+
+    /**
+     * Helper class to deserialize a Dashboard configuration JSON String
+     */
+    class DashboardConfigDeserializer implements JsonDeserializer<DashboardConfig> {
+        @Override
+        public DashboardConfig deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
+            final JsonObject jsonObject = json.getAsJsonObject();
+
+            // Get values from JSON
+            final String userId = jsonObject.get(DashboardConfig.FLD_USERID).getAsString();
+            final String dashboard = jsonObject.get(DashboardConfig.FLD_DASHBOARD).getAsString();
+            final String title = jsonObject.get(DashboardConfig.FLD_TITLE).getAsString();
+            final String params = jsonObject.get(DashboardConfig.FLD_PARAMS).getAsString();
+
+            return new DashboardConfig(userId, dashboard, title, params);
         }
     }
 }
