@@ -38,6 +38,17 @@ public class DashboardConfig {
         return gson.toJson(this);
     }
 
+    public JsonElement toJSONElement() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder
+                .registerTypeAdapter(DashboardConfig.class, new DashboardConfigSerializer())
+                .disableHtmlEscaping()
+                .setPrettyPrinting();
+        Gson gson = gsonBuilder.create();
+
+        return gson.toJsonTree(this);
+    }
+
     @Override
     public int hashCode() {
         int hash = 3;
