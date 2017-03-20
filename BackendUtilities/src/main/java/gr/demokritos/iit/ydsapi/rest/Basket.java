@@ -57,6 +57,40 @@ public class Basket {
                 .entity(res.toJSON()).build();
     }
 
+    @Path("save_dashboard")
+    @POST
+    public Response saveDashboardConfig(
+            String json_dashboard_config
+    ) {
+        DashboardConfigSaveResponse res = new DashboardConfigSaveResponse();
+        YDSAPI api = MongoAPIImpl.getInstance();
+
+        try {
+            DashboardConfig item = new DashboardConfig(json_dashboard_config);
+            String id = api.saveDashboardConfiguration(item);
+            if (id != null && !id.isEmpty()) {
+                res.setStatus(BaseResponse.Status.OK);
+                res.setDashboard_config_id(id);
+            } else {
+                res.setStatus(Status.OK);
+                res.setMessage("Could not save dashboard configuration");
+                res.setDashboard_config_id("");
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.toString());
+            res.setStatus(Status.ERROR);
+            res.setMessage(ex.getMessage() != null
+                    ? ex.getMessage()
+                    : ex.toString());
+        }
+
+        return Response.status(
+                res.getStatus() == Status.OK
+                        ? Response.Status.OK
+                        : Response.Status.INTERNAL_SERVER_ERROR)
+                .entity(res.toJSON()).build();
+    }
+
     @Path("get/{user_id}")
     @GET
     public Response load(
