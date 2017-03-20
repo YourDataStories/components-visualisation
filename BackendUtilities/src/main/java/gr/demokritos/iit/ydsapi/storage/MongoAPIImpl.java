@@ -19,6 +19,7 @@ import java.util.logging.Level;
 /**
  * @author George K. <gkiom@iit.demokritos.gr>
  */
+@SuppressWarnings("Duplicates")
 public class MongoAPIImpl implements YDSAPI {
 
     private volatile static MongoAPIImpl instance;
@@ -437,15 +438,41 @@ public class MongoAPIImpl implements YDSAPI {
 
     private DashboardConfig extractDashboardConfig(DBObject dbo) {
         String userId = (String) dbo.get(DashboardConfig.FLD_USERID);
+        String dashboard = (String) dbo.get(DashboardConfig.FLD_DASHBOARD);
         String title = (String) dbo.get(DashboardConfig.FLD_TITLE);
         String params = (String) dbo.get(DashboardConfig.FLD_PARAMS);
 
-        return new DashboardConfig(userId, title, params);
+        return new DashboardConfig(userId, dashboard, title, params);
     }
 
     @Override
     public String saveDashboardConfiguration(DashboardConfig config) {
-        return null;
+        DBCollection col = db.getCollection(COL_DASHBOARDCONFIGS);
+        String jsonDashboardConfig = config.toJSON();
+        int dbc_hashcode = config.hashCode();
+
+        DBObject storable = (DBObject) JSON.parse(jsonDashboardConfig);
+        storable.put(FLD_HASHCODE, dbc_hashcode);
+
+        WriteResult wr = col.update(
+                QueryBuilder.start(FLD_HASHCODE).is(dbc_hashcode).get(),
+                storable,
+                true,
+                false
+        );
+
+        Object upserted_id = wr.getUpsertedId();
+        String id;
+
+        if (upserted_id == null) {
+            id = ((ObjectId) col.findOne(
+                    new BasicDBObject(FLD_HASHCODE, dbc_hashcode)
+            ).get("_id")).toHexString();
+        } else {
+            id = upserted_id.toString();
+        }
+
+        return id;
     }
 
     private BasketItem extractBasketItem(DBObject dbo) {
