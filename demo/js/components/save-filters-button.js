@@ -13,6 +13,8 @@ angular.module("yds").directive("ydsSaveFiltersButton", ["DashboardService",
                     scope.lang = "en";
                 }
 
+                scope.tooltipText = (scope.lang == "el") ? "Αποθήκευση φίλτρων" : "Save filters to Library";
+
                 // Make the button disabled if the given dashboardId is not set up in DashboardService
                 scope.disableBtn = !DashboardService.dashboardIdHasCookies(scope.dashboardId);
 
