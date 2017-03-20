@@ -100,7 +100,7 @@ public class DashboardConfig {
         return Objects.equals(this.cookiesObject, other.cookiesObject);
     }
 
-    public static final String FLD_USERID = "userId";
+    public static final String FLD_USERID = "user_id";
     public static final String FLD_DASHBOARD = "dashboard";
     public static final String FLD_TITLE = "title";
     public static final String FLD_PARAMS = "parameters";
