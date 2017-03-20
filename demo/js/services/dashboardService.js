@@ -158,31 +158,31 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
         // The cookie keys that are created in each Dashboard
         var dashboardCookies = {
             aidactivity: [
-                "aidactivity.benefactor.countries.all",
-                "aidactivity.beneficiary.countries.all",
+                "aidactivity_benefactor_countries_all",
+                "aidactivity_beneficiary_countries_all",
                 "year_aidactivity"
             ],
             tradeactivity: [
-                "tradeactivity.hasdestination.countries.all",
-                "tradeactivity.hasorigin.countries.all",
+                "tradeactivity_hasdestination_countries_all",
+                "tradeactivity_hasorigin_countries_all",
                 "year_tradeactivity"
             ],
             contract: [
-                "contract.buyer.countries.all",
-                "contract.seller.countries.all",
+                "contract_buyer_countries_all",
+                "contract_seller_countries_all",
                 "year_contract"
             ],
             comparison: [
-                "contract.comparison.CPVs.for.countries.and.period_comparison1",
-                "contract.comparison.CPVs.for.countries.and.period_comparison2",
-                "contract.comparison.countryA.countries.all",
-                "contract.comparison.countryB.countries.all",
+                "contract_comparison_CPVs_for_countries_and_period_comparison1",
+                "contract_comparison_CPVs_for_countries_and_period_comparison2",
+                "contract_comparison_countryA_countries_all",
+                "contract_comparison_countryB_countries_all",
                 "year_comparison"
             ],
             public_project: [
-                "publicproject.filter.buyers.all_public_project",
-                "publicproject.filter.sellers.all_public_project",
-                "publicproject.regions.all_publicproject.regional_units.all",
+                "publicproject_filter_buyers_all_public_project",
+                "publicproject_filter_sellers_all_public_project",
+                "publicproject_regions_all_publicproject_regional_units_all",
                 "year_public_project"
             ]
         };
@@ -236,7 +236,7 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
          * @returns {*|Object}
          */
         var getCookieObject = function (key) {
-            return $cookies.getObject(key);
+            return $cookies.getObject(key.replace(/\./g, "_"));
         };
 
         /**
@@ -245,7 +245,7 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
          * @param valueObj
          */
         var setCookieObject = function (key, valueObj) {
-            $cookies.putObject(key, valueObj);
+            $cookies.putObject(key.replace(/\./g, "_"), valueObj);
         };
 
         /**
