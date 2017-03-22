@@ -440,7 +440,7 @@ public class MongoAPIImpl implements YDSAPI {
         String userId = (String) dbo.get(DashboardConfig.FLD_USERID);
         String dashboard = (String) dbo.get(DashboardConfig.FLD_DASHBOARD);
         String title = (String) dbo.get(DashboardConfig.FLD_TITLE);
-        String params = (String) dbo.get(DashboardConfig.FLD_PARAMS);
+        String params = dbo.get(DashboardConfig.FLD_PARAMS).toString();
 
         return new DashboardConfig(userId, dashboard, title, params);
     }
