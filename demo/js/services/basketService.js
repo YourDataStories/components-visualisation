@@ -53,10 +53,11 @@ angular.module('yds').factory('Basket', ['YDS_CONSTANTS', '$q', '$http', '$uibMo
 
                 return modalInstance;
             },
-            openDashboardModal: function (basketInput) {
+            openDashboardModal: function (basketInput, modalConfig) {
                 var modalInput = {
                     title: "Save filters to Library",
-                    closeModal: closeModal
+                    closeModal: closeModal,
+                    infoType: modalConfig.infoType
                 };
 
                 modalInstance = $uibModal.open({

@@ -1,9 +1,11 @@
-angular.module("yds").controller("DashboardConfigModalCtrl", function ($scope, modalInput, basketInput, Basket) {
+angular.module("yds").controller("DashboardConfigModalCtrl", function ($scope, DashboardService, modalInput, basketInput, Basket) {
     // Configuration of the shown modal
     $scope.modalConfig = {
         closeModal: modalInput.closeModal,
         title: modalInput.title,
-        alert: ""
+        alert: "",
+        infoType: modalInput.infoType,
+        lang: modalInput.lang
     };
 
     // Prepare the basket item
@@ -14,6 +16,9 @@ angular.module("yds").controller("DashboardConfigModalCtrl", function ($scope, m
         dashboard: basketInput.dashboard,
         parameters: basketInput.parameters
     };
+
+    // Get extra parameters for Info component
+    $scope.extraParams = DashboardService.getApiOptions(basketInput.dashboard);
 
     /**
      * Save a Library item
