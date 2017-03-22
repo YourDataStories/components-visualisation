@@ -59,7 +59,7 @@ angular.module('yds').factory('Basket', ['YDS_CONSTANTS', '$q', '$http', '$uibMo
                     closeModal: closeModal
                 };
 
-                var instance = $uibModal.open({
+                modalInstance = $uibModal.open({
                     controller: "DashboardConfigModalCtrl",
                     templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/dashboard-config-save-modal.html',
                     size: "md",
@@ -73,7 +73,7 @@ angular.module('yds').factory('Basket', ['YDS_CONSTANTS', '$q', '$http', '$uibMo
                     }
                 });
 
-                return instance;
+                return modalInstance;
             },
             formatBasketTags: function (tagsString) {
                 //tokenize the basket item tags and save them to the basket item obj
