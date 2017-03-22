@@ -35,7 +35,8 @@ angular.module("yds").directive("ydsSaveFiltersButton", ["DashboardService", "Ba
                     var basketConfig = {
                         user_id: Basket.getUserId(),
                         parameters: cookiesObj,
-                        dashboard: scope.dashboardId
+                        dashboard: scope.dashboardId,
+                        type: "dashboard"
                     };
 
                     var modalConfig = {

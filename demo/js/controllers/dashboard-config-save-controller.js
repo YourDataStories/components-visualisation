@@ -21,7 +21,7 @@ angular.module("yds").controller("DashboardConfigModalCtrl", function ($scope, D
     $scope.extraParams = DashboardService.getApiOptions(basketInput.dashboard);
 
     /**
-     * Save a Library item
+     * Save the Dashboard filters to the Library
      * @returns {boolean}
      */
     $scope.saveBasketItem = function () {
@@ -30,14 +30,14 @@ angular.module("yds").controller("DashboardConfigModalCtrl", function ($scope, D
             return false;
         }
 
-        //call the service to check if basket item exists
-        // Basket.saveBasketItem($scope.libraryObj)
-        //     .then(function (response) {
-        //         $scope.clearModalWarnings($scope.modalConfig);
-        //         $scope.dismissModal();
-        //     }, function (error) {
-        //         $scope.modalConfig.alert = "An error occurred, please try again";
-        //     });
+        // Save the filters
+        Basket.saveBasketItem($scope.libraryObj)
+            .then(function (response) {
+                $scope.clearModalWarnings($scope.modalConfig);
+                $scope.dismissModal();
+            }, function (error) {
+                $scope.modalConfig.alert = "An error occurred, please try again";
+            });
     };
 
     /**

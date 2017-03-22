@@ -113,9 +113,16 @@ angular.module('yds').factory('Basket', ['YDS_CONSTANTS', '$q', '$http', '$uibMo
                 var deferred = $q.defer();
                 lastSavedItem = angular.copy(bskItem);
 
+                // Use correct URL path depending on whether we are saving a dataset/visualisation or a Dashboard configuration
+                var urlSuffix = "save";
+                if (bskItem.type == "dashboard") {
+                    // Use URL for saving Dashboard filter configurations
+                    urlSuffix = "save_dashboard";
+                }
+
                 $http({
                     method: 'POST',
-                    url: YDS_CONSTANTS.BASKET_URL + "save",
+                    url: YDS_CONSTANTS.BASKET_URL + urlSuffix,
                     headers: {'Content-Type': 'application/json'},
                     data: JSON.stringify(bskItem)
                 }).success(function (data) {
