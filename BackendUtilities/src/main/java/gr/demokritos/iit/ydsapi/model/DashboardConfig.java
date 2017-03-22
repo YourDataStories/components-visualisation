@@ -1,17 +1,20 @@
 package gr.demokritos.iit.ydsapi.model;
 
 import com.google.gson.*;
+import org.bson.types.ObjectId;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
 
 public class DashboardConfig {
+    private final ObjectId itemId;
     private final String userId;
     private final String dashboard;
     private final String title;
     private final String cookiesObject;
 
-    public DashboardConfig(String user_id, String dashboard, String title, String cookiesObject) {
+    public DashboardConfig(ObjectId itemId, String user_id, String dashboard, String title, String cookiesObject) {
+        this.itemId = itemId;
         this.userId = user_id;
         this.dashboard = dashboard;
         this.title = title;
@@ -24,10 +27,15 @@ public class DashboardConfig {
                 .create()
                 .fromJson(jsonDashboardConfig, getClass());
 
+        this.itemId = dc.getItemId();
         this.userId = dc.getUserId();
         this.dashboard = dc.getDashboard();
         this.title = dc.getTitle();
         this.cookiesObject = dc.getCookiesObject();
+    }
+
+    public ObjectId getItemId() {
+        return itemId;
     }
 
     public String getDashboard() {
@@ -100,6 +108,8 @@ public class DashboardConfig {
         return Objects.equals(this.cookiesObject, other.cookiesObject);
     }
 
+    public static final String FLD_ITEMID = "basket_item_id";
+    public static final String FLD_OBJ_ID = "_id";
     public static final String FLD_USERID = "user_id";
     public static final String FLD_DASHBOARD = "dashboard";
     public static final String FLD_TITLE = "title";
@@ -107,12 +117,16 @@ public class DashboardConfig {
 
     /**
      * Helper class to serialize as needed in the API
+     * DashboardConfig -> JsonElement
      */
     class DashboardConfigSerializer implements JsonSerializer<DashboardConfig> {
         @Override
         public JsonElement serialize(DashboardConfig dc, Type type, JsonSerializationContext jsc) {
             final JsonObject jsonObject = new JsonObject();
 
+            if (dc.getItemId() != null) {
+                jsonObject.addProperty(DashboardConfig.FLD_ITEMID, dc.getItemId().toString());
+            }
             jsonObject.addProperty(DashboardConfig.FLD_USERID, dc.getUserId());
             jsonObject.addProperty(DashboardConfig.FLD_DASHBOARD, dc.getDashboard());
             jsonObject.addProperty(DashboardConfig.FLD_TITLE, dc.getTitle());
@@ -127,6 +141,7 @@ public class DashboardConfig {
 
     /**
      * Helper class to deserialize a Dashboard configuration JSON String
+     * JsonElement -> DashboardConfig
      */
     class DashboardConfigDeserializer implements JsonDeserializer<DashboardConfig> {
         @Override
@@ -134,12 +149,17 @@ public class DashboardConfig {
             final JsonObject jsonObject = json.getAsJsonObject();
 
             // Get values from JSON
+            ObjectId itemId = null;
+            JsonElement itemIdElem = jsonObject.get(DashboardConfig.FLD_OBJ_ID);
+            if (itemIdElem != null) {
+                itemId = new ObjectId(itemIdElem.getAsString());
+            }
             final String userId = jsonObject.get(DashboardConfig.FLD_USERID).getAsString();
             final String dashboard = jsonObject.get(DashboardConfig.FLD_DASHBOARD).getAsString();
             final String title = jsonObject.get(DashboardConfig.FLD_TITLE).getAsString();
             final String params = jsonObject.get(DashboardConfig.FLD_PARAMS).getAsJsonObject().toString();
 
-            return new DashboardConfig(userId, dashboard, title, params);
+            return new DashboardConfig(itemId, userId, dashboard, title, params);
         }
     }
 }

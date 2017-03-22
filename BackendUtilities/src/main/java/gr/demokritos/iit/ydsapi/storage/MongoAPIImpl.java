@@ -437,12 +437,19 @@ public class MongoAPIImpl implements YDSAPI {
     }
 
     private DashboardConfig extractDashboardConfig(DBObject dbo) {
+        ObjectId _id;
+        try {
+            _id = (ObjectId) dbo.get(DashboardConfig.FLD_OBJ_ID);
+        } catch (ClassCastException ex) {
+            String id = (String) dbo.get(DashboardConfig.FLD_OBJ_ID);
+            _id = new ObjectId(id);
+        }
         String userId = (String) dbo.get(DashboardConfig.FLD_USERID);
         String dashboard = (String) dbo.get(DashboardConfig.FLD_DASHBOARD);
         String title = (String) dbo.get(DashboardConfig.FLD_TITLE);
         String params = dbo.get(DashboardConfig.FLD_PARAMS).toString();
 
-        return new DashboardConfig(userId, dashboard, title, params);
+        return new DashboardConfig(_id, userId, dashboard, title, params);
     }
 
     @Override
