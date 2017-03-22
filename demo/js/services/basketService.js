@@ -119,10 +119,17 @@ function (YDS_CONSTANTS, $q, $http, $uibModal) {
 			var deferred = $q.defer();
 
 			var contType = "";
-			if ( type.toLowerCase() == "dataset" )
-				contType = "?basket_type=dataset";
-			else if ( type.toLowerCase() == "visualisation" )
-				contType = "?basket_type=visualisation";
+			switch(type.toLowerCase()) {
+				case "dataset":
+                    contType = "?basket_type=dataset";
+					break;
+				case "visualisation":
+                    contType = "?basket_type=visualisation";
+					break;
+				case "dashboard":
+					contType = "?basket_type=dashboard";
+					break;
+			}
 
 			$http({
 				method: 'GET',

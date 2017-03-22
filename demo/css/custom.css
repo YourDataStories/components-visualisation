@@ -411,7 +411,7 @@ body #main .container:first-child {
         top: 51px;
     }
     100% {
-        right: -300px;
+        right: -350px;
         top: 51px;
     }
 }
@@ -427,9 +427,9 @@ body #main .container:first-child {
     position: fixed;
     z-index: 10000;
     top: 51px;
-    right: -300px;
+    right: -350px;
     bottom: 0;
-    width: 310px;
+    width: 360px;
     box-shadow: -2px 0 9px -3px #444;
     webkit-box-shadow: -2px 0 9px -3px #444;
     padding-right: 0;
