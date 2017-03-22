@@ -36,7 +36,12 @@
                                 <span ng-switch-when="map" class="glyphicon glyphicon-globe"></span>
                             </span>
                             <br/>
-                            <label for="">Tags: </label><span ng-repeat="tag in item.tags">{{tag}}{{$last ? '' : ', '}}</span>
+                            <div ng-if="basketType != 'Dashboard'">
+                                <label for="">Tags: </label><span ng-repeat="tag in item.tags">{{tag}}{{$last ? '' : ', '}}</span>
+                            </div>
+                            <div ng-if="basketType == 'Dashboard'">
+                                <strong>Dashboard: </strong>{{ item.dashboard }}
+                            </div>
                         </div>
                         <div class="col-md-1 yds-basket-prev-delete-btn">
                             <span class="glyphicon glyphicon-trash text-danger" title="Delete" aria-hidden="true" ng-click="deleteBasketItem(item.basket_item_id)"></span>
