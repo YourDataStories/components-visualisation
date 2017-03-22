@@ -1,5 +1,5 @@
-angular.module("yds").directive("ydsSaveFiltersButton", ["DashboardService",
-    function (DashboardService) {
+angular.module("yds").directive("ydsSaveFiltersButton", ["DashboardService", "Basket",
+    function (DashboardService, Basket) {
         return {
             restrict: "E",
             scope: {
@@ -25,6 +25,13 @@ angular.module("yds").directive("ydsSaveFiltersButton", ["DashboardService",
                     var cookiesObj = DashboardService.getDashboardCookies(scope.dashboardId);
                     console.log("Save filters", cookiesObj);
                     //todo
+
+                    var basketConfig = {
+                        user_id: Basket.getUserId(),
+                        parameters: cookiesObj
+                    };
+
+                    Basket.openDashboardModal(basketConfig);
                 }
             }
         };
