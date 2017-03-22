@@ -343,6 +343,31 @@ public class Basket {
         ).entity(br.toJSON()).build();
     }
 
+    @Path("removeDashboards/{user_id}")
+    @GET
+    public Response remove(
+            @PathParam("user_id") String user_id
+    ) {
+        YDSAPI api = MongoAPIImpl.getInstance();
+        BaseResponse br;
+        try {
+            int res = api.removeDashboardConfigurations(user_id);
+            br = new BaseResponse(Status.OK, getMessage(res, user_id));
+            LOG.info(String.format("delete items: %d", res));
+        } catch (Exception ex) {
+            br = new BaseResponse(
+                    Status.ERROR,
+                    ex.getMessage() != null ? ex.getMessage() : ex.toString()
+            );
+        }
+
+        return Response.status(
+                br.getStatus() == Status.OK || br.getStatus() == Status.NOT_EXISTS
+                        ? Response.Status.OK
+                        : Response.Status.INTERNAL_SERVER_ERROR
+        ).entity(br.toJSON()).build();
+    }
+
     @Path("exists_item")
     @GET
     public Response existsItem(

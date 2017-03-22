@@ -475,6 +475,24 @@ public class MongoAPIImpl implements YDSAPI {
         return id;
     }
 
+    @Override
+    public int removeDashboardConfigurations(String user_id) {
+        int removed = 0;
+        if (user_id == null || user_id.trim().isEmpty()) {
+            return removed;
+        }
+        user_id = user_id.trim();
+        DBCollection col = db.getCollection(COL_DASHBOARDCONFIGS);
+        try {
+            WriteResult wr = col.remove(QueryBuilder.start(DashboardConfig.FLD_USERID).is(user_id).get());
+            removed = wr.getN();
+        } catch (Exception ex) {
+            LOGGER.warning(String.format("%s", ex.getMessage()));
+        }
+
+        return removed;
+    }
+
     private BasketItem extractBasketItem(DBObject dbo) {
         ObjectId _id;
         try {

@@ -117,4 +117,12 @@ public interface YDSAPI {
      * @return Hashcode of newly saved configuration
      */
     String saveDashboardConfiguration(DashboardConfig config);
+
+    /**
+     * Remove all the Dashboard configurations of a user
+     *
+     * @param user_id
+     * @return Number of removed configurations
+     */
+    int removeDashboardConfigurations(String user_id);
 }
