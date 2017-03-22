@@ -214,7 +214,7 @@ angular.module('yds').controller('BasketModalCtrl', function ($scope, modalInput
     };
 
     //prepare the basket item
-    $scope.libraryObj = {
+    $scope.basketObj = {
         title: "",
         type: basketInput.type,
         filters: basketInput.filters,
@@ -229,14 +229,14 @@ angular.module('yds').controller('BasketModalCtrl', function ($scope, modalInput
 
     //function to save a basket item
     $scope.saveBasketItem = function () {
-        if ($scope.libraryObj.title.trim().length == 0) {
+        if ($scope.basketObj.title.trim().length == 0) {
             $scope.modalConfig.alert = "Please provide a title for your item";
             return false;
         } else
-            $scope.libraryObj.tags = Basket.formatBasketTags($scope.libraryObj.tags);
+            $scope.basketObj.tags = Basket.formatBasketTags($scope.basketObj.tags);
 
         //call the service to check if basket item exists
-        Basket.saveBasketItem($scope.libraryObj)
+        Basket.saveBasketItem($scope.basketObj)
             .then(function (response) {
                 $scope.clearModalWarnings($scope.modalConfig);
                 $scope.dismissModal();
