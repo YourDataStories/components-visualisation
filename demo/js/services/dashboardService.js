@@ -1,5 +1,5 @@
-angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$cookies",
-    function ($rootScope, $timeout, $cookies) {
+angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$cookies", "$window",
+    function ($rootScope, $timeout, $cookies, $window) {
         var countries = {};
         var yearRange = {};
         var selectedViewType = {};
@@ -187,6 +187,18 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
             ]
         };
 
+        // Set variables that define the URL of each Dashboard
+        var dashboardUrlPrefix = "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/";
+        // var dashboardUrlPrefix = "http://yds-lib.dev/#!/";
+
+        var dashboardPaths = {
+            aidactivity: "dashboard",
+            tradeactivity: "dashboard",
+            contract: "dashboardp1",
+            comparison: "country-comparison",
+            public_project: "public-works"
+        };
+
         /**
          * For a given dashboardId, return true if there are cookies for that dashboard
          * @param dashboardId
@@ -246,6 +258,32 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
          */
         var setCookieObject = function (key, valueObj) {
             $cookies.putObject(key.replace(/\./g, "_"), valueObj);
+        };
+
+        /**
+         * Restore the cookies for a specific Dashboard and go to its page
+         * @param dashboard
+         * @param cookies
+         */
+        var restoreCookies = function (dashboard, cookies) {
+            var url = dashboardUrlPrefix + dashboardPaths[dashboard];
+
+            // Clear any previous cookies for the specified Dashboard
+            clearDashboardCookies(dashboard);
+
+            // Restore the new cookie values
+            _.each(cookies, function (data, key) {
+                setCookieObject(key, data);
+            });
+
+            // Go to the dashboard
+            if (url == $window.location.href) {
+                // URL is the same, reload the page
+                $window.location.reload();
+            } else {
+                // URL is different, go to the Dashboard page
+                $window.location.href = url;
+            }
         };
 
         /**
@@ -707,7 +745,8 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
             setCookieObject: setCookieObject,
             dashboardIdHasCookies: dashboardIdHasCookies,
             clearDashboardCookies: clearDashboardCookies,
-            getDashboardCookies: getDashboardCookies
+            getDashboardCookies: getDashboardCookies,
+            restoreCookies: restoreCookies
         };
     }]
 );

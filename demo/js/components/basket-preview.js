@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsBasketPreview', ['Data', '$compile', '$timeout', 'Basket',
-    function (Data, $compile, $timeout, Basket) {
+angular.module('yds').directive('ydsBasketPreview', ['Data', '$compile', '$timeout', 'Basket', 'DashboardService',
+    function (Data, $compile, $timeout, Basket, DashboardService) {
         return {
             restrict: 'E',
             scope: {
@@ -69,6 +69,15 @@ angular.module('yds').directive('ydsBasketPreview', ['Data', '$compile', '$timeo
                             return item;
                         }
                     };
+                };
+
+                /**
+                 * Restore the parameters for a specified Dashboard using the DashboardService
+                 * @param dashboard
+                 * @param parameters
+                 */
+                scope.restoreFilters = function (dashboard, parameters) {
+                    DashboardService.restoreCookies(dashboard, parameters);
                 };
 
                 //function to update basket items after a new one has been inserted

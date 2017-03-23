@@ -23,7 +23,7 @@
                                title="{{ item.is_private ? 'The resource is private.' : 'The resource is public.'}}"
                                ng-class="(item.is_private) ? 'glyphicon-eye-close' : 'glyphicon-eye-open'"></i>
                         </div>
-                        <div class="col-md-9 col-md-offset-1 yds-basket-prev-desc">
+                        <div class="col-md-offset-1 yds-basket-prev-desc" ng-class="{'col-md-9': basketType != 'Dashboard', 'col-md-8': basketType == 'Dashboard'}">
                             <b>{{item.title}}</b>
                             <span ng-switch="item.component_type" ng-if="item.type=='visualisation'">
                                 <span ng-switch-when="grid" class="glyphicon glyphicon-list-alt"></span>
@@ -42,6 +42,15 @@
                             <div ng-if="basketType == 'Dashboard'">
                                 <strong>Dashboard: </strong>{{ item.dashboard }}
                             </div>
+                        </div>
+                        <div ng-if="basketType == 'Dashboard'" class="col-md-1 yds-basket-prev-delete-btn">
+                            <span class="glyphicon glyphicon-folder-open"
+                                  style="cursor: pointer"
+                                  uib-tooltip="Restore filters"
+                                  tooltip-placement="left"
+                                  title="Restore filters"
+                                  aria-hidden="true"
+                                  ng-click="restoreFilters(item.dashboard, item.parameters)"></span>
                         </div>
                         <div class="col-md-1 yds-basket-prev-delete-btn">
                             <span class="glyphicon glyphicon-trash text-danger" title="Delete" aria-hidden="true" ng-click="deleteBasketItem(item.basket_item_id)"></span>
