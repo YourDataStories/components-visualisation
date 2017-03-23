@@ -125,4 +125,13 @@ public interface YDSAPI {
      * @return Number of removed configurations
      */
     int removeDashboardConfigurations(String user_id);
+
+    /**
+     * Remove a specific Dashboard Configuration, defined by its ID
+     *
+     * @param user_id
+     * @param dashboard_config_id
+     * @return True if item is removed successfully
+     */
+    boolean removeDashboardConfiguration(String user_id, String dashboard_config_id);
 }

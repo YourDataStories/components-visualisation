@@ -500,6 +500,31 @@ public class MongoAPIImpl implements YDSAPI {
         return removed;
     }
 
+    @Override
+    public boolean removeDashboardConfiguration(String user_id, String dashboard_config_id) {
+        boolean res = false;
+
+        if (dashboard_config_id == null || dashboard_config_id.trim().isEmpty()
+                || user_id == null || user_id.trim().isEmpty()) {
+            return res;
+        }
+
+        dashboard_config_id = dashboard_config_id.trim();
+        user_id = user_id.trim();
+
+        DBCollection col = db.getCollection(COL_DASHBOARDCONFIGS);
+        ObjectId _id;
+        try {
+            _id = new ObjectId(dashboard_config_id);
+            WriteResult wr = col.remove(QueryBuilder.start(DashboardConfig.FLD_USERID).is(user_id).and(DashboardConfig.FLD_OBJ_ID).is(_id).get());
+            res = wr.getN() > 0;
+        } catch (Exception ex) {
+            LOGGER.warning(String.format("%s", ex.getMessage()));
+        }
+
+        return res;
+    }
+
     private BasketItem extractBasketItem(DBObject dbo) {
         ObjectId _id;
         try {

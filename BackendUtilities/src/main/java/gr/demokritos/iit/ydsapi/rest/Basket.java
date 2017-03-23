@@ -344,16 +344,23 @@ public class Basket {
     }
 
     @Path("removeDashboards/{user_id}")
-    @GET
-    public Response remove(
-            @PathParam("user_id") String user_id
+    @POST
+    public Response removeFilters(
+            @PathParam("user_id") String user_id,
+            @FormParam("basket_item_id") String basket_item_id
     ) {
         YDSAPI api = MongoAPIImpl.getInstance();
         BaseResponse br;
         try {
-            int res = api.removeDashboardConfigurations(user_id);
-            br = new BaseResponse(Status.OK, getMessage(res, user_id));
-            LOG.info(String.format("delete items: %d", res));
+            if (basket_item_id == null) {
+                int res = api.removeDashboardConfigurations(user_id);
+                br = new BaseResponse(Status.OK, getMessage(res, user_id));
+                LOG.info(String.format("delete items: %d", res));
+            } else {
+                boolean res = api.removeDashboardConfiguration(user_id, basket_item_id);
+                br = new BaseResponse(Status.OK, getMessage(res, basket_item_id));
+                LOG.info(String.format("delete item: %s", Boolean.toString(res)));
+            }
         } catch (Exception ex) {
             br = new BaseResponse(
                     Status.ERROR,
