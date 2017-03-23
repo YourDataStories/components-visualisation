@@ -53,8 +53,8 @@ angular.module('yds').directive('ydsBasketPreview', ['Data', '$compile', '$timeo
                 };
 
                 //function to delete the basket items from user's basket
-                scope.deleteBasketItem = function (bskId) {
-                    Basket.deleteBasketItems(scope.userId, bskId).then(function (response) {
+                scope.deleteBasketItem = function (basketType, bskId) {
+                    Basket.deleteBasketItems(scope.userId, basketType, bskId).then(function (response) {
                         scope.getBasketItem(scope.basketType);
                     }, function (error) {
                         console.log('error', error);

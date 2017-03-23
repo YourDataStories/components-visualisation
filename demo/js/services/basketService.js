@@ -177,12 +177,17 @@ angular.module('yds').factory('Basket', ['YDS_CONSTANTS', '$q', '$http', '$uibMo
 
                 return deferred.promise;
             },
-            deleteBasketItems: function (userId, bskID) {
+            deleteBasketItems: function (userId, type, bskID) {
                 var deferred = $q.defer();
+
+                var removePath = "remove/";
+                if (type === "Dashboard") {
+                    removePath = "removeDashboards/";
+                }
 
                 $http({
                     method: 'POST',
-                    url: YDS_CONSTANTS.BASKET_URL + "remove/" + userId,
+                    url: YDS_CONSTANTS.BASKET_URL + removePath + userId,
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                     transformRequest: function (obj) {
                         var str = [];
