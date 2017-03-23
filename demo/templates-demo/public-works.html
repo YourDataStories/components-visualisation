@@ -1,10 +1,16 @@
 <div class="container" ng-controller="PublicWorksController">
     <!--Clear filters button-->
     <div class="row">
-        <div class="col-md-offset-10 col-md-2">
+        <div class="col-md-offset-9 col-md-3" style="text-align: right;">
+            <yds-save-filters-button
+                    dashboard-id="public_project"
+                    info-type="publicproject.filters.selected"
+                    lang="el">
+            </yds-save-filters-button>
             <yds-clear-filters-button
                     dashboard-id="public_project"
-                    lang="el"></yds-clear-filters-button>
+                    lang="el">
+            </yds-clear-filters-button>
         </div>
     </div>
 
@@ -64,7 +70,8 @@
     <div class="row" style="margin-top: 10px">
         <div class="col-md-10" style="min-height: 600px">
             <uib-tabset active="dashboardVisActiveTab">
-                <uib-tab index="$index" class="{{ 'tab-' + aggregateClasses[$index] }}" ng-repeat="type in aggregates track by $index" select="selectTab($index)">
+                <uib-tab index="$index" class="{{ 'tab-' + aggregateClasses[$index] }}"
+                         ng-repeat="type in aggregates track by $index" select="selectTab($index)">
                     <uib-tab-heading>
                         {{ aggregateTitles[$index] }}
                     </uib-tab-heading>
@@ -161,9 +168,11 @@
                             <div class="bs-callout bs-callout-success" style="margin-top: 0">
                                 <p class="text-justify">Select seller and buyer countries, change the time period, and
                                     see how the rules are automatically generated. Instructions on
-                                    <a href="http://ydsdev.iit.demokritos.gr/YDS-docs/Tutorials/examples/advanced-search-usage">how to use Advanced Search</a>,
+                                    <a href="http://ydsdev.iit.demokritos.gr/YDS-docs/Tutorials/examples/advanced-search-usage">how
+                                        to use Advanced Search</a>,
                                     a guided tutorial on filtering with a specific sector, access to the
-                                    <a href="http://platform.yourdatastories.eu/content/tabbed-search">full search interface</a>.</p>
+                                    <a href="http://platform.yourdatastories.eu/content/tabbed-search">full search
+                                        interface</a>.</p>
                             </div>
 
                             <yds-dashboard-updater
@@ -193,4 +202,9 @@
     <div ng-if="showProjectInfo" class="col-md-12">
         <ng-include src="'templates-demo/view-public-work.html'"></ng-include>
     </div>
+
+    <!--Basket-->
+    <yds-basket-preview
+            user-id="ydsUser">
+    </yds-basket-preview>
 </div>

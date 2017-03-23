@@ -1,12 +1,18 @@
 <div class="container">
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-9">
             <h2>Country Comparison</h2>
         </div>
-        <div class="col-md-2" style="text-align: right">
+        <div class="col-md-3" style="text-align: right">
+            <!--Country Comparison dashboard has no info component...-->
+            <yds-save-filters-button
+                    dashboard-id="comparison"
+                    lang="en">
+            </yds-save-filters-button>
             <yds-clear-filters-button
                     dashboard-id="comparison"
-                    lang="en"></yds-clear-filters-button>
+                    lang="en">
+            </yds-clear-filters-button>
         </div>
     </div>
     <!--Maps-->
@@ -157,4 +163,9 @@
             </yds-dashboard-visualization-grid-bubble>
         </div>
     </div>
+
+    <!--Basket-->
+    <yds-basket-preview
+            user-id="ydsUser">
+    </yds-basket-preview>
 </div>

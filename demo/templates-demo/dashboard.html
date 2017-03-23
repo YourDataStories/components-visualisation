@@ -53,7 +53,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-9">
             <h3 style="color: #3C75B7">A quick overview of the ODA data</h3>
 
             <p class="text-justify">The following two maps show all beneficiary (recipient) and benefactor (donor)
@@ -64,7 +64,12 @@
             <p class="text-justify">Below the maps, a slider allows the selection of any time period within
                 the available data.</p>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3" style="text-align: right;">
+            <yds-save-filters-button
+                    dashboard-id="aidactivity"
+                    info-type="aidactivity.filters.selected"
+                    lang="en">
+            </yds-save-filters-button>
             <yds-clear-filters-button
                     dashboard-id="aidactivity"
                     lang="en">
@@ -282,13 +287,18 @@
     <!--Trade activities-->
     <div class="row">
         <!--Trade activities title and description-->
-        <div class="col-md-10">
+        <div class="col-md-9">
             <h2>What data is related? Trade Activities</h2>
 
             <p>International trade activities describe the trade activities among countries.</p>
             <p>In the following map you can see the trade relations between the Netherlands, and the rest of the world:</p>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3" style="text-align: right;">
+            <yds-save-filters-button
+                    dashboard-id="tradeactivity"
+                    info-type="tradeactivity.filters.selected"
+                    lang="en">
+            </yds-save-filters-button>
             <yds-clear-filters-button
                     dashboard-id="tradeactivity"
                     lang="en">
