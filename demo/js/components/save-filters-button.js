@@ -28,10 +28,10 @@ angular.module("yds").directive("ydsSaveFiltersButton", ["DashboardService", "Ba
                  * Save the filters for the specified Dashboard to the Library
                  */
                 scope.saveFilters = function () {
+                    // Get cookies for this Dashboard
                     var cookiesObj = DashboardService.getDashboardCookies(scope.dashboardId);
-                    console.log("Save filters", cookiesObj);
-                    //todo
 
+                    // Create Library item
                     var basketConfig = {
                         user_id: Basket.getUserId(),
                         parameters: cookiesObj,
@@ -39,11 +39,13 @@ angular.module("yds").directive("ydsSaveFiltersButton", ["DashboardService", "Ba
                         type: "dashboard"
                     };
 
+                    // Create configuration object with info needed by the modal
                     var modalConfig = {
                         infoType: scope.infoType,
                         lang: scope.lang
                     };
 
+                    // Open the modal
                     Basket.openDashboardModal(basketConfig, modalConfig);
                 }
             }
