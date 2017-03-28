@@ -1119,6 +1119,7 @@ a.list-group-item.load-more-button:hover > span.load-more-button-text {
 a.aggregate_link_bright, a.aggregate_link_bright:visited {
     color: #fff;
 }
+
 a.aggregate_link_bright:hover {
     color: #e4e4e4;
 }
@@ -1127,6 +1128,7 @@ a.aggregate_link_bright:hover {
 a.aggregate_link_dark, a.aggregate_link_dark:visited {
     color: #333;
 }
+
 a.aggregate_link_dark:hover {
     color: #333;
 }
@@ -1239,6 +1241,12 @@ a.aggregate_link_dark:hover {
 .workbench-plus-minus-container > button {
     padding: 6px;
     width: 38px;
+}
+
+/* Colors for the workbench suggested axis lightbulb icon */
+.workbench-suggestion-lightbulb {
+    color: orange;
+    text-shadow: 0px 0px 4px rgba(255, 255, 7, 1);
 }
 
 /* Rating buttons styling */
