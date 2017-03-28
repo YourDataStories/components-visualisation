@@ -1230,6 +1230,17 @@ a.aggregate_link_dark:hover {
     padding: 20px;
 }
 
+/* Make +/- buttons for Y axis fit into the col-sm-2 container */
+.workbench-plus-minus-container {
+    padding-left: 0;
+    text-align: right;
+}
+
+.workbench-plus-minus-container > button {
+    padding: 6px;
+    width: 38px;
+}
+
 /* Rating buttons styling */
 .rating-buttons-container {
     position: absolute;
