@@ -1238,7 +1238,12 @@ a.aggregate_link_dark:hover {
     text-align: right;
 }
 
-.workbench-plus-minus-container > button {
+.workbench-plus-minus-container > .btn-group {
+    text-align: right;
+    display: flex; /* Prevent button wrapping */
+}
+
+.workbench-plus-minus-container > .btn-group > button {
     padding: 6px;
     width: 38px;
 }
@@ -1246,7 +1251,7 @@ a.aggregate_link_dark:hover {
 /* Colors for the workbench suggested axis lightbulb icon */
 .workbench-suggestion-lightbulb {
     color: orange;
-    text-shadow: 0px 0px 4px rgba(255, 255, 7, 1);
+    text-shadow: 0 0 4px rgba(255, 255, 7, 1);
 }
 
 /* Rating buttons styling */

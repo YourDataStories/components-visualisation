@@ -71,17 +71,19 @@
                             </ui-select>
                         </div>
                         <div class="col-sm-2 workbench-plus-minus-container">
-                            <button type="button"
-                                    class="btn btn-default"
-                                    ng-disabled="selection.y.length<2"
-                                    ng-click="removeAxisY($index)">
-                                <span class="glyphicon glyphicon-minus-sign"></span>
-                            </button>
-                            <button type="button"
-                                    class="btn btn-default"
-                                    ng-click="addAxisY()">
-                                <span class="glyphicon glyphicon-plus-sign"></span>
-                            </button>
+                            <div class="btn-group">
+                                <button type="button"
+                                        class="btn btn-default"
+                                        ng-disabled="selection.y.length<2"
+                                        ng-click="removeAxisY($index)">
+                                    <span class="glyphicon glyphicon-minus-sign"></span>
+                                </button>
+                                <button type="button"
+                                        class="btn btn-default"
+                                        ng-click="addAxisY()">
+                                    <span class="glyphicon glyphicon-plus-sign"></span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
