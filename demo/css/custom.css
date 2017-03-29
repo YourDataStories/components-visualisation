@@ -1252,6 +1252,14 @@ a.aggregate_link_dark:hover {
 .workbench-suggestion-lightbulb {
     color: orange;
     text-shadow: 0 0 4px rgba(255, 255, 7, 1);
+    position: relative;
+    left: -13px;
+}
+
+/* 0-width div that contains the lightbulb icon */
+.lightbulb-container-div {
+    display: inline-block;
+    width: 0;
 }
 
 /* Rating buttons styling */
