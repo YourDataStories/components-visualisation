@@ -167,10 +167,10 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 scope.createChart = function () {
                     // Get selected axes data
                     var selection = {
-                        x: _.omit(scope.selection.x, "$$hashKey"),
+                        x: _.omit(scope.selection.x, "$$hashKey", "suggested"),
                         y: _.map(scope.selection.y, function (axis) {
                             // Get only selection from axis configuration object, omitting blacklisted key
-                            return _.omit(axis.selected, "$$hashKey");
+                            return _.omit(axis.selected, "$$hashKey", "suggested");
                         })
                     };
 
@@ -206,6 +206,13 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                             x: axes["axis-x"],
                             y: axes["axis-y"]
                         };
+
+                        // Set suggested property on all axes, based on Personalisation API (random for now)
+                        _.each(scope.axes, function (axis) {
+                            _.each(axis, function (item) {
+                                item.suggested = (Math.random() > 0.8);
+                            });
+                        });
 
                         // Initialize/reset selected Y axes
                         scope.selection.y = [{

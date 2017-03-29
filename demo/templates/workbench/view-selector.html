@@ -36,6 +36,12 @@
                             <span ng-bind="selection.x.label"></span>
                         </ui-select-match>
                         <ui-select-choices repeat="item in axes.x">
+                            <div ng-if="item.suggested" class="lightbulb-container-div">
+                                <i class="fa fa-lightbulb-o workbench-suggestion-lightbulb"
+                                   title="This item is recommended for you!"
+                                   aria-hidden="true"></i>
+                            </div>
+
                             <span ng-bind="item.label"></span>
                         </ui-select-choices>
                     </ui-select>
@@ -62,7 +68,7 @@
                                     <span ng-bind="axisY.selected.label"></span>
                                 </ui-select-match>
                                 <ui-select-choices repeat="item in axisY.options|filter:yAxisComboboxFilter($index)">
-                                    <div ng-if="item.label == 'completionOfPayments'" class="lightbulb-container-div">
+                                    <div ng-if="item.suggested" class="lightbulb-container-div">
                                         <i class="fa fa-lightbulb-o workbench-suggestion-lightbulb"
                                            title="This item is recommended for you!"
                                            aria-hidden="true"></i>
