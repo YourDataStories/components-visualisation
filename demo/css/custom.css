@@ -1258,7 +1258,7 @@ a.aggregate_link_dark:hover {
 
 /* 0-width div that contains the lightbulb icon */
 .lightbulb-container-div {
-    display: inline-block;
+    position: absolute;
     width: 0;
 }
 
