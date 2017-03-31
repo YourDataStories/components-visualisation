@@ -70,7 +70,7 @@ angular.module('yds').directive('ydsBasketBtn', ['$compile', 'Data', 'Basket', '
 					compiledTemplate.css('position', 'absolute');
 					compiledTemplate.css('top', basketBtnY + 'px');
 					compiledTemplate.css('left', basketBtnX + 'px');
-					compiledTemplate.css('z-index', 999);
+				
 					compiledTemplate.css('font-size', 11 + 'px');
 					compiledTemplate.css('cursor', 'pointer');
 
