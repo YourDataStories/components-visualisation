@@ -68,9 +68,119 @@ angular.module('yds').factory('Personalization', ['$http', '$q', 'YDS_CONSTANTS'
             return deferred.promise;
         };
 
+        /**
+         * Transform request parameters object to "x-www-form-urlencoded" format
+         * @param obj
+         * @returns {string}
+         */
+        var customRequestTransform = function (obj) {
+            var str = [];
+            for (var p in obj)
+                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+            return str.join("&");
+        };
+
+        /**
+         * Feed the API with the selection of a user
+         * @param userId        User
+         * @param lang          Language
+         * @param templateId    Template that the user selected
+         * @param concept       Concept that the template was selected for
+         * @param weight        Weight of selection
+         * @returns {promise|*|d|s}
+         */
+        var feed = function(userId, lang, templateId, concept, weight) {
+            var deferred = $q.defer();
+
+            // Add the user
+            var addUser = $http({
+                method: 'POST',
+                url: YDS_CONSTANTS.API_PERSONALIZATION + "user/" + userId,
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                data: {
+                    "name": userId,
+                    "type": "user"
+                }
+            });
+
+            // var addTemplate = $http({
+            //     method: 'POST',
+            //     url: YDS_CONSTANTS.API_PERSONALIZATION + "user/" + templateId,
+            //     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            //     data: {
+            //         "name": templateId,
+            //         "type": "template"
+            //     }
+            // });
+
+            // var addConcept = $http({
+            //     method: 'POST',
+            //     url: YDS_CONSTANTS.API_PERSONALIZATION + "user/" + encodeURIComponent(concept),
+            //     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            //     data: {
+            //         "name": concept,
+            //         "type": "concept"
+            //     }
+            // });
+
+            // Feed the user with data
+            var feedUser = $http({
+                method: 'POST',
+                url: YDS_CONSTANTS.API_PERSONALIZATION + "feed/" + userId,
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                transformRequest: customRequestTransform,
+                data: {
+                    JSONObject: JSON.stringify({
+                        "id": templateId,
+                        "language": lang,
+                        "recommended": "true",
+                        "text": [
+                            concept,
+                            templateId
+                        ]
+                    })
+                }
+            });
+
+            //todo: Feed the dataset with data
+            // var feedDataset = $http({
+            //     method: 'POST',
+            //     url: YDS_CONSTANTS.API_PERSONALIZATION + "feed/" + encodeURIComponent(concept),
+            //     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            //     data: {
+            //         "id": templateId,
+            //         "language": lang,
+            //         "recommended": "true",
+            //         "text": [
+            //             templateId
+            //         ]
+            //     }
+            // });
+
+            // Prepare requests array
+            //todo: take weight into account
+            var promises = [
+                addUser,
+                // addTemplate,
+                // addConcept,
+                feedUser//,
+                // feedDataset
+            ];
+
+            // Do the requests
+            $q.all(promises).then(function(values) {
+                deferred.resolve(values);
+            }, function(error) {
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
+        };
+
         return {
             getSuggestedTemplates: getSuggestedTemplates,
-            getTemplateById: getTemplateById
+            getTemplateById: getTemplateById,
+            feed: feed
         }
     }
 ]);

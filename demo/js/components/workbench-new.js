@@ -109,7 +109,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
 
                     // Send parameters to personalisation server
                     if (!_.isUndefined(params.concept)) {
-                        Data.feedPersonalization(params.user_id, scope.lang, params.template_id, params.concept, params.weight);
+                        Personalization.feed(params.user_id, scope.lang, params.template_id, params.concept, params.weight);
                     }
                 };
 
