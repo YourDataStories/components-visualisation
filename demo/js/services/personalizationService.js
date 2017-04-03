@@ -1,4 +1,4 @@
-angular.module('yds').factory('Personalization', ['$http', '$q', 'YDS_CONSTANTS', 'Data',
+angular.module("yds").factory("Personalization", ["$http", "$q", "YDS_CONSTANTS", "Data",
     function ($http, $q, YDS_CONSTANTS, Data) {
         // Map which keeps the ID -> template mappings in order to be able to get a template object from its ID
         var templateIdMap = {};
@@ -34,7 +34,7 @@ angular.module('yds').factory('Personalization', ['$http', '$q', 'YDS_CONSTANTS'
             templates = _.flatten(templates);
 
             // Get ID of each template
-            templates = _.map(templates, function(template) {
+            templates = _.map(templates, function (template) {
                 // Get the ID
                 var id = Data.getTemplateId(template);
 
@@ -57,13 +57,55 @@ angular.module('yds').factory('Personalization', ['$http', '$q', 'YDS_CONSTANTS'
             var deferred = $q.defer();
 
             // Get the available templates
-            var allTemplates = getAllTemplateIDs();
+            var templateIds = getAllTemplateIDs();
 
-            // Keep 10 random templates
-            var suggestedTemplates = _.first(_.shuffle(allTemplates), 10);
-            deferred.resolve(suggestedTemplates);
+            var allTemplates = _.map(templateIds, function (template) {
+                return {
+                    "id": template,
+                    "language": "en",
+                    "recommended": "true",
+                    "text": [
+                        template
+                    ]
+                }
+            });
 
-            //todo: Get templates from personalisation API
+            // Get templates from personalisation API
+            //todo: get suggested templates for the concept, not user
+            $http({
+                method: "POST",
+                url: YDS_CONSTANTS.API_PERSONALIZATION + "getRecommendation/" + userId,
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                transformRequest: customRequestTransform,
+                data: {
+                    JSONObjectList: JSON.stringify(allTemplates)
+                }
+            }).then(function (response) {
+                var templateRanks = response.data.output;
+
+                // Create array with templates IDs and their rankings
+                var templates = _.map(templateIds, function (t) {
+                    return {
+                        id: t,
+                        rank: templateRanks[t]
+                    }
+                });
+
+                templates = _.sortBy(templates, "rank");
+
+                // Get last 10 templates (top 10 by ranking) and keep only those with a rank > 0
+                var suggestedTemplates = _.last(templates, 10);
+
+                suggestedTemplates = _.reject(suggestedTemplates, function (template) {
+                    return template.rank <= 0;
+                });
+
+                var suggestedTemplateIds = _.pluck(suggestedTemplates, "id");
+
+                deferred.resolve(suggestedTemplateIds);
+            }, function (error) {
+                deferred.reject(error);
+            });
 
             return deferred.promise;
         };
@@ -89,14 +131,14 @@ angular.module('yds').factory('Personalization', ['$http', '$q', 'YDS_CONSTANTS'
          * @param weight        Weight of selection
          * @returns {promise|*|d|s}
          */
-        var feed = function(userId, lang, templateId, concept, weight) {
+        var feed = function (userId, lang, templateId, concept, weight) {
             var deferred = $q.defer();
 
             // Add the user
             var addUser = $http({
-                method: 'POST',
+                method: "POST",
                 url: YDS_CONSTANTS.API_PERSONALIZATION + "user/" + userId,
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
                 data: {
                     "name": userId,
                     "type": "user"
@@ -104,9 +146,9 @@ angular.module('yds').factory('Personalization', ['$http', '$q', 'YDS_CONSTANTS'
             });
 
             // var addTemplate = $http({
-            //     method: 'POST',
+            //     method: "POST",
             //     url: YDS_CONSTANTS.API_PERSONALIZATION + "user/" + templateId,
-            //     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            //     headers: {"Content-Type": "application/x-www-form-urlencoded"},
             //     data: {
             //         "name": templateId,
             //         "type": "template"
@@ -114,9 +156,9 @@ angular.module('yds').factory('Personalization', ['$http', '$q', 'YDS_CONSTANTS'
             // });
 
             // var addConcept = $http({
-            //     method: 'POST',
+            //     method: "POST",
             //     url: YDS_CONSTANTS.API_PERSONALIZATION + "user/" + encodeURIComponent(concept),
-            //     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            //     headers: {"Content-Type": "application/x-www-form-urlencoded"},
             //     data: {
             //         "name": concept,
             //         "type": "concept"
@@ -125,9 +167,9 @@ angular.module('yds').factory('Personalization', ['$http', '$q', 'YDS_CONSTANTS'
 
             // Feed the user with data
             var feedUser = $http({
-                method: 'POST',
+                method: "POST",
                 url: YDS_CONSTANTS.API_PERSONALIZATION + "feed/" + userId,
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
                 transformRequest: customRequestTransform,
                 data: {
                     JSONObject: JSON.stringify({
@@ -144,9 +186,9 @@ angular.module('yds').factory('Personalization', ['$http', '$q', 'YDS_CONSTANTS'
 
             //todo: Feed the dataset with data
             // var feedDataset = $http({
-            //     method: 'POST',
+            //     method: "POST",
             //     url: YDS_CONSTANTS.API_PERSONALIZATION + "feed/" + encodeURIComponent(concept),
-            //     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            //     headers: {"Content-Type": "application/x-www-form-urlencoded"},
             //     data: {
             //         "id": templateId,
             //         "language": lang,
@@ -168,9 +210,9 @@ angular.module('yds').factory('Personalization', ['$http', '$q', 'YDS_CONSTANTS'
             ];
 
             // Do the requests
-            $q.all(promises).then(function(values) {
+            $q.all(promises).then(function (values) {
                 deferred.resolve(values);
-            }, function(error) {
+            }, function (error) {
                 deferred.reject(error);
             });
 
