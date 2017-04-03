@@ -157,7 +157,7 @@ angular.module("yds").factory("Personalization", ["$http", "$q", "YDS_CONSTANTS"
 
             // var addConcept = $http({
             //     method: "POST",
-            //     url: YDS_CONSTANTS.API_PERSONALIZATION + "user/" + encodeURIComponent(concept),
+            //     url: YDS_CONSTANTS.API_PERSONALIZATION + "user/" + concept,
             //     headers: {"Content-Type": "application/x-www-form-urlencoded"},
             //     data: {
             //         "name": concept,
@@ -184,20 +184,23 @@ angular.module("yds").factory("Personalization", ["$http", "$q", "YDS_CONSTANTS"
                 }
             });
 
-            //todo: Feed the dataset with data
-            // var feedDataset = $http({
-            //     method: "POST",
-            //     url: YDS_CONSTANTS.API_PERSONALIZATION + "feed/" + encodeURIComponent(concept),
-            //     headers: {"Content-Type": "application/x-www-form-urlencoded"},
-            //     data: {
-            //         "id": templateId,
-            //         "language": lang,
-            //         "recommended": "true",
-            //         "text": [
-            //             templateId
-            //         ]
-            //     }
-            // });
+            // Feed the dataset with data
+            var feedDataset = $http({
+                method: "POST",
+                url: YDS_CONSTANTS.API_PERSONALIZATION + "feed/" + concept,
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                transformRequest: customRequestTransform,
+                data: {
+                    JSONObject: JSON.stringify({
+                        "id": templateId,
+                        "language": lang,
+                        "recommended": "true",
+                        "text": [
+                            templateId
+                        ]
+                    })
+                }
+            });
 
             // Prepare requests array
             //todo: take weight into account
@@ -205,8 +208,8 @@ angular.module("yds").factory("Personalization", ["$http", "$q", "YDS_CONSTANTS"
                 addUser,
                 // addTemplate,
                 // addConcept,
-                feedUser//,
-                // feedDataset
+                feedUser,
+                feedDataset
             ];
 
             // Do the requests

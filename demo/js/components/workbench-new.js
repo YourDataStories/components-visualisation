@@ -78,20 +78,6 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                         });
                 });
 
-                /**
-                 * Get the ID of the currently selected concept/view
-                 * @returns {*}
-                 */
-                var getCurrentConceptId = function () {
-                    var result = _.findWhere(allViews, {type: scope.chartConfig.selectedView});
-
-                    if (!_.isUndefined(result)) {
-                        return result.cid;
-                    } else {
-                        return undefined;
-                    }
-                };
-
                 var templateSelectionHandler = function (template) {
                     // Get ID of template
                     var templateId = Data.getTemplateId(template);
@@ -102,7 +88,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     // Gather parameters
                     var params = {
                         template_id: templateId,
-                        concept: getCurrentConceptId(),
+                        concept: scope.chartConfig.selectedView,
                         user_id: scope.userId,
                         weight: 1
                     };
