@@ -66,16 +66,6 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
 
                     // Listen for template selection event
                     editor.templateSelector.on("Select", templateSelectionHandler);
-
-                    // Personalization service test
-                    Personalization.getSuggestedTemplates(scope.userId, "test")
-                        .then(function (data) {
-                            // Add the suggested templates in the object
-                            suggestedTemplates.templates = _.map(data, Personalization.getTemplateById);
-
-                            // Select the first category again in order to highlight the suggested templates
-                            editor.templateSelector.reselectFirstCategory();
-                        });
                 });
 
                 var templateSelectionHandler = function (template) {
@@ -208,6 +198,22 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     } else {
                         scope.axes = undefined;
                     }
+
+                    // Get suggested templates from the Personalization API
+                    Personalization.getSuggestedTemplates(scope.userId, scope.chartConfig.selectedView)
+                        .then(function (data) {
+                            // Add the suggested templates in the object
+                            suggestedTemplates.templates = _.map(data, Personalization.getTemplateById);
+
+                            // Select the first category again in order to highlight the suggested templates
+                            editor.templateSelector.reselectFirstCategory();
+                        }, function (error) {
+                            console.warn(error);
+
+                            // Remove all suggested templates, since there was a problem
+                            suggestedTemplates.templates = [];
+                            editor.templateSelector.reselectFirstCategory();
+                        });
                 };
 
                 /**

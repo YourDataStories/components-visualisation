@@ -50,10 +50,10 @@ angular.module("yds").factory("Personalization", ["$http", "$q", "YDS_CONSTANTS"
         /**
          * Get the suggested templates for a specific user and their selected concept
          * @param userId        ID of user
-         * @param conceptId     ID of concept
+         * @param concept       Selected concept
          * @returns {promise|*|d|s}
          */
-        var getSuggestedTemplates = function (userId, conceptId) {
+        var getSuggestedTemplates = function (userId, concept) {
             var deferred = $q.defer();
 
             // Get the available templates
@@ -71,38 +71,42 @@ angular.module("yds").factory("Personalization", ["$http", "$q", "YDS_CONSTANTS"
             });
 
             // Get templates from personalisation API
-            //todo: get suggested templates for the concept, not user
             $http({
                 method: "POST",
-                url: YDS_CONSTANTS.API_PERSONALIZATION + "getRecommendation/" + userId,
+                url: YDS_CONSTANTS.API_PERSONALIZATION + "getRecommendation/" + concept,
                 headers: {"Content-Type": "application/x-www-form-urlencoded"},
                 transformRequest: customRequestTransform,
                 data: {
                     JSONObjectList: JSON.stringify(allTemplates)
                 }
             }).then(function (response) {
-                var templateRanks = response.data.output;
+                if (_.has(response.data, "output")) {
+                    var templateRanks = response.data.output;
 
-                // Create array with templates IDs and their rankings
-                var templates = _.map(templateIds, function (t) {
-                    return {
-                        id: t,
-                        rank: templateRanks[t]
-                    }
-                });
+                    // Create array with templates IDs and their rankings
+                    var templates = _.map(templateIds, function (t) {
+                        return {
+                            id: t,
+                            rank: templateRanks[t]
+                        }
+                    });
 
-                templates = _.sortBy(templates, "rank");
+                    templates = _.sortBy(templates, "rank");
 
-                // Get last 10 templates (top 10 by ranking) and keep only those with a rank > 0
-                var suggestedTemplates = _.last(templates, 10);
+                    // Get last 10 templates (top 10 by ranking) and keep only those with a rank > 0
+                    var suggestedTemplates = _.last(templates, 10);
 
-                suggestedTemplates = _.reject(suggestedTemplates, function (template) {
-                    return template.rank <= 0;
-                });
+                    suggestedTemplates = _.reject(suggestedTemplates, function (template) {
+                        return template.rank <= 0;
+                    });
 
-                var suggestedTemplateIds = _.pluck(suggestedTemplates, "id");
+                    var suggestedTemplateIds = _.pluck(suggestedTemplates, "id");
 
-                deferred.resolve(suggestedTemplateIds);
+                    deferred.resolve(suggestedTemplateIds);
+                } else {
+                    // There was a problem, reject
+                    deferred.reject(response.data.outputMessage);
+                }
             }, function (error) {
                 deferred.reject(error);
             });
