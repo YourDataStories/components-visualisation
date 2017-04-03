@@ -104,12 +104,12 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                         template_id: templateId,
                         concept: getCurrentConceptId(),
                         user_id: scope.userId,
-                        weight: 1.0
+                        weight: 1
                     };
 
-                    // todo: Send parameters to personalisation server
+                    // Send parameters to personalisation server
                     if (!_.isUndefined(params.concept)) {
-                        console.log(params);
+                        Data.feedPersonalization(params.user_id, scope.lang, params.template_id, params.concept, params.weight);
                     }
                 };
 

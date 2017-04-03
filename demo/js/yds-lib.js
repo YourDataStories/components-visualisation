@@ -46,6 +46,8 @@ app.constant("YDS_CONSTANTS", {
     // "SEARCH_RESULTS_URL_EL": "http://yds-lib.dev/#!/search-el",
     // "SEARCH_RESULTS_URL_TABBED": "http://yds-lib.dev/#!/search-tabbed",
 
+    "API_PERSONALIZATION":"http://dev.yourdatastories.eu/personalaiz/recommendation/",
+
     "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
     "API_EMBED": "http://dev.yourdatastories.eu/api/tomcat/YDSAPI/yds/embed/",
     "API_RATINGS": "http://dev.yourdatastories.eu/api/tomcat/YDSAPI/yds/rating/",
@@ -240,6 +242,103 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).success(function (data) {
             deferred.resolve(data);
         }).error(function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    /**
+     * Feed the personalization API with the selection of a user
+     * @param userId        User
+     * @param lang          Language
+     * @param templateId    Template that the user selected
+     * @param concept       Concept that the template was selected for
+     * @param weight        Weight of selection
+     * @returns {promise|*|d|s}
+     */
+    dataService.feedPersonalization = function(userId, lang, templateId, concept, weight) {
+        var deferred = $q.defer();
+
+        // Add the user
+        var addUser = $http({
+            method: 'POST',
+            url: YDS_CONSTANTS.API_PERSONALIZATION + "user/" + userId,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            data: {
+                "name": userId,
+                "type": "user"
+            }
+        });
+
+        // var addTemplate = $http({
+        //     method: 'POST',
+        //     url: YDS_CONSTANTS.API_PERSONALIZATION + "user/" + templateId,
+        //     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        //     data: {
+        //         "name": templateId,
+        //         "type": "template"
+        //     }
+        // });
+
+        // var addConcept = $http({
+        //     method: 'POST',
+        //     url: YDS_CONSTANTS.API_PERSONALIZATION + "user/" + encodeURIComponent(concept),
+        //     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        //     data: {
+        //         "name": concept,
+        //         "type": "concept"
+        //     }
+        // });
+
+        // Feed the user with data
+        var feedUser = $http({
+            method: 'POST',
+            url: YDS_CONSTANTS.API_PERSONALIZATION + "feed/" + userId,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            transformRequest: customRequestTransform,
+            data: {
+                JSONObject: JSON.stringify({
+                    "id": templateId,
+                    "language": lang,
+                    "recommended": "true",
+                    "text": [
+                        concept,
+                        templateId
+                    ]
+                })
+            }
+        });
+
+        //todo: Feed the dataset with data
+        // var feedDataset = $http({
+        //     method: 'POST',
+        //     url: YDS_CONSTANTS.API_PERSONALIZATION + "feed/" + encodeURIComponent(concept),
+        //     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        //     data: {
+        //         "id": templateId,
+        //         "language": lang,
+        //         "recommended": "true",
+        //         "text": [
+        //             templateId
+        //         ]
+        //     }
+        // });
+
+        // Prepare requests array
+        //todo: take weight into account
+        var promises = [
+            addUser,
+            // addTemplate,
+            // addConcept,
+            feedUser//,
+            // feedDataset
+        ];
+
+        // Do the requests
+        $q.all(promises).then(function(values) {
+            deferred.resolve(values);
+        }, function(error) {
             deferred.reject(error);
         });
 
