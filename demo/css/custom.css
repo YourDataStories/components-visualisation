@@ -1267,8 +1267,28 @@ a.aggregate_link_dark:hover {
     position: absolute;
     bottom: -30px;
     right: 0;
-    cursor: pointer;
     z-index: 999;
+}
+
+/* Rating buttons cursor */
+.rating-buttons {
+    cursor: pointer;
+}
+
+/* Rating text fade out */
+.rating-title-text {
+    opacity: 0;
+    transition: opacity .5s;
+    -moz-transition: opacity .5s;
+    -webkit-transition: opacity .5s;
+}
+
+/* Rating text fade in */
+.rating-title-text-show {
+    opacity: 1.0;
+    transition: opacity .5s;
+    -moz-transition: opacity .5s;
+    -webkit-transition: opacity .5s;
 }
 
 .margin-bottom-30 {

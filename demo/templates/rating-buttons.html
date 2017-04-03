@@ -1,11 +1,18 @@
 <div class="rating-buttons-container">
+    <span ng-class="{'rating-title-text-show': showText}"
+          class="small rating-title-text">
+        How useful is this chart?
+    </span>
     <span uib-rating
+          class="rating-buttons"
           ng-model="rate"
           state-on="'fa fa-star'"
           state-off="'fa fa-star-o'"
           max="5"
+          ng-mouseover="showText = true"
+          ng-mouseleave="showText = false"
           ng-click="rateChart(rate)"
-          titles="['Rate 1 star','Rate 2 stars','Rate 3 stars']"
+          titles="['Rate 1 star','Rate 2 stars','Rate 3 stars','Rate 4 stars','Rate 5 stars']"
           aria-labelledby="default-rating">
     </span>
 </div>
