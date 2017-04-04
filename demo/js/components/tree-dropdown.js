@@ -6,8 +6,9 @@ angular.module("yds").directive("ydsTree", [
         return {
             restrict: "E",
             scope: {
-                nodes: "=",
-                placeholder: "@"
+                nodes: "=",         // List of nodes to display in the tree (must be in angular-tree-widget format)
+                selectedNode: "=",  // Selected node will be kept in this variable
+                placeholder: "@"    // Placeholder text for the dropdown
             },
             templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/tree-dropdown.html",
             link: function (scope) {
@@ -22,6 +23,12 @@ angular.module("yds").directive("ydsTree", [
                     multipleSelection: false,
                     showIcons: false
                 };
+
+                // Watch for selection change, and save the selected node to the scope
+                scope.$on('selection-changed', function (e, node) {
+                    //node = selected node in tree
+                    scope.selectedNode = node;
+                });
             }
         }
     }
