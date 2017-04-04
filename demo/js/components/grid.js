@@ -288,7 +288,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                     Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang, extraParams)
                         .then(function (response) {
                             // Check for conditions in which the grid creation should be stopped
-                            if (!_.isEqual(extraParams, scope.extraParams)) {
+                            if (!_.isUndefined(scope.extraParams) && !_.isEqual(extraParams, scope.extraParams)) {
                                 // If the extra parameters that were sent with the request are NOT the same with the
                                 // current ones, abort grid creation (in case the request takes some time, and
                                 // parameters change in the meantime)
@@ -329,6 +329,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                                 };
                             } else {
                                 rawData = Data.prepareGridData(response.data, response.view);
+                                console.log("non-grouped data");
                             }
 
                             // If selection is enabled, add checkbox to the first column
