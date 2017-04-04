@@ -1,0 +1,10 @@
+<div class="tree-dropdown-container">
+    <!--Dropdown-->
+    <div uib-dropdown auto-close="outsideClick">
+        <button type="button" class="btn btn-default" uib-dropdown-toggle>{{ selectedNode || placeholder}}</button>
+        <div class="my-dropdown-test" uib-dropdown-menu>
+            <!--Tree-->
+            <tree nodes="nodes" options="options"></tree>
+        </div>
+    </div>
+</div>
