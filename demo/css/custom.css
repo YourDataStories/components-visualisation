@@ -1314,3 +1314,10 @@ a.aggregate_link_dark:hover {
 #gridresults{
 	background-color: #ffffff;
 }
+
+/* Style of tree dropdown */
+.tree-dropdown {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden; /* hides last letters in some cases, but prevents firefox from adding horizontal scrollbar */
+}
