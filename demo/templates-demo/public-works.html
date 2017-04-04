@@ -29,28 +29,36 @@
         <!--Grid column-->
         <div class="col-md-5">
             <!--Buyers-->
-            <yds-dashboard-updater
-                    type="selection-grid"
-                    project-id="none"
-                    view-type="publicproject.filter.buyers.all"
-                    dashboard-id="public_project"
-                    selection-id="buyers"
-                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
-                    min-height="225"
-                    lang="el">
-            </yds-dashboard-updater>
+            <div class="row">
+                <div class="col-sm-12">
+                    <yds-dashboard-updater
+                            type="selection-grid"
+                            project-id="none"
+                            view-type="publicproject.filter.buyers.all"
+                            dashboard-id="public_project"
+                            selection-id="buyers"
+                            base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                            min-height="225"
+                            lang="el">
+                    </yds-dashboard-updater>
+                </div>
+            </div>
 
             <!--Sellers-->
-            <yds-dashboard-updater
-                    type="selection-grid"
-                    project-id="none"
-                    view-type="publicproject.filter.sellers.all"
-                    dashboard-id="public_project"
-                    selection-id="sellers"
-                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
-                    min-height="225"
-                    lang="el">
-            </yds-dashboard-updater>
+            <div class="row" style="margin-top: 10px">
+                <div class="col-sm-12">
+                    <yds-dashboard-updater
+                            type="selection-grid"
+                            project-id="none"
+                            view-type="publicproject.filter.sellers.all"
+                            dashboard-id="public_project"
+                            selection-id="sellers"
+                            base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                            min-height="225"
+                            lang="el">
+                    </yds-dashboard-updater>
+                </div>
+            </div>
         </div>
 
         <!--Year selection slider-->
