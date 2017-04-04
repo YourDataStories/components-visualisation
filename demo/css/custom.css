@@ -1321,3 +1321,29 @@ a.aggregate_link_dark:hover {
     overflow-y: auto;
     overflow-x: hidden; /* hides last letters in some cases, but prevents firefox from adding horizontal scrollbar */
 }
+
+/* Tree dropdown toggle button style */
+.tree-dropdown-button {
+    text-align: left;
+}
+
+.tree-dropdown-selection {
+    width: 100%;
+    padding-right: 1em;
+}
+
+.tree-dropdown-selection > span {
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tree-dropdown-caret {
+    position: absolute;
+    height: 10px;
+    top: 50%;
+    right: 10px;
+    margin-top: -2px;
+    margin-left: 0;
+}

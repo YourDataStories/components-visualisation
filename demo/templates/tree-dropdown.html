@@ -1,7 +1,13 @@
 <div class="tree-dropdown-container">
     <!--Dropdown-->
     <div uib-dropdown auto-close="outsideClick">
-        <button type="button" class="btn btn-default" uib-dropdown-toggle>{{ selectedNode.name || placeholder}}</button>
+        <span class="btn btn-default form-control tree-dropdown-button"
+              uib-dropdown-toggle>
+            <span class="tree-dropdown-selection pull-left">
+                <span>{{ selectedNode.name || placeholder}}</span>
+            </span>
+            <i class="tree-dropdown-caret caret pull-right"></i>
+        </span>
         <div class="tree-dropdown" uib-dropdown-menu>
             <!--Tree-->
             <tree nodes="nodes" options="options"></tree>
