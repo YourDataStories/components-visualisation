@@ -6,7 +6,7 @@ angular.module("yds").directive("ydsTree", [
         return {
             restrict: "E",
             scope: {
-                nodes: "=",         // List of nodes to display in the tree (must be in angular-tree-widget format)
+                nodes: "@",         // List of nodes to display in the tree (stringified JSON for angular-tree-widget)
                 selectedNode: "=",  // Selected node will be kept in this variable
                 placeholder: "@"    // Placeholder text for the dropdown
             },
@@ -16,6 +16,9 @@ angular.module("yds").directive("ydsTree", [
                 if (_.isUndefined(scope.placeholder) || scope.placeholder.trim().length == 0) {
                     scope.placeholder = "Make a selection";
                 }
+
+                // Get actual nodes as object from the stringified attribute
+                scope.treeNodes = angular.fromJson(scope.nodes);
 
                 // Set tree options
                 scope.options = {
