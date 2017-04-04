@@ -1320,6 +1320,7 @@ a.aggregate_link_dark:hover {
     max-height: 300px;
     overflow-y: auto;
     overflow-x: hidden; /* hides last letters in some cases, but prevents firefox from adding horizontal scrollbar */
+    margin-top: -1px;   /* makes the dropdown touch the dropdown toggle */
 }
 
 /* Tree dropdown toggle button style */
