@@ -29,8 +29,11 @@ angular.module("yds").directive("ydsTree", [
 
                 // Watch for selection change, and save the selected node to the scope
                 scope.$on('selection-changed', function (e, node) {
-                    //node = selected node in tree
+                    // Update the selected node in the scope
                     scope.selectedNode = node;
+
+                    // Close the dropdown
+                    scope.dropdownOpen = false;
                 });
             }
         }
