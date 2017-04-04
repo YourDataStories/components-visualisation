@@ -41,7 +41,7 @@ angular.module("yds").directive("ydsTree", [
                     });
                 };
 
-                // Add icon to suggested axes
+                // Add badges to the suggested axes
                 addBadgesToSuggestedNodes(scope.treeNodes);
 
                 // Set tree options
