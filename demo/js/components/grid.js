@@ -329,7 +329,6 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                                 };
                             } else {
                                 rawData = Data.prepareGridData(response.data, response.view);
-                                console.log("non-grouped data");
                             }
 
                             // If selection is enabled, add checkbox to the first column
