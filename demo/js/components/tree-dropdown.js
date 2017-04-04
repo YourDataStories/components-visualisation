@@ -20,6 +20,30 @@ angular.module("yds").directive("ydsTree", [
                 // Get actual nodes as object from the stringified attribute
                 scope.treeNodes = angular.fromJson(scope.nodes);
 
+                /**
+                 * Add suggested badges to nodes which have a "suggested" property equal to true.
+                 * Supports nested nodes like the angular-tree-widget.
+                 * @param nodes
+                 */
+                var addBadgesToSuggestedNodes = function (nodes) {
+                    _.each(nodes, function (axis) {
+                        if (_.has(axis.children) && _.isArray(axis.children)) {
+                            // Call self recursively because this has children
+                            addBadgesToSuggestedNodes(axis.children);
+                        }
+
+                        if (_.has(axis, "suggested") && axis.suggested === true) {
+                            axis.badge = {
+                                "type": "label-success",
+                                "title": "Suggested"
+                            };
+                        }
+                    });
+                };
+
+                // Add icon to suggested axes
+                addBadgesToSuggestedNodes(scope.treeNodes);
+
                 // Set tree options
                 scope.options = {
                     expandOnClick: true,
