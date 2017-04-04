@@ -27,24 +27,11 @@
             <div class="col-md-offset-1 col-md-10">
                 <div class="form-group">
                     <label>X Axis:</label>
-                    <ui-select
-                            ng-model="selection.x"
-                            theme="bootstrap"
-                            search-enabled="false"
-                            ng-disabled="axes.x.length == 1">
-                        <ui-select-match placeholder="Choose...">
-                            <span ng-bind="selection.x.label"></span>
-                        </ui-select-match>
-                        <ui-select-choices repeat="item in axes.x">
-                            <div ng-if="item.suggested" class="lightbulb-container-div">
-                                <i class="fa fa-lightbulb-o workbench-suggestion-lightbulb"
-                                   title="This item is recommended for you!"
-                                   aria-hidden="true"></i>
-                            </div>
-
-                            <span ng-bind="item.label"></span>
-                        </ui-select-choices>
-                    </ui-select>
+                    <yds-tree
+                            nodes="{{ axes.x }}"
+                            selected-node="selection.x"
+                            placeholder="Select axis">
+                    </yds-tree>
                 </div>
             </div>
         </div>
@@ -60,23 +47,11 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-10">
-                            <ui-select
-                                    ng-model="axisY.selected"
-                                    theme="bootstrap"
-                                    search-enabled="false">
-                                <ui-select-match placeholder="Choose...">
-                                    <span ng-bind="axisY.selected.label"></span>
-                                </ui-select-match>
-                                <ui-select-choices repeat="item in axisY.options|filter:yAxisComboboxFilter($index)">
-                                    <div ng-if="item.suggested" class="lightbulb-container-div">
-                                        <i class="fa fa-lightbulb-o workbench-suggestion-lightbulb"
-                                           title="This item is recommended for you!"
-                                           aria-hidden="true"></i>
-                                    </div>
-
-                                    <span ng-bind="item.label"></span>
-                                </ui-select-choices>
-                            </ui-select>
+                            <yds-tree
+                                    nodes="{{ axes.y }}"
+                                    selected-node="axisY.selected"
+                                    placeholder="Select axis">
+                            </yds-tree>
                         </div>
                         <div class="col-sm-2 workbench-plus-minus-container">
                             <div class="btn-group">

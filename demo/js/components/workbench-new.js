@@ -44,10 +44,6 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 if (_.isUndefined(scope.lang) || scope.lang.trim() == "")
                     scope.lang = "en";
 
-                var editorOptions = {
-                    features: "library view templates customize export"
-                };
-
                 // Load the required CSS & JS files for the Editor
                 $ocLazyLoad.load({
                     files: [
@@ -61,6 +57,10 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 }).then(function () {
                     // Start the Highcharts Editor
                     highed.ready(function () {
+                        var editorOptions = {
+                            features: "library view templates customize export"
+                        };
+
                         editor = highed.YDSEditor(editorContainer[0], editorOptions, suggestedTemplates, createLibraryList, createViewSelector);
                     });
 
@@ -138,15 +138,23 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 };
 
                 /**
+                 * Filter an axis object to keep only the keys needed by the API
+                 * @param axis
+                 */
+                var getValidAxisData = function (axis) {
+                    return _.pick(axis, "attribute", "field_id", "function", "label", "type");
+                };
+
+                /**
                  * Add data to the chart depending on the selection that has been made in the view/axes selection tab
                  */
                 scope.createChart = function () {
                     // Get selected axes data
                     var selection = {
-                        x: _.omit(scope.selection.x, "$$hashKey", "suggested"),
+                        x: getValidAxisData(scope.selection.x),
                         y: _.map(scope.selection.y, function (axis) {
                             // Get only selection from axis configuration object, omitting blacklisted key
-                            return _.omit(axis.selected, "$$hashKey", "suggested");
+                            return getValidAxisData(axis.selected);
                         })
                     };
 
@@ -186,6 +194,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                         // Set suggested property on all axes, based on Personalisation API (random for now)
                         _.each(scope.axes, function (axis) {
                             _.each(axis, function (item) {
+                                item.name = item.label; // Add name, same as label (needed for angular-tree-widget)
                                 item.suggested = (Math.random() > 0.8);
                             });
                         });
