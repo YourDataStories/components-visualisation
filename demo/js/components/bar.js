@@ -1,4 +1,4 @@
-angular.module('yds').directive('ydsBar', ['Data', 'Filters', function(Data, Filters) {
+angular.module('yds').directive('ydsBar', ['Data', 'Filters', function (Data, Filters) {
     return {
         restrict: 'E',
         scope: {
@@ -23,7 +23,7 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function(Data, Fil
 
             enableRating: '@'   // Enable rating buttons for this component
         },
-        templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/bar.html',
+        templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/bar.html',
         link: function (scope, element, attrs) {
             var barContainer = angular.element(element[0].querySelector('.bar-container'));
 
@@ -45,30 +45,30 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function(Data, Fil
             }
 
             //check if the projectId and the viewType attr is defined, else stop the process
-            if (_.isUndefined(projectId) || projectId.trim()=="") {
+            if (_.isUndefined(projectId) || projectId.trim() == "") {
                 scope.ydsAlert = "The YDS component is not properly configured. " +
                     "Please check the corresponding documentation section.";
                 return false;
             }
 
             //check if view-type attribute is empty and assign the default value
-            if(_.isUndefined(viewType) || viewType.trim()=="")
+            if (_.isUndefined(viewType) || viewType.trim() == "")
                 viewType = "default";
 
             //check if the language attr is defined, else assign default value
-            if(_.isUndefined(lang) || lang.trim()=="")
+            if (_.isUndefined(lang) || lang.trim() == "")
                 lang = "en";
 
             //check if the exporting attr is defined, else assign default value
-            if(_.isUndefined(exporting) || (exporting!="true" && exporting!="false"))
+            if (_.isUndefined(exporting) || (exporting != "true" && exporting != "false"))
                 exporting = "true";
 
             //check if the component's height attr is defined, else assign default value
-            if(_.isUndefined(elementH) || _.isNaN(elementH))
+            if (_.isUndefined(elementH) || _.isNaN(elementH))
                 elementH = 200;
 
             //check if the component's title size attr is defined, else assign default value
-            if(_.isUndefined(titleSize) || titleSize.length == 0 ||  _.isNaN(titleSize))
+            if (_.isUndefined(titleSize) || titleSize.length == 0 || _.isNaN(titleSize))
                 titleSize = 18;
 
             // Show loading animation
@@ -85,9 +85,6 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function(Data, Fil
                         return;
 
                     var options = response.data;
-
-                    // Add element ID to render the chart to in the options
-                    options.chart.renderTo = elementId;
 
                     // Set title size in options
                     options.title.style = {
@@ -107,7 +104,7 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function(Data, Fil
                         enabled: (exporting === "true")
                     };
 
-                    new Highcharts.Chart(options);
+                    new Highcharts.Chart(elementId, options);
 
                     // Remove loading animation
                     scope.loading = false;
