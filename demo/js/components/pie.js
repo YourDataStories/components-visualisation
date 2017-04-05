@@ -104,6 +104,20 @@ angular.module('yds').directive('ydsPie', ['Data', 'Filters', function (Data, Fi
                         enabled: (exporting === "true")
                     };
 
+                    // Create dataLabels object if it doesn't exist
+                    if (_.isUndefined(options.plotOptions.pie.dataLabels)) {
+                        options.plotOptions.pie.dataLabels = {};
+                    }
+
+                    // Add data label formatter function to trim names to 45 characters
+                    options.plotOptions.pie.dataLabels.formatter = function () {
+                        if (this.key.length > 45) {
+                            this.key = this.key.substring(0, 45) + "…";
+                        }
+
+                        return this.key + ": " + this.percentage.toFixed(1) + "%";
+                    };
+
                     // Create the chart
                     new Highcharts.Chart(elementId, options);
 
