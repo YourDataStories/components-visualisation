@@ -169,52 +169,52 @@ angular.module("yds").factory("Personalization", ["$http", "$q", "YDS_CONSTANTS"
             //     }
             // });
 
-            // Feed the user with data
-            var feedUser = $http({
-                method: "POST",
-                url: YDS_CONSTANTS.API_PERSONALIZATION + "feed/" + userId,
-                headers: {"Content-Type": "application/x-www-form-urlencoded"},
-                transformRequest: customRequestTransform,
-                data: {
-                    JSONObject: JSON.stringify({
-                        "id": templateId,
-                        "language": lang,
-                        "recommended": "true",
-                        "text": [
-                            concept,
-                            templateId
-                        ]
-                    })
-                }
-            });
-
-            // Feed the dataset with data
-            var feedDataset = $http({
-                method: "POST",
-                url: YDS_CONSTANTS.API_PERSONALIZATION + "feed/" + concept,
-                headers: {"Content-Type": "application/x-www-form-urlencoded"},
-                transformRequest: customRequestTransform,
-                data: {
-                    JSONObject: JSON.stringify({
-                        "id": templateId,
-                        "language": lang,
-                        "recommended": "true",
-                        "text": [
-                            templateId
-                        ]
-                    })
-                }
-            });
-
             // Prepare requests array
-            //todo: take weight into account
             var promises = [
-                addUser,
+                addUser
                 // addTemplate,
-                // addConcept,
-                feedUser,
-                feedDataset
+                // addConcept
             ];
+
+            // Feed the user & dataset a number of times depending on the specified weight
+            for (var i = 0; i < weight; i++) {
+                // Feed the user with data
+                promises.push($http({
+                    method: "POST",
+                    url: YDS_CONSTANTS.API_PERSONALIZATION + "feed/" + userId,
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                    transformRequest: customRequestTransform,
+                    data: {
+                        JSONObject: JSON.stringify({
+                            "id": templateId,
+                            "language": lang,
+                            "recommended": "true",
+                            "text": [
+                                concept,
+                                templateId
+                            ]
+                        })
+                    }
+                }));
+
+                // Feed the dataset with data
+                promises.push($http({
+                    method: "POST",
+                    url: YDS_CONSTANTS.API_PERSONALIZATION + "feed/" + concept,
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                    transformRequest: customRequestTransform,
+                    data: {
+                        JSONObject: JSON.stringify({
+                            "id": templateId,
+                            "language": lang,
+                            "recommended": "true",
+                            "text": [
+                                templateId
+                            ]
+                        })
+                    }
+                }));
+            }
 
             // Do the requests
             $q.all(promises).then(function (values) {
