@@ -62,6 +62,12 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                         };
 
                         editor = highed.YDSEditor(editorContainer[0], editorOptions, suggestedTemplates, createLibraryList, createViewSelector);
+
+                        // Add click event to the Editor's download buttons, to update the Personalization service
+                        $("button.highed-imp-button > a:contains('Download')").parent().click(function () {
+                            // Feed the Personalization service with a weight of 2
+                            Personalization.feed(scope.userId, scope.lang, lastTemplate, scope.chartConfig.selectedView, 2);
+                        });
                     });
 
                     // Listen for template selection event
@@ -75,17 +81,11 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     // Save the template's ID to remember it in case the chart is exported
                     lastTemplate = templateId;
 
-                    // Gather parameters
-                    var params = {
-                        template_id: templateId,
-                        concept: scope.chartConfig.selectedView,
-                        user_id: scope.userId,
-                        weight: 1
-                    };
+                    var concept = scope.chartConfig.selectedView;
 
                     // Send parameters to personalisation server
-                    if (!_.isUndefined(params.concept)) {
-                        Personalization.feed(params.user_id, scope.lang, params.template_id, params.concept, params.weight);
+                    if (!_.isUndefined(concept)) {
+                        Personalization.feed(scope.userId, scope.lang, templateId, concept, 1);
                     }
                 };
 
