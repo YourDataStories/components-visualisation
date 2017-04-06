@@ -21,6 +21,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 // Variable to keep the selected item in
                 scope.selectedItems = [];
                 scope.viewsLoaded = false;
+                scope.plotOptionsLoading = false;
                 scope.selection = {};
                 scope.chartConfig = {};
 
@@ -313,6 +314,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     var selectedItemIds = _.pluck(scope.selectedItems, "basket_item_id");
 
                     // Get available views and axes for this item
+                    scope.plotOptionsLoading = true;
                     Workbench.getAvailableVisualisations(scope.lang, selectedItemIds).then(function (response) {
                         // Keep view data to use for drop downs later
                         allViews = response.data;
@@ -320,9 +322,11 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                         // Add available views to the scope
                         scope.availableViews = _.pluck(response.data, "type");
                         scope.viewsLoaded = true;
+                        scope.plotOptionsLoading = false;
                     }, function (error) {
                         console.error(error.message);
                         scope.viewsLoaded = false;
+                        scope.plotOptionsLoading = false;
                     });
                 };
             }

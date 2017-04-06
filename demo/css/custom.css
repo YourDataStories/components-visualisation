@@ -1348,3 +1348,11 @@ a.aggregate_link_dark:hover {
     margin-top: -2px;
     margin-left: 0;
 }
+
+.workbench-loading-container {
+    text-align: center;
+}
+
+.workbench-loading-text {
+    font-size: 16px;
+}

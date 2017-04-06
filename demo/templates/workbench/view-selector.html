@@ -82,9 +82,15 @@
     </div>
 
     <!--Alert for when views are not loaded-->
-    <div ng-if="viewsLoaded == false || selectedItems.length == 0">
+    <div ng-if="(!viewsLoaded || selectedItems.length == 0) && !plotOptionsLoading">
         <div uib-alert class="alert-warning"><span class="glyphicon glyphicon-warning-sign"></span> Please select one or
             more Library items in the Import tab!
         </div>
+    </div>
+
+    <!--Loading-->
+    <div ng-if="plotOptionsLoading" class="well workbench-loading-container">
+        <i class="fa fa-2x fa-spinner fa-pulse"></i>
+        <div class="workbench-loading-text">Please wait...</div>
     </div>
 </div>
