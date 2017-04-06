@@ -58,7 +58,10 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     // Start the Highcharts Editor
                     highed.ready(function () {
                         var editorOptions = {
-                            features: "library view templates customize export"
+                            features: "library view templates customize export",
+                            exporter: {
+                                options: "html json svg"
+                            }
                         };
 
                         editor = highed.YDSEditor(editorContainer[0], editorOptions, suggestedTemplates, createLibraryList, createViewSelector);
