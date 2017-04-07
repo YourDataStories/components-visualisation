@@ -1,5 +1,5 @@
 angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardService', '$timeout', '$location',
-    function(Data, DashboardService, $timeout, $location) {
+    function (Data, DashboardService, $timeout, $location) {
         return {
             restrict: 'E',
             scope: {
@@ -11,6 +11,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 aggregateSetOnInit: '@',    // If the component shown is an aggregate, this indicates if it's the first
                 aggregateIconSize: '@',     // Aggregate icon size (used only if component shown is aggregate)
                 aggregateShowButton: '@',   // If true, the aggregate will show the "View details" button
+                aggregateValueObj: '=',     // If set, the aggregate should save its value in this object
 
                 addToBasket: '@',           // If true, will show basket button in the components that support it
                 selectionId: '@',           // ID for saving the selection for the specified dashboardId (used for grid)
@@ -24,7 +25,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
 
                 enableRating: '@'           // Enable rating buttons (not supported for all components)
             },
-            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/dashboard-updater.html',
+            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/dashboard-updater.html',
             link: function (scope) {
                 var dashboardId = scope.dashboardId;
                 var baseUrl = scope.baseUrl;
@@ -79,7 +80,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                     "min-height": minHeight + "px"
                 };
 
-                var updateExtraParams = function() {
+                var updateExtraParams = function () {
                     // Keep old parameters for comparison and get new parameters from DashboardService
                     var newParams = DashboardService.getApiOptions(dashboardId);
 
@@ -96,7 +97,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                         }
 
                         //noinspection FallThroughInSwitchStatementJS
-                        switch(scope.type) {
+                        switch (scope.type) {
                             case "selection-grid":
                             case "aggregate":
                                 // Aggregates and selection grid watch their extra params for changes, so do nothing
@@ -115,7 +116,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
 
                                 // Make request to get rules for QueryBuilder
                                 if (scope.enableAdvSearch == "true") {
-                                    Data.getQueryBuilderRules(requestType, scope.extraParams).then(function(response) {
+                                    Data.getQueryBuilderRules(requestType, scope.extraParams).then(function (response) {
                                         var paramPrefix = searchParams.urlParamPrefix;
                                         var newRules = JSURL.stringify(response.data);
 
@@ -127,7 +128,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                                 break;
                             case "simple-grid":
                                 // Remove string values that contain null from the parameters
-                                scope.extraParams = _.omit(scope.extraParams, function(param) {
+                                scope.extraParams = _.omit(scope.extraParams, function (param) {
                                     if (_.isString(param) && param.indexOf("null") != -1)
                                         return true;
                                     else
@@ -138,7 +139,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                                 var type = scope.type;  // Save current type
                                 scope.type = "";        // Make type empty to hide component
 
-                                $timeout(function() {
+                                $timeout(function () {
                                     scope.type = type;  // At end of digest show component again
                                 });
                                 break;
@@ -155,7 +156,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                                 var type = scope.type;  // Save current type
                                 scope.type = "";        // Make type empty to hide component
 
-                                $timeout(function() {
+                                $timeout(function () {
                                     scope.type = type;  // At end of digest show component again
                                 });
 

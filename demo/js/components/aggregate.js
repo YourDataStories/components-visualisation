@@ -1,21 +1,25 @@
 angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$sce',
-    function(Data, DashboardService, $sce) {
+    function (Data, DashboardService, $sce) {
         return {
             restrict: 'E',
             scope: {
                 projectId: '@',     // Project ID of chart
                 viewType: '@',      // View type of chart
-                dashboardId: '@',   // ID used for getting selected year range from DashboardService
                 lang: '@',          // Language
+                baseUrl: '@',       // Base URL to send to API (optional)
+                extraParams: '=',   // Extra parameters to send
+
+                dashboardId: '@',   // ID used for getting selected year range from DashboardService
+                setOnInit: '@',     // If true, will set this aggregate's view type in DashboardService on init
+                valueObj: '=',      // If set, the Dashboard aggregates will try to save their value in this object
+
                 iconSize: '@',      // Icon size for FontAwesome icon (2-5)
                 showViewBtn: '@',   // If true, will show the "view details" button in the layouts where it is available
-                setOnInit: '@',     // If true, will set this aggregate's view type in DashboardService on init
+
                 elementH: '@',      // Minimum height of Aggregate
-                maxHeight: '@',     // Max height (if exceeded will scroll). Currently works on "title" layout
-                baseUrl: '@',       // Base URL to send to API (optional)
-                extraParams: '='    // Extra parameters to send
+                maxHeight: '@'      // Max height (if exceeded will scroll). Currently works on "title" layout
             },
-            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + 'templates/aggregate.html',
+            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/aggregate.html',
             link: function (scope) {
                 var projectId = scope.projectId;
                 var viewType = scope.viewType;
@@ -66,7 +70,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                     };
                 }
 
-                var getAggregateData = function() {
+                var getAggregateData = function () {
                     var params = scope.extraParams;
 
                     // If base URL attribute is defined, add it to the parameters that will be sent
@@ -77,7 +81,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                     }
 
                     // Get data for aggregate from API to set variables
-                    Data.getAggregate(projectId, viewType, lang, params).then(function(response) {
+                    Data.getAggregate(projectId, viewType, lang, params).then(function (response) {
                         // Get view
                         var view = _.first(response.view);
 
@@ -111,14 +115,19 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                             if (_.has(view, "layout") && view.layout != "default") {
                                 scope.layout = view.layout;
 
-                                switch(scope.layout) {
+                                switch (scope.layout) {
                                     case "title_aspect":
                                         // Get aspect to display on page
                                         scope.aspect = response.data.aspect;
                                         break;
                                     case "dashboard":
                                         // Create class for aggregate
-                                        scope.dashboardClass = "aggregate-" + viewType.replace(/\./g , "-");
+                                        scope.dashboardClass = "aggregate-" + viewType.replace(/\./g, "-");
+
+                                        // If possible, save the aggregate's value in the value object
+                                        if (!_.isUndefined(viewType) && !_.isUndefined(scope.valueObj)) {
+                                            scope.valueObj[viewType] = scope.value;
+                                        }
                                 }
                             } else {
                                 // Set default layout options
@@ -158,7 +167,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 /**
                  * Sets the view type to this aggregate component's view type in DashboardService
                  */
-                scope.setViewType = function() {
+                scope.setViewType = function () {
                     DashboardService.setViewType(dashboardId, {
                         type: viewType,
                         panelStyle: scope.panelStyle,
@@ -167,7 +176,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 };
 
                 // Watch for changes in extra parameters of aggregate and update it
-                scope.$watch("extraParams", function(newValue, oldValue) {
+                scope.$watch("extraParams", function (newValue, oldValue) {
                     if (!_.isEqual(newValue, oldValue)) {
                         getAggregateData();
                     }

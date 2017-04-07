@@ -1,5 +1,5 @@
 angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService', '$ocLazyLoad', '$timeout',
-    function(DashboardService, $ocLazyLoad, $timeout) {
+    function (DashboardService, $ocLazyLoad, $timeout) {
         return {
             restrict: 'E',
             scope: {
@@ -14,9 +14,11 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 title: '@',         // Title of component
                 elementH: '@',      // Height of component
 
+                numberOfItems: '@', // Number of items that the charts are expected to show. If too big, will use paging
+
                 enableRating: '@'   // Enable rating buttons for this component
             },
-            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + 'templates/dashboard-visualization.html',
+            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/dashboard-visualization.html',
             link: function (scope) {
                 var dashboardId = scope.dashboardId;
                 var disableColor = scope.disableColor;
@@ -67,7 +69,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 /**
                  * Re-render the selected visualization
                  */
-                var updateVisualization = function() {
+                var updateVisualization = function () {
                     if (updateVis) {
                         var selectedVis = defaultChart;
                         if (scope.selectedVis.length > 0) {
@@ -78,7 +80,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                         scope.selectedVis = "";
 
                         // Postpone to end of digest queue
-                        $timeout(function() {
+                        $timeout(function () {
                             scope.selectVis(selectedVis);
 
                             updateVis = false;
@@ -90,7 +92,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                  * Update the view type from the DashboardService
                  * Also sets the Visualization panel's color
                  */
-                var updateViewType = function() {
+                var updateViewType = function () {
                     prevViewType = scope.selViewType;
                     var viewType = DashboardService.getViewType(dashboardId);
 
@@ -116,7 +118,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 /**
                  * Handles view type selection changes
                  */
-                var viewTypeChangeHandler = function() {
+                var viewTypeChangeHandler = function () {
                     updateViewType();
                     updateVisualization();
                 };
@@ -130,7 +132,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                  * Change selected visualization type
                  * @param visType
                  */
-                scope.selectVis = function(visType) {
+                scope.selectVis = function (visType) {
                     scope.selectedVis = visType;
 
                     DashboardService.setVisType(visType);

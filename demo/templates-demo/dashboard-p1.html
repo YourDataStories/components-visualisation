@@ -102,6 +102,7 @@
                             type="{{ type }}"
                             add-to-basket="true"
                             enable-rating="true"
+                            number-of-items="{{ aggregateValues[type] }}"
                             element-h="460">
                     </yds-dashboard-visualization>
                 </uib-tab>
@@ -116,6 +117,7 @@
                     dashboard-id="contract"
                     view-type="{{ type }}"
                     min-height="125"
+                    aggregate-value-obj="aggregateValues"
                     aggregate-show-button="false"
                     aggregate-icon-size="3">
             </yds-dashboard-updater>
