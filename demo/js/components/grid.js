@@ -18,6 +18,13 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                 pageSize: '@',          // Set the number of rows of each page
                 elementH: '@',          // Set the height of the component
 
+                allowSelection: '@',    // Allow row selection
+                selectionType: '@',     // Selection type ("single" or "multiple")
+                dashboardId: '@',       // Used for setting/getting parameters to/from DashboardService
+                selectionId: '@',       // ID for saving the selection for the specified dashboardId
+
+                groupedData: '@',       // Set to true if the response from the API for your view type is grouped data
+
                 addToBasket: '@',       // Enable or disable "add to basket" functionality, values: true, false
                 basketBtnX: '@',        // X-axis position of the basket button
                 basketBtnY: '@',        // Y-axis position of the basket button
@@ -25,13 +32,6 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                 exporting: '@',         // Enable or disable export to CSV
                 exportBtnX: '@',        // X-axis position of the exporting button
                 exportBtnY: '@',        // Y-axis position of the exporting button
-
-                allowSelection: '@',    // Allow row selection
-                selectionType: '@',     // Selection type ("single" or "multiple")
-                dashboardId: '@',       // Used for setting/getting parameters to/from DashboardService
-                selectionId: '@',       // ID for saving the selection for the specified dashboardId
-
-                groupedData: '@',       // Set to true if the response from the API for your view type is grouped data
 
                 embeddable: '@',        // Enable or disable the embedding of the component
                 embedBtnX: '@',         // X-axis position of the embed button

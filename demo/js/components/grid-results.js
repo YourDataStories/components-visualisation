@@ -23,13 +23,18 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 showResultsNum: '@',    // If true, will show the results number below the grid
                 enableViewButton: '@',  // Enable the view button in each row (Default: true)
 
+                addToBasket: '@',       // Enable or disable "add to basket" functionality, values: true, false
+                basketBtnX: '@',        // X-axis position of the basket button
+                basketBtnY: '@',        // Y-axis position of the basket button
+
                 exporting: '@',         // Enable or disable export to CSV
                 exportBtnX: '@',        // X-axis position of the exporting button
                 exportBtnY: '@',        // Y-axis position of the exporting button
 
-                addToBasket: '@',       // Enable or disable "add to basket" functionality, values: true, false
-                basketBtnX: '@',        // X-axis position of the basket button
-                basketBtnY: '@',        // Y-axis position of the basket button
+                embeddable: '@',        // Enable or disable the embedding of the component
+                embedBtnX: '@',         // X-axis position of the embed button
+                embedBtnY: '@',         // Y-axis position of the embed button
+                popoverPos: '@',        // The side of the embed button from which the embed  window will appear
 
                 enableRating: '@'       // Enable rating buttons for this component
             },

@@ -11,10 +11,14 @@
 
         <button type="button"
                 ng-click="clearComboFilters()"
-                class="btn btn-default component-adv-filter-btn">Clear</button>
+                class="btn btn-default component-adv-filter-btn">
+            Clear
+        </button>
         <button type="button"
                 ng-click="applyComboFilters()"
-                class="btn btn-primary component-adv-filter-btn">Apply Filters</button>
+                class="btn btn-primary component-adv-filter-btn">
+            Apply Filters
+        </button>
         <div ng-repeat="combo in comboboxFilters">
             <div class="form-group  component-adv-dropdown">
                 <label>{{combo.label}}:</label>
@@ -31,7 +35,7 @@
             ng-if="exporting == 'true'" ng-style="exportBtnPos" ng-click="exportGrid()">
         <span class="glyphicon glyphicon-save-file"></span>
     </button>
-    <div class="flex ag-fresh grid-container" yds-basket-btn yds-rating></div>
+    <div class="flex ag-fresh grid-container" yds-embed yds-basket-btn yds-rating></div>
     <div ng-if="showResultsNum == 'true'" class="grid-results-num-row">
         <span ng-if="resultsNum > 0">Showing {{ loadedRows }}/{{ resultsNum }} results</span>
         <span ng-if="resultsNum <= 0">No results found</span>
