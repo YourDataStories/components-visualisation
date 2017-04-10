@@ -3,20 +3,21 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
         return {
             restrict: 'E',
             scope: {
-                projectId: '@',     // Project ID of chart
-                dashboardId: '@',   // ID used for getting selected year range from DashboardService
-                addToBasket: '@',   // If true, the save to basket button will appear in visualizations
-                disableColor: '@',  // If true, the component will ignore the color of the selected aggregate type
-                defaultChart: '@',  // Chart to show on initialization of the component. Default is "bar".
-                type: '@',          // View type of component. If not set, will get it from DashboardService
-                lang: '@',          // Language of charts
-                baseUrl: '@',       // Base URL to send to API
-                title: '@',         // Title of component
-                elementH: '@',      // Height of component
+                projectId: '@',         // Project ID of chart
+                dashboardId: '@',       // ID used for getting selected year range from DashboardService
+                addToBasket: '@',       // If true, the save to basket button will appear in visualizations
+                disableColor: '@',      // If true, the component will ignore the color of the selected aggregate type
+                defaultChart: '@',      // Chart to show on initialization of the component. Default is "bar".
+                type: '@',              // View type of component. If not set, will get it from DashboardService
+                lang: '@',              // Language of charts
+                baseUrl: '@',           // Base URL to send to API
+                title: '@',             // Title of component
+                elementH: '@',          // Height of component
 
-                numberOfItems: '@', // Number of items that the charts are expected to show. If too big, will use paging
+                numberOfItems: '@',     // Number of items that the charts are expected to show. If too big, will use paging
+                pagingThreshold: '@',   // Number of items that when exceeded, components with paging should be used
 
-                enableRating: '@'   // Enable rating buttons for this component
+                enableRating: '@'       // Enable rating buttons for this component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/dashboard-visualization.html',
             link: function (scope) {
@@ -24,6 +25,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 var disableColor = scope.disableColor;
                 var defaultChart = scope.defaultChart;
                 var type = scope.type;
+                scope.usePaging = false;    // Paging disabled by default
 
                 // Check if the component's title attribute is defined, else assign default value
                 if (_.isUndefined(scope.title)) {
@@ -32,6 +34,18 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                     } else {
                         scope.title = "Details";
                     }
+                }
+
+                // If the pagingThreshold is set, watch for changes in the number of items
+                scope.pagingThreshold = parseInt(scope.pagingThreshold);
+
+                if (!_.isUndefined(scope.pagingThreshold) && !_.isNaN(scope.pagingThreshold)) {
+                    scope.$watch("numberOfItems", function () {
+                        // Check if paging should be used
+                        if (parseInt(scope.numberOfItems) >= scope.pagingThreshold) {
+                            scope.usePaging = true;
+                        }
+                    });
                 }
 
                 // Check if the component's height attribute is defined, else assign default value

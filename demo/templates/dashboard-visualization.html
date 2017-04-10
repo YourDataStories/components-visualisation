@@ -10,16 +10,34 @@
                     <i class="fa fa-pie-chart" aria-hidden="true"></i></button>
                 <button ng-click="selectVis('bar')" class="btn btn-default" title="Bar Chart">
                     <i class="fa fa-bar-chart" aria-hidden="true"></i></button>
-                <button ng-click="selectVis('tree')" class="btn btn-default" style="max-width: 35px; max-height: 30px" title="Treemap Chart">
+                <button ng-click="selectVis('tree')" class="btn btn-default" style="max-width: 35px; max-height: 30px"
+                        title="Treemap Chart">
                     <img src="fonts/ic_view_quilt_black_18px.svg"/></button>
             </div>
         </div>
         <div class="panel-body" ng-style="panelBodyStyle">
+            <!--Items: {{ numberOfItems }}, threshold: {{ pagingThreshold }}, paging: {{usePaging}}-->
             <div ng-if="selViewType.length > 0" ng-switch="selectedVis">
                 <!--Grid-->
                 <yds-dashboard-updater
                         ng-switch-when="grid"
+                        ng-if="!usePaging"
                         type="simple-grid"
+                        project-id="{{ selProjectId }}"
+                        view-type="{{ selViewType }}"
+                        dashboard-id="{{ dashboardId }}"
+                        min-height="{{ elementH }}"
+                        base-url="{{ baseUrl }}"
+                        add-to-basket="{{ addToBasket }}"
+                        enable-rating="{{ enableRating }}"
+                        lang="{{ lang }}">
+                </yds-dashboard-updater>
+
+                <!--Grid (with paging)-->
+                <yds-dashboard-updater
+                        ng-switch-when="grid"
+                        ng-if="usePaging"
+                        type="grid-paging"
                         project-id="{{ selProjectId }}"
                         view-type="{{ selViewType }}"
                         dashboard-id="{{ dashboardId }}"
