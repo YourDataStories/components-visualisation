@@ -18,6 +18,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 selectionType: '@',         // Selection type for grid (single or multiple)
                 enableAdvSearch: '@',       // Enable/disable advanced search in Search Tabs component (default: true)
                 groupedData: '@',           // Used for grid, set to true if the data from the API will be grouped
+                numberOfItems: '@',         // Number of items for the grid, if needed
                 baseUrl: '@',               // Base URL to send to API
                 lang: '@',                  // Language of component
 

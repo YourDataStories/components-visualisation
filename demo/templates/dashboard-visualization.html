@@ -16,7 +16,6 @@
             </div>
         </div>
         <div class="panel-body" ng-style="panelBodyStyle">
-            <!--Items: {{ numberOfItems }}, threshold: {{ pagingThreshold }}, paging: {{usePaging}}-->
             <div ng-if="selViewType.length > 0" ng-switch="selectedVis">
                 <!--Grid-->
                 <yds-dashboard-updater
@@ -43,6 +42,7 @@
                         dashboard-id="{{ dashboardId }}"
                         min-height="{{ elementH }}"
                         base-url="{{ baseUrl }}"
+                        number-of-items="{{ numberOfItems }}"
                         add-to-basket="{{ addToBasket }}"
                         enable-rating="{{ enableRating }}"
                         lang="{{ lang }}">
