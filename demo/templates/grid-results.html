@@ -1,4 +1,4 @@
-<div class="component-wrapper" ng-class="{'margin-bottom-30': enableRating == 'true'}">
+<div id="gridresults" class="component-wrapper flex" ng-class="{'margin-bottom-30': enableRating == 'true'}">
     <div uib-alert class="alert-danger" ng-if="ydsAlert.length>0" close="hideAlert()">
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
         {{ydsAlert}}
@@ -19,17 +19,15 @@
                 class="btn btn-primary component-adv-filter-btn">
             Apply Filters
         </button>
-        <div ng-repeat="combo in comboboxFilters">
-            <div class="form-group  component-adv-dropdown">
-                <label>{{combo.label}}:</label>
-                <select class="form-control"
-                        ng-model="combo.selected"
-                        ng-options="item as item.header for item in comboboxData[combo.attribute]">
-                    <option value="">Choose...</option>
-                </select>
-            </div>
-        </div>
         <div style="clear: both"></div>
     </div>
-    <div class="ag-fresh grid-container" yds-embed yds-basket-btn yds-rating></div>
+    <button type="button" class="btn btn-default btn-xs grid-export-btn" ng-class="exportBtnClass"
+            ng-if="exporting == 'true'" ng-style="exportBtnPos" ng-click="exportGrid()">
+        <span class="glyphicon glyphicon-save-file"></span>
+    </button>
+    <div class="flex ag-fresh grid-container" yds-embed yds-basket-btn yds-rating></div>
+    <div ng-if="showResultsNum == 'true'" class="grid-results-num-row">
+        <span ng-if="resultsNum > 0">Showing {{ loadedRows }}/{{ resultsNum }} results</span>
+        <span ng-if="resultsNum <= 0">No results found</span>
+    </div>
 </div>
