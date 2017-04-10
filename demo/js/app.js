@@ -135,6 +135,15 @@ ydsDemo.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 			$scope.baseUrl = "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect";
 		}
 	})
+	.state('contract-ted-n6', {
+		url: '/contract-ted-n6',
+		templateUrl: 'templates-demo/contract-ted.html',
+		controller: function($scope) {
+			// Set project ID and base URL variables
+			$scope.projectId = "http://linkedeconomy.org/resource/Contract/AwardNotice/2013208591/5795646";
+			$scope.baseUrl = "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect";
+		}
+	})
 	.state('organisation-buyer', {
 		url: '/organisation-buyer',
 		templateUrl: 'templates-demo/organisation-buyer.html',
