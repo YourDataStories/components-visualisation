@@ -101,12 +101,12 @@
         <div class="col-md-2">
             <yds-dashboard-updater
                     ng-repeat="type in aggregates track by $index"
-                    ng-show="aggregateToShow == $index"
+                    ng-if="aggregateToShow == $index"
                     type="aggregate"
                     project-id="{{ projectId }}"
                     dashboard-id="public_project"
                     view-type="{{ type }}"
-                    min-height="125"
+                    min-height="150"
                     aggregate-show-button="false"
                     aggregate-icon-size="3"
                     base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
