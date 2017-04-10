@@ -1118,6 +1118,7 @@ a.list-group-item.load-more-button:hover > span.load-more-button-text {
 /* Aggregate bright link colors */
 a.aggregate_link_bright, a.aggregate_link_bright:visited {
     color: #fff;
+    text-decoration: underline;
 }
 
 a.aggregate_link_bright:hover {
@@ -1127,6 +1128,7 @@ a.aggregate_link_bright:hover {
 /* Aggregate dark link colors */
 a.aggregate_link_dark, a.aggregate_link_dark:visited {
     color: #333;
+    text-decoration: underline;
 }
 
 a.aggregate_link_dark:hover {
