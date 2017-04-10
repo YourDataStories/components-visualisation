@@ -42,9 +42,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 if (!_.isUndefined(scope.pagingThreshold) && !_.isNaN(scope.pagingThreshold)) {
                     scope.$watch("numberOfItems", function () {
                         // Check if paging should be used
-                        if (parseInt(scope.numberOfItems) >= scope.pagingThreshold) {
-                            scope.usePaging = true;
-                        }
+                        scope.usePaging = parseInt(scope.numberOfItems) >= scope.pagingThreshold;
                     });
                 }
 
