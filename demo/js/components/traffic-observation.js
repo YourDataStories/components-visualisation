@@ -210,6 +210,9 @@ angular.module('yds').directive('ydsTrafficObservation', ['$timeout', 'Data',
                                         },
                                         exporting: {
                                             enabled: false
+                                        },
+                                        chart: {
+                                            height: 30
                                         }
                                     });
                                 });
