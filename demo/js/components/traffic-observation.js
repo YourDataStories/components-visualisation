@@ -189,7 +189,9 @@ angular.module('yds').directive('ydsTrafficObservation', ['$timeout', 'Data',
                             $timeout(function () {
                                 _.each(scope.rowData, function (row) {
                                     // Transform data for Highcharts
-                                    var data = _.omit(row, "day", "id", "$$hashKey");
+                                    var data = _.map(_.rest(scope.columnDefs), function (column) {
+                                        return row[column.field];
+                                    });
 
                                     var highchartsData = _.map(data, function (value, key) {
                                         return [
