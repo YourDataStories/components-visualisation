@@ -30,12 +30,18 @@
         </div>
     </div>
 </div>
-<div class="row" style="margin-top: 20px">
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Traffic per day of the week, across years</h3>
+    </div>
+</div>
+<div class="row">
     <div class="col-md-6">
         <yds-traffic-observation
                 project-id="{{ projectId }}"
                 view-type="contract.trafficobservation.per.weekday.over.year"
-                element-h="320"
+                element-h="350"
                 lang="en">
         </yds-traffic-observation>
     </div>
@@ -43,9 +49,15 @@
         <yds-bar
                 project-id="{{ projectId }}"
                 view-type="contract.trafficobservation.per.weekday.over.year"
-                element-h="320"
+                element-h="350"
                 lang="en">
         </yds-bar>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Traffic per vehicle type, across years</h3>
     </div>
 </div>
 <div class="row">
@@ -53,7 +65,7 @@
         <yds-traffic-observation
                 project-id="{{ projectId }}"
                 view-type="contract.trafficobservation.per.year.over.vehicle.type"
-                element-h="320"
+                element-h="350"
                 lang="en">
         </yds-traffic-observation>
     </div>
@@ -61,7 +73,7 @@
         <yds-bar
                 project-id="{{ projectId }}"
                 view-type="contract.trafficobservation.per.year.over.vehicle.type"
-                element-h="320"
+                element-h="350"
                 lang="en">
         </yds-bar>
     </div>
