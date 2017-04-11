@@ -569,12 +569,15 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                     paramsToSend = {};
                                 }
 
-                                // Add page size and starting row parameters
-                                // (twice because in some cases rows/start is used, in others limit/offset)
-                                paramsToSend.rows = grid.pageSize;
-                                paramsToSend.limit = grid.pageSize;
-                                paramsToSend.start = params.startRow;
-                                paramsToSend.offset = params.startRow;
+                                // Add page size, starting row and sorting parameters
+                                // (paging twice because in some cases rows/start is used, in others limit/offset)
+                                paramsToSend = _.extend(paramsToSend, {
+                                        rows: grid.pageSize,
+                                        limit: grid.pageSize,
+                                        start: params.startRow,
+                                        offset: params.startRow
+                                    },
+                                    Data.formatAgGridSortParams(params.sortModel));
 
                                 Filters.addGridResultsFilter(grid.elementId, {
                                     projectId: grid.projectId,

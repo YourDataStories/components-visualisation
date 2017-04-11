@@ -711,7 +711,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
      * @param sortModel     Sort model as given by ag-grid
      * @returns {{sort, sortdir}}
      */
-    var formatAgGridSortParams = function(sortModel) {
+    dataService.formatAgGridSortParams = function(sortModel) {
         return {
             sort: _.pluck(sortModel, "colId"),
             sortdir: _.pluck(sortModel, "sort")
@@ -732,7 +732,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
     dataService.getGridResultData = function(query, facets, viewType, start, rows, lang, sortModel) {
         var deferred = $q.defer();
 
-        var sortParams = formatAgGridSortParams(sortModel);
+        var sortParams = dataService.formatAgGridSortParams(sortModel);
 
         var params = _.extend({
             q: query,
@@ -783,7 +783,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         // Create facets array
         var fq = mergeFacetsAndViewType(viewType, facets);
 
-        var sortParams = formatAgGridSortParams(sortModel);
+        var sortParams = dataService.formatAgGridSortParams(sortModel);
 
         var searchParameters = _.extend({
             q: query,
