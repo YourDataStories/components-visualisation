@@ -382,25 +382,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 };
 
                 /**
-                 * Save parameters that were used to create the grid to the Filters service, so if the grid is
-                 * saved to the Basket, all parameters will be saved
-                 * @param query
-                 * @param facets
-                 * @param rules
-                 */
-                var saveParamsToFilters = function (query, facets, rules) {
-                    // Create parameters object
-                    var params = {
-                        q: query,
-                        fq: facets,
-                        rules: rules
-                    };
-
-                    // Save the parameters to Filters service
-                    Filters.addGridResultsFilter(grid.elementId, params);
-                };
-
-                /**
                  * Function to render the grid
                  */
                 var visualizeGrid = function (quickFilter) {
@@ -565,6 +546,13 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                         }
                                     }
 
+                                    // Save parameters used to create the grid to the filters service
+                                    Filters.addGridResultsFilter(grid.elementId, {
+                                        q: query,
+                                        fq: facets,
+                                        rules: rules
+                                    });
+
                                     if (_.isUndefined(rules)) {
                                         // Perform normal search
                                         Data.getGridResultData(query, facets, grid.viewType, params.startRow, grid.pageSize, grid.lang, params.sortModel)
@@ -574,9 +562,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                         Data.getGridResultDataAdvanced(query, facets, rules, grid.viewType, params.startRow, grid.pageSize, grid.lang, params.sortModel)
                                             .then(gridResultDataSuccess, gridResultDataError);
                                     }
-
-                                    // Save parameters used to create the grid to the filters service
-                                    saveParamsToFilters(query, facets, rules);
                                 });
                             } else {
                                 var paramsToSend = _.clone(extraParams);
@@ -590,6 +575,15 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                 paramsToSend.limit = grid.pageSize;
                                 paramsToSend.start = params.startRow;
                                 paramsToSend.offset = params.startRow;
+
+                                Filters.addGridResultsFilter(grid.elementId, {
+                                    projectId: grid.projectId,
+                                    type: grid.viewType,
+                                    lang: grid.lang,
+                                    pagingGrid: true,
+                                    numberOfItems: scope.numberOfItems,
+                                    extraParams: extraParams
+                                });
 
                                 Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang, paramsToSend)
                                     .then(gridResultDataSuccess, gridResultDataError);

@@ -28,7 +28,6 @@
                 ng-switch-when="line"
                 project-id="{{ projectId }}"
                 view-type="{{ viewType }}"
-                show-navigator="false"
                 title-size="{{ titleSize }}"
                 lang="{{ lang }}"
                 element-h="300">
@@ -38,7 +37,6 @@
                 ng-switch-when="scatter"
                 project-id="{{ projectId }}"
                 view-type="{{ viewType }}"
-                show-navigator="false"
                 title-size="{{ titleSize }}"
                 lang="{{ lang }}"
                 element-h="300">
@@ -96,5 +94,24 @@
                 lang="{{ lang }}"
                 element-h="300">
         </yds-grid>
+
+        <yds-grid-results
+                ng-switch-when="grid-paging"
+                project-id="{{ projectId }}"
+                view-type="{{ viewType }}"
+                project-details-type="{{ projectDetailsType }}"
+                number-of-items="{{ numberOfItems }}"
+                extra-params="extraParams"
+                page-size="50"
+                element-h="300"
+                col-resize="true"
+                use-grid-api="true"
+                quick-filtering="false"
+                enable-view-button="false"
+                add-to-basket="false"
+                exporting="false"
+                show-results-num="false"
+                lang="{{ lang }}">
+        </yds-grid-results>
     </div>
 </div>
