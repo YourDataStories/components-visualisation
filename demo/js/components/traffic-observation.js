@@ -190,19 +190,15 @@ angular.module('yds').directive('ydsTrafficObservation', ['$timeout', 'Data',
                                 _.each(scope.rowData, function (row) {
                                     // Transform data for Highcharts
                                     var data = _.map(_.rest(scope.columnDefs), function (column) {
-                                        return row[column.field];
-                                    });
-
-                                    var highchartsData = _.map(data, function (value, key) {
                                         return [
-                                            parseInt(key),
-                                            parseInt(value.replace(/,/g, ""))
-                                        ];
+                                            parseInt(column.field),
+                                            parseInt(row[column.field].replace(/,/g, ""))
+                                        ]
                                     });
 
                                     new Highcharts.SparkLine(row.id, {
                                         series: [{
-                                            data: highchartsData
+                                            data: data
                                         }],
                                         tooltip: {
                                             headerFormat: '<span style="font-size: 10px">{point.x}:</span><br/>',
