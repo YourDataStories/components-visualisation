@@ -226,6 +226,17 @@ angular.module('yds').directive('ydsTrafficObservation', ['$timeout', 'Data',
                                             min: minAxisValue,
                                             max: maxValue
                                         },
+                                        xAxis: {
+                                            labels: {
+                                                enabled: true,
+                                                style: {
+                                                    fontSize: "7px"
+                                                },
+                                                y: 2
+                                            },
+                                            tickPosition: "inside",
+                                            tickPositions: null
+                                        },
                                         chart: {
                                             height: 30
                                         }
