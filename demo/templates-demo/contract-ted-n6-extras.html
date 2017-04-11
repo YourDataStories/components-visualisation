@@ -4,49 +4,65 @@
     </div>
 </div>
 <div class="row" style="margin-bottom: 20px;">
-    <div class="col-md-6">
+    <div class="col-md-7">
         <div class="row">
             <div class="col-md-12">
                 <yds-map
                         project-id="{{ projectId }}"
                         view-type="contract.trafficobservation"
                         enable-rating="true"
-                        element-h="350"
+                        element-h="400"
                         lang="en">
                 </yds-map>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <img src="img/contract-n6/bodkin-traffic.png" width="100%"/>
-            </div>
-        </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-5">
         <div class="row">
             <div class="col-md-12">
                 <img src="img/contract-n6/bodkin-roundabout.png" width="100%"/>
             </div>
         </div>
-        <div class="row" style="margin-top: 20px">
+        <div class="row" style="margin-top: 20px;">
             <div class="col-md-12">
-                <yds-traffic-observation
-                        project-id="{{ projectId }}"
-                        view-type="contract.trafficobservation.per.weekday.over.year"
-                        element-h="320"
-                        lang="en">
-                </yds-traffic-observation>
+                <img src="img/contract-n6/bodkin-traffic.png" width="100%"/>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <yds-traffic-observation
-                        project-id="{{ projectId }}"
-                        view-type="contract.trafficobservation.per.year.over.vehicle.type"
-                        element-h="320"
-                        lang="en">
-                </yds-traffic-observation>
-            </div>
-        </div>
+    </div>
+</div>
+<div class="row" style="margin-top: 20px">
+    <div class="col-md-6">
+        <yds-traffic-observation
+                project-id="{{ projectId }}"
+                view-type="contract.trafficobservation.per.weekday.over.year"
+                element-h="320"
+                lang="en">
+        </yds-traffic-observation>
+    </div>
+    <div class="col-md-6">
+        <yds-bar
+                project-id="{{ projectId }}"
+                view-type="contract.trafficobservation.per.weekday.over.year"
+                element-h="320"
+                lang="en">
+        </yds-bar>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <yds-traffic-observation
+                project-id="{{ projectId }}"
+                view-type="contract.trafficobservation.per.year.over.vehicle.type"
+                element-h="320"
+                lang="en">
+        </yds-traffic-observation>
+    </div>
+    <div class="col-md-6">
+        <yds-bar
+                project-id="{{ projectId }}"
+                view-type="contract.trafficobservation.per.year.over.vehicle.type"
+                element-h="320"
+                lang="en">
+        </yds-bar>
     </div>
 </div>
