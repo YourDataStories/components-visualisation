@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsTrafficObservation', ['Data',
-    function (Data) {
+angular.module('yds').directive('ydsTrafficObservation', ['$timeout', 'Data',
+    function ($timeout, Data) {
         return {
             restrict: 'E',
             scope: {
@@ -77,7 +77,12 @@ angular.module('yds').directive('ydsTrafficObservation', ['Data',
                             scope.columnDefs = Data.prepareGridColumns(response.view);
 
                             // Get data for the grid
-                            scope.rowData = Data.prepareGridData(response.data, response.view);
+                            var rows = Data.prepareGridData(response.data, response.view);
+
+                            // Add IDs to Sparkline containers
+                            _.each(rows, function (row) {
+                                row.id = "sparkline" + Data.createRandomId();
+                            });
 
                             // Create Highcharts SparkLine constructor, if it doesn't exist
                             if (!_.has(Highcharts, "SparkLine")) {
@@ -180,19 +185,35 @@ angular.module('yds').directive('ydsTrafficObservation', ['Data',
                                 };
                             }
 
-                            // Add Sparklines
-                            _.each(scope.rowData, function (row) {
-                                row.id = "sparkline_" + Data.createRandomId();
+                            // Create sparklines after a timeout (so that IDs will have been applied to the DOM)
+                            $timeout(function () {
+                                _.each(scope.rowData, function (row) {
+                                    // Transform data for Highcharts
+                                    var data = _.omit(row, "day", "id", "$$hashKey");
 
-                                // Transform data for Highcharts
-                                var data = _.omit(row, "day");
+                                    var highchartsData = _.map(data, function (value, key) {
+                                        return [
+                                            parseInt(key),
+                                            parseInt(value.replace(/,/g, ""))
+                                        ];
+                                    });
 
-                                var highchartsData = _.map(data, function (value, key) {
-                                    return [key, value];
+                                    new Highcharts.SparkLine(row.id, {
+                                        series: [{
+                                            data: highchartsData
+                                        }],
+                                        tooltip: {
+                                            headerFormat: '<span style="font-size: 10px">{point.x}:</span><br/>',
+                                            pointFormat: '<b>{point.y}</b>'
+                                        },
+                                        exporting: {
+                                            enabled: false
+                                        }
+                                    });
                                 });
-
-                                // todo: create sparklines
                             });
+
+                            scope.rowData = rows;
                         }, function (error) {
                             if (_.isNull(error) || _.isUndefined(error) || _.isUndefined(error.message))
                                 scope.ydsAlert = "An error has occurred, please check the configuration of the component.";
