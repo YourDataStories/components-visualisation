@@ -198,6 +198,14 @@ angular.module('yds').directive('ydsTrafficObservation', ['$timeout', 'Data',
 
                                     // Get the raw values, used for calculating the min/max axis values
                                     var axisValues = _.last(_.unzip(data));
+                                    var minValue = _.min(axisValues);
+                                    var maxValue = _.max(axisValues);
+                                    var range = maxValue - minValue;
+
+                                    var minAxisValue = minValue - (range * 0.2);
+                                    if (minAxisValue < 0 && minValue >= 0) {
+                                        minAxisValue = 0;
+                                    }
 
                                     new Highcharts.SparkLine(row.id, {
                                         series: [{
@@ -215,8 +223,8 @@ angular.module('yds').directive('ydsTrafficObservation', ['$timeout', 'Data',
                                             enabled: false
                                         },
                                         yAxis: {
-                                            min: _.min(axisValues),
-                                            max: _.max(axisValues)
+                                            min: minAxisValue,
+                                            max: maxValue
                                         },
                                         chart: {
                                             height: 30
