@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsTrafficObservation', ['Data', 'DashboardService',
-    function (Data, DashboardService) {
+angular.module('yds').directive('ydsTrafficObservation', ['Data',
+    function (Data) {
         return {
             restrict: 'E',
             scope: {
@@ -79,7 +79,120 @@ angular.module('yds').directive('ydsTrafficObservation', ['Data', 'DashboardServ
                             // Get data for the grid
                             scope.rowData = Data.prepareGridData(response.data, response.view);
 
-                            // todo: sparklines
+                            // Create Highcharts SparkLine constructor, if it doesn't exist
+                            if (!_.has(Highcharts, "SparkLine")) {
+                                // Create a constructor for sparklines that takes some sensible defaults and merges in the individual
+                                // chart options. This function is also available from the jQuery plugin as $(element).highcharts('SparkLine').
+                                Highcharts.SparkLine = function (a, b, c) {
+                                    var hasRenderToArg = typeof a === 'string' || a.nodeName,
+                                        options = arguments[hasRenderToArg ? 1 : 0],
+                                        defaultOptions = {
+                                            chart: {
+                                                renderTo: (options.chart && options.chart.renderTo) || this,
+                                                backgroundColor: null,
+                                                borderWidth: 0,
+                                                type: 'area',
+                                                margin: [2, 0, 2, 0],
+                                                width: 120,
+                                                height: 20,
+                                                style: {
+                                                    overflow: 'visible'
+                                                },
+
+                                                // small optimalization, saves 1-2 ms each sparkline
+                                                skipClone: true
+                                            },
+                                            title: {
+                                                text: ''
+                                            },
+                                            credits: {
+                                                enabled: false
+                                            },
+                                            xAxis: {
+                                                labels: {
+                                                    enabled: false
+                                                },
+                                                title: {
+                                                    text: null
+                                                },
+                                                startOnTick: false,
+                                                endOnTick: false,
+                                                tickPositions: []
+                                            },
+                                            yAxis: {
+                                                endOnTick: false,
+                                                startOnTick: false,
+                                                labels: {
+                                                    enabled: false
+                                                },
+                                                title: {
+                                                    text: null
+                                                },
+                                                tickPositions: [0]
+                                            },
+                                            legend: {
+                                                enabled: false
+                                            },
+                                            tooltip: {
+                                                backgroundColor: null,
+                                                borderWidth: 0,
+                                                shadow: false,
+                                                useHTML: true,
+                                                hideDelay: 0,
+                                                shared: true,
+                                                padding: 0,
+                                                positioner: function (w, h, point) {
+                                                    return {x: point.plotX - w / 2, y: point.plotY - h};
+                                                }
+                                            },
+                                            plotOptions: {
+                                                series: {
+                                                    animation: false,
+                                                    lineWidth: 1,
+                                                    shadow: false,
+                                                    states: {
+                                                        hover: {
+                                                            lineWidth: 1
+                                                        }
+                                                    },
+                                                    marker: {
+                                                        radius: 1,
+                                                        states: {
+                                                            hover: {
+                                                                radius: 2
+                                                            }
+                                                        }
+                                                    },
+                                                    fillOpacity: 0.25
+                                                },
+                                                column: {
+                                                    negativeColor: '#910000',
+                                                    borderColor: 'silver'
+                                                }
+                                            }
+                                        };
+
+                                    options = Highcharts.merge(defaultOptions, options);
+
+                                    return hasRenderToArg ?
+                                        new Highcharts.Chart(a, options, c) :
+                                        new Highcharts.Chart(options, b);
+                                };
+                            }
+
+                            // Add Sparklines
+                            _.each(scope.rowData, function (row) {
+                                row.id = "sparkline_" + Data.createRandomId();
+
+                                // Transform data for Highcharts
+                                var data = _.omit(row, "day");
+
+                                var highchartsData = _.map(data, function (value, key) {
+                                    return [key, value];
+                                });
+
+                                // todo: create sparklines
+                            });
                         }, function (error) {
                             if (_.isNull(error) || _.isUndefined(error) || _.isUndefined(error.message))
                                 scope.ydsAlert = "An error has occurred, please check the configuration of the component.";

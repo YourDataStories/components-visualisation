@@ -11,10 +11,15 @@
 
             <!--Table rows-->
             <tr ng-repeat="row in rowData">
+                <!--Columns-->
                 <td ng-repeat="column in columnDefs">
                     {{ row[column.field] }}
                 </td>
-                <td></td>
+
+                <!--Sparkline column-->
+                <td>
+                    <div ng-attr-id="{{ row.id }}"></div>
+                </td>
             </tr>
         </table>
     </div>
