@@ -201,6 +201,10 @@ angular.module('yds').directive('ydsTrafficObservation', ['$timeout', 'Data',
                                             data: data
                                         }],
                                         tooltip: {
+                                            backgroundColor: "#FFFFFF",
+                                            borderWidth: 1,
+                                            shadow: true,
+                                            padding: 8,
                                             headerFormat: '<span style="font-size: 10px">{point.x}:</span><br/>',
                                             pointFormat: '<b>{point.y}</b>'
                                         },
