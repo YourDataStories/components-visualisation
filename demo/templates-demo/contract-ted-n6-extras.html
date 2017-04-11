@@ -28,14 +28,14 @@
                 <img src="img/contract-n6/bodkin-roundabout.png" width="100%"/>
             </div>
         </div>
-        <div class="row">
+        <div class="row" style="margin-top: 20px">
             <div class="col-md-12">
-                <yds-grid
-                    project-id="{{ projectId }}"
-                    view-type="contract.trafficobservation.per.weekday.over.year"
-                    element-h="350"
-                    lang="en">
-                </yds-grid>
+                <yds-traffic-observation
+                        project-id="{{ projectId }}"
+                        view-type="contract.trafficobservation.per.weekday.over.year"
+                        element-h="350"
+                        lang="en">
+                </yds-traffic-observation>
             </div>
         </div>
     </div>

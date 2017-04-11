@@ -1,4 +1,21 @@
 <div class="component-wrapper">
     <div class="traffic-observation-container">
+        <table class="table table-striped">
+            <!--Table header-->
+            <tr>
+                <th ng-repeat="heading in columnDefs track by $index">
+                    {{ heading.headerName }}
+                </th>
+                <th>Chart</th>
+            </tr>
+
+            <!--Table rows-->
+            <tr ng-repeat="row in rowData">
+                <td ng-repeat="column in columnDefs">
+                    {{ row[column.field] }}
+                </td>
+                <td></td>
+            </tr>
+        </table>
     </div>
 </div>
