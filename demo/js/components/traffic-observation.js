@@ -51,6 +51,11 @@ angular.module('yds').directive('ydsTrafficObservation', ['$timeout', 'Data',
                 trafficContainer[0].id = elementId;
                 trafficWrapper[0].style.height = elementH + 'px';
 
+                if (viewType === "contract.trafficobservation.per.weekday.over.year" ||
+                    viewType === "contract.trafficobservation.per.year.over.vehicle.type") {
+                    scope.showDurationHeaders = true;
+                }
+
                 /**
                  * Create the grid
                  */

@@ -1358,3 +1358,7 @@ a.aggregate_link_dark:hover {
 .workbench-loading-text {
     font-size: 16px;
 }
+
+td.table-cell-center, th.table-cell-center {
+    text-align: center;
+}

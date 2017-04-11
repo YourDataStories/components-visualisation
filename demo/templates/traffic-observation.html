@@ -1,18 +1,28 @@
 <div class="component-wrapper">
     <div class="traffic-observation-container">
         <table class="table table-striped">
+            <tr ng-if="showDurationHeaders">
+                <th></th>
+                <th class="table-cell-center">BEFORE</th>
+                <th class="table-cell-center">DURING</th>
+                <th class="table-cell-center" colspan="2">AFTER</th>
+                <th></th>
+            </tr>
+
             <!--Table header-->
             <tr>
-                <th ng-repeat="heading in columnDefs track by $index">
+                <th ng-repeat="heading in columnDefs track by $index"
+                    ng-class="{'table-cell-center': !$first}">
                     {{ heading.headerName }}
                 </th>
-                <th>Chart</th>
+                <th class="table-cell-center">Chart</th>
             </tr>
 
             <!--Table rows-->
             <tr ng-repeat="row in rowData">
                 <!--Columns-->
-                <td ng-repeat="column in columnDefs">
+                <td ng-repeat="column in columnDefs"
+                    ng-class="{'table-cell-center': !$first}">
                     {{ row[column.field] }}
                 </td>
 
