@@ -9,4 +9,8 @@
             {{ydsAlert}}
         </div>
     </div>
+    <div ng-if="enablePaging == 'true'" class="bar-buttons-container">
+        <button type="button" class="btn btn-default" ng-click="changePage('prev')">Previous</button>
+        <button type="button" class="btn btn-default" ng-click="changePage('next')">Next</button>
+    </div>
 </div>

@@ -2,24 +2,27 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function (Data, Fi
     return {
         restrict: 'E',
         scope: {
-            projectId: '@',     //id of the project that the data belong
-            viewType: '@',      //name of the array that contains the visualised data
-            lang: '@',          //lang of the visualised data
+            projectId: '@',     // Id of the project that the data belong
+            viewType: '@',      // Name of the array that contains the visualised data
+            lang: '@',          // Lang of the visualised data
 
-            extraParams: '=',   //extra attributes to pass to the API, if needed
+            extraParams: '=',   // Extra attributes to pass to the API, if needed
+            enablePaging: '@',  // Enable paging (default is false)
+            pageSize: '@',      // Page size for paging
+            numberOfItems: '@', // Number of items, required for paging
 
-            exporting: '@',     //enable or disable the export of the chart
-            elementH: '@',      //set the height of the component
-            titleSize: '@',     //the size of the chart's main title
+            exporting: '@',     // Enable or disable the export of the chart
+            elementH: '@',      // Set the height of the component
+            titleSize: '@',     // The size of the chart's main title
 
-            addToBasket: '@',   //enable or disable "add to basket" functionality, values: true, false
-            basketBtnX: '@',    //x-axis position of the basket button
-            basketBtnY: '@',    //y-axis position of the basket button
+            addToBasket: '@',   // Enable or disable "add to basket" functionality, values: true, false
+            basketBtnX: '@',    // X-axis position of the basket button
+            basketBtnY: '@',    // Y-axis position of the basket button
 
-            embeddable: '@',    //enable or disabled the embedding of the component
-            embedBtnX: '@',     //x-axis position of the embed button
-            embedBtnY: '@',     //y-axis position of the embed button
-            popoverPos: '@',    //the side of the embed button from which the embed information window will appear
+            embeddable: '@',    // Enable or disabled the embedding of the component
+            embedBtnX: '@',     // X-axis position of the embed button
+            embedBtnY: '@',     // Y-axis position of the embed button
+            popoverPos: '@',    // The side of the embed button from which the embed information window will appear
 
             enableRating: '@'   // Enable rating buttons for this component
         },
@@ -34,6 +37,7 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function (Data, Fi
             var projectId = scope.projectId;
             var viewType = scope.viewType;
             var lang = scope.lang;
+            var pageSize = parseInt(scope.pageSize);
             var exporting = scope.exporting;
             var elementH = scope.elementH;
             var titleSize = scope.titleSize;
@@ -44,79 +48,127 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function (Data, Fi
                 Filters.addExtraParamsFilter(elementId, extraParams);
             }
 
-            //check if the projectId and the viewType attr is defined, else stop the process
-            if (_.isUndefined(projectId) || projectId.trim() == "") {
+            // Check if the projectId and the viewType attr is defined, else stop the process
+            if (_.isUndefined(projectId) || projectId.trim() === "") {
                 scope.ydsAlert = "The YDS component is not properly configured. " +
                     "Please check the corresponding documentation section.";
                 return false;
             }
 
-            //check if view-type attribute is empty and assign the default value
-            if (_.isUndefined(viewType) || viewType.trim() == "")
+            // Check if view-type attribute is empty and assign the default value
+            if (_.isUndefined(viewType) || viewType.trim() === "")
                 viewType = "default";
 
-            //check if the language attr is defined, else assign default value
-            if (_.isUndefined(lang) || lang.trim() == "")
+            // Check if the language attr is defined, else assign default value
+            if (_.isUndefined(lang) || lang.trim() === "")
                 lang = "en";
 
-            //check if the exporting attr is defined, else assign default value
+            // Check if the exporting attr is defined, else assign default value
             if (_.isUndefined(exporting) || (exporting != "true" && exporting != "false"))
                 exporting = "true";
 
-            //check if the component's height attr is defined, else assign default value
+            // Check if the enablePaging attr is defined, else assign default value
+            if (_.isUndefined(scope.enablePaging) || (scope.enablePaging != "true" && scope.enablePaging != "false"))
+                scope.enablePaging = "false";
+
+            // Check if the pageSize attr is defined, else assign default value
+            if (_.isUndefined(pageSize) || _.isNaN(pageSize))
+                pageSize = 100;
+
+            // Check if the component's height attr is defined, else assign default value
             if (_.isUndefined(elementH) || _.isNaN(elementH))
                 elementH = 200;
 
-            //check if the component's title size attr is defined, else assign default value
-            if (_.isUndefined(titleSize) || titleSize.length == 0 || _.isNaN(titleSize))
+            // Check if the component's title size attr is defined, else assign default value
+            if (_.isUndefined(titleSize) || titleSize.length === 0 || _.isNaN(titleSize))
                 titleSize = 18;
+
+            //todo: if paging is enabled and number of items is not specified, show error
+
+            var chart = null;
 
             // Show loading animation
             scope.loading = true;
 
-            //set the height of the chart
+            // Setup paging variables
+            scope.offset = 0;
+
+            // Set the height of the chart
             barContainer[0].style.height = elementH + 'px';
 
-            // Get data and visualize bar
-            Data.getProjectVis("bar", projectId, viewType, lang, extraParams)
-                .then(function (response) {
-                    // Check that the component has not been destroyed
-                    if (scope.$$destroyed)
-                        return;
+            scope.changePage = function (direction) {
+                console.log("change page called");
+                switch (direction) {
+                    //todo: check in both cases if offset goes negative or exceeds maximum
+                    case "prev":
+                        scope.offset -= pageSize;
+                        break;
+                    case "next":
+                        scope.offset += pageSize;
+                        break;
+                }
 
-                    var options = response.data;
+                createBar();
+            };
 
-                    // Set title size in options
-                    options.title.style = {
-                        fontSize: titleSize + "px"
-                    };
+            var createBar = function () {
+                var params = _.clone(extraParams);
 
-                    // Set exporting options
-                    options.exporting = {
-                        buttons: {
-                            contextButton: {
-                                symbol: 'url(' + ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'img/fa-download-small.png)',
-                                symbolX: 19,
-                                symbolY: 19
-                            }
-                        },
+                if (_.isUndefined(params)) {
+                    params = {};
+                }
 
-                        enabled: (exporting === "true")
-                    };
+                // If paging is enabled, take it into account
+                if (scope.enablePaging === "true") {
+                    params.offset = scope.offset;
+                    params.limit = pageSize;
+                }
 
-                    new Highcharts.Chart(elementId, options);
+                // Get data and visualize bar
+                Data.getProjectVis("bar", projectId, viewType, lang, params)
+                    .then(function (response) {
+                        // Check that the component has not been destroyed
+                        if (scope.$$destroyed)
+                            return;
 
-                    // Remove loading animation
-                    scope.loading = false;
-                }, function (error) {
-                    if (_.isNull(error) || _.isUndefined(error) || _.isUndefined(error.message))
-                        scope.ydsAlert = "An error has occurred, please check the configuration of the component";
-                    else
-                        scope.ydsAlert = error.message;
+                        var options = response.data;
 
-                    // Remove loading animation
-                    scope.loading = false;
-                });
+                        // Set title size in options
+                        options.title.style = {
+                            fontSize: titleSize + "px"
+                        };
+
+                        // Set exporting options
+                        options.exporting = {
+                            buttons: {
+                                contextButton: {
+                                    symbol: 'url(' + ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'img/fa-download-small.png)',
+                                    symbolX: 19,
+                                    symbolY: 19
+                                }
+                            },
+
+                            enabled: (exporting === "true")
+                        };
+
+                        //todo: do not recreate it if not needed..
+                        chart = new Highcharts.Chart(elementId, options);
+
+                        // Remove loading animation
+                        scope.loading = false;
+                    }, function (error) {
+                        if (_.isNull(error) || _.isUndefined(error) || _.isUndefined(error.message))
+                            scope.ydsAlert = "An error has occurred, please check the configuration of the component";
+                        else
+                            scope.ydsAlert = error.message;
+
+                        // Remove loading animation
+                        scope.loading = false;
+                    });
+            };
+
+            // Create the bar
+            createBar();
         }
     };
 }]);
