@@ -126,6 +126,7 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function (Data, Fi
                 }
 
                 // Update the bar chart
+                chart.showLoading();
                 createBar();
             };
 
@@ -174,6 +175,7 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function (Data, Fi
                         } else {
                             // Update the chart's options
                             chart.update(response.data);
+                            chart.hideLoading();
                         }
 
                         // Remove loading animation
