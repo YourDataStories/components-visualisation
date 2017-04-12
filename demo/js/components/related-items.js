@@ -3,10 +3,11 @@ angular.module('yds').directive('ydsRelatedItems', ['Data',
         return {
             restrict: 'E',
             scope: {
-                projectId:'@',  // ID of the project to display related items for
-                elementH:'@'    // Height of the component in pixels
+                projectId: '@', // ID of the project to display related items for
+                period: '@',    // Set period of related items ("before", "during" or "after" the project)
+                elementH: '@'   // Height of the component in pixels
             },
-            templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/related-items.html',
+            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/related-items.html',
             link: function (scope, element) {
                 var elementH = parseInt(scope.elementH);
                 scope.loading = false;
@@ -14,6 +15,11 @@ angular.module('yds').directive('ydsRelatedItems', ['Data',
                 // Check if project ID is defined
                 if (_.isUndefined(scope.projectId) || scope.projectId.trim() == "") {
                     scope.projectId = "none";
+                }
+
+                // Check if period is defined
+                if (_.isUndefined(scope.period) || scope.period.trim() == "") {
+                    scope.period = "during";
                 }
 
                 // Check if element height is defined
@@ -54,8 +60,8 @@ angular.module('yds').directive('ydsRelatedItems', ['Data',
                 };
 
                 // Get initial data for each tab
-                _.each(scope.tabs, function(tab) {
-                    Data.getRelatedItems(scope.projectId, tab.apiType, 0).then(function(data) {
+                _.each(scope.tabs, function (tab) {
+                    Data.getRelatedItems(scope.projectId, tab.apiType, scope.period, 0).then(function (data) {
                         tab.data = data;
                     });
                 });
@@ -65,7 +71,7 @@ angular.module('yds').directive('ydsRelatedItems', ['Data',
                  * Finds the tab by using its name
                  * @param tabTitle  Title of the tab
                  */
-                scope.loadMore = function(tabTitle) {
+                scope.loadMore = function (tabTitle) {
                     if (!scope.loading) {
                         scope.loading = true;
 
@@ -75,9 +81,9 @@ angular.module('yds').directive('ydsRelatedItems', ['Data',
                         });
 
                         var start = tab.data.length;
-                        Data.getRelatedItems(scope.projectId, tab.apiType, start).then(function(data) {
+                        Data.getRelatedItems(scope.projectId, tab.apiType, start).then(function (data) {
                             // Add new items to the tab
-                            _.each(data, function(item) {
+                            _.each(data, function (item) {
                                 tab.data.push(item);
                             });
 

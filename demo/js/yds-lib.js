@@ -1103,15 +1103,17 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
      * Return related items of a specific type, for a specific project
      * @param projectId     ID of project to return items for
      * @param type          Type of related items to return (can be "news", "blog" or "tweet")
+     * @param period        Period of items ("before", "during" or "after")
      * @param start         Item to start from, for paging
      * @returns {promise|*|s|d}
      */
-    dataService.getRelatedItems = function(projectId, type, start) {
+    dataService.getRelatedItems = function (projectId, type, period, start) {
         var deferred = $q.defer();
 
         var params = {
             id: projectId,
             type: type,
+            period: period,
             start: start
         };
 
