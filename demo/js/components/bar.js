@@ -38,6 +38,7 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function (Data, Fi
             var viewType = scope.viewType;
             var lang = scope.lang;
             var pageSize = parseInt(scope.pageSize);
+            var numberOfItems = parseInt(scope.numberOfItems);
             var exporting = scope.exporting;
             var elementH = scope.elementH;
             var titleSize = scope.titleSize;
@@ -83,7 +84,11 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function (Data, Fi
             if (_.isUndefined(titleSize) || titleSize.length === 0 || _.isNaN(titleSize))
                 titleSize = 18;
 
-            //todo: if paging is enabled and number of items is not specified, show error
+            // If paging is enabled and number of items is not specified, turn off paging and show warning in console
+            if (scope.enablePaging === "true" && (_.isUndefined(numberOfItems) || _.isNaN(numberOfItems))) {
+                console.warn("Error in bar paging configuration! (did you give the number of items?) Paging will be turned off.");
+                scope.enablePaging = "false";
+            }
 
             var chart = null;
 
