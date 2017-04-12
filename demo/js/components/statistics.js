@@ -1,43 +1,64 @@
-angular.module('yds').directive('ydsStatistics', ['Data', '$interval', function(Data, $interval){
-	return {
-		restrict: 'E',
-		templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/statistics.html',
-		link: function (scope) {
-			scope.statistics = {
-				initialized: false,
-				maxIterations: 0,
-				stats: {},
-				statsLimit: {}
-			};
+angular.module('yds').directive('ydsStatistics', ['Data', '$interval', function (Data, $interval) {
+    return {
+        restrict: 'E',
+        templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/statistics.html',
+        link: function (scope) {
+            scope.statistics = {
+                initialized: false,
+                maxIterations: 0,
+                iterations: 0,
+                stats: {},
+                statsLimit: {}
+            };
 
-			//function to update the stats counters
-			var updateStatistics = function() {
-				_.each(scope.statistics.stats, function(value, key) {
-					if (scope.statistics.stats[key] < scope.statistics.statsLimit[key])
-					{
-						scope.statistics.stats[key] = scope.statistics.stats[key]<300 ? scope.statistics.stats[key]+1 : scope.statistics.stats[key]+20000;
-					}
-				});
-			};
+            /**
+             * Update the stats counters
+             */
+            var updateStatistics = function () {
+                if (scope.statistics.iterations === scope.statistics.maxIterations - 1) {
+                    // It's the last iteration, make sure values are correct
+                    scope.statistics.stats = scope.statistics.statsLimit;
+                    return;
+                }
 
-			//fetch the statistics from the server
-			Data.getYdsStatistics()
-			.then(function(response){
-				//copy the statistics in a new variable and find the max number of iterations required
-				scope.statistics.statsLimit = angular.copy(response.data);
-				scope.statistics.maxIterations = _.max(_.values(response.data));
+                _.each(scope.statistics.stats, function (value, key) {
+                    var currValue = scope.statistics.stats[key];
+                    var maxValue = scope.statistics.statsLimit[key];
 
-				//initialize the counter of each statistic
-				_.each(response.data, function(value, key){
-					scope.statistics.stats[key] = 0;
-				});
+                    // Calculate next value, with minimum step of 1
+                    var newValue = currValue + _.max([1, Math.floor(maxValue / 60)]);
 
-				//register interval to run every 15ms
-				scope.statistics.initialized = true;
-				$interval(updateStatistics, 15, scope.statistics.maxIterations);
-			}, function(error){
-				console.log(error.message);
-			});
-		}
-	};
+                    if (newValue <= maxValue) {
+                        // New value is valid, set it
+                        scope.statistics.stats[key] = newValue;
+                    } else {
+                        // New value exceeds maximum, set the statistic to its max value
+                        scope.statistics.stats[key] = maxValue;
+                    }
+                });
+
+                scope.statistics.iterations++;
+            };
+
+            // Fetch the statistics from the server
+            Data.getYdsStatistics()
+                .then(function (response) {
+                    // Copy the statistics in a new variable and find the max number of iterations required
+                    scope.statistics.statsLimit = angular.copy(response.data);
+                    scope.statistics.maxIterations = 62;
+
+
+                    // Initialize the counter of each statistic
+                    _.each(response.data, function (value, key) {
+                        scope.statistics.stats[key] = 0;
+                    });
+
+                    // Register interval to run every 15ms
+                    scope.statistics.initialized = true;
+                    $interval(updateStatistics, 16, scope.statistics.maxIterations);
+                }, function (error) {
+                    console.log(error.message);
+                });
+        }
+    };
 }]);
