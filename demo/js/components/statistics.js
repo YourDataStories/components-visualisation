@@ -5,7 +5,7 @@ angular.module('yds').directive('ydsStatistics', ['Data', '$interval', function 
         link: function (scope) {
             scope.statistics = {
                 initialized: false,
-                maxIterations: 0,
+                maxIterations: 62,
                 iterations: 0,
                 stats: {},
                 statsLimit: {}
@@ -43,10 +43,8 @@ angular.module('yds').directive('ydsStatistics', ['Data', '$interval', function 
             // Fetch the statistics from the server
             Data.getYdsStatistics()
                 .then(function (response) {
-                    // Copy the statistics in a new variable and find the max number of iterations required
+                    // Copy the statistics in a new variable
                     scope.statistics.statsLimit = angular.copy(response.data);
-                    scope.statistics.maxIterations = 62;
-
 
                     // Initialize the counter of each statistic
                     _.each(response.data, function (value, key) {
