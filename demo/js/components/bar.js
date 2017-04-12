@@ -96,22 +96,36 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function (Data, Fi
             scope.loading = true;
 
             // Setup paging variables
-            scope.offset = 0;
+            scope.offset = 0;               // Current offset
+            scope.nextOffset = pageSize;    // Offset of the next page
+            scope.pageSizeNum = pageSize;   // The page size, parsed in order to be an integer
 
             // Set the height of the chart
             barContainer[0].style.height = elementH + 'px';
 
+            /**
+             * Change the page in the specified direction
+             * @param direction Direction to switch page to, accepts "prev" for previous, or "next" for next page.
+             */
             scope.changePage = function (direction) {
+                // Set the new offset
                 switch (direction) {
                     case "prev":
                         scope.offset -= pageSize;
                         break;
                     case "next":
-                        //todo: check that it doesn't exceed maximum
                         scope.offset += pageSize;
                         break;
                 }
 
+                // Set the next offset
+                if (scope.offset + pageSize <= numberOfItems) {
+                    scope.nextOffset = scope.offset + pageSize;
+                } else {
+                    scope.nextOffset = numberOfItems;
+                }
+
+                // Update the bar chart
                 createBar();
             };
 

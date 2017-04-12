@@ -10,6 +10,7 @@
         </div>
     </div>
     <div ng-if="enablePaging == 'true'" class="bar-buttons-container clearfix">
+        <!--Previous page button-->
         <button
                 type="button"
                 class="btn btn-default pull-left"
@@ -17,9 +18,17 @@
                 ng-click="changePage('prev')">
             Previous
         </button>
+
+        <!--Paging status indicator-->
+        <span class="bar-paging-status">
+            {{ offset }}-{{ nextOffset }}/{{ numberOfItems }}
+        </span>
+
+        <!--Next page button-->
         <button
                 type="button"
                 class="btn btn-default pull-right"
+                ng-disabled="offset + pageSizeNum >= numberOfItems"
                 ng-click="changePage('next')">
             Next
         </button>

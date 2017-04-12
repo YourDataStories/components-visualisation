@@ -1362,3 +1362,8 @@ a.aggregate_link_dark:hover {
 td.table-cell-center, th.table-cell-center {
     text-align: center;
 }
+
+/* Center the paging status indicator in bar charts */
+.bar-buttons-container {
+    text-align: center;
+}
