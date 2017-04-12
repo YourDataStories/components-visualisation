@@ -136,8 +136,21 @@
             add-to-basket="{{ addToBasket }}"
             embeddable="true"
             embed-btn-x="40"
+            enable-rating="{{ enableRating }}"
+            lang="{{ lang }}"
+            element-h="{{ minHeight }}">
+    </yds-bar>
+
+    <yds-bar
+            ng-switch-when="bar-paging"
+            project-id="{{ projectId }}"
+            view-type="{{ viewType }}"
+            extra-params="extraParams"
+            add-to-basket="{{ addToBasket }}"
+            embeddable="true"
+            embed-btn-x="40"
             number-of-items="{{ numberOfItems }}"
-            enable-paging="{{ enablePaging }}"
+            enable-paging="true"
             enable-rating="{{ enableRating }}"
             lang="{{ lang }}"
             element-h="{{ minHeight }}">

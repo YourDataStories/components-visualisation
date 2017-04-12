@@ -19,7 +19,6 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 enableAdvSearch: '@',       // Enable/disable advanced search in Search Tabs component (default: true)
                 groupedData: '@',           // Used for grid, set to true if the data from the API will be grouped
                 numberOfItems: '@',         // Number of items for the grid, if needed
-                enablePaging: '@',          // Used for enabling paging in bar chart
                 baseUrl: '@',               // Base URL to send to API
                 lang: '@',                  // Language of component
 
@@ -175,11 +174,6 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                     || dashboardId == "comparison1" || dashboardId == "comparison2"
                     || dashboardId == "comparison_details_1" || dashboardId == "comparison_details_2") {
                     DashboardService.subscribeGridSelectionChanges(scope, updateExtraParams);
-                }
-
-                // If the paging variable is used, watch for changes in order to refresh component
-                if (!_.isUndefined(scope.enablePaging)) {
-                    scope.$watch("enablePaging", updateExtraParams);
                 }
 
                 // Get initial info

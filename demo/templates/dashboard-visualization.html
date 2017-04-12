@@ -65,8 +65,23 @@
                 <!--Bar-->
                 <yds-dashboard-updater
                         ng-switch-when="bar"
-                        enable-paging="{{ usePaging }}"
+                        ng-if="!usePaging"
                         type="bar"
+                        project-id="{{ selProjectId }}"
+                        view-type="{{ selViewType }}"
+                        dashboard-id="{{ dashboardId }}"
+                        min-height="{{ elementH }}"
+                        base-url="{{ baseUrl }}"
+                        add-to-basket="{{ addToBasket }}"
+                        enable-rating="{{ enableRating }}"
+                        lang="{{ lang }}">
+                </yds-dashboard-updater>
+
+                <!--Bar (with paging)-->
+                <yds-dashboard-updater
+                        ng-switch-when="bar"
+                        ng-if="usePaging"
+                        type="bar-paging"
                         project-id="{{ selProjectId }}"
                         view-type="{{ selViewType }}"
                         dashboard-id="{{ dashboardId }}"
