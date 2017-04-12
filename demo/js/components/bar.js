@@ -102,13 +102,12 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function (Data, Fi
             barContainer[0].style.height = elementH + 'px';
 
             scope.changePage = function (direction) {
-                console.log("change page called");
                 switch (direction) {
-                    //todo: check in both cases if offset goes negative or exceeds maximum
                     case "prev":
                         scope.offset -= pageSize;
                         break;
                     case "next":
+                        //todo: check that it doesn't exceed maximum
                         scope.offset += pageSize;
                         break;
                 }
@@ -132,32 +131,36 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function (Data, Fi
                 // Get data and visualize bar
                 Data.getProjectVis("bar", projectId, viewType, lang, params)
                     .then(function (response) {
-                        // Check that the component has not been destroyed
-                        if (scope.$$destroyed)
-                            return;
+                        if (_.isNull(chart)) {
+                            // Check that the component has not been destroyed
+                            if (scope.$$destroyed)
+                                return;
 
-                        var options = response.data;
+                            var options = response.data;
 
-                        // Set title size in options
-                        options.title.style = {
-                            fontSize: titleSize + "px"
-                        };
+                            // Set title size in options
+                            options.title.style = {
+                                fontSize: titleSize + "px"
+                            };
 
-                        // Set exporting options
-                        options.exporting = {
-                            buttons: {
-                                contextButton: {
-                                    symbol: 'url(' + ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'img/fa-download-small.png)',
-                                    symbolX: 19,
-                                    symbolY: 19
-                                }
-                            },
+                            // Set exporting options
+                            options.exporting = {
+                                buttons: {
+                                    contextButton: {
+                                        symbol: 'url(' + ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'img/fa-download-small.png)',
+                                        symbolX: 19,
+                                        symbolY: 19
+                                    }
+                                },
 
-                            enabled: (exporting === "true")
-                        };
+                                enabled: (exporting === "true")
+                            };
 
-                        //todo: do not recreate it if not needed..
-                        chart = new Highcharts.Chart(elementId, options);
+                            chart = new Highcharts.Chart(elementId, options);
+                        } else {
+                            // Update the chart's options
+                            chart.update(response.data);
+                        }
 
                         // Remove loading animation
                         scope.loading = false;
