@@ -80,3 +80,50 @@
         </yds-bar>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Social</h3>
+    </div>
+</div>
+<div class="row" style="margin-bottom: 20px">
+    <div class="col-md-12">
+        <uib-tabset>
+            <!--Before-->
+            <uib-tab heading="Before">
+                <div class="row">
+                    <div class="col-md-offset-3 col-md-6">
+                        <yds-related-items
+                                project-id="{{ projectId }}"
+                                element-h="300">
+                        </yds-related-items>
+                    </div>
+                </div>
+            </uib-tab>
+
+            <!--During-->
+            <uib-tab heading="During">
+                <div class="row">
+                    <div class="col-md-offset-3 col-md-6">
+                        <yds-related-items
+                                project-id="{{ projectId }}"
+                                element-h="300">
+                        </yds-related-items>
+                    </div>
+                </div>
+            </uib-tab>
+
+            <!--After-->
+            <uib-tab heading="After">
+                <div class="row">
+                    <div class="col-md-offset-3 col-md-6">
+                        <yds-related-items
+                                project-id="{{ projectId }}"
+                                element-h="300">
+                        </yds-related-items>
+                    </div>
+                </div>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+</div>
