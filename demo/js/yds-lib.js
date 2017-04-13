@@ -1141,8 +1141,8 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                     case "tweet":
                         formattedData = results.map(function (item) {
                             return {
-                                text: _.first(item.text),
-                                url: _.first(item.url)
+                                text: item.clean_text,
+                                url: item.entry_url
                             }
                         });
                         break;
