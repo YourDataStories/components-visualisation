@@ -3,12 +3,6 @@
         <div class="panel-heading clearfix" ng-style="panelHeadingStyle">
             <h3 class="panel-title pull-left" style="padding-top: 7.5px;">{{ title }}</h3>
 
-            <!--Amount/Count radio buttons-->
-            <div class="btn-group btn-group-sm" style="margin-left: 250px">
-                <label class="btn btn-default" ng-model="aggregateRadio" uib-btn-radio="'amount'">Amount</label>
-                <label class="btn btn-default" ng-model="aggregateRadio" uib-btn-radio="'count'">Count</label>
-            </div>
-
             <!--Chart type radio buttons-->
             <!--todo: make actual radio buttons??-->
             <div class="btn-group btn-group-sm pull-right" id="vistypes">
@@ -21,6 +15,15 @@
                 <button ng-click="selectVis('tree')" class="btn btn-default" style="max-width: 35px; max-height: 30px"
                         title="Treemap Chart">
                     <img src="fonts/ic_view_quilt_black_18px.svg"/></button>
+            </div>
+
+            <!--Amount/Count radio buttons-->
+            <div class="pull-right" style="margin-right: 20px;">
+                <span uib-tooltip="Select whether visualisations will present amounts or counts over items.">Show:</span>
+                <div class="btn-group btn-group-sm">
+                    <label class="btn btn-default" ng-model="aggregateRadio" uib-btn-radio="'count'">Count</label>
+                    <label class="btn btn-default" ng-model="aggregateRadio" uib-btn-radio="'amount'">Amount</label>
+                </div>
             </div>
         </div>
         <div class="panel-body" ng-style="panelBodyStyle">
