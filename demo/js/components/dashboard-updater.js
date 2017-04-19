@@ -75,6 +75,9 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                     minHeight = 0;
                 }
 
+                // Set Y position of buttons
+                scope.yBtnPosition = minHeight + 5;
+
                 // Set minimum height of container so when component is being refreshed, the container's
                 // height does not become 0 which causes the page to scroll up
                 scope.containerStyle = {

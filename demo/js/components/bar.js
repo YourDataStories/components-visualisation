@@ -101,7 +101,11 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function (Data, Fi
             scope.pageSizeNum = pageSize;   // The page size, parsed in order to be an integer
 
             // Set the height of the chart
-            barContainer[0].style.height = elementH + 'px';
+            if (scope.enablePaging === "true") {
+                barContainer[0].style.height = (parseInt(elementH) - 35) + 'px';
+            } else {
+                barContainer[0].style.height = elementH + 'px';
+            }
 
             /**
              * Change the page in the specified direction
