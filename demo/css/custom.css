@@ -1132,7 +1132,21 @@ a.aggregate_link_dark, a.aggregate_link_dark:visited {
 }
 
 a.aggregate_link_dark:hover {
-    color: #333;
+    color: #737373;
+}
+
+/* Bootstrap link icon after Aggregate links (bright & dark) */
+a.aggregate_link_bright:after, a.aggregate_link_dark:after {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    content: "\e144";
 }
 
 /* Classes for "dashboard" aggregate layout */
