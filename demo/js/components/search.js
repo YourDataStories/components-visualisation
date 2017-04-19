@@ -3,15 +3,15 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
         return {
             restrict: 'E',
             scope: {
-                lang: '@',				// Language of component
-                urlParamPrefix: '@',	// Prefix to add before all url parameters (optional)
+                lang: '@',              // Language of component
+                urlParamPrefix: '@',    // Prefix to add before all url parameters (optional)
                 watchRuleUrlParam: '@', // If Advanced Search should watch URL parameter for rule changes and apply them
-                maxSuggestions: '@',	// Maximum suggestions to show in typeahead popup
-                standalone: '@',		// If search component is standalone
-                tabbed: '@',			// If search component is used in tabbed search (so it needs to use different URL)
-                enableAdvSearch: '@',	// Set to false to disable advanced search (defaults to true)
-                concept: '@',			// Concept for adv. search, used by QB for restoring rules from url parameters
-                conceptId: '@'			// Concept id, used by advanced search for getting query builder rules
+                maxSuggestions: '@',    // Maximum suggestions to show in typeahead popup
+                standalone: '@',        // If search component is standalone
+                tabbed: '@',            // If search component is used in tabbed search (so it needs to use different URL)
+                enableAdvSearch: '@',   // Set to false to disable advanced search (defaults to true)
+                concept: '@',           // Concept for adv. search, used by QB for restoring rules from url parameters
+                conceptId: '@'          // Concept id, used by advanced search for getting query builder rules
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/search.html',
             link: function (scope) {
@@ -22,7 +22,10 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
                     searchKeyword: ""
                 };
 
+                // Create parameter names because they are used multiple times after this
                 var paramPrefix = scope.urlParamPrefix;
+                var queryParamName = paramPrefix + "q";
+                var rulesParamName = paramPrefix + "rules";
 
                 // Make advanced search visible if rules are defined in the URL
                 if (!_.isUndefined($location.search()[paramPrefix + "rules"]) && scope.concept == $location.search()[paramPrefix + "tab"]) {
@@ -89,10 +92,6 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
                 scope.search = function (searchForm) {
                     if (scope.tabbed == "true") {
                         if (scope.searchOptions.standalone != "true") {
-                            // Create parameter names because they are used multiple times after this
-                            var queryParamName = paramPrefix + "q";
-                            var rulesParamName = paramPrefix + "rules";
-
                             // Check if search box is empty
                             if (!searchForm.$valid) {
                                 $location.search(queryParamName, null);
@@ -159,9 +158,20 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
                                 keyword = "*";
                             }
 
-                            // Add new keyword and rules to the URL params
-                            $location.search(paramPrefix + "q", keyword);
-                            $location.search(paramPrefix + "rules", JSURL.stringify(rules));
+                            // Get previous and new advanced search rules
+                            var prevRules = $location.search()[rulesParamName];
+                            var newRules = JSURL.stringify(rules);
+
+                            // If new rules are the same, make them null to force a refresh of the grid results
+                            if (_.isEqual(prevRules, newRules)) {
+                                $location.search(rulesParamName, null);
+                            }
+
+                            $timeout(function () {
+                                // Add new keyword and rules to the URL params
+                                $location.search(queryParamName, keyword);
+                                $location.search(rulesParamName, newRules);
+                            });
                         });
                     } else {
                         scope.validationError = true;
