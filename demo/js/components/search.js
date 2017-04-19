@@ -89,15 +89,29 @@ angular.module('yds').directive('ydsSearch', ['$window', '$timeout', '$location'
 				scope.search = function (searchForm) {
 					if (scope.tabbed == "true") {
 						if (scope.searchOptions.standalone != "true") {
-							//check if search box is empty
+							// Create parameter names because they are used multiple times after this
+							var queryParamName = paramPrefix + "q";
+							var rulesParamName = paramPrefix + "rules";
+
+							// Check if search box is empty
 							if (!searchForm.$valid) {
-								$location.search(paramPrefix + "q", null);
-								$location.search(paramPrefix + "rules", null);
+								$location.search(queryParamName, null);
+								$location.search(rulesParamName, null);
 								Search.clearKeyword();
 							} else {
-								// Add new keyword to url params, and remove any rules because this is not advanced search
-								$location.search(paramPrefix + "q", scope.searchOptions.searchKeyword);
-								$location.search(paramPrefix + "rules", null);
+								var prevQ = $location.search()[queryParamName];
+
+								// In case the query didn't change, remove it to cause the grid-results to refresh
+                                if (_.isEqual(prevQ, scope.searchOptions.searchKeyword)) {
+                                    $location.search(queryParamName, null);
+                                }
+
+                                // After a timeout, set the correct query parameter
+                                $timeout(function() {
+                                    // Add new keyword to url params, and remove any rules because this is not advanced search
+                                    $location.search(queryParamName, scope.searchOptions.searchKeyword);
+                                    $location.search(rulesParamName, null);
+                                });
 							}
 						} else if (searchForm.$valid) {
 							// Standalone tabbed search
