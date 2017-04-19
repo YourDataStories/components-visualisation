@@ -3,6 +3,14 @@
         <div class="panel-heading clearfix" ng-style="panelHeadingStyle">
             <h3 class="panel-title pull-left" style="padding-top: 7.5px;">{{ title }}</h3>
 
+            <!--Amount/Count radio buttons-->
+            <div class="btn-group btn-group-sm" style="margin-left: 250px">
+                <label class="btn btn-default" ng-model="aggregateRadio" uib-btn-radio="'amount'">Amount</label>
+                <label class="btn btn-default" ng-model="aggregateRadio" uib-btn-radio="'count'">Count</label>
+            </div>
+
+            <!--Chart type radio buttons-->
+            <!--todo: make actual radio buttons??-->
             <div class="btn-group btn-group-sm pull-right" id="vistypes">
                 <button ng-click="selectVis('grid')" class="btn btn-default" title="Grid View">
                     <i class="fa fa-list-alt" aria-hidden="true"></i></button>
@@ -27,6 +35,7 @@
                         dashboard-id="{{ dashboardId }}"
                         min-height="{{ elementH }}"
                         base-url="{{ baseUrl }}"
+                        aggregate-type="{{ aggregateRadio }}"
                         add-to-basket="{{ addToBasket }}"
                         enable-rating="{{ enableRating }}"
                         lang="{{ lang }}">
@@ -42,6 +51,7 @@
                         dashboard-id="{{ dashboardId }}"
                         min-height="{{ elementH }}"
                         base-url="{{ baseUrl }}"
+                        aggregate-type="{{ aggregateRadio }}"
                         number-of-items="{{ numberOfItems }}"
                         add-to-basket="{{ addToBasket }}"
                         enable-rating="{{ enableRating }}"
@@ -57,6 +67,7 @@
                         dashboard-id="{{ dashboardId }}"
                         min-height="{{ elementH }}"
                         base-url="{{ baseUrl }}"
+                        aggregate-type="{{ aggregateRadio }}"
                         add-to-basket="{{ addToBasket }}"
                         enable-rating="{{ enableRating }}"
                         lang="{{ lang }}">
@@ -72,6 +83,7 @@
                         dashboard-id="{{ dashboardId }}"
                         min-height="{{ elementH }}"
                         base-url="{{ baseUrl }}"
+                        aggregate-type="{{ aggregateRadio }}"
                         add-to-basket="{{ addToBasket }}"
                         enable-rating="{{ enableRating }}"
                         lang="{{ lang }}">
@@ -87,6 +99,7 @@
                         dashboard-id="{{ dashboardId }}"
                         min-height="{{ elementH }}"
                         base-url="{{ baseUrl }}"
+                        aggregate-type="{{ aggregateRadio }}"
                         number-of-items="{{ numberOfItems }}"
                         add-to-basket="{{ addToBasket }}"
                         enable-rating="{{ enableRating }}"
@@ -101,6 +114,7 @@
                         view-type="{{ selViewType }}"
                         dashboard-id="{{ dashboardId }}"
                         min-height="{{ elementH }}"
+                        aggregate-type="{{ aggregateRadio }}"
                         base-url="{{ baseUrl }}"
                         add-to-basket="{{ addToBasket }}"
                         enable-rating="{{ enableRating }}"

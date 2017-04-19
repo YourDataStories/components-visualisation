@@ -27,6 +27,8 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 var type = scope.type;
                 scope.usePaging = false;    // Paging disabled by default
 
+                scope.aggregateRadio = "amount";
+
                 // Check if the component's title attribute is defined, else assign default value
                 if (_.isUndefined(scope.title)) {
                     if (scope.lang == "el") {
