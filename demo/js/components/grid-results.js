@@ -336,7 +336,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     var viewBtnColDef = {
                         field: "viewBtn",
                         headerName: "",
-                        width: 45,
+                        width: 30,
                         suppressSorting: true,
                         suppressMenu: true,
                         suppressSizeToFit: true
@@ -344,8 +344,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
 
                     if (viewInDashboard == "true") {
                         viewBtnColDef.cellRenderer = function (params) {
-                            var btnStr = "<button type='button' class='btn btn-xs btn-primary'" +
-                                " style='margin-top: -4px' ng-click='viewBtn(\"" + params.data.id + "\")'>View</button>";
+                            var btnStr = "<button type='button' class='btn btn-xs btn-primary' style='margin-top: -4px' ng-click='viewBtn(\"" + params.data.id + "\")'><span class='glyphicon glyphicon-info-sign'></span></button>";
                             var compiled = $compile(btnStr)(scope);
 
                             return _.first(compiled);
@@ -372,7 +371,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     _.each(rows, function (row) {
                         var viewBtnUrl = YDS_CONSTANTS.PROJECT_DETAILS_URL + "?id=" + row.id + "&type=" + projectDetailsType;
 
-                        row.viewBtn = "<a href='" + viewBtnUrl + "' class='btn btn-xs btn-primary' target='_blank' style='margin-top: -4px'>View</a>";
+                        row.viewBtn = "<a href='" + viewBtnUrl + "' class='btn btn-xs btn-primary' target='_blank' style='margin-top: -4px'><span class='glyphicon glyphicon-info-sign'></span></a>";
                         // row.basketBtn = "<a href='" + viewBtnUrl + "' class='btn btn-xs btn-success' target='_blank' style='margin-top: -4px'>Basket</a>";
 
                         newRows.push(row);
