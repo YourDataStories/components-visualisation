@@ -3,6 +3,9 @@ angular.module("yds").factory("Personalization", ["$http", "$q", "YDS_CONSTANTS"
         // Map which keeps the ID -> template mappings in order to be able to get a template object from its ID
         var templateIdMap = {};
 
+        // Same, but for axis items
+        var axisIdMap = {};
+
         /**
          * Get a template's object from its ID, using the map object which is created when getAllTemplateIDs() is ran
          * @param templateId
@@ -48,6 +51,70 @@ angular.module("yds").factory("Personalization", ["$http", "$q", "YDS_CONSTANTS"
         };
 
         /**
+         * Transform an item ID into an item used by the personalization API to get recommendations
+         * @param id
+         * @returns {{id: *, language: string, recommended: string, text: [*]}}
+         */
+        var idToApiItem = function (id) {
+            return {
+                "id": id,
+                "language": "en",
+                "recommended": "true",
+                "text": [
+                    id
+                ]
+            }
+        };
+
+        /**
+         * Get the suggested axes for a specific concept
+         * @param concept   Concept
+         * @param allAxes      The axes, as returned from the JSON-LD API
+         * @returns {promise|*|d|s}
+         */
+        var getSuggestedAxes = function (concept, allAxes) {
+            var deferred = $q.defer();
+
+            var axisIds = [];
+
+            // Add the X and Y axis item IDs to the axisIds array
+            _.each(allAxes, function (axis, axisKey) {
+                _.each(axis, function (axisItem) {
+                    // Create this axis item's ID
+                    var axisId = "axis_" + axisKey + "_" + calcMD5(axisItem["field_id"]);
+
+                    // Add the ID to the array, and save it in the ID -> axis object map
+                    axisIds.push(axisId);
+                    axisIdMap[axisId] = axisItem;
+                });
+            });
+
+            // Create JSON items for the IDs like the personalization API expects them
+            var allAxisIds = _.map(axisIds, idToApiItem);
+
+            $http({
+                method: "POST",
+                url: YDS_CONSTANTS.API_PERSONALIZATION + "getRecommendation/" + concept,
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                transformRequest: customRequestTransform,
+                data: {
+                    JSONObjectList: JSON.stringify(allAxisIds)
+                }
+            }).then(function (response) {
+                if (_.has(response.data, "output")) {
+                    //todo
+                } else {
+                    // There was a problem, reject
+                    deferred.reject(response.data.outputMessage);
+                }
+            }, function (error) {
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
+        };
+
+        /**
          * Get the suggested templates for a specific user and their selected concept
          * @param userId        ID of user
          * @param concept       Selected concept
@@ -59,16 +126,7 @@ angular.module("yds").factory("Personalization", ["$http", "$q", "YDS_CONSTANTS"
             // Get the available templates
             var templateIds = getAllTemplateIDs();
 
-            var allTemplates = _.map(templateIds, function (template) {
-                return {
-                    "id": template,
-                    "language": "en",
-                    "recommended": "true",
-                    "text": [
-                        template
-                    ]
-                }
-            });
+            var allTemplates = _.map(templateIds, idToApiItem);
 
             // Get templates from personalisation API
             $http({
@@ -228,6 +286,7 @@ angular.module("yds").factory("Personalization", ["$http", "$q", "YDS_CONSTANTS"
 
         return {
             getSuggestedTemplates: getSuggestedTemplates,
+            getSuggestedAxes: getSuggestedAxes,
             getTemplateById: getTemplateById,
             feed: feed
         }

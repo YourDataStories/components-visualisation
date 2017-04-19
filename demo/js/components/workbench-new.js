@@ -227,6 +227,12 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                             suggestedTemplates.templates = [];
                             editor.templateSelector.reselectFirstCategory();
                         });
+
+                    // Get suggested axes for this concept for the Personalization API
+                    Personalization.getSuggestedAxes(scope.chartConfig.selectedView, scope.axes)
+                        .then(function (data) {
+                            //todo
+                        });
                 };
 
                 /**
