@@ -7,6 +7,7 @@ angular.module('yds').directive('ydsBubble', ['YDS_CONSTANTS', 'Data', '$window'
             lang: '@',          // Lang of the visualised data
 
             extraParams: '=',   // Extra attributes to pass to the API, if needed
+            baseUrl: '@',       // Base URL to send to API (optional)
 
             exporting: '@',     // Enable or disable the export of the plot
             elementH: '@',      // Set the height of the component
@@ -40,6 +41,7 @@ angular.module('yds').directive('ydsBubble', ['YDS_CONSTANTS', 'Data', '$window'
             var titleSize = scope.titleSize;
             var legend = scope.legend;
             var extraParams = scope.extraParams;
+            var baseUrl = scope.baseUrl;
 
             //check if the projectId and the viewType attr is defined, else stop the process
             if (angular.isUndefined(projectId) || projectId.trim()=="") {
@@ -74,6 +76,13 @@ angular.module('yds').directive('ydsBubble', ['YDS_CONSTANTS', 'Data', '$window'
 
             //set the height of the plot
             bubbleContainer[0].style.height = elementH + 'px';
+
+            // Add base URL to extra params, if needed
+            if (!_.isUndefined(baseUrl) && baseUrl.length > 0) {
+                extraParams = _.extend({
+                    baseurl: baseUrl
+                }, extraParams);
+            }
 
             Data.getProjectVis("bubble", projectId, viewType, lang, extraParams)
                 .then(function (response) {
