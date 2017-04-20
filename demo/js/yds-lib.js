@@ -165,6 +165,16 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         return calcMD5(JSON.stringify(template.config));
     };
 
+    /**
+     * Get the ID of an axis for the Personalization API, based on X or Y axis and its field_id attribute
+     * @param axis      Axis type ("x" or "y")
+     * @param fieldId   Field ID of the axis ("field_id" attribute)
+     * @returns {string}
+     */
+    dataService.getAxisId = function (axis, fieldId) {
+        return "axis_" + axis + "_" + calcMD5(fieldId);
+    };
+
     dataService.getRoutePoints = function(start, end, via) {
         var deferred = $q.defer();
 

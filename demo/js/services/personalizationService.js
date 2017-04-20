@@ -91,7 +91,7 @@ angular.module("yds").factory("Personalization", ["$http", "$q", "YDS_CONSTANTS"
             _.each(allAxes, function (axis, axisKey) {
                 _.each(axis, function (axisItem) {
                     // Create this axis item's ID
-                    var axisId = "axis_" + axisKey + "_" + calcMD5(axisItem["field_id"]);
+                    var axisId = Data.getAxisId(axisKey, axisItem.field_id);
 
                     // Add the ID to the array, and save it in the ID -> axis object map
                     axisIds.push(axisId);
@@ -131,21 +131,17 @@ angular.module("yds").factory("Personalization", ["$http", "$q", "YDS_CONSTANTS"
                             }
                         });
 
-                        // Sort by rank
-                        axis = _.sortBy(axis, "rank");
-
-                        // Keep top 10
-                        axis = _.last(axis, 10);
-
-                        // Reject axes with rank of 0
-                        axis = _.reject(axis, function (item) {
-                            return item.rank <= 0;
-                        });
-
-                        // Get axis field IDs
-                        axis = _.map(axis, function (item) {
-                            return axisIdMap[item.id].field_id;
-                        });
+                        // Sort by rank, keep top 10, remove items with rank of 0 and keep their field_ids
+                        axis = _.chain(axis)
+                            .sortBy("rank")
+                            .last(10)
+                            .reject(function (item) {
+                                return item.rank <= 0;
+                            })
+                            .map(function (item) {
+                                return axisIdMap[item.id].field_id;
+                            })
+                            .value();
 
                         axes[key] = axis;
                     });
@@ -244,17 +240,6 @@ angular.module("yds").factory("Personalization", ["$http", "$q", "YDS_CONSTANTS"
         var feed = function (userId, lang, templateId, concept, weight) {
             var deferred = $q.defer();
 
-            // Add the user
-            var addUser = $http({
-                method: "POST",
-                url: YDS_CONSTANTS.API_PERSONALIZATION + "user/" + userId,
-                headers: {"Content-Type": "application/x-www-form-urlencoded"},
-                data: {
-                    "name": userId,
-                    "type": "user"
-                }
-            });
-
             // var addTemplate = $http({
             //     method: "POST",
             //     url: YDS_CONSTANTS.API_PERSONALIZATION + "user/" + templateId,
@@ -277,31 +262,45 @@ angular.module("yds").factory("Personalization", ["$http", "$q", "YDS_CONSTANTS"
 
             // Prepare requests array
             var promises = [
-                addUser
                 // addTemplate,
                 // addConcept
             ];
 
+            if (!_.isUndefined(userId)) {
+                // Add the user
+                promises.push($http({
+                    method: "POST",
+                    url: YDS_CONSTANTS.API_PERSONALIZATION + "user/" + userId,
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                    data: {
+                        "name": userId,
+                        "type": "user"
+                    }
+                }));
+            }
+
             // Feed the user & dataset a number of times depending on the specified weight
             for (var i = 0; i < weight; i++) {
                 // Feed the user with data
-                promises.push($http({
-                    method: "POST",
-                    url: YDS_CONSTANTS.API_PERSONALIZATION + "feed/" + userId,
-                    headers: {"Content-Type": "application/x-www-form-urlencoded"},
-                    transformRequest: customRequestTransform,
-                    data: {
-                        JSONObject: JSON.stringify({
-                            "id": templateId,
-                            "language": lang,
-                            "recommended": "true",
-                            "text": [
-                                concept,
-                                templateId
-                            ]
-                        })
-                    }
-                }));
+                if (!_.isUndefined(userId)) {
+                    promises.push($http({
+                        method: "POST",
+                        url: YDS_CONSTANTS.API_PERSONALIZATION + "feed/" + userId,
+                        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                        transformRequest: customRequestTransform,
+                        data: {
+                            JSONObject: JSON.stringify({
+                                "id": templateId,
+                                "language": lang,
+                                "recommended": "true",
+                                "text": [
+                                    concept,
+                                    templateId
+                                ]
+                            })
+                        }
+                    }));
+                }
 
                 // Feed the dataset with data
                 promises.push($http({

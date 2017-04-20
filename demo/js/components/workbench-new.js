@@ -173,6 +173,23 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     }, function (error) {
                         console.error(error.message);
                     });
+
+                    // Create array with IDs of axes to feed
+                    var axisIds = [];
+
+                    // Add X axis ID
+                    axisIds.push(Data.getAxisId("x", scope.selection.x.field_id));
+
+                    // Add Y axes IDs
+                    var yAxisObjects = _.pluck(scope.selection.y, "selected");
+                    _.each(yAxisObjects, function (axisObject) {
+                        axisIds.push(Data.getAxisId("y", axisObject));
+                    });
+
+                    // Feed the axis objects with a weight of 1
+                    _.each(axisIds, function (axisId) {
+                        Personalization.feed(undefined, scope.lang, axisId, scope.chartConfig.selectedView, 1);
+                    });
                 };
 
                 /**
