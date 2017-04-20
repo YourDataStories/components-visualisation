@@ -360,19 +360,24 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                                         return;
                                     }
 
+                                    // Prevent next grid update if needed
+                                    if (!_.isEmpty(selection) && e.selectedRows.length < selection.length) {
+                                        // Something was deselected, we need to refresh the grid
+                                        preventUpdate = false;
+                                    } else {
+                                        preventUpdate = true;
+                                    }
+
                                     // Set selected rows in DashboardService
                                     DashboardService.setGridSelection(selectionId, e.selectedRows);
-                                    selection = e.selectedRows;
+                                    selection = _.clone(e.selectedRows);
 
                                     // Save selection to cookies too
                                     DashboardService.setCookieObject(cookieKey, e.selectedRows);
-
-                                    // Prevent next grid update
-                                    preventUpdate = true;
                                 }
                             }
 
-                            //If paging enabled set the required options to the grid configuration
+                            // If paging enabled set the required options to the grid configuration
                             if (grid.paging === "true") {
                                 var localDataSource = {
                                     rowCount: parseInt(rawData.length),    // not setting the row count, infinite paging will be used
@@ -394,7 +399,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
 
                             new agGrid.Grid(gridContainer[0], scope.gridOptions);
 
-                            //If filtering is enabled, register function to watch for filter updates
+                            // If filtering is enabled, register function to watch for filter updates
                             if (grid.filtering === "true" || grid.quickFiltering === "true") {
                                 scope.gridOptions.api.addEventListener('afterFilterChanged', filterModifiedListener);
                             }
