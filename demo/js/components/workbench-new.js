@@ -183,7 +183,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     // Add Y axes IDs
                     var yAxisObjects = _.pluck(scope.selection.y, "selected");
                     _.each(yAxisObjects, function (axisObject) {
-                        axisIds.push(Data.getAxisId("y", axisObject));
+                        axisIds.push(Data.getAxisId("y", axisObject.field_id));
                     });
 
                     // Feed the axis objects with a weight of 1
