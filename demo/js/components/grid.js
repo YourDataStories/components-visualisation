@@ -352,6 +352,7 @@ angular.module('yds').directive('ydsGrid', ['Data', 'Filters', 'DashboardService
                             // If selection is enabled, add extra options for it in the gridOptions
                             if (allowSelection == "true") {
                                 scope.gridOptions.rowSelection = selectionType;
+                                scope.gridOptions.suppressRowClickSelection = true;
                                 scope.gridOptions.onSelectionChanged = function (e) {
                                     // Ignore event if grid is loading, or it's marked to be skipped
                                     if (scope.loading || preventSelectionEvent) {
