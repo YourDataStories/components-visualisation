@@ -336,6 +336,10 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     if (viewInDashboard == "true") {
                         _.first(columnDefs).cellRenderer = function (params) {
                             var value = params.value || "";
+                            if (!_.isUndefined(params.data) && !_.isEmpty(params.data) && (_.isNull(params.value) || params.value.length === 0)) {
+                                value = "(see details)";
+                            }
+
                             var btnStr = "<a ng-click='viewBtn(\"" + params.data.id + "\")' target='_blank'>" + value + "</a>";
 
                             var compiled = $compile(btnStr)(scope);
@@ -346,6 +350,9 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                         _.first(columnDefs).cellRenderer = function (params) {
                             // Create view URL and get row text
                             var value = params.value || "";
+                            if (!_.isUndefined(params.data) && !_.isEmpty(params.data) && (_.isNull(params.value) || params.value.length === 0)) {
+                                value = "(see details)";
+                            }
                             var viewBtnUrl = YDS_CONSTANTS.PROJECT_DETAILS_URL + "?id=" + params.data.id + "&type=" + projectDetailsType;
 
                             return "<a href='" + viewBtnUrl + "' target='_blank'>" + value + "</a>";
