@@ -19,10 +19,10 @@
 
             <!--Amount/Count radio buttons-->
             <div class="pull-right" style="margin-right: 20px;">
-                <span uib-tooltip="Select whether visualisations will present amounts or counts over items.">Show:</span>
+                <span uib-tooltip="{{ translations.tooltip }}">{{ translations.prompt }}</span>
                 <div class="btn-group btn-group-sm">
-                    <label class="btn btn-default" ng-model="aggregateRadio" uib-btn-radio="'amount'">Amount</label>
-                    <label class="btn btn-default" ng-model="aggregateRadio" uib-btn-radio="'count'">Count</label>
+                    <label class="btn btn-default" ng-model="aggregateRadio" uib-btn-radio="'amount'">{{ translations.amount }}</label>
+                    <label class="btn btn-default" ng-model="aggregateRadio" uib-btn-radio="'count'">{{ translations.count}}</label>
                 </div>
             </div>
         </div>

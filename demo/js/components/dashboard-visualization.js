@@ -31,10 +31,22 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
 
                 // Check if the component's title attribute is defined, else assign default value
                 if (_.isUndefined(scope.title)) {
-                    if (scope.lang == "el") {
+                    if (scope.lang === "el") {
                         scope.title = "Λεπτομέρειες";
+                        scope.translations = {
+                            amount: "Ποσό",
+                            count: "Αριθμός",
+                            tooltip: "Επιλέξτε αν τα γραφήματα θα παρουσιάζουν ποσά οι αριθμούς αντικειμένων.",
+                            prompt: "Προβολή:"
+                        };
                     } else {
                         scope.title = "Details";
+                        scope.translations = {
+                            amount: "Amount",
+                            count: "Count",
+                            tooltip: "Select whether visualisations will present amounts or counts over items.",
+                            prompt: "Show:"
+                        };
                     }
                 }
 
