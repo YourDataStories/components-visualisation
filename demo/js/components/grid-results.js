@@ -332,52 +332,27 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                  * @param columnDefs    Column definitions array as returned by Data.prepareGridColumns()
                  * @returns {Array.<*>} New column definitions
                  */
-                var addButtonsToColumnDefs = function (columnDefs) {
-                    var viewBtnColDef = {
-                        field: "viewBtn",
-                        headerName: "",
-                        width: 30,
-                        suppressSorting: true,
-                        suppressMenu: true,
-                        suppressSizeToFit: true
-                    };
-
+                var addLinkRendererToColumnDefs = function (columnDefs) {
                     if (viewInDashboard == "true") {
-                        viewBtnColDef.cellRenderer = function (params) {
-                            var btnStr = "<button type='button' class='btn btn-xs btn-primary' style='margin-top: -4px' ng-click='viewBtn(\"" + params.data.id + "\")'><span class='glyphicon glyphicon-info-sign'></span></button>";
+                        _.first(columnDefs).cellRenderer = function (params) {
+                            var value = params.value || "";
+                            var btnStr = "<a ng-click='viewBtn(\"" + params.data.id + "\")' target='_blank'>" + value + "</a>";
+
                             var compiled = $compile(btnStr)(scope);
 
                             return _.first(compiled);
                         };
+                    } else {
+                        _.first(columnDefs).cellRenderer = function (params) {
+                            // Create view URL and get row text
+                            var value = params.value || "";
+                            var viewBtnUrl = YDS_CONSTANTS.PROJECT_DETAILS_URL + "?id=" + params.data.id + "&type=" + projectDetailsType;
+
+                            return "<a href='" + viewBtnUrl + "' target='_blank'>" + value + "</a>";
+                        }
                     }
 
-                    var newColDefs = [
-                        viewBtnColDef
-                        // { field: "basketBtn", headerName: "", width: 60, suppressSorting: true, suppressMenu: true }
-                    ];
-
-
-                    return newColDefs.concat(columnDefs);
-                };
-
-                /**
-                 * Adds "View" and "Add to basket" buttons to the data
-                 * @param rows      Table rows to add buttons to
-                 * @returns {Array} Table rows with buttons
-                 */
-                var addButtonsToGridData = function (rows) {
-                    var newRows = [];
-
-                    _.each(rows, function (row) {
-                        var viewBtnUrl = YDS_CONSTANTS.PROJECT_DETAILS_URL + "?id=" + row.id + "&type=" + projectDetailsType;
-
-                        row.viewBtn = "<a href='" + viewBtnUrl + "' class='btn btn-xs btn-primary' target='_blank' style='margin-top: -4px'><span class='glyphicon glyphicon-info-sign'></span></a>";
-                        // row.basketBtn = "<a href='" + viewBtnUrl + "' class='btn btn-xs btn-success' target='_blank' style='margin-top: -4px'>Basket</a>";
-
-                        newRows.push(row);
-                    });
-
-                    return newRows;
+                    return columnDefs;
                 };
 
                 /**
@@ -457,7 +432,8 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                     var columnDefs = Data.prepareGridColumns(responseView);
 
                                     if (enableViewButton == "true") {
-                                        columnDefs = addButtonsToColumnDefs(columnDefs);
+                                        // Make the 1st column have links to more details
+                                        columnDefs = addLinkRendererToColumnDefs(columnDefs);
                                     }
 
                                     scope.gridOptions.api.setColumnDefs(columnDefs);
@@ -487,10 +463,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                     });
                                 });
 
-                                // Add view button for viewing more info about the result
-                                var rowsWithButtons = addButtonsToGridData(rowsThisPage);
-
-                                params.successCallback(rowsWithButtons, scope.resultsNum);
+                                params.successCallback(rowsThisPage, scope.resultsNum);
 
                                 // Call sizeColumnsToFit, if this grid is in the selected tab of Tabbed Search (so
                                 // tab url parameter will be the same as this grid's view type) or if query length
