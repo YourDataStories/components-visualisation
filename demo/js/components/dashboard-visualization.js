@@ -36,7 +36,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                         scope.translations = {
                             amount: "Ποσό",
                             count: "Αριθμός",
-                            tooltip: "Επιλέξτε αν τα γραφήματα θα παρουσιάζουν ποσά οι αριθμούς αντικειμένων.",
+                            tooltip: "Επιλέξτε αν τα γραφήματα θα παρουσιάζουν ποσά ή αριθμούς αντικειμένων.",
                             prompt: "Προβολή:"
                         };
                     } else {
