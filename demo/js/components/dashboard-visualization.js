@@ -29,25 +29,23 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
 
                 scope.aggregateRadio = "amount";
 
-                // Check if the component's title attribute is defined, else assign default value
-                if (_.isUndefined(scope.title)) {
-                    if (scope.lang === "el") {
-                        scope.title = "Λεπτομέρειες";
-                        scope.translations = {
-                            amount: "Ποσό",
-                            count: "Αριθμός",
-                            tooltip: "Επιλέξτε αν τα γραφήματα θα παρουσιάζουν ποσά ή αριθμούς αντικειμένων.",
-                            prompt: "Προβολή:"
-                        };
-                    } else {
-                        scope.title = "Details";
-                        scope.translations = {
-                            amount: "Amount",
-                            count: "Count",
-                            tooltip: "Select whether visualisations will present amounts or counts over items.",
-                            prompt: "Show:"
-                        };
-                    }
+                // Set the amount/count button translations and, if needed, the default title
+                if (scope.lang === "el") {
+                    scope.title = scope.title || "Λεπτομέρειες";
+                    scope.translations = {
+                        amount: "Ποσό",
+                        count: "Αριθμός",
+                        tooltip: "Επιλέξτε αν τα γραφήματα θα παρουσιάζουν ποσά ή αριθμούς αντικειμένων.",
+                        prompt: "Προβολή:"
+                    };
+                } else {
+                    scope.title = scope.title || "Details";
+                    scope.translations = {
+                        amount: "Amount",
+                        count: "Count",
+                        tooltip: "Select whether visualisations will present amounts or counts over items.",
+                        prompt: "Show:"
+                    };
                 }
 
                 // If the pagingThreshold is set, watch for changes in the number of items
