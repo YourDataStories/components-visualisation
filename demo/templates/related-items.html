@@ -3,7 +3,7 @@
         <uib-tab ng-repeat="tab in tabs track by $index">
             <uib-tab-heading>
                 <i class="fa" ng-class="tab.icon" aria-hidden="true"></i>
-                {{ tab.title }}
+                {{ tab.title }} ({{ tab.data.length || 0 }})
             </uib-tab-heading>
             <div class="related-items-list-container" ng-style="listContainerStyle">
                 <ul ng-switch="tab.viewType" class="list-group related-items-list">
