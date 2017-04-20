@@ -67,6 +67,16 @@ angular.module("yds").factory("Personalization", ["$http", "$q", "YDS_CONSTANTS"
         };
 
         /**
+         * Return true if the key starts with "axis_x_". Used as a filter to select X or Y (inverted) axis IDs
+         * @param value
+         * @param key
+         * @returns {boolean}
+         */
+        var xAxisFilter = function (value, key) {
+            return key.indexOf("axis_x_") !== -1;
+        };
+
+        /**
          * Get the suggested axes for a specific concept
          * @param concept   Concept
          * @param allAxes      The axes, as returned from the JSON-LD API
@@ -102,7 +112,45 @@ angular.module("yds").factory("Personalization", ["$http", "$q", "YDS_CONSTANTS"
                 }
             }).then(function (response) {
                 if (_.has(response.data, "output")) {
-                    //todo
+                    // Separate X and Y axis item IDs
+                    var allItems = response.data.output;
+
+                    var axes = {
+                        x: _.pick(allItems, xAxisFilter),
+                        y: _.omit(allItems, xAxisFilter)
+                    };
+
+                    // Keep top 10 axes
+                    _.each(axes, function (axis, key) {
+                        var axisIds = _.keys(axis);
+
+                        axis = _.map(axisIds, function (itemId) {
+                            return {
+                                id: itemId,
+                                rank: axis[itemId]
+                            }
+                        });
+
+                        // Sort by rank
+                        axis = _.sortBy(axis, "rank");
+
+                        // Keep top 10
+                        axis = _.last(axis, 10);
+
+                        // Reject axes with rank of 0
+                        axis = _.reject(axis, function (item) {
+                            return item.rank <= 0;
+                        });
+
+                        // Get axis field IDs
+                        axis = _.map(axis, function (item) {
+                            return axisIdMap[item.id].field_id;
+                        });
+
+                        axes[key] = axis;
+                    });
+
+                    deferred.resolve(axes);
                 } else {
                     // There was a problem, reject
                     deferred.reject(response.data.outputMessage);

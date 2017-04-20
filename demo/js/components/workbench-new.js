@@ -190,24 +190,32 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
 
                     // Add axes to the scope if the generic view object exists
                     if (_.has(axes, "axis-x") && _.has(axes, "axis-y")) {
-                        scope.axes = {
+                        var scopeAxes = {
                             x: axes["axis-x"],
                             y: axes["axis-y"]
                         };
 
-                        // Set suggested property on all axes, based on Personalisation API (random for now)
-                        _.each(scope.axes, function (axis) {
-                            _.each(axis, function (item) {
-                                item.name = item.label; // Add name, same as label (needed for angular-tree-widget)
-                                item.suggested = (Math.random() > 0.8);
-                            });
-                        });
+                        // Get suggested axes for this concept for the Personalization API
+                        Personalization.getSuggestedAxes(scope.chartConfig.selectedView, scopeAxes)
+                            .then(function (data) {
+                                // Set suggested property on all axes, based on Personalisation API (random for now)
+                                _.each(scopeAxes, function (axis, key) {
+                                    _.each(axis, function (item) {
+                                        item.name = item.label; // Add name, same as label (needed for angular-tree-widget)
 
-                        // Initialize/reset selected Y axes
-                        scope.selection.y = [{
-                            selected: "",
-                            options: scope.axes.y
-                        }];
+                                        // Make it suggested if the array of suggested axis items contains its ID
+                                        item.suggested = (data[key].indexOf(item.field_id) !== -1);
+                                    });
+                                });
+
+                                // Initialize/reset selected Y axes
+                                scope.selection.y = [{
+                                    selected: "",
+                                    options: scopeAxes.y
+                                }];
+
+                                scope.axes = scopeAxes;
+                            });
                     } else {
                         scope.axes = undefined;
                     }
@@ -226,12 +234,6 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                             // Remove all suggested templates, since there was a problem
                             suggestedTemplates.templates = [];
                             editor.templateSelector.reselectFirstCategory();
-                        });
-
-                    // Get suggested axes for this concept for the Personalization API
-                    Personalization.getSuggestedAxes(scope.chartConfig.selectedView, scope.axes)
-                        .then(function (data) {
-                            //todo
                         });
                 };
 
