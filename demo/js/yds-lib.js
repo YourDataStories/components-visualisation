@@ -1105,15 +1105,17 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
      * @param type          Type of related items to return (can be "news", "blog" or "tweet")
      * @param period        Period of items ("before", "during" or "after")
      * @param start         Item to start from, for paging
+     * @param rows          Number of rows to return
      * @returns {promise|*|s|d}
      */
-    dataService.getRelatedItems = function (projectId, type, period, start) {
+    dataService.getRelatedItems = function (projectId, type, period, start, rows) {
         var deferred = $q.defer();
 
         var params = {
             id: projectId,
             type: type,
             period: period,
+            rows: rows,
             start: start
         };
 
@@ -1126,6 +1128,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             // Transform the data to the format expected by the component
             var formattedData = [];
             var results = response.data.data.response.docs;
+            var totalResults = response.data.data.response.numFound;
 
             if (_.isArray(results)) {
                 switch (type) {
@@ -1149,7 +1152,10 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                 }
             }
 
-            deferred.resolve(formattedData);
+            deferred.resolve({
+                data: formattedData,
+                total: totalResults
+            });
         }, function (error) {
             deferred.reject(error);
         });

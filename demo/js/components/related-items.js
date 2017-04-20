@@ -11,6 +11,7 @@ angular.module('yds').directive('ydsRelatedItems', ['Data',
             link: function (scope, element) {
                 var elementH = parseInt(scope.elementH);
                 scope.loading = false;
+                var pageSize = 10;
 
                 // Check if project ID is defined
                 if (_.isUndefined(scope.projectId) || scope.projectId.trim() == "") {
@@ -59,11 +60,29 @@ angular.module('yds').directive('ydsRelatedItems', ['Data',
                     }
                 };
 
+                /**
+                 * Add data to a tab and perform other necessary functions
+                 * @param tab       Tab object
+                 * @param response  Response with new data and total number of items
+                 */
+                var addData = function (tab, response) {
+                    // Add data to the array and set the total items number
+                    tab.data = tab.data.concat(response.data);
+                    tab.total = response.total;
+
+                    // If there are no more results, hide the "Load more" button
+                    tab.hasMore = (tab.data.length < tab.total);
+
+                    // Set loading to false
+                    scope.loading = false;
+                };
+
                 // Get initial data for each tab
                 _.each(scope.tabs, function (tab) {
-                    Data.getRelatedItems(scope.projectId, tab.apiType, scope.period, 0).then(function (data) {
-                        tab.data = data;
-                    });
+                    Data.getRelatedItems(scope.projectId, tab.apiType, scope.period, 0, pageSize)
+                        .then(function (response) {
+                            addData(tab, response);
+                        });
                 });
 
                 /**
@@ -80,16 +99,10 @@ angular.module('yds').directive('ydsRelatedItems', ['Data',
                             title: tabTitle
                         });
 
-                        var start = tab.data.length;
-                        Data.getRelatedItems(scope.projectId, tab.apiType, scope.period, start).then(function (data) {
-                            // Add new items to the tab
-                            _.each(data, function (item) {
-                                tab.data.push(item);
+                        Data.getRelatedItems(scope.projectId, tab.apiType, scope.period, tab.data.length, pageSize)
+                            .then(function (response) {
+                                addData(tab, response);
                             });
-
-                            // Set loading to false
-                            scope.loading = false;
-                        });
                     }
                 }
             }
