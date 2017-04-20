@@ -109,7 +109,10 @@ ydsDemo.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 	})
 	.state('project2', {
 		url: '/project2',
-		templateUrl: 'templates-demo/project2.html'
+		templateUrl: 'templates-demo/project2.html',
+		controller: function($scope) {
+            $scope.projectId = "http://linkedeconomy.org/resource/PublicWork/216004";
+		}
 	})
 	.state('projects', {
 		url: '/projects',
