@@ -81,7 +81,7 @@ angular.module('yds').directive('ydsRelatedItems', ['Data',
                         });
 
                         var start = tab.data.length;
-                        Data.getRelatedItems(scope.projectId, tab.apiType, start).then(function (data) {
+                        Data.getRelatedItems(scope.projectId, tab.apiType, scope.period, start).then(function (data) {
                             // Add new items to the tab
                             _.each(data, function (item) {
                                 tab.data.push(item);
