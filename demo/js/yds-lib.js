@@ -610,6 +610,11 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                             newData[i].id_original = attrValue;
                         }
 
+                        // If addbase attribute is true, we need to create the full URL using the type
+                        if (viewVal.addbase == true && _.has(viewVal, "urltype")) {
+                            url = YDS_CONSTANTS.PROJECT_DETAILS_URL + "?id=" + url + "&type=" + viewVal.urltype;
+                        }
+
                         // Make attribute link to the url
                         attrValue = "<a href=\"" + url + "\" target=\"_blank\">" + attrValue + "</a>";
                     }
