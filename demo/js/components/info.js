@@ -93,7 +93,7 @@ angular.module('yds').directive('ydsInfo', ['Data', 'Translations', '$sce', func
                     });
                 }, function (error) {
                     if (error == null || _.isUndefined(error) || _.isUndefined(error.message))
-                        scope.ydsAlert = "An error has occurred, please check the configuration of the component";
+                        scope.ydsAlert = "An error has occurred, please check the configuration of the component.";
                     else
                         scope.ydsAlert = error.message;
                 });

@@ -19,8 +19,8 @@ angular.module('yds').directive('ydsInfoTable', ['Data', 'Translations', '$sce',
             //check if project id or grid type are defined
             if (_.isUndefined(projectId) || projectId.trim() == "") {
                 scope.ydsAlert = "The YDS component is not properly initialized " +
-                    "because the projectId or the viewType attribute aren't configured properly." +
-                    "Please check the corresponding documentation sertion";
+                    "because the projectId or the viewType attribute aren't configured properly. " +
+                    "Please check the corresponding documentation section.";
                 return false;
             }
 
@@ -96,7 +96,7 @@ angular.module('yds').directive('ydsInfoTable', ['Data', 'Translations', '$sce',
                     });
                 }, function (error) {
                     if (error == null || _.isUndefined(error) || _.isUndefined(error.message))
-                        scope.ydsAlert = "An error was occurred, please check the configuration of the component";
+                        scope.ydsAlert = "An error has occurred, please check the configuration of the component.";
                     else
                         scope.ydsAlert = error.message;
                 });
