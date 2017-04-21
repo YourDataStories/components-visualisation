@@ -1,12 +1,12 @@
 var app = angular.module('yds', ['ui.bootstrap', 'rzModule', 'ui.checkbox', 'oc.lazyLoad', 'angularUtils.directives.dirDisqus', 'ngTextTruncate', 'ngCookies', 'ui.select', 'TreeWidget']);
 
-var host="http://ydsdev.iit.demokritos.gr:8085";
-var geoRouteUrl = host+"/YDSAPI/yds/geo/route";
+var host = "http://ydsdev.iit.demokritos.gr:8085";
+var geoRouteUrl = host + "/YDSAPI/yds/geo/route";
 
 // Defining global variables for the YDS lib
 app.constant("YDS_CONSTANTS", {
     "PROXY": "/",
-    "API_YDS_MODEL_HIERARCHY":"platform.yourdatastories.eu/api/json-ld/model/YDSModelHierarchy.json",
+    "API_YDS_MODEL_HIERARCHY": "platform.yourdatastories.eu/api/json-ld/model/YDSModelHierarchy.json",
     "API_BAR": "platform.yourdatastories.eu/api/json-ld/component/barchart.tcl",
     "API_GRID": "platform.yourdatastories.eu/api/json-ld/component/grid.tcl",
     "API_HEATMAP": "platform.yourdatastories.eu/api/json-ld/component/heatmap.tcl",
@@ -46,7 +46,7 @@ app.constant("YDS_CONSTANTS", {
     // "SEARCH_RESULTS_URL_EL": "http://yds-lib.dev/#!/search-el",
     // "SEARCH_RESULTS_URL_TABBED": "http://yds-lib.dev/#!/search-tabbed",
 
-    "API_PERSONALIZATION":"http://dev.yourdatastories.eu/personalaiz/recommendation/",
+    "API_PERSONALIZATION": "http://dev.yourdatastories.eu/personalaiz/recommendation/",
 
     "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
     "API_EMBED": "http://dev.yourdatastories.eu/api/tomcat/YDSAPI/yds/embed/",
@@ -54,11 +54,11 @@ app.constant("YDS_CONSTANTS", {
     "BASKET_URL": "http://dev.yourdatastories.eu/api/tomcat/YDSAPI/yds/basket/"
 });
 
-app.directive('clipboard', ['$document', function(){
+app.directive('clipboard', ['$document', function () {
     return {
         restrict: 'A',
         link: function (scope, element, attrs) {
-            element.on('click', function(e){
+            element.on('click', function (e) {
                 var iframeURL = angular.element(element.parent()[0].getElementsByClassName("well"));
 
                 var range = document.createRange();         // create a Range object
@@ -84,16 +84,16 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             return null;
         }
 
-        var yearNumber = date.substring(6,10);
-        var monthNumber = date.substring(3,5);
-        var dayNumber = date.substring(0,2);
+        var yearNumber = date.substring(6, 10);
+        var monthNumber = date.substring(3, 5);
+        var dayNumber = date.substring(0, 2);
 
-        var result = (yearNumber*10000) + (monthNumber*100) + dayNumber;
+        var result = (yearNumber * 10000) + (monthNumber * 100) + dayNumber;
         return result;
     };
 
-    dataService.getYearMonthFromTimestamp = function(timestamp, yearToMonth) {
-        var d = new Date(timestamp*1000);
+    dataService.getYearMonthFromTimestamp = function (timestamp, yearToMonth) {
+        var d = new Date(timestamp * 1000);
         var month = ("0" + (d.getMonth() + 1)).slice(-2);
         var year = d.getFullYear();
 
@@ -103,19 +103,19 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             return month + "/" + year;
     };
 
-    dataService.getTimestampFromDate = function(date) {
+    dataService.getTimestampFromDate = function (date) {
         return parseInt(new Date(date).getTime() / 1000);
     };
 
-    dataService.hashFromObject = function(inputObj) {
+    dataService.hashFromObject = function (inputObj) {
         var str = JSON.stringify(inputObj);
         return calcMD5(str);
     };
 
-    dataService.deepObjSearch = function(obj, path){
+    dataService.deepObjSearch = function (obj, path) {
         //function to get the value of an object property, by defining its path
-        for (var i=0, path=path.split('.'), len=path.length; i<len; i++){
-            if(_.isUndefined(obj)) {
+        for (var i = 0, path = path.split('.'), len = path.length; i < len; i++) {
+            if (_.isUndefined(obj)) {
                 obj = "";
                 break;
             }
@@ -126,7 +126,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         return obj;
     };
 
-    dataService.transform = function(data) {
+    dataService.transform = function (data) {
         if (!angular.isObject(data))		    	 // If this is not an object, defer to native stringification.
             return ( ( data == null ) ? "" : data.toString() );
 
@@ -175,7 +175,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         return "axis_" + axis + "_" + calcMD5(fieldId);
     };
 
-    dataService.getRoutePoints = function(start, end, via) {
+    dataService.getRoutePoints = function (start, end, via) {
         var deferred = $q.defer();
 
         var inputData = {
@@ -188,7 +188,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             url: geoRouteUrl,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             transformRequest: customRequestTransform,
-            data: { geoData: angular.toJson(inputData) }
+            data: {geoData: angular.toJson(inputData)}
         }).success(function (data) {
             deferred.resolve(data);
         }).error(function (error) {
@@ -198,12 +198,12 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         return deferred.promise;
     };
 
-    dataService.saveGeoObj = function(projectId,geoObj) {
+    dataService.saveGeoObj = function (projectId, geoObj) {
         var deferred = $q.defer();
 
         $http({
             method: 'POST',
-            url: geoRouteUrl+"/save/"+projectId,
+            url: geoRouteUrl + "/save/" + projectId,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             transformRequest: customRequestTransform,
             data: {
@@ -218,12 +218,12 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         return deferred.promise;
     };
 
-    dataService.getGeoObj = function(projectId) {
+    dataService.getGeoObj = function (projectId) {
         var deferred = $q.defer();
 
         $http({
             method: 'GET',
-            url: geoRouteUrl+"/"+ projectId,
+            url: geoRouteUrl + "/" + projectId,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).success(function (data) {
             deferred.resolve(data);
@@ -234,7 +234,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         return deferred.promise;
     };
 
-    dataService.requestEmbedCode = function(projectId, facets, visType, viewType, lang) {
+    dataService.requestEmbedCode = function (projectId, facets, visType, viewType, lang) {
         var deferred = $q.defer();
 
         $http({
@@ -258,7 +258,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         return deferred.promise;
     };
 
-    dataService.recoverEmbedCode = function(embedCode) {
+    dataService.recoverEmbedCode = function (embedCode) {
         var deferred = $q.defer();
 
         $http({
@@ -278,7 +278,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
      * @param params
      * @returns {*|promise|s|d}
      */
-    dataService.saveRating = function(params) {
+    dataService.saveRating = function (params) {
         var deferred = $q.defer();
 
         // Remove undefined values from the parameters
@@ -292,16 +292,16 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             headers: {"Content-Type": "application/x-www-form-urlencoded"},
             transformRequest: customRequestTransform,
             data: params
-        }).then(function(response) {
+        }).then(function (response) {
             deferred.resolve(response.data);
-        }, function(error) {
+        }, function (error) {
             deferred.reject(error);
         });
 
         return deferred.promise;
     };
 
-    dataService.getBreadcrumbColor = function(index) {
+    dataService.getBreadcrumbColor = function (index) {
         var colors = [
             "#0000ff", "#a52a2a", "#a020f0", "#ff0000", "#ffc0cd",
             "#ffa500", "#00ff00", "#ffff00", "#C0C000", "#C0C0FF",
@@ -321,12 +321,12 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         return colors[index];
     };
 
-    dataService.getBrowseData = function() {
+    dataService.getBrowseData = function () {
         var deferred = $q.defer();
 
         $http({
             method: 'GET',
-            url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_YDS_MODEL_HIERARCHY,
+            url: "http://" + YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_YDS_MODEL_HIERARCHY,
             headers: {'Content-Type': 'application/json'}
         }).success(function (data) {
             deferred.resolve(data);
@@ -337,14 +337,14 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         return deferred.promise;
     };
 
-    dataService.createRandomId = function() {
+    dataService.createRandomId = function () {
         return '_' + Math.random().toString(36).substr(2, 9);
     };
 
-    dataService.prepareGridColumns = function(gridView) {
+    dataService.prepareGridColumns = function (gridView) {
         var gridColumns = [];
 
-        for (var i=0; i<gridView.length; i++) {
+        for (var i = 0; i < gridView.length; i++) {
             var columnInfo = {
                 headerName: gridView[i].header,
                 field: gridView[i].attribute
@@ -364,25 +364,25 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             }
 
             //if it is not string add number filtering
-            if (gridView[i].type.indexOf("string")==-1 && gridView[i].type.indexOf("url")==-1 && gridView[i].type.indexOf("date")==-1) {
+            if (gridView[i].type.indexOf("string") == -1 && gridView[i].type.indexOf("url") == -1 && gridView[i].type.indexOf("date") == -1) {
                 columnInfo.filter = 'number';
             }
 
             //if it is 'amount', apply custom filter to remove the currency and sort them
-            if (gridView[i].type=="amount") {
+            if (gridView[i].type == "amount") {
                 columnInfo.comparator = function (value1, value2) {
-                    if(_.isUndefined(value1) || value1==null)
+                    if (_.isUndefined(value1) || value1 == null)
                         value1 = "-1";
 
-                    if(_.isUndefined(value2) || value2==null)
+                    if (_.isUndefined(value2) || value2 == null)
                         value2 = "-1";
 
                     value1 = parseFloat(String(value1).split(" ")[0].replace(/,/g, ""));
                     value2 = parseFloat(String(value2).split(" ")[0].replace(/,/g, ""));
 
-                    return value1-value2;
+                    return value1 - value2;
                 }
-            } else if (gridView[i].type=="date") {
+            } else if (gridView[i].type == "date") {
                 columnInfo.comparator = function (date1, date2) {
                     var date1Number = monthToComparableNumber(date1);
                     var date2Number = monthToComparableNumber(date2);
@@ -414,7 +414,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
      * @param value (optional) if given, will be the last object in the hierarchy
      * @returns {*} the last object in the hierarchy
      */
-    dataService.createNestedObject = function( base, names, value ) {
+    dataService.createNestedObject = function (base, names, value) {
         // Keep original item, in case it is needed
         var originalBase = base;
 
@@ -423,8 +423,8 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
 
         // Walk the hierarchy, creating new objects where needed.
         // If the lastName was removed, then the last object is not set yet:
-        for( var i = 0; i < names.length; i++ ) {
-            var newVal = base[ names[i] ] || {};
+        for (var i = 0; i < names.length; i++) {
+            var newVal = base[names[i]] || {};
 
             // If newVal is a String, something went wrong (it should be an object)
             if (_.isString(newVal) && lastName) {
@@ -438,14 +438,14 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
 
                 // Make the current attribute an object instead of a string
                 // (since we know the value we need to give, because lastName != false in here)
-                baseBefore[ names[i] ] = {};
+                baseBefore[names[i]] = {};
             }
 
-            base = base[ names[i] ] = base[ names[i] ] || {};
+            base = base[names[i]] = base[names[i]] || {};
         }
 
         // If a value was given, set it to the last name:
-        if( lastName ) base = base[ lastName ] = value;
+        if (lastName) base = base[lastName] = value;
 
         // Return the last object in the hierarchy:
         return base;
@@ -454,26 +454,26 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
 
     /**
      * Function to find a value in the data even if the attribute name in the view doesn't match exactly
-     * @param result		The result
-     * @param attribute		The name of the attribute to find (from the view)
+     * @param result        The result
+     * @param attribute        The name of the attribute to find (from the view)
      * @param langs         Available languages
-     * @param prefLang		Preferred language
-     * @returns {*}			The value, if found
+     * @param prefLang        Preferred language
+     * @returns {*}            The value, if found
      */
-    dataService.findValueInResult = function(result, attribute, langs, prefLang) {
+    dataService.findValueInResult = function (result, attribute, langs, prefLang) {
         var value = result[attribute];
 
         //if the value of a result doesn't exist
-        if (_.isUndefined(value) || String(value).trim().length==0) {
+        if (_.isUndefined(value) || String(value).trim().length == 0) {
             //extract the last 3 characters of the specific attribute of the result
-            var last3chars = attribute.substr(attribute.length-3);
+            var last3chars = attribute.substr(attribute.length - 3);
 
             //if it is internationalized
             if (last3chars == ("." + prefLang)) {
                 //split the attribute in tokens
                 var attributeTokens = attribute.split(".");
                 //extract the attribute without the i18n tokens
-                var nonInternationalizedAttr = _.first(attributeTokens, attributeTokens.length-1).join(".");
+                var nonInternationalizedAttr = _.first(attributeTokens, attributeTokens.length - 1).join(".");
                 //find the opposite language of the component
                 var alternativeLang = _.first(_.without(langs, prefLang));
 
@@ -481,7 +481,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                 value = result [nonInternationalizedAttr + "." + alternativeLang];
 
                 //if no value was acquired from the i18n attributes, try with non-internationalized attribute
-                if (_.isUndefined(value) || String(value).trim().length==0)
+                if (_.isUndefined(value) || String(value).trim().length == 0)
                     value = result [nonInternationalizedAttr];
             }
         }
@@ -494,7 +494,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
      * @param dateToFormat  ISO-8601 date string
      * @returns {string}    "DD/MM/YYYY" formatted date
      */
-    var formatDateToDDMMYYYY = function(dateToFormat) {
+    var formatDateToDDMMYYYY = function (dateToFormat) {
         var date = new Date(dateToFormat);
 
         var dd = date.getDate();
@@ -512,7 +512,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
      * @param attribute
      * @returns {*}
      */
-    var arraySearch = function(item, attribute) {
+    var arraySearch = function (item, attribute) {
         var tokens = attribute.split(".");
 
         var itemPart = item[_.first(tokens)];
@@ -520,7 +520,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         if (_.isArray(itemPart)) {
             // It is array
             var str = "";
-            _.each(itemPart, function(item) {
+            _.each(itemPart, function (item) {
                 var attrStr = _.rest(tokens, 1).join(".");
                 str += arraySearch(item, attrStr) + ", ";
             });
@@ -533,9 +533,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }
     };
 
-    dataService.prepareGridData = function(newData, newView) {
+    dataService.prepareGridData = function (newData, newView) {
         for (var i = 0; i < newData.length; i++) {
-            _.each(newView, function(viewVal) {
+            _.each(newView, function (viewVal) {
                 // Find value of attribute
                 var attrValue = newData[i][viewVal.attribute];
                 var attributeTokens = viewVal.attribute.split(".");
@@ -557,11 +557,11 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                     attrValue = formatDateToDDMMYYYY(attrValue);
                 } else if (viewVal.type == "format_to_amount" && !_.isUndefined(attrValue)) {
                     // Make attribute a string so we can do more checks
-                    var attrStr =  attrValue.toString().trim();
+                    var attrStr = attrValue.toString().trim();
 
                     // Format the amount only if it's not empty, and doesn't contain dollar or euro sign
                     if (attrStr.length > 0) {
-                        attrValue = attrValue.toLocaleString(undefined, { minimumFractionDigits: 2 });
+                        attrValue = attrValue.toLocaleString(undefined, {minimumFractionDigits: 2});
 
                         // Try to find and add currency symbol
                         var lastTokenLength = _.last(attributeTokens).length;
@@ -574,7 +574,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                         // If currency is USD or EUR add their symbols, otherwise add the notation as it is in the data
                         var currNotation = _.first(newData[i][currNotAttr]);
                         if (!_.isUndefined(currNotation)) {
-                            switch(currNotation) {
+                            switch (currNotation) {
                                 case "USD":
                                     attrValue = "$" + attrValue;
                                     break;
@@ -592,19 +592,27 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                 if (_.has(viewVal, "url")) {
                     // Find the url
                     var url = newData[i][viewVal.url];
-                    if (_.isUndefined(url) || (_.isString(url) && url.trim().length == 0)) {
+                    if (_.isUndefined(url) || (_.isString(url) && url.trim().length === 0)) {
                         // If the url is empty, maybe it is a nested attribute, so try deep object search
                         url = dataService.deepObjSearch(newData[i], viewVal.url);
                     }
 
-                    if (viewVal.attribute === "id") {
-                        // If the viewVal specifies the "id" as its attribute and is a link,
-                        // save it because it might be needed and the original value will be modified
-                        newData[i].id_original = attrValue;
+                    // In case the found URL is an array, keep the first value
+                    if (_.isArray(url) && !_.isEmpty(url)) {
+                        url = _.first(url);
                     }
 
-                    // Make attribute link to the url
-                    attrValue = "<a href=\"" + url + "\" target=\"_blank\">" + attrValue + "</a>";
+                    // Only continue to make the cell a link if a URL was found
+                    if (!_.isUndefined(url) && _.isString(url) && url.trim().length > 0) {
+                        if (viewVal.attribute === "id") {
+                            // If the viewVal specifies the "id" as its attribute and is a link,
+                            // save it because it might be needed and the original value will be modified
+                            newData[i].id_original = attrValue;
+                        }
+
+                        // Make attribute link to the url
+                        attrValue = "<a href=\"" + url + "\" target=\"_blank\">" + attrValue + "</a>";
+                    }
                 }
 
                 // Add the new attribute to the data so ag grid can find it
@@ -615,7 +623,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         return newData;
     };
 
-    dataService.getYdsStatistics = function() {
+    dataService.getYdsStatistics = function () {
         var deferred = $q.defer();
 
         $http({
@@ -637,7 +645,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
      * @param lang          Language of the description
      * @returns {d|s|a}
      */
-    dataService.getConceptDescription = function(conceptId, lang) {
+    dataService.getConceptDescription = function (conceptId, lang) {
         var deferred = $q.defer();
 
         $http({
@@ -663,7 +671,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
      * @param apiOptions    Options from ODA Dashboard (eg. year, selected countries...)
      * @returns {*|d.promise|promise|d|s}
      */
-    dataService.getQueryBuilderRules = function(viewType, apiOptions) {
+    dataService.getQueryBuilderRules = function (viewType, apiOptions) {
         var deferred = $q.defer();
 
         var params = _.extend({
@@ -675,9 +683,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             url: "http://" + YDS_CONSTANTS.API_TYPE2_ADVANCED_QUERY,
             params: params,
             headers: {'Content-Type': 'application/json; charset=UTF-8'}
-        }).then(function(response) {
+        }).then(function (response) {
             deferred.resolve(response.data);
-        }, function(error) {
+        }, function (error) {
             deferred.reject(error);
         });
 
@@ -690,13 +698,13 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
      * @param params    Parameters object
      * @returns {*|d.promise|promise|d|s}
      */
-    dataService.getType2SolrQuery = function(type, params) {
+    dataService.getType2SolrQuery = function (type, params) {
         var deferred = $q.defer();
 
         params.type = type;
 
         // Remove any string values that contain "null"
-        params = _.omit(params, function(param) {
+        params = _.omit(params, function (param) {
             if (_.isString(param)) {
                 return param.indexOf("null") != -1;
             } else {
@@ -725,18 +733,18 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
      * @param facets
      * @returns {*}
      */
-    var mergeFacetsAndViewType = function(viewType, facets) {
+    var mergeFacetsAndViewType = function (viewType, facets) {
         var newFacet = "{!tag=TYPE}type:" + viewType;
 
         if (_.isArray(facets)) {
             // facets is an array, add new facet to it (if it exists, union will not add it again)
-            facets = _.union(facets, [ newFacet ]);
+            facets = _.union(facets, [newFacet]);
         } else if (_.isString(facets) && newFacet != facets) {
             // facets is a single facet and is not an array, so make it an array with both facets
-            facets = [ facets, newFacet ];
+            facets = [facets, newFacet];
         } else if (_.isUndefined(facets)) {
             // Facets is undefined, only facet is the view type
-            facets = [ newFacet ];
+            facets = [newFacet];
         }
 
         return facets;
@@ -747,7 +755,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
      * @param sortModel     Sort model as given by ag-grid
      * @returns {{sort, sortdir}}
      */
-    dataService.formatAgGridSortParams = function(sortModel) {
+    dataService.formatAgGridSortParams = function (sortModel) {
         return {
             sort: _.pluck(sortModel, "colId"),
             sortdir: _.pluck(sortModel, "sort")
@@ -765,7 +773,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
      * @param sortModel Parameters for how the server should sort the data
      * @returns {d|a|s}
      */
-    dataService.getGridResultData = function(query, facets, viewType, start, rows, lang, sortModel) {
+    dataService.getGridResultData = function (query, facets, viewType, start, rows, lang, sortModel) {
         var deferred = $q.defer();
 
         var sortParams = dataService.formatAgGridSortParams(sortModel);
@@ -813,7 +821,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
      * @param sortModel Parameters for how the server should sort the data
      * @returns {d|a|s}
      */
-    dataService.getGridResultDataAdvanced = function(query, facets, rules, viewType, start, rows, lang, sortModel) {
+    dataService.getGridResultDataAdvanced = function (query, facets, rules, viewType, start, rows, lang, sortModel) {
         var deferred = $q.defer();
 
         // Create facets array
@@ -852,7 +860,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
      * @param viewType
      * @param lang
      */
-    dataService.downloadGridResultDataAsCsv = function(query, facets, rules, viewType, lang) {
+    dataService.downloadGridResultDataAsCsv = function (query, facets, rules, viewType, lang) {
         // Create facets array
         var fq = facets;
         if (!_.isUndefined(viewType)) {
@@ -861,7 +869,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }
         // The server expects fq to always be an array, so if it's a string we make it an array with 1 string in it
         if (!_.isArray(fq) && !_.isUndefined(fq)) {
-            fq = [ fq ];
+            fq = [fq];
         }
 
         // Create parameters object
@@ -883,13 +891,13 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                 url: "http://" + YDS_CONSTANTS.API_ADVANCED_SEARCH,
                 data: params,
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-            }).then(function(response) {
+            }).then(function (response) {
                 // Download the received CSV data as a file
                 var csvData = response.data;
                 var filename = "YourDataStories-Export.csv";
 
                 var blob = new Blob([csvData], {type: 'text/csv'});
-                if(window.navigator.msSaveOrOpenBlob) {
+                if (window.navigator.msSaveOrOpenBlob) {
                     window.navigator.msSaveBlob(blob, filename);
                 } else {
                     var elem = window.document.createElement('a');
@@ -899,16 +907,16 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                     elem.click();
                     document.body.removeChild(elem);
                 }
-            }, function(error) {
+            }, function (error) {
                 console.error("An error occured while exporting the data!", error);
             });
         } else {
             // Normal search
             var url = "http://" + YDS_CONSTANTS.API_SEARCH + "?export=csv";
 
-            _.each(params, function(value, key) {
+            _.each(params, function (value, key) {
                 if (key == "fq") {
-                    _.each(value, function(value) {
+                    _.each(value, function (value) {
                         url += "&" + key + "=" + encodeURIComponent(value);
                     });
                 } else {
@@ -929,7 +937,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
      * @param extraParams   Extra parameters to send with request
      * @returns {promise|d.promise|*|d|s}
      */
-    dataService.getAggregate = function(resourceId, viewType, lang, extraParams) {
+    dataService.getAggregate = function (resourceId, viewType, lang, extraParams) {
         var deferred = $q.defer();
 
         var params = {
@@ -948,7 +956,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             url: "http://" + YDS_CONSTANTS.API_AGGREGATE,
             headers: {'Content-Type': 'application/json; charset=UTF-8'},
             params: params
-        }).then(function(response) {
+        }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
             deferred.reject(error);
@@ -957,7 +965,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         return deferred.promise;
     };
 
-    dataService.getProjectVis = function(type, resourceId, viewType, lang, extraParams) {
+    dataService.getProjectVis = function (type, resourceId, viewType, lang, extraParams) {
         var deferred = $q.defer();
 
         // Setup request parameters
@@ -973,39 +981,39 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }
 
         var visualizationUrl = "";
-        switch(type) {
+        switch (type) {
             case "bar":
-                visualizationUrl="http://" + YDS_CONSTANTS.API_BAR;
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_BAR;
                 break;
             case "info":
-                visualizationUrl="http://" + YDS_CONSTANTS.API_INFO;
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_INFO;
                 params.context = 0;
                 break;
             case "grid":
-                visualizationUrl="http://" + YDS_CONSTANTS.API_GRID;
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_GRID;
                 params.context = 0;
                 break;
             case "pie":
-                visualizationUrl="http://" + YDS_CONSTANTS.API_PIE;
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_PIE;
                 break;
             case "scatter":
-                visualizationUrl="http://" + YDS_CONSTANTS.API_SCATTER;
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_SCATTER;
                 break;
             case "bubble":
-                visualizationUrl="http://" + YDS_CONSTANTS.API_BUBBLE;
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_BUBBLE;
                 break;
             case "treemap":
-                visualizationUrl="http://" + YDS_CONSTANTS.API_TREEMAP;
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_TREEMAP;
                 break;
             case "line":
-                visualizationUrl="http://" + YDS_CONSTANTS.API_LINE;
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_LINE;
                 break;
             case "map":
-                visualizationUrl="http://" + YDS_CONSTANTS.API_MAP;
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_MAP;
                 params.baseurl = YDS_CONSTANTS.PROJECT_DETAILS_URL;
                 break;
             case "heatmap":
-                visualizationUrl="http://"+ YDS_CONSTANTS.API_HEATMAP;
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_HEATMAP;
                 break;
             default:
                 deferred.reject({
@@ -1030,7 +1038,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         return deferred.promise;
     };
 
-    dataService.getProjectVisAdvanced = function(type, resourceId, viewType, lang, comboFilters, start) {
+    dataService.getProjectVisAdvanced = function (type, resourceId, viewType, lang, comboFilters, start) {
         var deferred = $q.defer();
         var visualizationUrl = "";
 
@@ -1040,24 +1048,24 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             lang: lang
         };
 
-        if(!_.isUndefined(start))
+        if (!_.isUndefined(start))
             inputParams.start = start;
 
         _.extendOwn(inputParams, comboFilters);
 
-        switch(type) {
+        switch (type) {
             case "grid":
-                visualizationUrl="http://" + YDS_CONSTANTS.API_GRID;
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_GRID;
                 inputParams.context = 0;
                 break;
             case "bar":
-                visualizationUrl="http://" + YDS_CONSTANTS.API_BAR;
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_BAR;
                 break;
             case "line":
-                visualizationUrl="http://" + YDS_CONSTANTS.API_LINE;
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_LINE;
                 break;
             case "pie":
-                visualizationUrl="http://" + YDS_CONSTANTS.API_PIE;
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_PIE;
                 break;
             default:
                 deferred.reject({
@@ -1082,12 +1090,12 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         return deferred.promise;
     };
 
-    dataService.getComboboxFilters = function(resourceId, filterType, filterAttr, lang) {
+    dataService.getComboboxFilters = function (resourceId, filterType, filterAttr, lang) {
         var deferred = $q.defer();
 
         $http({
             method: 'GET',
-            url: "http://"+ YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_COMBOBOX_FILTER,
+            url: "http://" + YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_COMBOBOX_FILTER,
             headers: {'Content-Type': 'application/json; charset=UTF-8'},
             params: {
                 id: resourceId,
@@ -1111,7 +1119,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
      * @param tableToTruncate   Table to be truncated (leave undefined for just getting info)
      * @returns {*|d.promise|promise|s|d|a}
      */
-    dataService.getCacheInfo = function(tableToTruncate) {
+    dataService.getCacheInfo = function (tableToTruncate) {
         var deferred = $q.defer();
 
         var params = {};
@@ -1205,7 +1213,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
      * @param region        Region to get high detail map for
      * @returns {promise|*|s|d}
      */
-    dataService.getGeoJSON = function(detailLevel, region) {
+    dataService.getGeoJSON = function (detailLevel, region) {
         var deferred = $q.defer();
 
         var url = "http://" + YDS_CONSTANTS.API_GEOJSON_GR + "/";
@@ -1232,7 +1240,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
     return dataService;
 }]);
 
-app.factory('Filters', [ function () {
+app.factory('Filters', [function () {
     var filters = [];
 
     var updateFilters = function (newFilter, newCompId, allFilters) {
@@ -1251,12 +1259,12 @@ app.factory('Filters', [ function () {
     };
 
     return {
-        addLineFilter: function(compId, lineChart) {
+        addLineFilter: function (compId, lineChart) {
             chartFilters = [];
             var lineExtremes = lineChart.xAxis[0].getExtremes();
 
             //define which axis has range ? is needed ?
-            chartFilters.push ({
+            chartFilters.push({
                 applied_to: "x",
                 attrs: {
                     min: lineExtremes.min,
@@ -1264,7 +1272,7 @@ app.factory('Filters', [ function () {
                 }
             });
 
-            chartFilters.push ({
+            chartFilters.push({
                 applied_to: "y",
                 attrs: {
                     attrName: ""
@@ -1273,7 +1281,7 @@ app.factory('Filters', [ function () {
 
             updateFilters(chartFilters, compId, filters);
         },
-        addExtraParamsFilter: function(compId, params) {
+        addExtraParamsFilter: function (compId, params) {
             // Create array with params as filters
             var newFilters = [{
                 attrs: _.clone(params)
@@ -1281,7 +1289,7 @@ app.factory('Filters', [ function () {
 
             updateFilters(newFilters, compId, filters);
         },
-        addGridResultsFilter: function(compId, gridFilters) {
+        addGridResultsFilter: function (compId, gridFilters) {
             var newFilters = [{
                 applied_to: "search",
                 attrs: gridFilters
@@ -1289,7 +1297,7 @@ app.factory('Filters', [ function () {
 
             updateFilters(newFilters, compId, filters);
         },
-        addGridFilter: function(compId, gridFilters) {
+        addGridFilter: function (compId, gridFilters) {
             var chartFilters = [];
 
             for (property in gridFilters) {
@@ -1299,25 +1307,25 @@ app.factory('Filters', [ function () {
                     if (property == "_ydsQuickFilter_") {		//quick filter applied on grid
                         var tmpAttrs = {};
 
-                        if (filterVal.length>0) {
+                        if (filterVal.length > 0) {
                             tmpAttrs[filterVal] = true;
 
-                            chartFilters.push ({
-                                applied_to: '_quick_bar_' ,
+                            chartFilters.push({
+                                applied_to: '_quick_bar_',
                                 attrs: tmpAttrs
                             });
                         }
-                    } else if ( _.isArray(filterVal) && filterVal.length>0 ) {	//string filter applied on grid
+                    } else if (_.isArray(filterVal) && filterVal.length > 0) {	//string filter applied on grid
                         var attrsArray = [];
 
-                        for (var j=0; j<filterVal.length; j++) {
+                        for (var j = 0; j < filterVal.length; j++) {
                             attrsArray.push(filterVal[j]);
                         }
 
-                        var tmpAttr = { 'rows': attrsArray };
+                        var tmpAttr = {'rows': attrsArray};
 
-                        chartFilters.push ({
-                            applied_to: property ,
+                        chartFilters.push({
+                            applied_to: property,
                             attrs: tmpAttr
                         });
                     } else if (filterVal.hasOwnProperty('filter') && filterVal.hasOwnProperty('type')) { //numeric filter applied on grid
@@ -1335,8 +1343,8 @@ app.factory('Filters', [ function () {
                                 break;
                         }
 
-                        chartFilters.push ({
-                            applied_to: property ,
+                        chartFilters.push({
+                            applied_to: property,
                             attrs: tmpAttrs
                         });
                     }
@@ -1346,15 +1354,17 @@ app.factory('Filters', [ function () {
             updateFilters(chartFilters, compId, filters);
         },
         get: function (compId) {
-            var filterFound = _.findWhere(filters, { componentId: compId })
+            var filterFound = _.findWhere(filters, {componentId: compId})
 
-            if(!angular.isUndefined(filterFound))
+            if (!angular.isUndefined(filterFound))
                 return filterFound.filters;
             else
                 return [];
         },
         remove: function (compId) {
-            filters = _.reject(filters, function(d){ return d.componentId === compId; });
+            filters = _.reject(filters, function (d) {
+                return d.componentId === compId;
+            });
         }
     }
 }]);
