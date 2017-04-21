@@ -597,6 +597,12 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                         url = dataService.deepObjSearch(newData[i], viewVal.url);
                     }
 
+                    if (viewVal.attribute === "id") {
+                        // If the viewVal specifies the "id" as its attribute and is a link,
+                        // save it because it might be needed and the original value will be modified
+                        newData[i].id_original = attrValue;
+                    }
+
                     // Make attribute link to the url
                     attrValue = "<a href=\"" + url + "\" target=\"_blank\">" + attrValue + "</a>";
                 }

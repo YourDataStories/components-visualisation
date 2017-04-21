@@ -340,7 +340,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                 value = "(missing)";
                             }
 
-                            var btnStr = "<a ng-click='viewBtn(\"" + params.data.id + "\")' target='_blank'>" + value + "</a>";
+                            var btnStr = "<a ng-click='viewBtn(\"" + (params.data.id_original || params.data.id) + "\")' target='_blank'>" + value + "</a>";
 
                             var compiled = $compile(btnStr)(scope);
 
@@ -353,7 +353,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                             if (!_.isUndefined(params.data) && !_.isEmpty(params.data) && (_.isNull(params.value) || params.value.length === 0)) {
                                 value = "(missing)";
                             }
-                            var viewBtnUrl = YDS_CONSTANTS.PROJECT_DETAILS_URL + "?id=" + params.data.id + "&type=" + projectDetailsType;
+                            var viewBtnUrl = YDS_CONSTANTS.PROJECT_DETAILS_URL + "?id=" + (params.data.id_original || params.data.id) + "&type=" + projectDetailsType;
 
                             return "<a href='" + viewBtnUrl + "' target='_blank'>" + value + "</a>";
                         }
