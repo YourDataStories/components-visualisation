@@ -337,7 +337,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                         _.first(columnDefs).cellRenderer = function (params) {
                             var value = params.value || "";
                             if (!_.isUndefined(params.data) && !_.isEmpty(params.data) && (_.isNull(params.value) || params.value.length === 0)) {
-                                value = "(see details)";
+                                value = "(missing)";
                             }
 
                             var btnStr = "<a ng-click='viewBtn(\"" + params.data.id + "\")' target='_blank'>" + value + "</a>";
@@ -351,7 +351,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                             // Create view URL and get row text
                             var value = params.value || "";
                             if (!_.isUndefined(params.data) && !_.isEmpty(params.data) && (_.isNull(params.value) || params.value.length === 0)) {
-                                value = "(see details)";
+                                value = "(missing)";
                             }
                             var viewBtnUrl = YDS_CONSTANTS.PROJECT_DETAILS_URL + "?id=" + params.data.id + "&type=" + projectDetailsType;
 
@@ -465,7 +465,11 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                                 newValue = newValue.join(", ");
                                             }
 
-                                            Data.createNestedObject(row, attr.split("."), newValue);
+                                            // If the new value is an object, prevent nested object creation
+                                            // (the grid will display "[object Object]" if we create it)
+                                            if (!_.isObject(newValue)) {
+                                                Data.createNestedObject(row, attr.split("."), newValue);
+                                            }
                                         }
                                     });
                                 });

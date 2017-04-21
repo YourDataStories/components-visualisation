@@ -415,12 +415,32 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
      * @returns {*} the last object in the hierarchy
      */
     dataService.createNestedObject = function( base, names, value ) {
+        // Keep original item, in case it is needed
+        var originalBase = base;
+
         // If a value is given, remove the last name and keep it for later:
         var lastName = arguments.length === 3 ? names.pop() : false;
 
         // Walk the hierarchy, creating new objects where needed.
         // If the lastName was removed, then the last object is not set yet:
         for( var i = 0; i < names.length; i++ ) {
+            var newVal = base[ names[i] ] || {};
+
+            // If newVal is a String, something went wrong (it should be an object)
+            if (_.isString(newVal) && lastName) {
+                // Find the previous "base" object
+                var baseBefore = undefined;
+                if (i > 1) {
+                    baseBefore = dataService.deepObjSearch(originalBase, _.first(names, i).join("."));
+                } else {
+                    baseBefore = originalBase;
+                }
+
+                // Make the current attribute an object instead of a string
+                // (since we know the value we need to give, because lastName != false in here)
+                baseBefore[ names[i] ] = {};
+            }
+
             base = base[ names[i] ] = base[ names[i] ] || {};
         }
 
