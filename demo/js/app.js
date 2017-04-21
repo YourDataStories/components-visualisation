@@ -46,6 +46,11 @@ ydsDemo.controller('ProjectDetailsController', ['$scope', '$location', 'YDS_CONS
 
                 projectId = projectId || "http://linkedeconomy.org/resource/Contract/AwardNotice/2015233765/6910539";
                 break;
+            case "/contract-notice":
+                $scope.lang = "en";
+
+                projectId = projectId || "http://linkedeconomy.org/resource/Contract/AwardNotice/2015233765/6910539";
+                break;
         }
 
         $scope.projectId = projectId;
@@ -113,9 +118,9 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
                         case "Contract":
                             $location.path("/contract-ted");
                             break;
-                        // case "Contract.Notice":
-                        //     $location.path("/contract-notice");
-                        //     break;
+                        case "Contract.Notice":
+                            $location.path("/contract-notice");
+                            break;
                     }
                 }
             }
@@ -150,6 +155,11 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
         .state('contract-ted-n6', {
             url: '/contract-ted-n6',
             templateUrl: 'templates-demo/contract-ted.html',
+            controller: 'ProjectDetailsController'
+        })
+        .state('contract-notice', {
+            url: '/contract-notice',
+            templateUrl: 'templates-demo/contract-notice.html',
             controller: 'ProjectDetailsController'
         })
         .state('organisation-buyer', {

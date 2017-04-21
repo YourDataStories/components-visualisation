@@ -1,0 +1,159 @@
+<div class="container">
+    <!--Buyer/seller aggregate-->
+    <div class="row">
+        <div class="col-md-12">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="contract.buyer.seller"
+                           element-h="100"
+                           base-url="{{ baseUrl }}"
+                           lang="en">
+            </yds-aggregate>
+        </div>
+    </div>
+
+    <!--Aggregates row-->
+    <div class="row">
+        <div class="col-md-2">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="contract.date"
+                           icon-size="3"
+                           element-h="150"
+                           base-url="{{ baseUrl }}"
+                           lang="en">
+            </yds-aggregate>
+        </div>
+        <div class="col-md-2">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="contract.amount"
+                           icon-size="3"
+                           element-h="150"
+                           base-url="{{ baseUrl }}"
+                           lang="en">
+            </yds-aggregate>
+        </div>
+        <div class="col-md-4">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="contract.category"
+                           icon-size="3"
+                           element-h="150"
+                           base-url="{{ baseUrl }}"
+                           lang="en">
+            </yds-aggregate>
+        </div>
+        <div class="col-md-2">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="contract.criterion"
+                           icon-size="3"
+                           element-h="150"
+                           base-url="{{ baseUrl }}"
+                           lang="en">
+            </yds-aggregate>
+        </div>
+        <div class="col-md-2">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="contract.tenders.number"
+                           icon-size="3"
+                           element-h="150"
+                           base-url="{{ baseUrl }}"
+                           lang="en">
+            </yds-aggregate>
+        </div>
+    </div>
+
+    <!--Info tables-->
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Contract Details</h3>
+        </div>
+    </div>
+    <div class="row">
+        <uib-tabset class="col-md-12">
+            <uib-tab heading="Award Notice">
+                <yds-info-table
+                        project-id="{{ projectId }}"
+                        view-type="contract.award.notice"
+                        base-url="{{ baseUrl }}"
+                        lang="en">
+                </yds-info-table>
+            </uib-tab>
+            <uib-tab heading="Notice">
+                <yds-info-table
+                        project-id="{{ projectId }}"
+                        view-type="contract.award.notice.related.notice"
+                        base-url="{{ baseUrl }}"
+                        lang="en">
+                </yds-info-table>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+
+    <!--Buyer/seller contracts list title aggregate-->
+    <div class="row">
+        <div class="col-md-12">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="contract.buyer.seller.list.contracts.title"
+                           icon-size="3"
+                           element-h="125"
+                           base-url="{{ baseUrl }}"
+                           lang="en">
+            </yds-aggregate>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="contract.buyer.seller.list.contracts.number"
+                           icon-size="3"
+                           element-h="150"
+                           base-url="{{ baseUrl }}"
+                           lang="en">
+            </yds-aggregate>
+        </div>
+        <div class="col-md-2">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="contract.buyer.seller.list.contracts.amount.total"
+                           icon-size="3"
+                           element-h="150"
+                           base-url="{{ baseUrl }}"
+                           lang="en">
+            </yds-aggregate>
+        </div>
+        <div class="col-md-8">
+            <yds-aggregate project-id="{{ projectId }}"
+                           view-type="contract.buyer.seller.list.contracts.category.top"
+                           icon-size="3"
+                           element-h="150"
+                           base-url="{{ baseUrl }}"
+                           lang="en">
+            </yds-aggregate>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <yds-grid-results
+                    project-id="{{ projectId }}"
+                    project-details-type="Contract"
+                    view-type="contract.listitems.for.buyer.and.seller"
+                    use-grid-api="true"
+                    col-resize="true"
+                    enable-rating="true"
+                    lang="en"
+                    element-h="200">
+            </yds-grid-results>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 20px">
+        <div class="col-md-12">
+            <yds-bubble
+                    project-id="{{ projectId }}"
+                    view-type="contract.listitems.for.buyer.and.seller"
+                    enable-rating="true"
+                    element-h="450"
+                    lang="en">
+            </yds-bubble>
+        </div>
+    </div>
+</div>
