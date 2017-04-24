@@ -1381,3 +1381,19 @@ td.table-cell-center, th.table-cell-center {
 .bar-buttons-container {
     text-align: center;
 }
+
+/* Public Project page - smaller spaces between aggregates */
+.basic-facts-row {
+    margin-right: -5px;
+    margin-left: -5px;
+}
+
+.basic-facts-row > .col-md-2 {
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+/* Public Project completion aggregate - smaller font for content */
+.aggregate-publicproject-completion > div.panel-heading > div.row:last-child > div.col-xs-12 > h4 {
+    font-size:16px;
+}
