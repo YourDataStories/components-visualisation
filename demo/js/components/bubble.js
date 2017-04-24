@@ -118,7 +118,13 @@ angular.module('yds').directive('ydsBubble', ['YDS_CONSTANTS', 'Data', '$window'
                             click: function(event) {
                                 var point = event.point;
                                 if (_.has(point, "uri") && _.has(point, "type")) {
-                                    var url = YDS_CONSTANTS.PROJECT_DETAILS_URL + "?id=" + point.uri + "&type=" + point.type;
+                                    var url = null;
+                                    if (point.type === "aurl") {
+                                        // Absolute URL, use it as is
+                                        url = point.uri;
+                                    } else {
+                                        url = YDS_CONSTANTS.PROJECT_DETAILS_URL + "?id=" + point.uri + "&type=" + point.type;
+                                    }
 
                                     $window.open(url, "_blank");
                                 }
