@@ -28,9 +28,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 scope.usePaging = false;    // Paging disabled by default
 
                 scope.aggregateRadio = "amount";
-
-                // Enable the Budget button only for Aid Activities
-                scope.enableBudget = (dashboardId === "aidactivity");
+                scope.enableBudget = false;         // Budget button disabled by default
 
                 // Set the amount/count button translations and, if needed, the default title
                 if (scope.lang === "el") {
@@ -51,6 +49,14 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                         tooltip: "Select whether visualisations will present amounts or counts over items.",
                         prompt: "Show:"
                     };
+                }
+
+                // Enable the Budget button only for Aid Activities
+                if (dashboardId === "aidactivity") {
+                    scope.enableBudget = true;
+
+                    // Set amount button to "Spending"
+                    scope.translations.amount = (scope.lang === "el") ? "Δαπάνες" : "Spending";
                 }
 
                 // If the pagingThreshold is set, watch for changes in the number of items
