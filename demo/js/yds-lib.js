@@ -48,7 +48,7 @@ app.constant("YDS_CONSTANTS", {
 
     "API_PERSONALIZATION": "http://dev.yourdatastories.eu/personalaiz/recommendation/",
 
-    "PROJECT_DETAILS_URL": "http://ydsdev.iit.demokritos.gr/yds/content/project-details",
+    "PROJECT_DETAILS_URL": "http://platform.yourdatastories.eu/project-details",
     "API_EMBED": "http://dev.yourdatastories.eu/api/tomcat/YDSAPI/yds/embed/",
     "API_RATINGS": "http://dev.yourdatastories.eu/api/tomcat/YDSAPI/yds/rating/",
     "BASKET_URL": "http://dev.yourdatastories.eu/api/tomcat/YDSAPI/yds/basket/"
