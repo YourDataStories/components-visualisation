@@ -76,10 +76,11 @@
                         lang="en">
                 </yds-info-table>
             </uib-tab>
-            <uib-tab heading="Related Notice">
+            <uib-tab ng-init="relatedEmpty = false" heading="Related Notice" disable="relatedEmpty">
                 <yds-info-table
                         project-id="{{ projectId }}"
                         view-type="contract.award.notice.related.notice"
+                        is-empty-obj="relatedEmpty"
                         base-url="{{ baseUrl }}"
                         lang="en">
                 </yds-info-table>
