@@ -128,6 +128,10 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                                         if (!_.isUndefined(viewType) && !_.isUndefined(scope.valueObj)) {
                                             scope.valueObj[viewType] = scope.value;
                                         }
+
+                                        break;
+                                    case "plain":
+                                        scope.viewTypeClass = "aggregate-" + viewType.replace(/\./g, "-");
                                 }
                             } else {
                                 // Set default layout options
