@@ -71,6 +71,9 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                         $("button.highed-imp-button > a:contains('Download')").parent().click(function () {
                             // Feed the Personalization service with a weight of 2
                             Personalization.feed(scope.userId, scope.lang, lastTemplate, scope.chartConfig.selectedView, 2);
+
+                            // Feed the axis selection to the Personalization service with weight of 2
+                            feedAxisToPersonalization(2);
                         });
                     });
 
@@ -150,6 +153,31 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                 };
 
                 /**
+                 * Get the currently selected axes (for X and Y), and feed the personalization service with the
+                 * specified weight
+                 * @param weight    Weight for personalization service (integer)
+                 */
+                var feedAxisToPersonalization = function (weight) {
+                    // Create array with IDs of axes to feed
+                    var axisIds = [];
+
+                    // Add X axis ID
+                    axisIds.push(Data.getAxisId("x", scope.selection.x.field_id));
+
+                    // Add Y axes IDs
+                    var yAxisObjects = _.pluck(scope.selection.y, "selected");
+                    _.each(yAxisObjects, function (axisObject) {
+                        axisIds.push(Data.getAxisId("y", axisObject.field_id));
+                    });
+
+                    // Feed the axis objects with the specified weight
+                    console.log("axis ids to feed with weight", weight, axisIds);
+                    _.each(axisIds, function (axisId) {
+                        Personalization.feed(undefined, scope.lang, axisId, scope.chartConfig.selectedView, weight);
+                    });
+                };
+
+                /**
                  * Add data to the chart depending on the selection that has been made in the view/axes selection tab
                  */
                 scope.createChart = function () {
@@ -174,22 +202,8 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                         console.error(error.message);
                     });
 
-                    // Create array with IDs of axes to feed
-                    var axisIds = [];
-
-                    // Add X axis ID
-                    axisIds.push(Data.getAxisId("x", scope.selection.x.field_id));
-
-                    // Add Y axes IDs
-                    var yAxisObjects = _.pluck(scope.selection.y, "selected");
-                    _.each(yAxisObjects, function (axisObject) {
-                        axisIds.push(Data.getAxisId("y", axisObject.field_id));
-                    });
-
-                    // Feed the axis objects with a weight of 1
-                    _.each(axisIds, function (axisId) {
-                        Personalization.feed(undefined, scope.lang, axisId, scope.chartConfig.selectedView, 1);
-                    });
+                    // Feed the axis selection to the Personalization service with weight of 1
+                    feedAxisToPersonalization(1);
                 };
 
                 /**
