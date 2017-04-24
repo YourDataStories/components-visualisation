@@ -1396,4 +1396,5 @@ td.table-cell-center, th.table-cell-center {
 /* Public Project completion aggregate - smaller font for content */
 .aggregate-publicproject-completion > div.panel-heading > div.row:last-child > div.col-xs-12 > h4 {
     font-size:16px;
+    line-height: 1.5;
 }
