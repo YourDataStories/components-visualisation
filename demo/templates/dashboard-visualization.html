@@ -4,17 +4,16 @@
             <h3 class="panel-title pull-left" style="padding-top: 7.5px;">{{ title }}</h3>
 
             <!--Chart type radio buttons-->
-            <!--todo: make actual radio buttons??-->
             <div class="btn-group btn-group-sm pull-right" id="vistypes">
-                <button ng-click="selectVis('grid')" class="btn btn-default" title="Grid View">
-                    <i class="fa fa-list-alt" aria-hidden="true"></i></button>
-                <button ng-click="selectVis('pie')" class="btn btn-default" title="Pie Chart">
-                    <i class="fa fa-pie-chart" aria-hidden="true"></i></button>
-                <button ng-click="selectVis('bar')" class="btn btn-default" title="Bar Chart">
-                    <i class="fa fa-bar-chart" aria-hidden="true"></i></button>
-                <button ng-click="selectVis('tree')" class="btn btn-default" style="max-width: 35px; max-height: 30px"
+                <label ng-model="selectedVis" uib-btn-radio="'grid'" ng-click="selectVis('grid')" class="btn btn-default" title="Grid View">
+                    <i class="fa fa-list-alt" aria-hidden="true"></i></label>
+                <label ng-model="selectedVis" uib-btn-radio="'pie'" ng-click="selectVis('pie')" class="btn btn-default" title="Pie Chart">
+                    <i class="fa fa-pie-chart" aria-hidden="true"></i></label>
+                <label ng-model="selectedVis" uib-btn-radio="'bar'" ng-click="selectVis('bar')" class="btn btn-default" title="Bar Chart">
+                    <i class="fa fa-bar-chart" aria-hidden="true"></i></label>
+                <label ng-model="selectedVis" uib-btn-radio="'tree'" ng-click="selectVis('tree')" class="btn btn-default" style="max-width: 35px; max-height: 30px"
                         title="Treemap Chart">
-                    <img src="fonts/ic_view_quilt_black_18px.svg"/></button>
+                    <img src="fonts/ic_view_quilt_black_18px.svg"/></label>
             </div>
 
             <!--Amount/Count radio buttons-->
