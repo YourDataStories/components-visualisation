@@ -22,6 +22,7 @@
                 <span uib-tooltip="{{ translations.tooltip }}">{{ translations.prompt }}</span>
                 <div class="btn-group btn-group-sm">
                     <label class="btn btn-default" ng-model="aggregateRadio" uib-btn-radio="'amount'">{{ translations.amount }}</label>
+                    <label class="btn btn-default" ng-show="enableBudget" ng-model="aggregateRadio" uib-btn-radio="'budget'">{{ translations.budget }}</label>
                     <label class="btn btn-default" ng-model="aggregateRadio" uib-btn-radio="'count'">{{ translations.count}}</label>
                 </div>
             </div>

@@ -104,7 +104,8 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
 
                         // If the aggregateType attribute is defined (and valid), add it to the extra parameters
                         var aggregateType = scope.aggregateType;
-                        if (!_.isUndefined(aggregateType) && (aggregateType === "amount" || aggregateType === "count")) {
+                        if (!_.isUndefined(aggregateType) &&
+                            (aggregateType === "amount" || aggregateType === "count" || aggregateType === "budget")) {
                             scope.extraParams = _.extend({
                                 aggregate: aggregateType
                             }, scope.extraParams);
@@ -166,7 +167,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
 
                                     initialized = true;
                                 }
-                                // Continue to re-render grid
+                            // Continue to re-render grid
                             default:
                                 // Re-render component
                                 var type = scope.type;  // Save current type
@@ -193,7 +194,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
 
                 // If the aggregateType attribute is defined, watch it for changes and update the chart
                 if (!_.isUndefined(scope.aggregateType) &&
-                    (scope.aggregateType === "amount" || scope.aggregateType === "count")) {
+                    (scope.aggregateType === "amount" || scope.aggregateType === "count" || scope.aggregateType === "budget")) {
                     scope.$watch("aggregateType", updateExtraParams);
                 }
 

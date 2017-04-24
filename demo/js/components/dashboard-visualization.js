@@ -29,11 +29,15 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
 
                 scope.aggregateRadio = "amount";
 
+                // Enable the Budget button only for Aid Activities
+                scope.enableBudget = (dashboardId === "aidactivity");
+
                 // Set the amount/count button translations and, if needed, the default title
                 if (scope.lang === "el") {
                     scope.title = scope.title || "Λεπτομέρειες";
                     scope.translations = {
                         amount: "Ποσό",
+                        budget: "Προϋπολογισμός",
                         count: "Αριθμός",
                         tooltip: "Επιλέξτε αν τα γραφήματα θα παρουσιάζουν ποσά ή αριθμούς αντικειμένων.",
                         prompt: "Προβολή:"
@@ -42,6 +46,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                     scope.title = scope.title || "Details";
                     scope.translations = {
                         amount: "Amount",
+                        budget: "Budget",
                         count: "Number",
                         tooltip: "Select whether visualisations will present amounts or counts over items.",
                         prompt: "Show:"
