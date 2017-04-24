@@ -1398,3 +1398,8 @@ td.table-cell-center, th.table-cell-center {
     font-size:16px;
     line-height: 1.5;
 }
+
+/* Public Project budget aggregate - remove left padding of title to make it fit inside the aggregate */
+.aggregate-publicproject-budget > div.panel-heading > div.row:first-child > div.col-xs-9 {
+    padding-left: 0;
+}
