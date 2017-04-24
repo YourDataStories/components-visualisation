@@ -72,6 +72,7 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
                 types: [
                     "aidactivity.benefactor.countries.all",
                     "aidactivity.beneficiary.countries.all",
+                    "aidactivity.benefactor.organisations.all",
                     "aidactivity.beneficiary.organisations.all",
                     "aidactivity.sectors.for.countries.and.period",
                     "aidactivity.budget.for.countries.and.period",
@@ -80,6 +81,7 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
                 titles: [
                     "Benefactor Countries",
                     "Beneficiary Countries",
+                    "Benefactor Organisations",
                     "Beneficiary Organisations",
                     "Sectors",
                     "Budget",
