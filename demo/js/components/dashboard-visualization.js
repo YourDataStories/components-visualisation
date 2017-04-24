@@ -17,6 +17,8 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 numberOfItems: '@',     // Number of items that the charts are expected to show. If too big, will use paging
                 pagingThreshold: '@',   // Number of items that when exceeded, components with paging should be used
 
+                disableAggregates: '@', // If true, will disable the extra filters for amount/count
+
                 enableRating: '@'       // Enable rating buttons for this component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/dashboard-visualization.html',
@@ -27,7 +29,9 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 var type = scope.type;
                 scope.usePaging = false;    // Paging disabled by default
 
-                scope.aggregateRadio = "amount";
+                scope.aggregateRadio = {
+                    value: "amount"
+                };
                 scope.enableBudget = false;         // Budget button disabled by default
 
                 // Set the amount/count button translations and, if needed, the default title
@@ -80,6 +84,10 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 // If disableColor is undefined, show error
                 if (_.isUndefined(disableColor) || (disableColor != "true" && disableColor != "false"))
                     disableColor = "false";
+
+                // If disableAggregates is undefined, set it to false
+                if (_.isUndefined(scope.disableAggregates) || (scope.disableAggregates != "true" && scope.disableAggregates != "false"))
+                    scope.disableAggregates = "false";
 
                 // If defaultChart is undefined, show bar chart
                 if (_.isUndefined(defaultChart)) {

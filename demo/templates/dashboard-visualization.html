@@ -17,12 +17,12 @@
             </div>
 
             <!--Amount/Count radio buttons-->
-            <div class="pull-right" style="margin-right: 20px;">
+            <div ng-if="disableAggregates != 'true'" class="pull-right" style="margin-right: 20px;">
                 <span uib-tooltip="{{ translations.tooltip }}">{{ translations.prompt }}</span>
                 <div class="btn-group btn-group-sm">
-                    <label class="btn btn-default" ng-model="aggregateRadio" uib-btn-radio="'amount'">{{ translations.amount }}</label>
-                    <label class="btn btn-default" ng-show="enableBudget" ng-model="aggregateRadio" uib-btn-radio="'budget'">{{ translations.budget }}</label>
-                    <label class="btn btn-default" ng-model="aggregateRadio" uib-btn-radio="'count'">{{ translations.count}}</label>
+                    <label class="btn btn-default" ng-model="aggregateRadio.value" uib-btn-radio="'amount'">{{ translations.amount }}</label>
+                    <label class="btn btn-default" ng-show="enableBudget" ng-model="aggregateRadio.value" uib-btn-radio="'budget'">{{ translations.budget }}</label>
+                    <label class="btn btn-default" ng-model="aggregateRadio.value" uib-btn-radio="'count'">{{ translations.count}}</label>
                 </div>
             </div>
         </div>
@@ -38,7 +38,7 @@
                         dashboard-id="{{ dashboardId }}"
                         min-height="{{ elementH }}"
                         base-url="{{ baseUrl }}"
-                        aggregate-type="{{ aggregateRadio }}"
+                        aggregate-type="{{ aggregateRadio.value }}"
                         add-to-basket="{{ addToBasket }}"
                         enable-rating="{{ enableRating }}"
                         lang="{{ lang }}">
@@ -54,7 +54,7 @@
                         dashboard-id="{{ dashboardId }}"
                         min-height="{{ elementH }}"
                         base-url="{{ baseUrl }}"
-                        aggregate-type="{{ aggregateRadio }}"
+                        aggregate-type="{{ aggregateRadio.value }}"
                         number-of-items="{{ numberOfItems }}"
                         add-to-basket="{{ addToBasket }}"
                         enable-rating="{{ enableRating }}"
@@ -70,7 +70,7 @@
                         dashboard-id="{{ dashboardId }}"
                         min-height="{{ elementH }}"
                         base-url="{{ baseUrl }}"
-                        aggregate-type="{{ aggregateRadio }}"
+                        aggregate-type="{{ aggregateRadio.value }}"
                         add-to-basket="{{ addToBasket }}"
                         enable-rating="{{ enableRating }}"
                         lang="{{ lang }}">
@@ -86,7 +86,7 @@
                         dashboard-id="{{ dashboardId }}"
                         min-height="{{ elementH }}"
                         base-url="{{ baseUrl }}"
-                        aggregate-type="{{ aggregateRadio }}"
+                        aggregate-type="{{ aggregateRadio.value }}"
                         add-to-basket="{{ addToBasket }}"
                         enable-rating="{{ enableRating }}"
                         lang="{{ lang }}">
@@ -102,7 +102,7 @@
                         dashboard-id="{{ dashboardId }}"
                         min-height="{{ elementH }}"
                         base-url="{{ baseUrl }}"
-                        aggregate-type="{{ aggregateRadio }}"
+                        aggregate-type="{{ aggregateRadio.value }}"
                         number-of-items="{{ numberOfItems }}"
                         add-to-basket="{{ addToBasket }}"
                         enable-rating="{{ enableRating }}"
@@ -117,7 +117,7 @@
                         view-type="{{ selViewType }}"
                         dashboard-id="{{ dashboardId }}"
                         min-height="{{ elementH }}"
-                        aggregate-type="{{ aggregateRadio }}"
+                        aggregate-type="{{ aggregateRadio.value }}"
                         base-url="{{ baseUrl }}"
                         add-to-basket="{{ addToBasket }}"
                         enable-rating="{{ enableRating }}"
