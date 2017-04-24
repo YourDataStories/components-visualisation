@@ -4,10 +4,10 @@
             <h3 class="panel-title pull-left" style="padding-top: 7.5px;">{{ title }}</h3>
 
             <div class="btn-group btn-group-sm pull-right">
-                <button ng-click="selectVis('grid')" class="btn btn-default" title="Grid View">
-                    <i class="fa fa-list-alt" aria-hidden="true"></i></button>
-                <button ng-click="selectVis('bubble')" class="btn btn-default" title="Pie Chart">
-                    <i class="fa fa-circle-o" aria-hidden="true"></i></button>
+                <label ng-model="selectedVis" uib-btn-radio="'grid'" ng-click="selectVis('grid')" class="btn btn-default" title="Grid View">
+                    <i class="fa fa-list-alt" aria-hidden="true"></i></label>
+                <label ng-model="selectedVis" uib-btn-radio="'bubble'" ng-click="selectVis('bubble')" class="btn btn-default" title="Bubble Chart">
+                    <i class="fa fa-circle-o" aria-hidden="true"></i></label>
             </div>
         </div>
         <div class="panel-body" ng-style="panelBodyStyle">
