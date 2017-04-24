@@ -42,7 +42,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                     scope.title = scope.title || "Details";
                     scope.translations = {
                         amount: "Amount",
-                        count: "Count",
+                        count: "Number",
                         tooltip: "Select whether visualisations will present amounts or counts over items.",
                         prompt: "Show:"
                     };
