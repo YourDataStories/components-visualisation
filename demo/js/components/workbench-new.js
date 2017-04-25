@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '$compile', '$templateRequest', '$uibModal', 'Data', 'Basket', 'Workbench', 'Personalization',
-    function ($ocLazyLoad, $timeout, $compile, $templateRequest, $uibModal, Data, Basket, Workbench, Personalization) {
+angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$compile', '$templateRequest', 'Data', 'Basket', 'Workbench', 'Personalization',
+    function ($ocLazyLoad, $compile, $templateRequest, Data, Basket, Workbench, Personalization) {
         return {
             restrict: 'E',
             scope: {
@@ -171,7 +171,6 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$timeout', '
                     });
 
                     // Feed the axis objects with the specified weight
-                    console.log("axis ids to feed with weight", weight, axisIds);
                     _.each(axisIds, function (axisId) {
                         Personalization.feed(undefined, scope.lang, axisId, scope.chartConfig.selectedView, weight);
                     });
