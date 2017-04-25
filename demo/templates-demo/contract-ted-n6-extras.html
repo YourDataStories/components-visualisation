@@ -88,14 +88,15 @@
 </div>
 <div class="row" style="margin-bottom: 20px">
     <div class="col-md-12">
-        <uib-tabset>
+        <uib-tabset justified="true">
             <!--Before-->
-            <uib-tab heading="Before">
+            <uib-tab heading="Before ({{ beforeTotal }})">
                 <div class="row">
                     <div class="col-md-12">
                         <yds-related-items
                                 project-id="{{ projectId }}"
                                 period="before"
+                                total-items="beforeTotal"
                                 element-h="300">
                         </yds-related-items>
                     </div>
@@ -103,12 +104,13 @@
             </uib-tab>
 
             <!--During-->
-            <uib-tab heading="During">
+            <uib-tab heading="During ({{ duringTotal }})">
                 <div class="row">
                     <div class="col-md-12">
                         <yds-related-items
                                 project-id="{{ projectId }}"
                                 period="during"
+                                total-items="duringTotal"
                                 element-h="300">
                         </yds-related-items>
                     </div>
@@ -116,12 +118,13 @@
             </uib-tab>
 
             <!--After-->
-            <uib-tab heading="After">
+            <uib-tab heading="After ({{ afterTotal }})">
                 <div class="row">
                     <div class="col-md-12">
                         <yds-related-items
                                 project-id="{{ projectId }}"
                                 period="after"
+                                total-items="afterTotal"
                                 element-h="300">
                         </yds-related-items>
                     </div>

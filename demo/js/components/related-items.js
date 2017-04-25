@@ -3,13 +3,15 @@ angular.module('yds').directive('ydsRelatedItems', ['Data',
         return {
             restrict: 'E',
             scope: {
-                projectId: '@', // ID of the project to display related items for
-                period: '@',    // Set period of related items ("before", "during" or "after" the project)
-                elementH: '@'   // Height of the component in pixels
+                projectId: '@',     // ID of the project to display related items for
+                period: '@',        // Set period of related items ("before", "during" or "after" the project)
+                elementH: '@',      // Height of the component in pixels,
+                totalItems: '=',    // The related items component will set the total number of items to this value
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/related-items.html',
             link: function (scope, element) {
                 var elementH = parseInt(scope.elementH);
+                scope.totalItems = 0;
                 scope.loading = false;
                 var pageSize = 10;
 
@@ -81,6 +83,7 @@ angular.module('yds').directive('ydsRelatedItems', ['Data',
                 _.each(scope.tabs, function (tab) {
                     Data.getRelatedItems(scope.projectId, tab.apiType, scope.period, 0, pageSize)
                         .then(function (response) {
+                            scope.totalItems += response.total;
                             addData(tab, response);
                         });
                 });
