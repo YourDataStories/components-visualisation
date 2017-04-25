@@ -1403,3 +1403,21 @@ td.table-cell-center, th.table-cell-center {
 .aggregate-publicproject-budget > div.panel-heading > div.row:first-child > div.col-xs-9 {
     padding-left: 0;
 }
+
+/* Related Items component sentiment classes */
+.sentiment-badge {
+    font-size: 18px;
+    background: none;
+}
+
+.ri-sentiment-pos {
+    color: #08a800;
+}
+
+.ri-sentiment-neut {
+    color: #db8a00;
+}
+
+.ri-sentiment-neg {
+    color: #c30005;
+}

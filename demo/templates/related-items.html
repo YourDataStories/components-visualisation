@@ -13,6 +13,13 @@
                        class="list-group-item related-news-item"
                        target="_blank">
                         {{ item.text }}
+
+                        <!--Sentiment badge-->
+                        <span class="badge sentiment-badge">
+                            <i class="fa"
+                               ng-class="{'fa-smile-o ri-sentiment-pos': item.polarity == 1, 'fa-meh-o ri-sentiment-neut': item.polarity == 0, 'fa-frown-o ri-sentiment-neg': item.polarity == -1}"
+                               aria-hidden="true"></i>
+                        </span>
                     </a>
 
                     <!--Tweets-->
