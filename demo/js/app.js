@@ -51,6 +51,10 @@ ydsDemo.controller('ProjectDetailsController', ['$scope', '$location', 'YDS_CONS
 
                 projectId = projectId || "http://linkedeconomy.org/resource/Contract/AwardNotice/2015233765/6910539";
                 break;
+            case "/project2":
+                $scope.lang = "el";
+
+                projectId = projectId || "http://linkedeconomy.org/resource/PublicWork/216004";
         }
 
         $scope.projectId = projectId;
@@ -121,6 +125,9 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
                         case "Contract.Notice":
                             $location.path("/contract-notice");
                             break;
+                        case "PublicProject":
+                            $location.path("/project2");
+                            break;
                     }
                 }
             }
@@ -128,9 +135,7 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
         .state('project2', {
             url: '/project2',
             templateUrl: 'templates-demo/project2.html',
-            controller: function ($scope) {
-                $scope.projectId = "http://linkedeconomy.org/resource/PublicWork/216004";
-            }
+            controller: 'ProjectDetailsController'
         })
         .state('projects', {
             url: '/projects',
