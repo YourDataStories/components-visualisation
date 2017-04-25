@@ -1186,7 +1186,8 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                         formattedData = results.map(function (item) {
                             return {
                                 text: item.title,
-                                url: item.entry_url
+                                url: item.entry_url,
+                                polarity: item.polarity
                             }
                         });
                         break;
@@ -1194,7 +1195,8 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                         formattedData = results.map(function (item) {
                             return {
                                 text: item.clean_text,
-                                url: item.entry_url
+                                url: item.entry_url,
+                                polarity: item.polarity
                             }
                         });
                         break;
