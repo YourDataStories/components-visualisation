@@ -12,14 +12,15 @@
                        href="{{ item.url }}"
                        class="list-group-item related-news-item"
                        target="_blank">
-                        {{ item.text }}
-
                         <!--Sentiment badge-->
-                        <span class="badge sentiment-badge">
+                        <span class="sentiment-badge"
+                              ng-class="{'ri-sentiment-pos': item.polarity == '+1', 'ri-sentiment-neut': item.polarity == '0', 'ri-sentiment-neg': item.polarity == '-1'}">
                             <i class="fa"
-                               ng-class="{'fa-smile-o ri-sentiment-pos': item.polarity == '+1', 'fa-meh-o ri-sentiment-neut': item.polarity == '0', 'fa-frown-o ri-sentiment-neg': item.polarity == '-1'}"
+                               ng-class="{'fa-smile-o': item.polarity == '+1', 'fa-meh-o': item.polarity == '0', 'fa-frown-o': item.polarity == '-1'}"
                                aria-hidden="true"></i>
                         </span>
+
+                        {{ item.text }}
                     </a>
 
                     <!--Tweets-->
@@ -27,6 +28,14 @@
                        href="{{ item.url }}"
                        class="list-group-item related-tweet-item"
                        target="_blank">
+                        <!--Sentiment badge-->
+                        <span class="sentiment-badge"
+                              ng-class="{'ri-sentiment-pos': item.polarity == '+1', 'ri-sentiment-neut': item.polarity == '0', 'ri-sentiment-neg': item.polarity == '-1'}">
+                            <i class="fa"
+                               ng-class="{'fa-smile-o': item.polarity == '+1', 'fa-meh-o': item.polarity == '0', 'fa-frown-o': item.polarity == '-1'}"
+                               aria-hidden="true"></i>
+                        </span>
+
                         {{ item.text }}
                     </a>
 

@@ -1407,17 +1407,28 @@ td.table-cell-center, th.table-cell-center {
 /* Related Items component sentiment classes */
 .sentiment-badge {
     font-size: 18px;
-    background: none;
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 6px;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-radius: 5px;
 }
 
 .ri-sentiment-pos {
-    color: #08a800;
+    color: #066700;
+    background: #a8f69d;
 }
 
 .ri-sentiment-neut {
-    color: #db8a00;
+    color: #a55e00;
+    background: #ffcc95;
 }
 
 .ri-sentiment-neg {
-    color: #c30005;
+    color: #a30004;
+    background: #ffbdc2;
 }
