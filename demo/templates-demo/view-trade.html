@@ -1,6 +1,25 @@
 <div ng-controller="ProjectInfoController">
-    <h2>Trade Activity Project Info</h2>
-    <yds-info
-            project-id="{{ projectId }}">
-    </yds-info>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Trade Activity Project Info</h2>
+        </div>
+    </div>
+
+    <!--Info-->
+    <div class="row">
+        <div class="col-md-12">
+            <yds-info
+                    project-id="{{ projectId }}">
+            </yds-info>
+        </div>
+    </div>
+
+    <!--Twitter-->
+    <div class="row">
+        <div class="col-md-12">
+            <yds-twitter-search
+                    project-id="{{ projectId }}">
+            </yds-twitter-search>
+        </div>
+    </div>
 </div>
