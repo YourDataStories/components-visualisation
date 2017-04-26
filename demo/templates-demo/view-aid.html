@@ -1,9 +1,36 @@
 <div ng-controller="ProjectInfoController">
-    <h2>Aid Activity Project Info</h2>
-    <yds-info
-            project-id="{{ projectId }}">
-    </yds-info>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Aid Activity Project Info</h2>
+        </div>
+    </div>
 
+    <!--Heatmap & info-->
+    <div class="row">
+        <div class="col-md-6">
+            <yds-heatmap
+                    project-id="{{ projectId }}">
+            </yds-heatmap>
+        </div>
+        <div class="col-md-6">
+            <div style="height: 300px; overflow-y: auto">
+                <yds-info
+                        project-id="{{ projectId }}">
+                </yds-info>
+            </div>
+        </div>
+    </div>
+
+    <!--Twitter widget-->
+    <div class="row">
+        <div class="col-md-12">
+            <yds-twitter-search
+                    project-id="{{ projectId }}">
+            </yds-twitter-search>
+        </div>
+    </div>
+
+    <!--Social-->
     <div class="row">
         <div class="col-md-12">
             <h3>Social</h3>
