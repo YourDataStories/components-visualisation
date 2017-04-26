@@ -29,7 +29,7 @@ angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout
 				comboboxLabels: scope.comboboxLabels,
 				comboboxAttrs: scope.comboboxAttrs
 			};
-			
+
 			scope.quickFilterValue = "";
 			//array containing the selected data of the rendered comboboxes
 			scope.comboboxFilters = [];
@@ -54,7 +54,7 @@ angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout
 			//check if the language attr is defined, else assign default value
 			if(_.isUndefined(grid.lang) || grid.lang.trim()=="")
 				grid.lang = "en";
-			
+
 			//check if the page size attr is defined, else assign default value
 			if(_.isUndefined(grid.pageSize) || isNaN(grid.pageSize))
 				grid.pageSize = "100";
@@ -65,11 +65,12 @@ angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout
 
 			//add the unique id generated for the grid component and set its height
 			gridContainer[0].id = grid.elementId;
+			gridContainer[0].style.height = grid.elementH + 'px';
 			gridWrapper[0].style.height = grid.elementH + 'px';
 			gridWrapper[0].style.marginBottom = '80px';
 
 
-			/**
+            /**
 			 * function show errors on top of the visualization
 			 **/
 			var showAlert = function(alertMsg, predefined, persistent) {
@@ -205,7 +206,7 @@ angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout
 				scope.gridOptions.api.setDatasource(dataSource);
 			};
 
-			
+
 			/**
 			 * function called when the 'apply filters' btn is clicked
 		 	 **/
@@ -231,7 +232,7 @@ angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout
 					visualizeGrid(appliedFilters);
 				}
 			};
-			
+
 
 			/**
 			 * function called when the 'clear filters' btn is clicked
@@ -239,7 +240,7 @@ angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout
 			scope.clearComboFilters = function() {
 				//clear the filters' error message and initialize the selected value of each filter
 				scope.ydsAlert = "";
-				
+
 				_.each(scope.comboboxFilters, function (filter) {
 					filter.selected = "";
 				});
