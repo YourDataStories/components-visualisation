@@ -293,9 +293,7 @@
                     <i ng-if="!isCollapsedAidActivityPanel" class="fa fa-chevron-down pull-right" aria-hidden="true"></i>
                 </div>
 
-                <div class="panel-body"
-                     uib-collapse="isCollapsedAidActivityPanel"
-                     ng-init="isCollapsedAidActivityPanel = true">
+                <div class="panel-body">
                     <uib-tabset active="aaTab"
                                 template-url="templates/tabset-panel-success.html">
                         <uib-tab heading="View Data" index="0">
@@ -312,7 +310,7 @@
 
                             <!--AidActivity grid-->
                             <yds-dashboard-updater
-                                    ng-if="!isCollapsedAidActivityPanel && aaTab == 0"
+                                    ng-if="aaTab == 0"
                                     id="dashboard-aid-data-grid"
                                     type="grid"
                                     view-type="aidactivity.listitems.for.countries.and.period"
@@ -339,7 +337,7 @@
                             </div>
 
                             <yds-dashboard-updater
-                                    ng-if="!isCollapsedAidActivityPanel && aaTab == 1"
+                                    ng-if="aaTab == 1"
                                     type="search"
                                     dashboard-id="aidactivity"
                                     add-to-basket="true"
@@ -351,7 +349,7 @@
                         <uib-tab heading="Visualize the data" index="2">
                             <!--Workbench-->
                             <yds-workbench
-                                    ng-if="!isCollapsedAidActivityPanel && aaTab == 2"
+                                    ng-if="aaTab == 2"
                                     user-id="ydsUser"></yds-workbench>
                         </uib-tab>
                     </uib-tabset>
@@ -372,9 +370,7 @@
                     <i ng-if="!isCollapsedTradeActivityPanel" class="fa fa-chevron-down pull-right" aria-hidden="true"></i>
                 </div>
 
-                <div class="panel-body"
-                     uib-collapse="isCollapsedTradeActivityPanel"
-                     ng-init="isCollapsedTradeActivityPanel = true">
+                <div class="panel-body">
                     <uib-tabset active="taTab"
                                 template-url="templates/tabset-panel-success.html">
                         <uib-tab heading="View Data" index="0">
@@ -391,7 +387,7 @@
 
                             <!--TradeActivity grid-->
                             <yds-dashboard-updater
-                                    ng-if="!isCollapsedTradeActivityPanel && taTab == 0"
+                                    ng-if="taTab == 0"
                                     type="grid"
                                     id="dashboard-trade-data-grid"
                                     view-type="tradeactivity.listitems.for.countries.and.period"
@@ -418,7 +414,7 @@
                             </div>
 
                             <yds-dashboard-updater
-                                    ng-if="!isCollapsedTradeActivityPanel && taTab == 1"
+                                    ng-if="taTab == 1"
                                     type="search"
                                     dashboard-id="tradeactivity"
                                     add-to-basket="true"
@@ -430,7 +426,7 @@
                         <uib-tab heading="Visualize the data" index="2">
                             <!--Workbench-->
                             <yds-workbench
-                                    ng-if="!isCollapsedTradeActivityPanel && taTab == 2"
+                                    ng-if="taTab == 2"
                                     user-id="ydsUser"></yds-workbench>
                         </uib-tab>
                     </uib-tabset>

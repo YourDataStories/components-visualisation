@@ -9,9 +9,11 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
         scope.panelCategoryTitle = "Choose filter category";
 
         // Accordion options
-        scope.oneAtATime = true;
+        scope.oneAtATime = false;
         scope.status = {
-            sectorOpen: true
+            sectorOpen: true,
+            countryOpen: true,
+            periodOpen: true
         };
 
         scope.showVis = true;
@@ -58,6 +60,13 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
                     scope.aggregateClasses.push(aggregate.replace(/\./g , "-"));
                 });
 
+                // Select new sector
+                scope.selectedSector = newSector;
+                scope.infoType = newSector + ".filters.selected";
+
+                // Reset selected project
+                scope.selectedProject = {};
+
                 $timeout(function() {
                     // Set new aggregates
                     scope.aggregates = aggregates.types;
@@ -66,13 +75,6 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
                     // Show tabset again
                     scope.showVis = true;
                 });
-
-                // Select new sector
-                scope.selectedSector = newSector;
-                scope.infoType = newSector + ".filters.selected";
-
-                // Reset selected project
-                scope.selectedProject = {};
             }
 
             // If setTitle is true, set the panel's title to show the selection
