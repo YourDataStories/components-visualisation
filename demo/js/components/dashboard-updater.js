@@ -32,6 +32,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 var dashboardId = scope.dashboardId;
                 var baseUrl = scope.baseUrl;
                 var minHeight = parseInt(scope.minHeight);
+                var originalType = scope.type;
                 scope.showInfo = false;
 
                 // Variables needed in case Search Tabs are shown
@@ -153,11 +154,10 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                                 });
 
                                 // Re-render component
-                                var type = scope.type;  // Save current type
                                 scope.type = "";        // Make type empty to hide component
 
                                 $timeout(function () {
-                                    scope.type = type;  // At end of digest show component again
+                                    scope.type = originalType;  // At end of digest show component again
                                 });
                                 break;
                             case "grid":
@@ -170,11 +170,10 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                             // Continue to re-render grid
                             default:
                                 // Re-render component
-                                var type = scope.type;  // Save current type
                                 scope.type = "";        // Make type empty to hide component
 
                                 $timeout(function () {
-                                    scope.type = type;  // At end of digest show component again
+                                    scope.type = originalType;  // At end of digest show component again
                                 });
 
                                 break;
