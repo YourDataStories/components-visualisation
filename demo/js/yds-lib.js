@@ -880,7 +880,10 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
 
         // Create string with fields to export
         var fields = _.map(columns, function (col) {
-            return col.header + ":" + col.attribute
+            // Replace spaces with underscores in headers
+            var header = col.header.replace(/ /g, "_");
+
+            return header + ":" + col.attribute
         }).join(",");
 
         // Create parameters object
