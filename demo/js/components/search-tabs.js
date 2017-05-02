@@ -1,5 +1,5 @@
 angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location', 'Translations',
-    function(Data, Search, $location, Translations){
+    function (Data, Search, $location, Translations) {
         return {
             restrict: 'E',
             scope: {
@@ -12,8 +12,8 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                 addToBasket: '@',       // If true, the grids will have an "add to basket" button
                 lang: '@'               // Language of component
             },
-            templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' :'') + 'templates/search-tabs.html',
-            link: function(scope) {
+            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/search-tabs.html',
+            link: function (scope) {
                 scope.initialized = false;	    // flag that indicated when the component is initialized
                 scope.tabs = {};                // Object with tab information
                 scope.translations = Translations.getAll(scope.lang);   // Translations used for no results message
@@ -31,7 +31,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                 var prevTab = "";               // Keeps previous tab name value
 
                 // check if the language attr is defined, else assign default value
-                if(_.isUndefined(scope.lang) || scope.lang.trim()=="")
+                if (_.isUndefined(scope.lang) || scope.lang.trim() == "")
                     scope.lang = "en";
 
                 // If enableAdvSearch is undefined, set default value
@@ -39,7 +39,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                     scope.enableAdvSearch = "true";
 
                 // if no url parameter prefix is defined or it is only whitespace, use not parameter prefix
-                if (_.isUndefined(paramPrefix) || (paramPrefix.trim()=="" && paramPrefix.length > 0)) {
+                if (_.isUndefined(paramPrefix) || (paramPrefix.trim() == "" && paramPrefix.length > 0)) {
                     paramPrefix = "";
                     scope.urlParamPrefix = "";
                 }
@@ -53,7 +53,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                  * Changes the url parameters to reflect tab changes
                  * @param tabName
                  */
-                scope.tabChangeHandler = function(tabName) {
+                scope.tabChangeHandler = function (tabName) {
                     if (scope.initialized) {
                         // Change the url parameter to reflect the tab change
                         $location.search(paramPrefix + "tab", tabName);
@@ -62,30 +62,46 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
 
                 /**
                  * Get result count for each tab and update the existing tabs with the new values
-                 * @param rules     Rules for query builder, if there are any (can be undefined)
+                 * @param rules Rules for query builder, if there are any (can be undefined)
                  */
-                var updateTabResultCounts = function(rules) {
+                var updateTabResultCounts = function (rules) {
                     // Get any selected facets from the URL
-                    var facets = $location.search()[paramPrefix + "fq"];
+                    var urlParams = $location.search();
+                    var facets = urlParams[paramPrefix + "fq"];
+                    var query = urlParams[paramPrefix + "q"];
 
-                    Search.getTabResultCounts(rules, facets).then(function(tabResultCounts) {
-                        // Update amounts of tabs
-                        _.each(scope.tabs, function(tab) {
-                            if (_.has(tabResultCounts, tab.concept)) {
-                                // update the tab's amount to the new one
-                                tab.amount = tabResultCounts[tab.concept];
-                            } else {
-                                // set tab's amount to 0
-                                tab.amount = 0;
-                            }
-                        });
+                    Search.getTabResultCounts(query, rules, facets).then(function (response) {
+                        // Check the current query & rules of the search to determine if this response is current or not
+                        urlParams = $location.search();
+                        var queryLatest = response.query === urlParams[paramPrefix + "q"];
+
+                        var rulesLatest = true;
+                        if (_.has(urlParams, paramPrefix + "rules")) {
+                            var rules = urlParams[paramPrefix + "rules"];
+                            var responseRules = JSURL.stringify(response.rules);
+
+                            rulesLatest = responseRules === rules;
+                        }
+
+                        if (queryLatest && rulesLatest) {
+                            // Update amounts of tabs
+                            _.each(scope.tabs, function (tab) {
+                                if (_.has(response.tabResultCounts, tab.concept)) {
+                                    // update the tab's amount to the new one
+                                    tab.amount = response.tabResultCounts[tab.concept];
+                                } else {
+                                    // set tab's amount to 0
+                                    tab.amount = 0;
+                                }
+                            });
+                        }
                     });
                 };
 
                 /**
                  * Runs when the url parameters change and acts depending on which one changed
                  */
-                var urlChangeHandler = function() {
+                var urlChangeHandler = function () {
                     // Get url parameters to see if the tab or the query/rules changed
                     var urlParams = $location.search();
 
@@ -107,15 +123,15 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
 
                         // Initialize tabs if needed
                         if (!scope.initialized) {
-                            Search.getSearchTabs(scope.lang).then(function(response) {
+                            Search.getSearchTabs(scope.lang).then(function (response) {
                                 // Set the tabs variable
                                 scope.tabs = response.tabs;
 
                                 // If there is a default tab set and tabs are hidden, load only the default tab
                                 if (!_.isUndefined(defaultTab) && defaultTab.trim().length > 0 && scope.hideTabs == "true") {
-                                    _.each(response.tabs, function(tab) {
+                                    _.each(response.tabs, function (tab) {
                                         if (tab.concept == defaultTab) {
-                                            scope.tabs = [ tab ];
+                                            scope.tabs = [tab];
                                         }
                                     });
                                 }
@@ -126,7 +142,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                                 if (!_.isUndefined(prevSelTab)) {
                                     // Select the previously selected tab
                                     scope.activeTab = prevSelTab;
-                                } else if (_.isUndefined(defaultTab) || defaultTab.length == 0){
+                                } else if (_.isUndefined(defaultTab) || defaultTab.length == 0) {
                                     // Select first tab
                                     var tabToSel = _.first(scope.tabs).concept;
                                     scope.activeTab = tabToSel;
@@ -163,7 +179,9 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                     }
                 };
 
-                var pageLoadListener = scope.$watch(function () { return $location.search() }, pageLoadHandler);
+                var pageLoadListener = scope.$watch(function () {
+                    return $location.search()
+                }, pageLoadHandler);
                 scope.$on("$locationChangeSuccess", urlChangeHandler);
             }
         };

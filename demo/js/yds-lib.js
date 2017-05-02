@@ -891,9 +891,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             q: query,
             fq: fq,
             fl: fields,
-            lang: lang,
-            start: 0,   // this is ignored by the server
-            rows: 100   // this is ignored by the server
+            lang: lang
         };
 
         if (!_.isUndefined(rules)) {
