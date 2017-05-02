@@ -316,7 +316,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                         });
 
                         // When modal closes, export the grid
-                        exportModal.result.then(function (data) {
+                        exportModal.result.then(function (selectedCols) {
                             getSearchQuery().then(function (searchQuery) {
                                 var query = searchQuery;
                                 var quickFilter = scope.quickFilterValue;
@@ -341,7 +341,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                     viewType = undefined;
                                 }
 
-                                Data.downloadGridResultDataAsCsv(query, facets, rules, viewType, grid.lang);
+                                Data.downloadGridResultDataAsCsv(query, facets, rules, viewType, grid.lang, selectedCols);
                             });
                         });
                     }

@@ -859,13 +859,14 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
 
     /**
      * Download grid results as a CSV file
-     * @param query
-     * @param facets
-     * @param rules
-     * @param viewType
-     * @param lang
+     * @param query     Search query
+     * @param facets    Facets of data to export
+     * @param rules     Advanced search rules (if applicable)
+     * @param viewType  View type of data
+     * @param lang      Language of data
+     * @param columns   Columns to export
      */
-    dataService.downloadGridResultDataAsCsv = function (query, facets, rules, viewType, lang) {
+    dataService.downloadGridResultDataAsCsv = function (query, facets, rules, viewType, lang, columns) {
         // Create facets array
         var fq = facets;
         if (!_.isUndefined(viewType)) {
@@ -877,10 +878,16 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             fq = [fq];
         }
 
+        // Create string with fields to export
+        var fields = _.map(columns, function (col) {
+            return col.header + ":" + col.attribute
+        }).join(",");
+
         // Create parameters object
         var params = {
             q: query,
             fq: fq,
+            fl: fields,
             lang: lang,
             start: 0,   // this is ignored by the server
             rows: 100   // this is ignored by the server
