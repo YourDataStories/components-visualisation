@@ -3,12 +3,18 @@ angular.module('yds').controller('GridResultsExportModalCtrl', ['$scope', 'modal
         $scope.modalConfig = {
             title: modalInput.title,
             alert: "",
-            view: modalInput.view
+            view: _.map(modalInput.view, function (viewItem) {
+                viewItem.selected = true;
+                return viewItem;
+            })
         };
 
         $scope.exportGrid = function () {
-            //todo
-            $scope.$close("data");
+            var selection = _.where($scope.modalConfig.view, {
+                selected: true
+            });
+
+            $scope.$close(selection);
         };
     }
 ]);
