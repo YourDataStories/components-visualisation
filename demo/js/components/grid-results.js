@@ -1,5 +1,5 @@
-angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 'Basket', 'YDS_CONSTANTS', 'DashboardService', '$compile', '$location', '$q',
-    function (Data, Filters, Search, Basket, YDS_CONSTANTS, DashboardService, $compile, $location, $q) {
+angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 'Basket', 'YDS_CONSTANTS', 'DashboardService', '$compile', '$location', '$q', '$uibModal',
+    function (Data, Filters, Search, Basket, YDS_CONSTANTS, DashboardService, $compile, $location, $q, $uibModal) {
         return {
             restrict: 'E',
             scope: {
@@ -66,6 +66,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 scope.loadedRows = 0;
                 var query = "";
                 var hasColDefs = false; // Indicates if the column definitions have been loaded for the grid
+                var dataView = null;
 
                 var paramPrefix = scope.urlParamPrefix;
                 var projectDetailsType = scope.projectDetailsType;
@@ -293,35 +294,55 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 };
 
                 /**
-                 * Export grid data to csv
+                 * Show modal to export grid data to CSV
                  */
                 scope.exportGrid = function () {
                     if (scope.exportBtnClass != "disabled") {
-                        getSearchQuery().then(function (searchQuery) {
-                            var query = searchQuery;
-                            var quickFilter = scope.quickFilterValue;
+                        var modalInput = {
+                            view: dataView,
+                            lang: scope.lang,
+                            title: "Export to CSV"
+                        };
 
-                            if (!_.isUndefined(quickFilter) && quickFilter.length > 0) {
-                                query = "" + query + " AND " + quickFilter;
+                        var exportModal = $uibModal.open({
+                            controller: "GridResultsExportModalCtrl",
+                            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/grid-results-export-modal.html",
+                            size: "md",
+                            resolve: {
+                                modalInput: function () {
+                                    return modalInput;
+                                }
                             }
+                        });
 
-                            // Get facets from URL parameters
-                            var facets = $location.search()[paramPrefix + "fq"];
+                        // When modal closes, export the grid
+                        exportModal.result.then(function (data) {
+                            getSearchQuery().then(function (searchQuery) {
+                                var query = searchQuery;
+                                var quickFilter = scope.quickFilterValue;
 
-                            // If there are advanced search rules, get them and perform advanced search
-                            var rules = $location.search()[paramPrefix + "rules"];
+                                if (!_.isUndefined(quickFilter) && quickFilter.length > 0) {
+                                    query = "" + query + " AND " + quickFilter;
+                                }
 
-                            if (!_.isUndefined(rules)) {
-                                rules = JSURL.parse(rules);
-                            }
+                                // Get facets from URL parameters
+                                var facets = $location.search()[paramPrefix + "fq"];
 
-                            // Download the data as a CSV file from the server
-                            var viewType = grid.viewType;
-                            if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
-                                viewType = undefined;
-                            }
+                                // If there are advanced search rules, get them and perform advanced search
+                                var rules = $location.search()[paramPrefix + "rules"];
 
-                            Data.downloadGridResultDataAsCsv(query, facets, rules, viewType, grid.lang);
+                                if (!_.isUndefined(rules)) {
+                                    rules = JSURL.parse(rules);
+                                }
+
+                                // Download the data as a CSV file from the server
+                                var viewType = grid.viewType;
+                                if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
+                                    viewType = undefined;
+                                }
+
+                                Data.downloadGridResultDataAsCsv(query, facets, rules, viewType, grid.lang);
+                            });
                         });
                     }
                 };
@@ -412,6 +433,11 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                     responseView = response.view;
                                 }
 
+                                // Save the view in order to be able to use it for exporting
+                                if (_.isNull(dataView)) {
+                                    dataView = responseView;
+                                }
+
                                 // Disable the export button if there are more than 5000 results
                                 if (scope.resultsNum > 5000) {
                                     scope.exportBtnClass = "disabled";
@@ -451,11 +477,11 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
 
                                 // Check if any rows have no value for some attribute
                                 _.each(rowsThisPage, function (row) {
-                                    // for each column of the table
+                                    // For each column of the table
                                     _.each(responseView, function (column) {
                                         var attr = column.attribute;
 
-                                        // if it's undefined, try to find it with similar attribute name
+                                        // If it's undefined, try to find it with similar attribute name
                                         if (_.isUndefined(row[attr])) {
                                             var newValue = Data.findValueInResult(row, attr, Search.geti18nLangs(), grid.lang);
 

@@ -1,0 +1,18 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{ modalConfig.title }}</h4>
+</div>
+<div class="modal-body basket-modal-body">
+    <div class="alert alert-danger" role="alert" ng-if="modalConfig.alert.length>0">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        {{ modalConfig.alert }}
+    </div>
+
+    <ul>
+        <li ng-repeat="col in modalConfig.view">{{ col.header }}</li>
+    </ul>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-success" type="button" ng-click="exportGrid()">Export</button>
+    <button class="btn btn-active" type="button" ng-click="$dismiss()">Cancel</button>
+</div>
