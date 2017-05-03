@@ -389,14 +389,15 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 var visualizeGrid = function (quickFilter) {
                     // Create grid data source
                     var dataSource = {
+                        rowCount: null, // behave as infinite scroll
                         maxPagesInCache: 10,
+                        overflowSize: parseInt(grid.pageSize),
                         pageSize: parseInt(grid.pageSize),
                         getRows: function (params) {
                             // Function to be called when grid results are retrieved successfully
                             var gridResultDataSuccess = function (response) {
                                 // Extract needed variables from server response
                                 var responseData = null;
-                                var lastRow = null;
                                 var responseView = null;
 
                                 // If response.data is an array, assume that results are formatted for grids directly
@@ -410,9 +411,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                     // Get number of results
                                     scope.resultsNum = response.data.response.numFound;
 
-                                    // Get last row number
-                                    lastRow = response.data.response.start + parseInt(grid.pageSize);
-
                                     // Create array with possible view names (view type of tab should always be preferred)
                                     var resultTypes = _.first(responseData).type;
                                     var possibleViewNames = _.union([grid.viewType], resultTypes);
@@ -425,9 +423,6 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
 
                                     // Get number of results
                                     scope.resultsNum = parseInt(scope.numberOfItems);
-
-                                    // Get last row number
-                                    lastRow = params.startRow + parseInt(grid.pageSize);
 
                                     // Get view object
                                     responseView = response.view;
@@ -446,8 +441,8 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                 }
 
                                 // Set number of loaded rows
-                                if (lastRow > scope.loadedRows) {
-                                    scope.loadedRows = lastRow;
+                                if (params.endRow > scope.loadedRows) {
+                                    scope.loadedRows = params.endRow;
 
                                     if (scope.loadedRows > scope.resultsNum) {
                                         scope.loadedRows = scope.resultsNum;
@@ -500,7 +495,13 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                     });
                                 });
 
-                                params.successCallback(rowsThisPage, scope.resultsNum);
+                                var lastRow = -1;
+                                if (scope.resultsNum <= params.endRow) {
+                                    // We reached the end, so set the last row to the number of total results
+                                    lastRow = scope.resultsNum;
+                                }
+
+                                params.successCallback(rowsThisPage, lastRow);
 
                                 // Call sizeColumnsToFit, if this grid is in the selected tab of Tabbed Search (so
                                 // tab url parameter will be the same as this grid's view type) or if query length
