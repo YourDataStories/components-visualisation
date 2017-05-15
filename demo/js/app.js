@@ -16,6 +16,9 @@ ydsDemo.controller('ProjectDetailsController', ['$scope', '$location', 'YDS_CONS
 
         // Set language and default project ID if needed, depending on which page is shown
         switch (path) {
+            case "/dcat-ap":
+                projectId = projectId || "http://linkedeconomy.org/resource/PublicWork/356835";
+                break;
             case "/organisation-buyer":
                 $scope.lang = "el";
 
@@ -128,6 +131,9 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
                         case "PublicProject":
                             $location.path("/project2");
                             break;
+                        case "DcatAp":
+                            $location.path("/dcat-ap");
+                            break;
                     }
                 }
             }
@@ -193,7 +199,8 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
         })
         .state('dcat-ap', {
             url: '/dcat-ap',
-            templateUrl: 'templates-demo/dcat-ap.html'
+            templateUrl: 'templates-demo/dcat-ap.html',
+            controller: 'ProjectDetailsController',
         })
         .state('geo-editing', {
             url: '/geo-editing',

@@ -9,9 +9,17 @@
         <tbody>
         <tr ng-repeat="item in itemData">
             <td>
-                <a ng-href="{{item.key.url}}">
+                <!--Attribute label with URL-->
+                <span ng-if="item.key.url.length > 0">
+                    <a ng-href="{{item.key.url}}">
+                        {{ item.key.label }}
+                    </a>
+                </span>
+
+                <!--Attribute label without URL-->
+                <span ng-if="item.key.url === undefined">
                     {{ item.key.label }}
-                </a>
+                </span>
             </td>
             <td>
                 <div class="dcat-value">

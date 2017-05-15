@@ -1226,9 +1226,10 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
     /**
      * Get item description for DCAT-AP pages
      * @param itemUri   ID of item to describe
+     * @param baseUrl
      * @returns {promise|*|s|d|t|i}
      */
-    dataService.getItemDescription = function (itemUri) {
+    dataService.getItemDescription = function (itemUri, baseUrl) {
         var deferred = $q.defer();
 
         var params = {
@@ -1246,15 +1247,18 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             // Get data and remove the context
             var data = response.data.data;
             var context = data["@context"];
-            data = _.omit(data, "@context");
-
             var newData = [];
 
+            data = _.omit(data, "@context");
             _.each(data, function (val, key) {
                 // Get URL for key
-                var keyUrl = context[key];
-                if (_.isObject(keyUrl) && _.has(keyUrl, "@id")) {
-                    keyUrl = keyUrl["@id"];
+                if (!_.isUndefined(context)) {
+                    var keyUrl = context[key];
+                    if (_.isObject(keyUrl) && _.has(keyUrl, "@id")) {
+                        keyUrl = keyUrl["@id"];
+                    }
+
+                    keyUrl = baseUrl + "?type=DcatAp&id=" + keyUrl;
                 }
 
                 // Create data object
