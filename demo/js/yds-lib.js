@@ -1233,7 +1233,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
 
         var params = {
             compact: 1,
-            context: 0,
+            // context: 0,
             id: itemUri
         };
 
@@ -1243,7 +1243,35 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             params: params,
             headers: {'Content-Type': 'application/json; charset=UTF-8'}
         }).then(function (response) {
-            deferred.resolve(response.data);
+            // Get data and remove the context
+            var data = response.data.data;
+            var context = data["@context"];
+            data = _.omit(data, "@context");
+
+            var newData = [];
+
+            _.each(data, function (val, key) {
+                // Get URL for key
+                var keyUrl = context[key];
+                if (_.isObject(keyUrl) && _.has(keyUrl, "@id")) {
+                    keyUrl = keyUrl["@id"];
+                }
+
+                // Create data object
+                var dataObj = {
+                    key: {
+                        label: key,
+                        url: keyUrl
+                    },
+                    value: {
+                        label: val
+                    }
+                };
+
+                newData.push(dataObj);
+            });
+
+            deferred.resolve(newData);
         }, function (error) {
             deferred.reject(error);
         });

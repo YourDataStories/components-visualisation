@@ -7,11 +7,15 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="(key, value) in itemData">
-            <td>{{ key }}</td>
+        <tr ng-repeat="item in itemData">
+            <td>
+                <a ng-href="{{item.key.url}}">
+                    {{ item.key.label }}
+                </a>
+            </td>
             <td>
                 <div class="dcat-value">
-                    {{ value }}
+                    {{ item.value.label }}
                 </div>
             </td>
         </tr>

@@ -1437,4 +1437,5 @@ td.table-cell-center, th.table-cell-center {
 div.dcat-value {
     max-height: 200px;
     overflow-y: auto;
+    word-break: break-all;
 }
