@@ -191,6 +191,10 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
             url: '/map',
             templateUrl: 'templates-demo/map.html'
         })
+        .state('dcat-ap', {
+            url: '/dcat-ap',
+            templateUrl: 'templates-demo/dcat-ap.html'
+        })
         .state('geo-editing', {
             url: '/geo-editing',
             templateUrl: 'templates-demo/geo-editing.html'
