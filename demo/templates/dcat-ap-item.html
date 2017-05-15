@@ -1,9 +1,12 @@
 <div class="component-wrapper">
     <table class="table table-striped">
+        <thead>
         <tr>
             <th>Attributes</th>
             <th>Values</th>
         </tr>
+        </thead>
+        <tbody>
         <tr ng-repeat="(key, value) in itemData">
             <td>{{ key }}</td>
             <td>
@@ -12,5 +15,6 @@
                 </div>
             </td>
         </tr>
+        </tbody>
     </table>
 </div>
