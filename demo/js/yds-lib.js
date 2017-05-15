@@ -38,6 +38,7 @@ app.constant("YDS_CONSTANTS", {
     "API_TYPE2_ADVANCED_QUERY": "platform.yourdatastories.eu/api/json-ld/component/type2advancedquery.tcl",
     "API_RELATED_ITEMS": "platform.yourdatastories.eu/api/json-ld/social/relateditems.tcl",
     "API_GEOJSON_GR": "platform.yourdatastories.eu/api/json-ld/geo/greece",
+    "API_DESCRIBE": "platform.yourdatastories.eu/api/json-ld/model/describe.tcl",
 
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search",
     "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search-el",
@@ -1215,6 +1216,34 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                 data: formattedData,
                 total: totalResults
             });
+        }, function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
+
+    /**
+     * Get item description for DCAT-AP pages
+     * @param itemUri   ID of item to describe
+     * @returns {promise|*|s|d|t|i}
+     */
+    dataService.getItemDescription = function (itemUri) {
+        var deferred = $q.defer();
+
+        var params = {
+            compact: 1,
+            context: 0,
+            id: itemUri
+        };
+
+        $http({
+            method: 'GET',
+            url: "http://" + YDS_CONSTANTS.API_DESCRIBE,
+            params: params,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'}
+        }).then(function (response) {
+            deferred.resolve(response.data);
         }, function (error) {
             deferred.reject(error);
         });

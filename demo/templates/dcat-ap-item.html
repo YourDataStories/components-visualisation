@@ -1,0 +1,16 @@
+<div class="component-wrapper">
+    <table class="table table-striped">
+        <tr>
+            <th>Attributes</th>
+            <th>Values</th>
+        </tr>
+        <tr ng-repeat="(key, value) in itemData">
+            <td>{{ key }}</td>
+            <td>
+                <div class="dcat-value">
+                    {{ value }}
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

@@ -1432,3 +1432,9 @@ td.table-cell-center, th.table-cell-center {
     color: #a30004;
     background: #ffbdc2;
 }
+
+/* DCAT-AP item style */
+div.dcat-value {
+    max-height: 200px;
+    overflow-y: auto;
+}
