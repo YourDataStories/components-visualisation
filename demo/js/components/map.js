@@ -44,7 +44,7 @@ angular.module('yds').directive('ydsMap', ['Data', function (Data) {
                 return false;
             }
 
-            //check if info-type attribute is empty and assign the default value
+            //check if view-type attribute is empty and assign the default value
             if (_.isUndefined(viewType) || viewType.trim() == "")
                 viewType = "default";
 

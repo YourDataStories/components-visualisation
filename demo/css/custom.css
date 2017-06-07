@@ -1439,3 +1439,10 @@ div.dcat-value {
     overflow-y: auto;
     word-break: break-all;
 }
+
+/* Make the SVG container of the graph component the same size as its container
+   (fix this issue https://github.com/anvaka/VivaGraphJS/issues/108#issuecomment-61425988) */
+.graph-container svg {
+    width: 100%;
+    height: 100%;
+}
