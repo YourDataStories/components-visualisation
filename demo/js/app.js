@@ -163,6 +163,11 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
             templateUrl: 'templates-demo/contract-ted.html',
             controller: 'ProjectDetailsController'
         })
+        .state('graph', {
+            url: '/graph',
+            templateUrl: 'templates-demo/graph.html',
+            controller: 'ProjectDetailsController'
+        })
         .state('contract-ted-n6', {
             url: '/contract-ted-n6',
             templateUrl: 'templates-demo/contract-ted.html',
