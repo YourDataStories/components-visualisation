@@ -58,15 +58,48 @@ angular.module("yds").directive("ydsGraph", ["Data",
                 graphContainer.style.height = elementH + "px";
 
                 // Create the graph
-                var graph = Viva.Graph.graph();
+                var g = Viva.Graph.graph();
 
                 // Add graph data
-                graph.addLink(1, 2);
-                graph.addLink(2, 3);
+                g.addNode("Node 1", {
+                    icon: "\uf197"
+                });
+                g.addNode("Node 2", {
+                    icon: "\uf080"
+                });
+                g.addLink("Node 1", "Node 2");
+
+                // Add node rendering functions
+                var graphics = Viva.Graph.View.svgGraphics();
+                var nodeSize = 24;
+
+                graphics.node(function (node) {
+                    // The function is called every time renderer needs a ui to display node
+                    var myNode = Viva.Graph.svg("g"),
+                        icon = Viva.Graph.svg("text")
+                            .attr("font-family", "FontAwesome")
+                            .attr("font-size", "24px")
+                            .text(node.data.icon),
+                        text = Viva.Graph.svg("text")
+                            .attr("x", "30px")
+                            .attr("y", "-4px")
+                            .text(node.id);
+
+                    myNode.append(icon);
+                    myNode.append(text);
+
+                    return myNode;
+                }).placeNode(function (nodeUI, pos) {
+                    nodeUI.attr('transform',
+                        'translate(' +
+                        (pos.x - nodeSize / 2) + ',' + (pos.y + nodeSize / 2) +
+                        ')');
+                });
 
                 // Render the graph
-                var renderer = Viva.Graph.View.renderer(graph, {
-                    container: graphContainer
+                var renderer = Viva.Graph.View.renderer(g, {
+                    container: graphContainer,
+                    graphics: graphics
                 });
                 renderer.run();
             }
