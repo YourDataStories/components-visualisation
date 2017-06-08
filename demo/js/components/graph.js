@@ -1,5 +1,5 @@
-angular.module("yds").directive("ydsGraph", ["Data",
-    function (Data) {
+angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
+    function (Data, $ocLazyLoad) {
         return {
             restrict: "E",
             scope: {
@@ -17,6 +17,7 @@ angular.module("yds").directive("ydsGraph", ["Data",
             },
             templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/graph.html",
             link: function (scope, element, attrs) {
+                var drupalPath = (typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '';
                 var graphContainer = _.first(angular.element(element[0].querySelector(".graph-container")));
 
                 var elementId = "graph" + Data.createRandomId();
@@ -57,10 +58,13 @@ angular.module("yds").directive("ydsGraph", ["Data",
 
                 graphContainer.style.height = elementH + "px";
 
-                //todo: load cytoscape if not loaded, else just call createGraph()
-
-                var getData = function () {
-                    return {
+                /**
+                 * Create the graph
+                 */
+                var createGraph = function () {
+                    // Get data
+                    //todo: get real data
+                    var data = {
                         nodes: [
                             {
                                 data: {
@@ -100,11 +104,6 @@ angular.module("yds").directive("ydsGraph", ["Data",
                             }
                         ]
                     };
-                };
-
-                var createGraph = function () {
-                    // Get data
-                    var data = getData();
 
                     // Create graph
                     var cy = cytoscape({
@@ -135,8 +134,16 @@ angular.module("yds").directive("ydsGraph", ["Data",
                     });
                 };
 
-                // Create the graph
-                createGraph();
+                // Load cytoscape if not loaded already and create the graph
+                if (typeof cytoscape === "undefined") {
+                    $ocLazyLoad.load({
+                        files: [
+                            drupalPath + "lib/cytoscape.min.js"
+                        ]
+                    }).then(createGraph);
+                } else {
+                    createGraph();
+                }
             }
         };
     }
