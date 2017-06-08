@@ -17,7 +17,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
             },
             templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/graph.html",
             link: function (scope, element, attrs) {
-                var drupalPath = (typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '';
+                var drupalPath = (typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "";
                 var graphContainer = _.first(angular.element(element[0].querySelector(".graph-container")));
 
                 var elementId = "graph" + Data.createRandomId();
@@ -132,14 +132,39 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
                             animate: true
                         }
                     });
+
+                    // Add qtips to the graph nodes for getting more information
+                    cy.nodes().qtip({
+                        content: function () {
+                            var data = this.data();
+                            return "<strong>Node ID:</strong> " + this.id()
+                                + "<br/><strong>Node name:</strong> " + data.name;
+                        },
+                        position: {
+                            my: "top center",
+                            at: "bottom center"
+                        },
+                        style: {
+                            classes: "qtip-bootstrap",
+                            tip: {
+                                width: 16,
+                                height: 8
+                            }
+                        }
+                    });
                 };
 
                 // Load cytoscape if not loaded already and create the graph
                 if (typeof cytoscape === "undefined") {
                     $ocLazyLoad.load({
                         files: [
-                            drupalPath + "lib/cytoscape.min.js"
-                        ]
+                            drupalPath + "css/jquery.qtip.min.css",
+                            drupalPath + "lib/cytoscape/jquery.qtip.min.js",
+                            drupalPath + "lib/cytoscape/cytoscape.min.js",
+                            drupalPath + "lib/cytoscape/cytoscape-qtip.js"
+                        ],
+                        cache: true,
+                        serie: true
                     }).then(createGraph);
                 } else {
                     createGraph();
