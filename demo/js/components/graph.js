@@ -57,51 +57,86 @@ angular.module("yds").directive("ydsGraph", ["Data",
 
                 graphContainer.style.height = elementH + "px";
 
+                //todo: load cytoscape if not loaded, else just call createGraph()
+
+                var getData = function () {
+                    return {
+                        nodes: [
+                            {
+                                data: {
+                                    id: 0,
+                                    name: "Node 1",
+                                    icon: "\uf15b"
+                                }
+                            },
+                            {
+                                data: {
+                                    id: 1,
+                                    name: "Node 2",
+                                    icon: "\uf15b"
+                                }
+                            },
+                            {
+                                data: {
+                                    id: 2,
+                                    name: "Node 3",
+                                    icon: "\uf15b"
+                                }
+                            }
+                        ],
+                        edges: [
+                            {
+                                data: {
+                                    id: "edge1",
+                                    name: "Edge 1",
+                                    source: 0, target: 1
+                                }
+                            }, {
+                                data: {
+                                    id: "edge2",
+                                    name: "Edge 2",
+                                    source: 1, target: 2
+                                }
+                            }
+                        ]
+                    };
+                };
+
+                var createGraph = function () {
+                    // Get data
+                    var data = getData();
+
+                    // Create graph
+                    var cy = cytoscape({
+                        container: graphContainer,
+                        elements: data,
+                        wheelSensitivity: 0.3,
+                        style: cytoscape.stylesheet()
+                            .selector("node")
+                            .css({
+                                "text-wrap": "wrap",
+                                "content": function (ele) {
+                                    return ele.data("icon") + "\n" + ele.data("name");
+                                },
+                                "width": "label",
+                                "padding": "10px",
+                                "font-family": "FontAwesome, Sans-Serif",
+                                "text-valign": "center",
+                                "text-halign": "center"
+                            })
+                            .selector("edge")
+                            .css({
+                                "label": "data(name)"
+                            }),
+                        layout: {
+                            name: "cose",
+                            animate: true
+                        }
+                    });
+                };
+
                 // Create the graph
-                var g = Viva.Graph.graph();
-
-                // Add graph data
-                g.addNode("Node 1", {
-                    icon: "\uf197"
-                });
-                g.addNode("Node 2", {
-                    icon: "\uf080"
-                });
-                g.addLink("Node 1", "Node 2");
-
-                // Add node rendering functions
-                var graphics = Viva.Graph.View.svgGraphics();
-                var nodeSize = 24;
-
-                graphics.node(function (node) {
-                    // The function is called every time renderer needs a ui to display node
-                    var myNode = Viva.Graph.svg("g"),
-                        icon = Viva.Graph.svg("text")
-                            .attr("font-family", "FontAwesome")
-                            .attr("font-size", "24px")
-                            .text(node.data.icon),
-                        text = Viva.Graph.svg("text")
-                            .attr("x", "30px")
-                            .attr("y", "-4px")
-                            .text(node.id);
-
-                    myNode.append(icon);
-                    myNode.append(text);
-
-                    return myNode;
-                }).placeNode(function (nodeUI, pos) {
-                    nodeUI.attr('transform',
-                        'translate(' +
-                        (pos.x - nodeSize / 2) + ',' + (pos.y + nodeSize / 2) +
-                        ')');
-                });
-
-                // Render the graph
-                var renderer = Viva.Graph.View.renderer(g, {
-                    container: graphContainer,
-                    graphics: graphics
-                });
-                renderer.run();
+                createGraph();
             }
         };
     }

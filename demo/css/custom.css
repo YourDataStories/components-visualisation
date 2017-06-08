@@ -1440,6 +1440,11 @@ div.dcat-value {
     word-break: break-all;
 }
 
+/* Graph component border */
+.graph-container {
+    border: 2px rgb(220, 220, 220) solid;
+}
+
 /* Make the SVG container of the graph component the same size as its container
    (fix this issue https://github.com/anvaka/VivaGraphJS/issues/108#issuecomment-61425988) */
 .graph-container svg {
