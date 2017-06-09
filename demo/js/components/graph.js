@@ -70,7 +70,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
                                 data: {
                                     id: 0,
                                     name: "Node 1",
-                                    icon: "\uf15b"
+                                    icon: "\uf19c"
                                 }
                             },
                             {
@@ -84,7 +84,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
                                 data: {
                                     id: 2,
                                     name: "Node 3",
-                                    icon: "\uf15b"
+                                    icon: "\uf0e7"
                                 }
                             }
                         ],
@@ -117,19 +117,32 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
                                 "content": function (ele) {
                                     return ele.data("icon") + "\n" + ele.data("name");
                                 },
+                                "background-color": "#c2c2c2",
                                 "width": "label",
+                                "height": function (ele) {
+                                    return ele.width();
+                                },
                                 "padding": "10px",
                                 "font-family": "FontAwesome, Sans-Serif",
                                 "text-valign": "center",
-                                "text-halign": "center"
+                                "text-halign": "center",
+                                "border-width": "1",
+                                "border-color": "#707070"
+                            })
+                            .selector(":selected")
+                            .css({
+                                "background-color": "#0089ff"
                             })
                             .selector("edge")
                             .css({
                                 "label": "data(name)"
                             }),
                         layout: {
-                            name: "cose",
-                            animate: true
+                            name: "cola",
+                            animate: true,
+                            infinite: true,
+                            fit: false,
+                            nodeSpacing: 40
                         }
                     });
 
@@ -161,6 +174,8 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
                             drupalPath + "css/jquery.qtip.min.css",
                             drupalPath + "lib/cytoscape/jquery.qtip.min.js",
                             drupalPath + "lib/cytoscape/cytoscape.min.js",
+                            drupalPath + "lib/cytoscape/cola.min.js",
+                            drupalPath + "lib/cytoscape/cytoscape-cola.js",
                             drupalPath + "lib/cytoscape/cytoscape-qtip.js"
                         ],
                         cache: true,
