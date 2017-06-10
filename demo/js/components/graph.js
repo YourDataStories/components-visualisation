@@ -114,28 +114,25 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
                             .selector("node")
                             .css({
                                 "text-wrap": "wrap",
-                                "content": function (ele) {
-                                    return ele.data("icon") + "\n" + ele.data("name");
-                                },
+                                "label": "data(name)",
                                 "background-color": "#c2c2c2",
-                                "width": "label",
-                                "height": function (ele) {
-                                    return ele.width();
-                                },
-                                "padding": "10px",
-                                "font-family": "FontAwesome, Sans-Serif",
+                                "width": "40",
+                                "height": "40",
+                                "padding": "5",
+                                "text-margin-x": "3",
+                                "font-family": "Sans-Serif",
                                 "text-valign": "center",
-                                "text-halign": "center",
+                                "text-halign": "right",
                                 "border-width": "1",
-                                "border-color": "#707070"
+                                "border-color": "#707070",
+                                "background-image": "img/1497125843_bookshelf.svg", // test icon from: https://www.iconfinder.com/icons/1055107/books_bookshelf_library_icon#size=128
+                                "background-fit": "contain",
+                                "background-width-relative-to": "inner",
+                                "background-height-relative-to": "inner"
                             })
                             .selector(":selected")
                             .css({
                                 "background-color": "#0089ff"
-                            })
-                            .selector("edge")
-                            .css({
-                                "label": "data(name)"
                             }),
                         layout: {
                             name: "cola",
