@@ -162,6 +162,31 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
                             }
                         }
                     });
+
+                    // Define custom "double click" event (https://stackoverflow.com/a/24830082)
+                    var doubleClickDuration = 300;  // Max time between two taps that will be considered a double tap
+                    var tappedBefore;
+                    var tappedTimeout;
+                    cy.on("tap", function (event) {
+                        var tappedNow = event.cyTarget;
+                        if (tappedTimeout && tappedBefore) {
+                            clearTimeout(tappedTimeout);
+                        }
+                        if (tappedBefore === tappedNow) {
+                            tappedNow.trigger("doubleTap");
+                            tappedBefore = null;
+                        } else {
+                            tappedTimeout = setTimeout(function () {
+                                tappedBefore = null;
+                            }, doubleClickDuration);
+                            tappedBefore = tappedNow;
+                        }
+                    });
+
+                    // Set double click event handler (to load more graph nodes)
+                    cy.nodes().on("doubleTap", function (event) {
+                        console.log("Double tap", event);
+                    });
                 };
 
                 // Load cytoscape if not loaded already and create the graph
