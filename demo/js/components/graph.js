@@ -26,12 +26,13 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
                 var projectId = scope.projectId;
                 var viewType = scope.viewType;
                 var lang = scope.lang;
-
                 var extraParams = scope.extraParams;
                 var baseUrl = scope.baseUrl;
-
                 var exporting = scope.exporting;
                 var elementH = parseInt(scope.elementH);
+
+                // The Cytoscape instance for this graph component
+                var cy = null;
 
                 // Check if projectId is defined
                 if (_.isUndefined(projectId) || projectId.trim() === "") {
@@ -57,6 +58,81 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
                     elementH = 200;
 
                 graphContainer.style.height = elementH + "px";
+
+                // Define qTip settings
+                var qtipConfig = {
+                    content: function () {
+                        var data = this.data();
+                        return "<strong>Node ID:</strong> " + this.id()
+                            + "<br/><strong>Node name:</strong> " + data.name;
+                    },
+                    position: {
+                        my: "top center",
+                        at: "bottom center"
+                    },
+                    style: {
+                        classes: "qtip-bootstrap",
+                        tip: {
+                            width: 16,
+                            height: 8
+                        }
+                    }
+                };
+
+                var nodeDoubleTapHandler = function (event) {
+                    // Generate extra nodes & edges
+                    //todo: get the new nodes from API
+                    var newData = [];
+                    var nodesToGenerate = 4;
+                    var edgesToGenerate = 5;
+                    var existingNodes = cy.nodes().length;
+                    var existingEdges = cy.edges().length;
+
+                    // Generate nodes
+                    for (var nodeNum = 0; nodeNum < nodesToGenerate; nodeNum++) {
+                        newData.push({
+                            group: "nodes",
+                            data: {
+                                id: existingNodes + nodeNum,
+                                name: "Node " + (existingNodes + nodeNum + 1)
+                            }
+                        });
+                    }
+
+                    // Generate edges
+                    var newNodesMaxId = existingNodes + nodesToGenerate - 1;
+                    var newNodesMinId = existingNodes;
+
+                    for (var edgeNum = 0; edgeNum < edgesToGenerate; edgeNum++) {
+                        newData.push({
+                            group: "edges",
+                            data: {
+                                id: "edge" + (existingEdges + edgeNum + 1),
+                                name: "Edge " + (existingEdges + edgeNum + 1),
+                                source: Math.floor(Math.random() * (newNodesMaxId - newNodesMinId + 1)) + newNodesMinId,
+                                target: Math.floor(Math.random() * (newNodesMaxId - newNodesMinId + 1)) + newNodesMinId
+                            }
+                        });
+                    }
+
+                    // Create edge that connects the clicked node with one of the new nodes
+                    newData.push({
+                        group: "edges",
+                        data: {
+                            id: "edge" + (existingEdges + edgesToGenerate + 1),
+                            name: "Edge " + (existingEdges + edgesToGenerate + 1),
+                            source: parseInt(event.cyTarget.id()),  // Double-tapped node ID
+                            target: Math.floor(Math.random() * (newNodesMaxId - newNodesMinId + 1)) + newNodesMinId
+                        }
+                    });
+
+                    // Add new nodes and edges to the graph
+                    var newElements = cy.add(newData);
+
+                    // Add qtip and double click event to the new nodes
+                    newElements.nodes().qtip(qtipConfig);
+                    newElements.nodes().on("doubleTap", nodeDoubleTapHandler);
+                };
 
                 /**
                  * Create the graph
@@ -106,7 +182,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
                     };
 
                     // Create graph
-                    var cy = cytoscape({
+                    cy = cytoscape({
                         container: graphContainer,
                         elements: data,
                         wheelSensitivity: 0.3,
@@ -144,24 +220,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
                     });
 
                     // Add qtips to the graph nodes for getting more information
-                    cy.nodes().qtip({
-                        content: function () {
-                            var data = this.data();
-                            return "<strong>Node ID:</strong> " + this.id()
-                                + "<br/><strong>Node name:</strong> " + data.name;
-                        },
-                        position: {
-                            my: "top center",
-                            at: "bottom center"
-                        },
-                        style: {
-                            classes: "qtip-bootstrap",
-                            tip: {
-                                width: 16,
-                                height: 8
-                            }
-                        }
-                    });
+                    cy.nodes().qtip(qtipConfig);
 
                     // Define custom "double click" event (https://stackoverflow.com/a/24830082)
                     var doubleClickDuration = 300;  // Max time between two taps that will be considered a double tap
@@ -184,9 +243,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
                     });
 
                     // Set double click event handler (to load more graph nodes)
-                    cy.nodes().on("doubleTap", function (event) {
-                        console.log("Double tap", event);
-                    });
+                    cy.nodes().on("doubleTap", nodeDoubleTapHandler);
                 };
 
                 // Load cytoscape if not loaded already and create the graph
