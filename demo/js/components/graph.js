@@ -142,7 +142,8 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
                     newElements.nodes().qtip(qtipConfig);
                     newElements.nodes().on("doubleTap", nodeDoubleTapHandler);
 
-                    // Add new nodes to layout
+                    // Stop current layout, and create new one with all the graph elements
+                    cy.layout().stop();
                     cy.elements().layout(layoutConfig);
                 };
 
