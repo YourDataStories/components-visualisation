@@ -79,6 +79,15 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
                     }
                 };
 
+                // Define graph layout settings
+                var layoutConfig = {
+                    name: "cola",
+                    animate: true,
+                    infinite: true,
+                    fit: false,
+                    nodeSpacing: 40
+                };
+
                 var nodeDoubleTapHandler = function (event) {
                     // Generate extra nodes & edges
                     //todo: get the new nodes from API
@@ -132,6 +141,9 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
                     // Add qtip and double click event to the new nodes
                     newElements.nodes().qtip(qtipConfig);
                     newElements.nodes().on("doubleTap", nodeDoubleTapHandler);
+
+                    // Add new nodes to layout
+                    cy.elements().layout(layoutConfig);
                 };
 
                 /**
@@ -210,13 +222,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
                             .css({
                                 "background-color": "#0089ff"
                             }),
-                        layout: {
-                            name: "cola",
-                            animate: true,
-                            infinite: true,
-                            fit: false,
-                            nodeSpacing: 40
-                        }
+                        layout: layoutConfig
                     });
 
                     // Add qtips to the graph nodes for getting more information
