@@ -83,6 +83,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
                 var maxNodeLevel = 0;
                 var totalGeneratedNodes = 0;
                 var totalGeneratedEdges = 0;
+                var oldLayout = null;
 
                 /**
                  * Generate a number of nodes with random edges.
@@ -141,24 +142,35 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
                     // Add new nodes and edges to the graph
                     var newElements = cy.add(newData);
 
-                    // Add qtip and double click event to the new nodes
-                    newElements.nodes().qtip(qtipConfig);
-                    newElements.nodes().on("doubleTap", nodeDoubleTapHandler);
-
                     // Create new layout with all the elements
-                    cy.layout().stop();
-                    cy.elements().layout({
+                    if (!_.isNull(oldLayout)) {
+                        oldLayout.stop();
+                    }
+                    oldLayout = cy.elements().layout({
                         name: "cola",
                         animate: true,
                         infinite: true,
                         fit: false,
                         nodeSpacing: 40
-                    });
+                    }).run();
 
                     // If there are more than 3 levels of nodes, remove the oldest one
                     if (maxNodeLevel > 3) {
-                        cy.remove("[level = " + (maxNodeLevel - 4) + "]");
+                        var oldNodeSelector = "[level = " + (maxNodeLevel - 4) + "]";
+
+                        // Remove edges
+                        cy.remove("edge" + oldNodeSelector);
+
+                        // Remove double tap listeners from nodes that are going to be deleted
+                        cy.nodes(oldNodeSelector).off("doubleTap");
+
+                        // Remove the nodes from the graph
+                        cy.remove(oldNodeSelector);
                     }
+
+                    // Add qtip and double click event to the new nodes
+                    newElements.nodes().qtip(qtipConfig);
+                    newElements.nodes().on("doubleTap", nodeDoubleTapHandler);
 
                     setTimeout(function () {
                         // Fit the viewport to the new nodes
@@ -213,7 +225,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
                     var tappedBefore;
                     var tappedTimeout;
                     cy.on("tap", function (event) {
-                        var tappedNow = event.cyTarget;
+                        var tappedNow = event.target;
                         if (tappedTimeout && tappedBefore) {
                             clearTimeout(tappedTimeout);
                         }
