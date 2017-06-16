@@ -64,7 +64,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                     content: function () {
                         var data = this.data();
                         return "<strong>Node ID:</strong> " + this.id()
-                            + "<br/><strong>Node name:</strong> " + data.name;
+                            + "<br/><strong>Node name:</strong> " + data.label;
                     },
                     position: {
                         my: "top center",
@@ -194,7 +194,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                             .selector("node")
                             .css({
                                 "text-wrap": "wrap",
-                                "label": "data(name)",
+                                "label": "data(label)",
                                 "background-color": "#c2c2c2",
                                 "width": "40",
                                 "height": "40",
@@ -241,7 +241,16 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                     });
 
                     // Add initial data
-                    nodeDoubleTapHandler();
+                    cy.add(Graph.getData("main"));
+                    cy.nodes().qtip(qtipConfig);
+                    oldLayout = cy.elements().layout({
+                        name: "cola",
+                        animate: true,
+                        infinite: true,
+                        randomize: true,
+                        fit: false,
+                        nodeSpacing: 75
+                    }).run();
                 };
 
                 // Load cytoscape if not loaded already and create the graph
