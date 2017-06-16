@@ -118,7 +118,7 @@ angular.module("yds").factory("Graph", ["$http", "$q", "YDS_CONSTANTS", "Data",
                 {
                     data: {
                         id: subprojectId + "_seller",
-                        label: "ΓΡΑΜΜΑΤΙΚΟΠΟΥΛΟΣ ΑΝΩΝΥΜΗ ΤΕΧΝΙΚΗ ΕΤΑΙΡΙΑ",
+                        label: "Seller: ΓΡΑΜΜΑΤΙΚΟΠΟΥΛΟΣ ΑΝΩΝΥΜΗ ΤΕΧΝΙΚΗ ΕΤΑΙΡΙΑ",
                         icon: ""
                     }
                 }, {

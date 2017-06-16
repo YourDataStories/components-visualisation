@@ -80,102 +80,47 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                 };
 
                 // Initialize counters for generated edges & nodes
-                var maxNodeLevel = 0;
-                var totalGeneratedNodes = 0;
-                var totalGeneratedEdges = 0;
                 var oldLayout = null;
-
-                /**
-                 * Generate a number of nodes with random edges.
-                 * @param nodesToGenerate   Number of nodes to generate
-                 * @param edgesToGenerate   Number of edges to generate
-                 */
-                var newRandomNodes = function (nodesToGenerate, edgesToGenerate) {
-                    var newData = [];
-
-                    // Generate nodes
-                    for (var nodeNum = 0; nodeNum < nodesToGenerate; nodeNum++) {
-                        newData.push({
-                            group: "nodes",
-                            data: {
-                                id: totalGeneratedNodes + nodeNum,
-                                name: "Node " + (totalGeneratedNodes + nodeNum + 1),
-                                level: maxNodeLevel
-                            }
-                        });
-                    }
-
-                    // Generate edges
-                    var newNodesMaxId = totalGeneratedNodes + nodesToGenerate - 1;
-                    var newNodesMinId = totalGeneratedNodes;
-
-                    for (var edgeNum = 0; edgeNum < edgesToGenerate; edgeNum++) {
-                        newData.push({
-                            group: "edges",
-                            data: {
-                                id: "edge" + (totalGeneratedEdges + edgeNum + 1),
-                                name: "Edge " + (totalGeneratedEdges + edgeNum + 1),
-                                level: maxNodeLevel,
-                                source: Math.floor(Math.random() * (newNodesMaxId - newNodesMinId + 1)) + newNodesMinId,
-                                target: Math.floor(Math.random() * (newNodesMaxId - newNodesMinId + 1)) + newNodesMinId
-                            }
-                        });
-                    }
-
-                    // Increase level counter and total created nodes and edges counters
-                    maxNodeLevel++;
-                    totalGeneratedNodes += nodesToGenerate;
-                    totalGeneratedEdges += edgesToGenerate;
-
-                    return newData;
-                };
 
                 /**
                  * Get the new nodes that need to be added to the graph for the double-clicked node and add them
                  * @param event
                  */
                 var nodeDoubleTapHandler = function (event) {
-                    // Generate extra nodes & edges
-                    //todo: get the new nodes from API
-                    var newData = newRandomNodes(4, 5);
+                    var targetNodeData = event.target.data();
+                    if (_.has(targetNodeData, "numberOfItems")) {
+                        var newData = Graph.getData(event.target.id());
 
-                    // Add new nodes and edges to the graph
-                    var newElements = cy.add(newData);
+                        if (!_.isUndefined(newData)) {
+                            // Add the new data to the graph
+                            var elements = cy.add(newData);
 
-                    // Create new layout with all the elements
-                    if (!_.isNull(oldLayout)) {
-                        oldLayout.stop();
-                    }
-                    oldLayout = cy.elements().layout({
-                        name: "cola",
-                        animate: true,
-                        infinite: true,
-                        fit: false,
-                        nodeSpacing: 40
-                    }).run();
+                            if (!_.isNull(oldLayout)) {
+                                oldLayout.stop();
+                            }
+                            oldLayout = cy.elements().layout({
+                                name: "cola",
+                                animate: true,
+                                infinite: true,
+                                fit: false,
+                                nodeSpacing: 75
+                            }).run();
 
-                    // If there are more than 3 levels of nodes, remove the oldest one
-                    if (maxNodeLevel > 3) {
-                        var oldNodeSelector = "[level = " + (maxNodeLevel - 4) + "]";
-
-                        // Remove edges
-                        cy.remove("edge" + oldNodeSelector);
-
-                        // Remove double tap listeners from nodes that are going to be deleted
-                        cy.nodes(oldNodeSelector).off("doubleTap");
-
-                        // Remove the nodes from the graph
-                        cy.remove(oldNodeSelector);
+                            // Add qtip and double tap event to all nodes (after removing them (?))
+                            elements.nodes().on("doubleTap", nodeDoubleTapHandler);
+                            elements.nodes().qtip(qtipConfig);
+                        } else {
+                            // This should not happen, unless there is a server error (?)
+                            console.error("Error getting data for node...");
+                        }
+                    } else {
+                        console.log("No extra data for this node");
                     }
 
-                    // Add qtip and double click event to the new nodes
-                    newElements.nodes().qtip(qtipConfig);
-                    newElements.nodes().on("doubleTap", nodeDoubleTapHandler);
-
-                    setTimeout(function () {
-                        // Fit the viewport to the new nodes
-                        cy.fit("node[level = " + (maxNodeLevel - 1) + "]", 40);
-                    }, 500);
+                    // setTimeout(function () {
+                    //     // Fit the viewport to the new nodes
+                    //     cy.fit("node[level = " + (maxNodeLevel - 1) + "]", 40);
+                    // }, 500);
                 };
 
                 /**
@@ -251,6 +196,8 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                         fit: false,
                         nodeSpacing: 75
                     }).run();
+
+                    cy.nodes().on("doubleTap", nodeDoubleTapHandler);
                 };
 
                 // Load cytoscape if not loaded already and create the graph
