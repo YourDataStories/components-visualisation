@@ -1,5 +1,5 @@
-angular.module("yds").directive("ydsGraph", ["Data", "$ocLazyLoad",
-    function (Data, $ocLazyLoad) {
+angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
+    function (Data, Graph, $ocLazyLoad) {
         return {
             restrict: "E",
             scope: {
