@@ -157,6 +157,11 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                                 "background-width-relative-to": "inner",
                                 "background-height-relative-to": "inner"
                             })
+                            .selector("node[id=\"title\"]")
+                            .css({
+                                "width": "80",
+                                "height": "80"
+                            })
                             .selector("node:selected")
                             .css({
                                 "background-color": "#0089ff",
