@@ -6,7 +6,7 @@ angular.module("yds").factory("Graph", ["$http", "$q", "YDS_CONSTANTS", "Data",
                 {
                     group: "nodes",
                     data: {
-                        id: "title",
+                        id: "main",
                         label: "Βελτίωση οδού σύνδεσης Κομοτηνής - Καρυδιάς Ν. Ροδόπη",
                         icon: ""
                     }
@@ -32,24 +32,6 @@ angular.module("yds").factory("Graph", ["$http", "$q", "YDS_CONSTANTS", "Data",
                         label: "Financial Decisions",
                         icon: "",
                         numberOfItems: 100
-                    }
-                }, {
-                    data: {
-                        id: "title_budget_edge",
-                        source: "title",
-                        target: "budget"
-                    }
-                }, {
-                    data: {
-                        id: "title_subprojects_edge",
-                        source: "title",
-                        target: "subprojects"
-                    }
-                }, {
-                    data: {
-                        id: "title_fd_edge",
-                        source: "title",
-                        target: "financial_decisions"
                     }
                 }
             ],
@@ -81,30 +63,6 @@ angular.module("yds").factory("Graph", ["$http", "$q", "YDS_CONSTANTS", "Data",
                         label: "ΒΕΛΤΙΩΣΗ ΟΔΟΥ ΣΥΝΔΕΣΗΣ ΚΟΜΟΤΗΝΗΣ – ΚΑΡΥΔΙΑΣ 4",
                         icon: "",
                         numberOfItems: 4
-                    }
-                }, {
-                    data: {
-                        id: "edge_subproject1",
-                        source: "subprojects",
-                        target: "subproject1"
-                    }
-                }, {
-                    data: {
-                        id: "edge_subproject2",
-                        source: "subprojects",
-                        target: "subproject2"
-                    }
-                }, {
-                    data: {
-                        id: "edge_subproject3",
-                        source: "subprojects",
-                        target: "subproject3"
-                    }
-                }, {
-                    data: {
-                        id: "edge_subproject4",
-                        source: "subprojects",
-                        target: "subproject4"
                     }
                 }
             ]
@@ -142,20 +100,8 @@ angular.module("yds").factory("Graph", ["$http", "$q", "YDS_CONSTANTS", "Data",
                 }
             ];
 
-            // add edges
-            var edges = [];
-            _.each(subprojectData, function (item) {
-                edges.push({
-                    data: {
-                        id: "edge_" + item.data.id,
-                        source: subprojectId,
-                        target: item.data.id
-                    }
-                });
-            });
-
             // Add the subproject's data
-            fakeData[subprojectId] = _.union(subprojectData, edges);
+            fakeData[subprojectId] = subprojectData;
         }
 
         //todo: Generate data for the 100 financial_decisions
@@ -163,8 +109,29 @@ angular.module("yds").factory("Graph", ["$http", "$q", "YDS_CONSTANTS", "Data",
         // for (var i = 0; i < 100; i++) {
         // }
 
+        /**
+         * Get the nodes & edges for a specific node ID.
+         * @param id    Parent node ID
+         * @returns {*} Nodes & edges for adding to the graph
+         */
         var getData = function (id) {
-            return fakeData[id];
+            var nodes = fakeData[id];
+
+            // Create edges from the given node to each new one
+            var edges = [];
+            _.each(nodes, function (item) {
+                if (id !== item.data.id) {  // Prevent creating edge from the main node to itself
+                    edges.push({
+                        data: {
+                            id: "edge_" + item.data.id,
+                            source: id,
+                            target: item.data.id
+                        }
+                    });
+                }
+            });
+
+            return _.union(nodes, edges);
         };
 
         return {
