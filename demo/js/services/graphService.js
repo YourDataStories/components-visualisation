@@ -1,5 +1,7 @@
 angular.module("yds").factory("Graph", ["$http", "$q", "YDS_CONSTANTS", "Data",
     function ($http, $q, YDS_CONSTANTS, Data) {
+        var numOfFinancialDecisions = 20;
+
         // Create data
         var fakeData = {
             "main": [
@@ -31,7 +33,7 @@ angular.module("yds").factory("Graph", ["$http", "$q", "YDS_CONSTANTS", "Data",
                         id: "financial_decisions",
                         label: "Financial Decisions",
                         icon: "",
-                        numberOfItems: 100
+                        numberOfItems: numOfFinancialDecisions
                     }
                 }
             ],
@@ -65,14 +67,16 @@ angular.module("yds").factory("Graph", ["$http", "$q", "YDS_CONSTANTS", "Data",
                         numberOfItems: 4
                     }
                 }
-            ]
+            ],
+            "financial_decisions": []   // this is generated below
         };
 
         // Generate data for each subproject
-        for (var i = 1; i < 5; i++) {
+        var i;
+        for (i = 1; i < 5; i++) {
             var subprojectId = "subproject" + i;
 
-            var subprojectData = [
+            fakeData[subprojectId] = [
                 {
                     data: {
                         id: subprojectId + "_seller",
@@ -99,15 +103,58 @@ angular.module("yds").factory("Graph", ["$http", "$q", "YDS_CONSTANTS", "Data",
                     }
                 }
             ];
-
-            // Add the subproject's data
-            fakeData[subprojectId] = subprojectData;
         }
 
-        //todo: Generate data for the 100 financial_decisions
-        // var decisions = [];
-        // for (var i = 0; i < 100; i++) {
-        // }
+        // Generate the nodes for the financial decisions
+        for (i = 0; i < numOfFinancialDecisions; i++) {
+            fakeData["financial_decisions"].push({
+                data: {
+                    id: "financial_decision" + i,
+                    label: "Financial Decision #" + (i + 1),
+                    icon: "",
+                    numberOfItems: 5
+                }
+            })
+        }
+
+        // Generate data for each of the 100 financial_decisions
+        for (i = 0; i < numOfFinancialDecisions; i++) {
+            var decisionId = "financial_decision" + i;
+
+            fakeData[decisionId] = [
+                {
+                    data: {
+                        id: decisionId + "_seller",
+                        label: "Seller: ΠΑΠΑΤΖΙΚΟΥ ΕΛΕΝΗ ΓΕΩΡΓΙΟΣ",
+                        icon: ""
+                    }
+                }, {
+                    data: {
+                        id: decisionId + "_buyer",
+                        label: "Buyer: ΔΗΜΟΣ ΝΑΞΟΥ ΚΑΙ ΜΙΚΡΩΝ ΚΥΚΛΑΔΩΝ",
+                        icon: ""
+                    }
+                }, {
+                    data: {
+                        id: decisionId + "_date",
+                        label: "Date: 19/05/2014",
+                        icon: ""
+                    }
+                }, {
+                    data: {
+                        id: decisionId + "_amount",
+                        label: "Amount: €9,901.50",
+                        icon: ""
+                    }
+                }, {
+                    data: {
+                        id: decisionId + "_type",
+                        label: "Type: ΕΓΚΡΙΣΗ ΔΑΠΑΝΗΣ",
+                        icon: ""
+                    }
+                }
+            ];
+        }
 
         /**
          * Get the nodes & edges for a specific node ID.
