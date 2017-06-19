@@ -1444,3 +1444,20 @@ div.dcat-value {
 .graph-container {
     border: 2px rgb(220, 220, 220) solid;
 }
+
+/* Info panel of graph component */
+.graph-info-panel {
+    width: 350px;
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    overflow-y: auto;
+    padding: 10px;
+    margin: 10px;
+
+    border-radius: 8px;
+    border: 2px #b1b1b1 solid;
+    background-color: rgb(224, 224, 224);
+}

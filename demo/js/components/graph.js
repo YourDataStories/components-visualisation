@@ -31,6 +31,8 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                 var exporting = scope.exporting;
                 var elementH = parseInt(scope.elementH);
 
+                scope.showInfoPanel = false;
+
                 // The Cytoscape instance for this graph component
                 var cy = null;
 
