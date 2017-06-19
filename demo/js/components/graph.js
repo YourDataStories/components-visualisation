@@ -97,6 +97,23 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                 };
 
                 /**
+                 * Stop the old graph layout (if it exists in the "oldLayout" variable) and create a new one with the
+                 * current graph elements.
+                 */
+                var reloadLayout = function () {
+                    if (!_.isNull(oldLayout)) {
+                        oldLayout.stop();
+                    }
+                    oldLayout = cy.elements().layout({
+                        name: "cola",
+                        animate: true,
+                        infinite: true,
+                        fit: false,
+                        nodeSpacing: 75
+                    }).run();
+                };
+
+                /**
                  * Get the new nodes that need to be added to the graph for the double-clicked node and add them
                  * @param event
                  */
@@ -114,16 +131,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                                 // Add the new data to the graph
                                 var elements = cy.add(newData);
 
-                                if (!_.isNull(oldLayout)) {
-                                    oldLayout.stop();
-                                }
-                                oldLayout = cy.elements().layout({
-                                    name: "cola",
-                                    animate: true,
-                                    infinite: true,
-                                    fit: false,
-                                    nodeSpacing: 75
-                                }).run();
+                                reloadLayout();
 
                                 // Add qtip and double tap event to all nodes (after removing them (?))
                                 elements.nodes().on("doubleTap", nodeDoubleTapHandler);
@@ -133,8 +141,9 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                                 console.error("Error getting data for node...");
                             }
                         } else {
-                            // Remove all children of the node
+                            // Remove all children of the node and reload the graph layout
                             removeAllChildNodes(event.target);
+                            reloadLayout();
                         }
                     } else {
                         console.log("No extra data for this node");
