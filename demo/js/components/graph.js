@@ -83,35 +83,58 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                 var oldLayout = null;
 
                 /**
+                 * Remove all the outgoing edges and nodes from the given node, and all their own outgoing edges/nodes
+                 * recursively.
+                 * @param node  Node to remove all children of
+                 */
+                var removeAllChildNodes = function (node) {
+                    var outgoers = node.outgoers();
+                    if (outgoers.length > 0) {
+                        outgoers.nodes().forEach(removeAllChildNodes);
+                    }
+
+                    outgoers.remove();
+                };
+
+                /**
                  * Get the new nodes that need to be added to the graph for the double-clicked node and add them
                  * @param event
                  */
                 var nodeDoubleTapHandler = function (event) {
                     var targetNodeData = event.target.data();
                     if (_.has(targetNodeData, "numberOfItems")) {
-                        var newData = Graph.getData(event.target.id());
+                        // Get nodes & edges coming OUT from the clicked node
+                        var outgoers = event.target.outgoers();
 
-                        if (!_.isUndefined(newData)) {
-                            // Add the new data to the graph
-                            var elements = cy.add(newData);
+                        if (outgoers.length === 0) {
+                            // The node does not have children loaded, so load them
+                            var newData = Graph.getData(event.target.id());
 
-                            if (!_.isNull(oldLayout)) {
-                                oldLayout.stop();
+                            if (!_.isUndefined(newData)) {
+                                // Add the new data to the graph
+                                var elements = cy.add(newData);
+
+                                if (!_.isNull(oldLayout)) {
+                                    oldLayout.stop();
+                                }
+                                oldLayout = cy.elements().layout({
+                                    name: "cola",
+                                    animate: true,
+                                    infinite: true,
+                                    fit: false,
+                                    nodeSpacing: 75
+                                }).run();
+
+                                // Add qtip and double tap event to all nodes (after removing them (?))
+                                elements.nodes().on("doubleTap", nodeDoubleTapHandler);
+                                elements.nodes().qtip(qtipConfig);
+                            } else {
+                                // This should not happen, unless there is a server error (?)
+                                console.error("Error getting data for node...");
                             }
-                            oldLayout = cy.elements().layout({
-                                name: "cola",
-                                animate: true,
-                                infinite: true,
-                                fit: false,
-                                nodeSpacing: 75
-                            }).run();
-
-                            // Add qtip and double tap event to all nodes (after removing them (?))
-                            elements.nodes().on("doubleTap", nodeDoubleTapHandler);
-                            elements.nodes().qtip(qtipConfig);
                         } else {
-                            // This should not happen, unless there is a server error (?)
-                            console.error("Error getting data for node...");
+                            // Remove all children of the node
+                            removeAllChildNodes(event.target);
                         }
                     } else {
                         console.log("No extra data for this node");
@@ -157,7 +180,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                                 "background-width-relative-to": "inner",
                                 "background-height-relative-to": "inner"
                             })
-                            .selector("node[id=\"title\"]")
+                            .selector("node[id=\"main\"]")
                             .css({
                                 "width": "80",
                                 "height": "80"
