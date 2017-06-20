@@ -32,6 +32,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                 var elementH = parseInt(scope.elementH);
 
                 scope.showInfoPanel = false;
+                scope.infoPanelContent = "";
 
                 // The Cytoscape instance for this graph component
                 var cy = null;
@@ -118,6 +119,28 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                 };
 
                 /**
+                 * Callback for adding data from the Graph service to the graph, or showing it in the info panel if the
+                 * returned nodes are too many.
+                 * @param data  Data for the graph. Expected to be an object with "nodes" and "edges" properties.
+                 */
+                var addDataToGraph = function (data) {
+                    if (data.nodes.length < 50) {
+                        // Add the new nodes and their edges to the graph
+                        var elements = cy.add(_.union(data.nodes, data.edges));
+
+                        reloadLayout();
+
+                        // Add qtip and double tap event to all nodes (after removing them (?))
+                        elements.nodes().on("doubleTap", nodeDoubleTapHandler);
+                        elements.nodes().qtip(qtipConfig);
+                    } else {
+                        // Too many nodes, show them in the info panel
+                        scope.showInfoPanel = true;
+                        scope.infoPanelContent = data.nodes;
+                    }
+                };
+
+                /**
                  * Get the new nodes that need to be added to the graph for the double-clicked node and add them
                  * @param event
                  */
@@ -131,16 +154,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                         if (outgoers.length === 0) {
                             // The node does not have children loaded, so load them
                             Graph.getData(event.target.id())
-                                .then(function (data) {
-                                    // Add the new data to the graph
-                                    var elements = cy.add(data);
-
-                                    reloadLayout();
-
-                                    // Add qtip and double tap event to all nodes (after removing them (?))
-                                    elements.nodes().on("doubleTap", nodeDoubleTapHandler);
-                                    elements.nodes().qtip(qtipConfig);
-                                }, function (error) {
+                                .then(addDataToGraph, function (error) {
                                     console.error("Error while loading more nodes: ", error);
                                 });
                         } else {

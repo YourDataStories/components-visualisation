@@ -1,6 +1,6 @@
-angular.module("yds").factory("Graph", ["$http", "$q", "YDS_CONSTANTS", "Data",
-    function ($http, $q, YDS_CONSTANTS, Data) {
-        var numOfFinancialDecisions = 20;
+angular.module("yds").factory("Graph", ["$http", "$q",
+    function ($http, $q) {
+        var numOfFinancialDecisions = 50;
 
         // Create data
         var fakeData = {
@@ -180,9 +180,12 @@ angular.module("yds").factory("Graph", ["$http", "$q", "YDS_CONSTANTS", "Data",
                 }
             });
 
-            var totalData = _.union(nodes, edges);
+            var totalData = {
+                nodes: nodes,
+                edges: edges
+            };
 
-            if (!_.isUndefined(totalData) && !_.isEmpty(totalData)) {
+            if (!_.isUndefined(totalData.nodes) && !_.isEmpty(totalData.nodes)) {
                 deferred.resolve(totalData);
             } else {
                 deferred.reject("No data for this node...");
