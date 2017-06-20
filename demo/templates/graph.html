@@ -1,10 +1,17 @@
 <div class="component-wrapper" ng-class="{'margin-bottom-30': enableRating == 'true'}">
+    <!--Container for the graph-->
     <div class="graph-container">
     </div>
+
+    <!--Info panel-->
     <div class="graph-info-panel"
          ng-if="showInfoPanel">
-        <p>
-            {{ infoPanelContent }}
-        </p>
+        <!--Close button-->
+        <div class="info-panel-close-btn" ng-click="closeInfoPanel()">
+            <i class="fa fa-2x fa-times-circle" aria-hidden="true"></i>
+        </div>
+
+        <!--Content-->
+        <p>{{ infoPanelContent }}</p>
     </div>
 </div>

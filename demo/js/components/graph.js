@@ -86,6 +86,13 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                 var oldLayout = null;
 
                 /**
+                 * Close the info panel
+                 */
+                scope.closeInfoPanel = function () {
+                    scope.showInfoPanel = false;
+                };
+
+                /**
                  * Remove all the outgoing edges and nodes from the given node, and all their own outgoing edges/nodes
                  * recursively.
                  * @param node  Node to remove all children of

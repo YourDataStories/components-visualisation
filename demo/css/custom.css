@@ -1461,3 +1461,13 @@ div.dcat-value {
     border: 2px #b1b1b1 solid;
     background-color: rgb(224, 224, 224);
 }
+
+/* Info panel close button */
+.info-panel-close-btn {
+    position: absolute;
+    right: 5px;
+    top: 0;
+
+    cursor: pointer;
+    color: #c3000f;
+}
