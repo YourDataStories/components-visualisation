@@ -231,7 +231,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                                     "background-height-relative-to": "inner"
                                 }
                             }, {
-                                selector: "node[id=\"main\"]",
+                                selector: "node#main",
                                 style: {
                                     "width": "80",
                                     "height": "80"
