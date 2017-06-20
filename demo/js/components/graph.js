@@ -18,7 +18,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
             templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/graph.html",
             link: function (scope, element, attrs) {
                 var drupalPath = (typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "";
-                var iconPath = drupalPath + "img/"; // Path for the graph node icons
+                var iconPath = drupalPath + "img/Font-Awesome-SVG-PNG/"; // Path for the graph node icons
 
                 var graphContainer = _.first(angular.element(element[0].querySelector(".graph-container")));
 
@@ -197,7 +197,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                                     "background-color": "data(bgcolor)",
                                     "width": "40",
                                     "height": "40",
-                                    "padding": "5",
+                                    "padding": "10",
                                     "text-margin-x": "3",
                                     "text-outline-color": "white",
                                     "text-outline-width": "2",

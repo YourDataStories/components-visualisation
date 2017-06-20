@@ -10,7 +10,7 @@ angular.module("yds").factory("Graph", ["$http", "$q",
                     data: {
                         id: "main",
                         label: "Βελτίωση οδού σύνδεσης Κομοτηνής - Καρυδιάς Ν. Ροδόπη",
-                        icon: "1497125843_bookshelf.svg",
+                        icon: "road.svg",
                         bgcolor: "#00b2c2"
                     }
                 }, {
@@ -18,16 +18,16 @@ angular.module("yds").factory("Graph", ["$http", "$q",
                     data: {
                         id: "budget",
                         label: "Budget: €978K",
-                        icon: "1497125843_bookshelf.svg",
-                        bgcolor: "#c2c2c2"
+                        icon: "money.svg",
+                        bgcolor: "#00a902"
                     }
                 }, {
                     group: "nodes",
                     data: {
                         id: "subprojects",
                         label: "Subprojects",
-                        icon: "1497125843_bookshelf.svg",
-                        bgcolor: "#c2c2c2",
+                        icon: "folder.svg",
+                        bgcolor: "#004184",
                         numberOfItems: 4
                     }
                 }, {
@@ -35,8 +35,8 @@ angular.module("yds").factory("Graph", ["$http", "$q",
                     data: {
                         id: "financial_decisions",
                         label: "Financial Decisions",
-                        icon: "1497125843_bookshelf.svg",
-                        bgcolor: "#c2c2c2",
+                        icon: "credit-card-alt.svg",
+                        bgcolor: "#e67100",
                         numberOfItems: numOfFinancialDecisions
                     }
                 }
@@ -46,32 +46,32 @@ angular.module("yds").factory("Graph", ["$http", "$q",
                     data: {
                         id: "subproject1",
                         label: "ΒΕΛΤΙΩΣΗ ΟΔΟΥ ΣΥΝΔΕΣΗΣ ΚΟΜΟΤΗΝΗΣ – ΚΑΡΥΔΙΑΣ",
-                        icon: "1497125843_bookshelf.svg",
-                        bgcolor: "#c2c2c2",
+                        icon: "folder.svg",
+                        bgcolor: "#0081c2",
                         numberOfItems: 4
                     }
                 }, {
                     data: {
                         id: "subproject2",
                         label: "ΒΕΛΤΙΩΣΗ ΟΔΟΥ ΣΥΝΔΕΣΗΣ ΚΟΜΟΤΗΝΗΣ – ΚΑΡΥΔΙΑΣ 2",
-                        icon: "1497125843_bookshelf.svg",
-                        bgcolor: "#c2c2c2",
+                        icon: "folder.svg",
+                        bgcolor: "#0081c2",
                         numberOfItems: 4
                     }
                 }, {
                     data: {
                         id: "subproject3",
                         label: "ΒΕΛΤΙΩΣΗ ΟΔΟΥ ΣΥΝΔΕΣΗΣ ΚΟΜΟΤΗΝΗΣ – ΚΑΡΥΔΙΑΣ 3",
-                        icon: "1497125843_bookshelf.svg",
-                        bgcolor: "#c2c2c2",
+                        icon: "folder.svg",
+                        bgcolor: "#0081c2",
                         numberOfItems: 4
                     }
                 }, {
                     data: {
                         id: "subproject4",
                         label: "ΒΕΛΤΙΩΣΗ ΟΔΟΥ ΣΥΝΔΕΣΗΣ ΚΟΜΟΤΗΝΗΣ – ΚΑΡΥΔΙΑΣ 4",
-                        icon: "1497125843_bookshelf.svg",
-                        bgcolor: "#c2c2c2",
+                        icon: "folder.svg",
+                        bgcolor: "#0081c2",
                         numberOfItems: 4
                     }
                 }
@@ -89,29 +89,29 @@ angular.module("yds").factory("Graph", ["$http", "$q",
                     data: {
                         id: subprojectId + "_seller",
                         label: "Seller: ΓΡΑΜΜΑΤΙΚΟΠΟΥΛΟΣ ΑΝΩΝΥΜΗ ΤΕΧΝΙΚΗ ΕΤΑΙΡΙΑ",
-                        icon: "1497125843_bookshelf.svg",
-                        bgcolor: "#c2c2c2"
+                        icon: "user.svg",
+                        bgcolor: "#7c00e7"
                     }
                 }, {
                     data: {
                         id: subprojectId + "_startDate",
                         label: "Start: 22/12/2010",
-                        icon: "1497125843_bookshelf.svg",
-                        bgcolor: "#c2c2c2"
+                        icon: "calendar.svg",
+                        bgcolor: "#c2000e"
                     }
                 }, {
                     data: {
                         id: subprojectId + "_endDate",
                         label: "End: 30/07/2014",
-                        icon: "1497125843_bookshelf.svg",
-                        bgcolor: "#c2c2c2"
+                        icon: "calendar.svg",
+                        bgcolor: "#c2000e"
                     }
                 }, {
                     data: {
                         id: subprojectId + "_Budget",
                         label: "Budget: €977,914.00",
-                        icon: "1497125843_bookshelf.svg",
-                        bgcolor: "#c2c2c2"
+                        icon: "money.svg",
+                        bgcolor: "#00a902"
                     }
                 }
             ];
@@ -123,8 +123,8 @@ angular.module("yds").factory("Graph", ["$http", "$q",
                 data: {
                     id: "financial_decision" + i,
                     label: "Financial Decision #" + (i + 1),
-                    icon: "1497125843_bookshelf.svg",
-                    bgcolor: "#c2c2c2",
+                    icon: "credit-card-alt.svg",
+                    bgcolor: "#e67100",
                     numberOfItems: 5
                 }
             })
@@ -139,36 +139,36 @@ angular.module("yds").factory("Graph", ["$http", "$q",
                     data: {
                         id: decisionId + "_seller",
                         label: "Seller: ΠΑΠΑΤΖΙΚΟΥ ΕΛΕΝΗ ΓΕΩΡΓΙΟΣ",
-                        icon: "1497125843_bookshelf.svg",
-                        bgcolor: "#c2c2c2"
+                        icon: "user.svg",
+                        bgcolor: "#7c00e7"
                     }
                 }, {
                     data: {
                         id: decisionId + "_buyer",
                         label: "Buyer: ΔΗΜΟΣ ΝΑΞΟΥ ΚΑΙ ΜΙΚΡΩΝ ΚΥΚΛΑΔΩΝ",
-                        icon: "1497125843_bookshelf.svg",
-                        bgcolor: "#c2c2c2"
+                        icon: "user.svg",
+                        bgcolor: "#c900e7"
                     }
                 }, {
                     data: {
                         id: decisionId + "_date",
                         label: "Date: 19/05/2014",
-                        icon: "1497125843_bookshelf.svg",
-                        bgcolor: "#c2c2c2"
+                        icon: "calendar.svg",
+                        bgcolor: "#c2000e"
                     }
                 }, {
                     data: {
                         id: decisionId + "_amount",
                         label: "Amount: €9,901.50",
-                        icon: "1497125843_bookshelf.svg",
-                        bgcolor: "#c2c2c2"
+                        icon: "money.svg",
+                        bgcolor: "#00a902"
                     }
                 }, {
                     data: {
                         id: decisionId + "_type",
                         label: "Type: ΕΓΚΡΙΣΗ ΔΑΠΑΝΗΣ",
-                        icon: "1497125843_bookshelf.svg",
-                        bgcolor: "#c2c2c2"
+                        icon: "question.svg",
+                        bgcolor: "#00c5cf"
                     }
                 }
             ];
