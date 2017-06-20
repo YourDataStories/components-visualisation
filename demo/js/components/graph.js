@@ -194,7 +194,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                                 style: {
                                     "text-wrap": "wrap",
                                     "label": "data(label)",
-                                    "background-color": "#c2c2c2",
+                                    "background-color": "data(bgcolor)",
                                     "width": "40",
                                     "height": "40",
                                     "padding": "5",
@@ -225,7 +225,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                                 style: {
                                     "background-color": "#0089ff",
                                     "border-color": "#707070",
-                                    "border-width": "3"
+                                    "border-width": "1"
                                 }
                             }
                         ]
