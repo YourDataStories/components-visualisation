@@ -18,6 +18,8 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
             templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/graph.html",
             link: function (scope, element, attrs) {
                 var drupalPath = (typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "";
+                var iconPath = drupalPath + "img/"; // Path for the graph node icons
+
                 var graphContainer = _.first(angular.element(element[0].querySelector(".graph-container")));
 
                 var elementId = "graph" + Data.createRandomId();
@@ -202,7 +204,10 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                                     "font-family": "Sans-Serif",
                                     "text-valign": "center",
                                     "text-halign": "right",
-                                    "background-image": "img/1497125843_bookshelf.svg", // test icon from: https://www.iconfinder.com/icons/1055107/books_bookshelf_library_icon#size=128
+                                    "background-image": function (ele) {
+                                        // Return the icon path with the icon in the end
+                                        return iconPath + ele.data().icon;
+                                    },
                                     "background-repeat": "no-repeat",
                                     "background-clip": "none",
                                     "background-fit": "contain",
