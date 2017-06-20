@@ -158,10 +158,12 @@ angular.module("yds").factory("Graph", ["$http", "$q", "YDS_CONSTANTS", "Data",
 
         /**
          * Get the nodes & edges for a specific node ID.
-         * @param id    Parent node ID
-         * @returns {*} Nodes & edges for adding to the graph
+         * @param id                            Parent node ID
+         * @returns {*|promise|o.promise|d|i|t} Nodes & edges for adding to the graph
          */
         var getData = function (id) {
+            var deferred = $q.defer();
+
             var nodes = fakeData[id];
 
             // Create edges from the given node to each new one
@@ -178,7 +180,15 @@ angular.module("yds").factory("Graph", ["$http", "$q", "YDS_CONSTANTS", "Data",
                 }
             });
 
-            return _.union(nodes, edges);
+            var totalData = _.union(nodes, edges);
+
+            if (!_.isUndefined(totalData) && !_.isEmpty(totalData)) {
+                deferred.resolve(totalData);
+            } else {
+                deferred.reject("No data for this node...");
+            }
+
+            return deferred.promise;
         };
 
         return {

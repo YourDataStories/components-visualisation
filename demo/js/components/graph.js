@@ -101,8 +101,9 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                 /**
                  * Stop the old graph layout (if it exists in the "oldLayout" variable) and create a new one with the
                  * current graph elements.
+                 * @param randomize If true, the positions of the elements will be randomized
                  */
-                var reloadLayout = function () {
+                var reloadLayout = function (randomize) {
                     if (!_.isNull(oldLayout)) {
                         oldLayout.stop();
                     }
@@ -110,6 +111,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                         name: "cola",
                         animate: true,
                         infinite: true,
+                        randomize: randomize,
                         fit: false,
                         nodeSpacing: 75
                     }).run();
@@ -121,27 +123,26 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                  */
                 var nodeDoubleTapHandler = function (event) {
                     var targetNodeData = event.target.data();
+
                     if (_.has(targetNodeData, "numberOfItems")) {
                         // Get nodes & edges coming OUT from the clicked node
                         var outgoers = event.target.outgoers();
 
                         if (outgoers.length === 0) {
                             // The node does not have children loaded, so load them
-                            var newData = Graph.getData(event.target.id());
+                            Graph.getData(event.target.id())
+                                .then(function (data) {
+                                    // Add the new data to the graph
+                                    var elements = cy.add(data);
 
-                            if (!_.isUndefined(newData)) {
-                                // Add the new data to the graph
-                                var elements = cy.add(newData);
+                                    reloadLayout();
 
-                                reloadLayout();
-
-                                // Add qtip and double tap event to all nodes (after removing them (?))
-                                elements.nodes().on("doubleTap", nodeDoubleTapHandler);
-                                elements.nodes().qtip(qtipConfig);
-                            } else {
-                                // This should not happen, unless there is a server error (?)
-                                console.error("Error getting data for node...");
-                            }
+                                    // Add qtip and double tap event to all nodes (after removing them (?))
+                                    elements.nodes().on("doubleTap", nodeDoubleTapHandler);
+                                    elements.nodes().qtip(qtipConfig);
+                                }, function (error) {
+                                    console.error("Error while loading more nodes: ", error);
+                                });
                         } else {
                             // Remove all children of the node and reload the graph layout
                             removeAllChildNodes(event.target);
@@ -150,11 +151,6 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                     } else {
                         console.log("No extra data for this node");
                     }
-
-                    // setTimeout(function () {
-                    //     // Fit the viewport to the new nodes
-                    //     cy.fit("node[level = " + (maxNodeLevel - 1) + "]", 40);
-                    // }, 500);
                 };
 
                 /**
@@ -225,18 +221,14 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                     });
 
                     // Add initial data
-                    cy.add(Graph.getData("main"));
-                    cy.nodes().qtip(qtipConfig);
-                    oldLayout = cy.elements().layout({
-                        name: "cola",
-                        animate: true,
-                        infinite: true,
-                        randomize: true,
-                        fit: false,
-                        nodeSpacing: 75
-                    }).run();
+                    Graph.getData("main")
+                        .then(function (data) {
+                            cy.add(data);
+                            cy.nodes().qtip(qtipConfig);
+                            reloadLayout(true);
 
-                    cy.nodes().on("doubleTap", nodeDoubleTapHandler);
+                            cy.nodes().on("doubleTap", nodeDoubleTapHandler);
+                        });
                 };
 
                 // Load cytoscape if not loaded already and create the graph
