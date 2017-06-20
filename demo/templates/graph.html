@@ -12,6 +12,19 @@
         </div>
 
         <!--Content-->
-        <p>{{ infoPanelContent }}</p>
+        <div class="info-panel-content">
+            <table class="table table-striped table-condensed table-responsive info-panel-table">
+                <thead>
+                <tr>
+                    <!--todo: <th></th>........-->
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="node in infoPanelContent track by $index">
+                    <td ng-repeat="val in node">{{ val }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

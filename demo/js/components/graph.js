@@ -69,7 +69,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                     content: function () {
                         var data = this.data();
                         return "<strong>Node ID:</strong> " + this.id()
-                            + "<br/><strong>Node name:</strong> " + data.label;
+                            + "<br/><strong>Value:</strong> " + data.value;
                     },
                     position: {
                         my: "top center",
@@ -144,8 +144,15 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                         elements.nodes().qtip(qtipConfig);
                     } else {
                         // Too many nodes, show them in the info panel
-                        scope.showInfoPanel = true;
-                        scope.infoPanelContent = data.nodes;
+                        var nodeIds = _.pluck(_.pluck(data.nodes, "data"), "id");
+
+                        Graph.getDataMultiple(nodeIds)
+                            .then(function (data) {
+                                scope.showInfoPanel = true;
+                                scope.infoPanelContent = data;
+                            }, function (error) {
+                                console.error("Error while getting data for multiple nodes: ", error);
+                            });
                     }
                 };
 
