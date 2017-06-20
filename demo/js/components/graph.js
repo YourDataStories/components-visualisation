@@ -200,7 +200,15 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                                 selector: "node",
                                 style: {
                                     "text-wrap": "wrap",
-                                    "label": "data(label)",
+                                    "label": function (ele) {
+                                        var data = ele.data();
+
+                                        if (data.label.length > 0) {
+                                            return data.label + ": " + data.value
+                                        } else {
+                                            return data.value;
+                                        }
+                                    },
                                     "background-color": "data(bgcolor)",
                                     "width": "40",
                                     "height": "40",
