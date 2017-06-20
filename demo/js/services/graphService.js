@@ -241,7 +241,14 @@ angular.module("yds").factory("Graph", ["$http", "$q",
                 })
                 .value();
 
-            deferred.resolve(data);
+            // Gather the table headers, assuming that all nodes have the same values in them
+            var sampleNodes = fakeData[_.first(idArray)];
+            var labels = _.pluck(_.pluck(sampleNodes, "data"), "label");
+
+            deferred.resolve({
+                data: data,
+                view: labels
+            });
 
             return deferred.promise;
         };

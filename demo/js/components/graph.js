@@ -147,9 +147,10 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                         var nodeIds = _.pluck(_.pluck(data.nodes, "data"), "id");
 
                         Graph.getDataMultiple(nodeIds)
-                            .then(function (data) {
+                            .then(function (response) {
                                 scope.showInfoPanel = true;
-                                scope.infoPanelContent = data;
+                                scope.infoPanelContent = response.data;
+                                scope.infoPanelView = response.view;
                             }, function (error) {
                                 console.error("Error while getting data for multiple nodes: ", error);
                             });
