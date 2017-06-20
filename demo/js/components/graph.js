@@ -165,39 +165,44 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                             edges: []
                         },
                         wheelSensitivity: 0.3,
-                        style: cytoscape.stylesheet()
-                            .selector("node")
-                            .css({
-                                "text-wrap": "wrap",
-                                "label": "data(label)",
-                                "background-color": "#c2c2c2",
-                                "width": "40",
-                                "height": "40",
-                                "padding": "5",
-                                "text-margin-x": "3",
-                                "text-outline-color": "white",
-                                "text-outline-width": "2",
-                                "font-family": "Sans-Serif",
-                                "text-valign": "center",
-                                "text-halign": "right",
-                                "background-image": "img/1497125843_bookshelf.svg", // test icon from: https://www.iconfinder.com/icons/1055107/books_bookshelf_library_icon#size=128
-                                "background-repeat": "no-repeat",
-                                "background-clip": "none",
-                                "background-fit": "contain",
-                                "background-width-relative-to": "inner",
-                                "background-height-relative-to": "inner"
-                            })
-                            .selector("node[id=\"main\"]")
-                            .css({
-                                "width": "80",
-                                "height": "80"
-                            })
-                            .selector("node:selected")
-                            .css({
-                                "background-color": "#0089ff",
-                                "border-color": "#707070",
-                                "border-width": "3"
-                            })
+                        style: [
+                            {
+                                selector: "node",
+                                style: {
+                                    "text-wrap": "wrap",
+                                    "label": "data(label)",
+                                    "background-color": "#c2c2c2",
+                                    "width": "40",
+                                    "height": "40",
+                                    "padding": "5",
+                                    "text-margin-x": "3",
+                                    "text-outline-color": "white",
+                                    "text-outline-width": "2",
+                                    "font-family": "Sans-Serif",
+                                    "text-valign": "center",
+                                    "text-halign": "right",
+                                    "background-image": "img/1497125843_bookshelf.svg", // test icon from: https://www.iconfinder.com/icons/1055107/books_bookshelf_library_icon#size=128
+                                    "background-repeat": "no-repeat",
+                                    "background-clip": "none",
+                                    "background-fit": "contain",
+                                    "background-width-relative-to": "inner",
+                                    "background-height-relative-to": "inner"
+                                }
+                            }, {
+                                selector: "node[id=\"main\"]",
+                                style: {
+                                    "width": "80",
+                                    "height": "80"
+                                }
+                            }, {
+                                selector: "node:selected",
+                                style: {
+                                    "background-color": "#0089ff",
+                                    "border-color": "#707070",
+                                    "border-width": "3"
+                                }
+                            }
+                        ]
                     });
 
                     // Define custom "double click" event (https://stackoverflow.com/a/24830082)
