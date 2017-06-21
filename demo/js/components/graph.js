@@ -275,6 +275,11 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                             reloadLayout(true);
 
                             cy.nodes().on("doubleTap", nodeDoubleTapHandler);
+
+                            // Fit the viewport to the initial nodes after 0.5 sec.
+                            setTimeout(function () {
+                                cy.fit(cy.nodes(), 30);
+                            }, 500);
                         });
                 };
 
