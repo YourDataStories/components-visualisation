@@ -36,6 +36,9 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                 scope.showInfoPanel = false;
                 scope.infoPanelContent = "";
 
+                scope.graphLayouts = Graph.getLayouts();
+                scope.selectedLayout = _.first(scope.graphLayouts);
+
                 // The Cytoscape instance for this graph component
                 var cy = null;
 
@@ -94,6 +97,10 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                     scope.showInfoPanel = false;
                 };
 
+                scope.selectLayout = function () {
+                    reloadLayout();
+                };
+
                 /**
                  * Remove all the outgoing edges and nodes from the given node, and all their own outgoing edges/nodes
                  * recursively.
@@ -111,20 +118,13 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                 /**
                  * Stop the old graph layout (if it exists in the "oldLayout" variable) and create a new one with the
                  * current graph elements.
-                 * @param randomize If true, the positions of the elements will be randomized
                  */
-                var reloadLayout = function (randomize) {
+                var reloadLayout = function () {
                     if (!_.isNull(oldLayout)) {
                         oldLayout.stop();
                     }
-                    oldLayout = cy.elements().layout({
-                        name: "cola",
-                        animate: true,
-                        infinite: true,
-                        randomize: randomize,
-                        fit: false,
-                        nodeSpacing: 75
-                    }).run();
+
+                    oldLayout = cy.elements().layout(scope.selectedLayout).run();
                 };
 
                 /**
@@ -290,6 +290,8 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                             drupalPath + "css/jquery.qtip.min.css",
                             drupalPath + "lib/cytoscape/jquery.qtip.min.js",
                             drupalPath + "lib/cytoscape/cytoscape.min.js",
+                            drupalPath + "lib/cytoscape/dagre.min.js",
+                            drupalPath + "lib/cytoscape/cytoscape-dagre.js",
                             drupalPath + "lib/cytoscape/cola.min.js",
                             drupalPath + "lib/cytoscape/cytoscape-cola.js",
                             drupalPath + "lib/cytoscape/cytoscape-qtip.js"

@@ -253,9 +253,40 @@ angular.module("yds").factory("Graph", ["$http", "$q",
             return deferred.promise;
         };
 
+        /**
+         * Get a list of the available graph layouts and their configurations
+         * @returns {[*,*,*,*,*,*,*,*]} Layouts
+         */
+        var getLayouts = function () {
+            return [
+                {
+                    name: "cola",
+                    animate: true,
+                    infinite: true,
+                    fit: false,
+                    nodeSpacing: 75
+                }, {
+                    name: "random"
+                }, {
+                    name: "grid"
+                }, {
+                    name: "circle"
+                }, {
+                    name: "concentric"
+                }, {
+                    name: "breadthfirst"
+                }, {
+                    name: "cose"
+                }, {
+                    name: "dagre"
+                }
+            ]
+        };
+
         return {
             getData: getData,
-            getDataMultiple: getDataMultiple
+            getDataMultiple: getDataMultiple,
+            getLayouts: getLayouts
         };
     }
 ]);

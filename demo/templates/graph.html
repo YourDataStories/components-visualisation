@@ -1,30 +1,48 @@
 <div class="component-wrapper" ng-class="{'margin-bottom-30': enableRating == 'true'}">
-    <!--Container for the graph-->
-    <div class="graph-container">
+    <div class="row">
+        <div class="col-md-12">
+            <!--Container for the graph-->
+            <div class="graph-container">
+            </div>
+
+            <!--Info panel-->
+            <div class="graph-info-panel"
+                 ng-if="showInfoPanel">
+                <!--Close button-->
+                <div class="info-panel-close-btn" ng-click="closeInfoPanel()">
+                    <i class="fa fa-2x fa-times-circle" aria-hidden="true"></i>
+                </div>
+
+                <!--Content-->
+                <div class="info-panel-content">
+                    <table class="table table-striped table-condensed table-responsive info-panel-table">
+                        <thead>
+                        <tr>
+                            <th ng-repeat="val in infoPanelView">{{ val }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="node in infoPanelContent track by $index">
+                            <td ng-repeat="val in node">{{ val }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!--Info panel-->
-    <div class="graph-info-panel"
-         ng-if="showInfoPanel">
-        <!--Close button-->
-        <div class="info-panel-close-btn" ng-click="closeInfoPanel()">
-            <i class="fa fa-2x fa-times-circle" aria-hidden="true"></i>
-        </div>
-
-        <!--Content-->
-        <div class="info-panel-content">
-            <table class="table table-striped table-condensed table-responsive info-panel-table">
-                <thead>
-                <tr>
-                    <th ng-repeat="val in infoPanelView">{{ val }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="node in infoPanelContent track by $index">
-                    <td ng-repeat="val in node">{{ val }}</td>
-                </tr>
-                </tbody>
-            </table>
+    <!--Layout selection combobox-->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Layout:</label>
+                <select class="form-control"
+                        ng-options="layout.name for layout in graphLayouts track by layout.name"
+                        ng-model="selectedLayout"
+                        ng-change="selectLayout(selectedLayout)">
+                </select>
+            </div>
         </div>
     </div>
 </div>
