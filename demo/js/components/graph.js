@@ -1,5 +1,5 @@
-angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
-    function (Data, Graph, $ocLazyLoad) {
+angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$timeout",
+    function (Data, Graph, $ocLazyLoad, $timeout) {
         return {
             restrict: "E",
             scope: {
@@ -38,6 +38,8 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
 
                 scope.graphLayouts = Graph.getLayouts();
                 scope.selectedLayout = _.first(scope.graphLayouts);
+
+                scope.showNodeInfo = false;
 
                 // The Cytoscape instance for this graph component
                 var cy = null;
@@ -185,6 +187,27 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                 };
 
                 /**
+                 * Show a node's info in the Info Panel
+                 * @param event
+                 */
+                var nodeClickHandler = function (event) {
+                    // Run in $timeout so the scope changes with be reflected
+                    $timeout(function () {
+                        var data = event.target.data();
+
+                        scope.clickedNode = {
+                            name: (data.label.length > 0) ? (data.label + ": " + data.value) : data.value,
+                            icon: iconPath + data.icon,
+                            iconStyle: {
+                                "background-color": data.bgcolor
+                            }
+                        };
+
+                        scope.showNodeInfo = true;
+                    });
+                };
+
+                /**
                  * Create the graph
                  */
                 var createGraph = function () {
@@ -275,6 +298,9 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                             tappedBefore = tappedNow;
                         }
                     });
+
+                    // Add node click handler (to show the clicked node's information in the info panel)
+                    cy.on("tap", "node", nodeClickHandler);
 
                     // Add initial data
                     Graph.getData("main")

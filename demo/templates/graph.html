@@ -50,10 +50,25 @@
         <div class="col-md-3">
             <div class="panel panel-info node-info-panel">
                 <div class="panel-heading">
-                    Select a node...
+                    Information for: {{ clickedNode.name || "-" }}
                 </div>
                 <div class="panel-body">
-                    (node details)
+                    <div ng-if="showNodeInfo" class="row">
+                        <div class="col-sm-3">
+                            <div class="graph-info-panel-icon" ng-style="clickedNode.iconStyle">
+                                <img ng-src="{{ clickedNode.icon }}" width="100%">
+                            </div>
+                        </div>
+                        <div class="col-sm-9">
+                            <strong>{{ clickedNode.name }}</strong>
+                        </div>
+                    </div>
+
+                    <div ng-if="!showNodeInfo" class="row">
+                        <div class="col-sm-12">
+                            <p>Select a node to display more information about it.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

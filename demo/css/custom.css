@@ -1481,3 +1481,9 @@ div.dcat-value {
 .info-panel-table {
     font-size: 10px;
 }
+
+/* Container of the node icon in the Graph info panel */
+.graph-info-panel-icon {
+    border-radius: 10px;
+    padding: 10px;
+}
