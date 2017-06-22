@@ -1443,6 +1443,7 @@ div.dcat-value {
 /* Graph component border */
 .graph-container {
     border: 2px rgb(220, 220, 220) solid;
+    height: 65vh;
 }
 
 /* Info panel of graph component */

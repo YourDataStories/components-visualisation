@@ -62,10 +62,10 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                     exporting = "false";
 
                 // Check if the element height is defined, otherwise set default value
-                if (_.isUndefined(elementH) || _.isNaN(elementH))
-                    elementH = 200;
+                // if (_.isUndefined(elementH) || _.isNaN(elementH))
+                //     elementH = 200;
 
-                graphContainer.style.height = elementH + "px";
+                // graphContainer.style.height = elementH + "px";
 
                 // Define qTip settings
                 var qtipConfig = {
