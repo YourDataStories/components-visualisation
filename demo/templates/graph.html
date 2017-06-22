@@ -1,4 +1,18 @@
 <div class="component-wrapper" ng-class="{'margin-bottom-30': enableRating == 'true'}">
+    <!--Layout selection combobox-->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Layout:</label>
+                <select class="form-control"
+                        ng-options="layout.name for layout in graphLayouts track by layout.name"
+                        ng-model="selectedLayout"
+                        ng-change="selectLayout(selectedLayout)">
+                </select>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-12">
             <!--Container for the graph-->
@@ -28,20 +42,6 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!--Layout selection combobox-->
-    <div class="row">
-        <div class="col-md-3">
-            <div class="form-group">
-                <label>Layout:</label>
-                <select class="form-control"
-                        ng-options="layout.name for layout in graphLayouts track by layout.name"
-                        ng-model="selectedLayout"
-                        ng-change="selectLayout(selectedLayout)">
-                </select>
             </div>
         </div>
     </div>
