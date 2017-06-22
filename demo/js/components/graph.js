@@ -62,10 +62,10 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                     exporting = "false";
 
                 // Check if the element height is defined, otherwise set default value
-                // if (_.isUndefined(elementH) || _.isNaN(elementH))
-                //     elementH = 200;
+                if (_.isUndefined(elementH) || _.isNaN(elementH))
+                    elementH = 200;
 
-                // graphContainer.style.height = elementH + "px";
+                graphContainer.style.minHeight = elementH + "px";
 
                 // Define qTip settings
                 var qtipConfig = {
@@ -209,7 +209,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                                         if (data.label.length > 0) {
                                             value = data.label + ": " + data.value
                                         } else {
-                                            value =  data.value;
+                                            value = data.value;
                                         }
 
                                         // If the label is longer than 40 characters, trim it
