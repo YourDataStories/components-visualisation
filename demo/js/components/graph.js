@@ -69,26 +69,6 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
 
                 graphContainer.style.minHeight = elementH + "px";
 
-                // Define qTip settings
-                var qtipConfig = {
-                    content: function () {
-                        var data = this.data();
-                        return "<strong>Node ID:</strong> " + this.id()
-                            + "<br/><strong>Value:</strong> " + data.value;
-                    },
-                    position: {
-                        my: "top center",
-                        at: "bottom center"
-                    },
-                    style: {
-                        classes: "qtip-bootstrap",
-                        tip: {
-                            width: 16,
-                            height: 8
-                        }
-                    }
-                };
-
                 // Initialize counters for generated edges & nodes
                 var oldLayout = null;
 
@@ -141,9 +121,8 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
 
                         reloadLayout();
 
-                        // Add qtip and double tap event to all nodes (after removing them (?))
+                        // Add double tap event to all nodes (after removing them (?))
                         elements.nodes().on("doubleTap", nodeDoubleTapHandler);
-                        elements.nodes().qtip(qtipConfig);
                     } else {
                         // Too many nodes, show them in the info panel
                         var nodeIds = _.pluck(_.pluck(data.nodes, "data"), "id");
@@ -306,7 +285,6 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                     Graph.getData("main")
                         .then(function (data) {
                             cy.add(data);
-                            cy.nodes().qtip(qtipConfig);
                             reloadLayout(true);
 
                             cy.nodes().on("doubleTap", nodeDoubleTapHandler);
@@ -322,14 +300,11 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                 if (typeof cytoscape === "undefined") {
                     $ocLazyLoad.load({
                         files: [
-                            drupalPath + "css/jquery.qtip.min.css",
-                            drupalPath + "lib/cytoscape/jquery.qtip.min.js",
                             drupalPath + "lib/cytoscape/cytoscape.min.js",
                             drupalPath + "lib/cytoscape/dagre.min.js",
                             drupalPath + "lib/cytoscape/cytoscape-dagre.js",
                             drupalPath + "lib/cytoscape/cola.min.js",
-                            drupalPath + "lib/cytoscape/cytoscape-cola.js",
-                            drupalPath + "lib/cytoscape/cytoscape-qtip.js"
+                            drupalPath + "lib/cytoscape/cytoscape-cola.js"
                         ],
                         cache: true,
                         serie: true
