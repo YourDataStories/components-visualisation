@@ -260,6 +260,8 @@ angular.module("yds").factory("Graph", ["$http", "$q",
         var getLayouts = function () {
             return [
                 {
+                    name: "dagre"
+                }, {
                     name: "cola",
                     animate: true,
                     infinite: true,
@@ -277,8 +279,6 @@ angular.module("yds").factory("Graph", ["$http", "$q",
                     name: "breadthfirst"
                 }, {
                     name: "cose"
-                }, {
-                    name: "dagre"
                 }
             ]
         };
