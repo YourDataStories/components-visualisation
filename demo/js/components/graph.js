@@ -72,13 +72,6 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                 // Initialize counters for generated edges & nodes
                 var oldLayout = null;
 
-                /**
-                 * Close the info panel
-                 */
-                scope.closeInfoPanel = function () {
-                    scope.showInfoPanel = false;
-                };
-
                 scope.selectLayout = function () {
                     reloadLayout();
                 };
@@ -173,9 +166,16 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                     // Run in $timeout so the scope changes with be reflected
                     $timeout(function () {
                         var data = event.target.data();
+                        var newName = (data.label.length > 0) ? (data.label + ": " + data.value) : data.value;
 
+                        // Check if we should hide the node children table
+                        if (!_.isUndefined(scope.clickedNode) && scope.clickedNode.name !== newName) {
+                            scope.showInfoPanel = false;
+                        }
+
+                        // Add clicked node data to scope
                         scope.clickedNode = {
-                            name: (data.label.length > 0) ? (data.label + ": " + data.value) : data.value,
+                            name: newName,
                             icon: iconPath + data.icon,
                             iconStyle: {
                                 "background-color": data.bgcolor

@@ -1447,35 +1447,18 @@ div.dcat-value {
     border: 2px rgb(220, 220, 220) solid;
 }
 
-/* Info panel of graph component */
+/* Table with node's children in graph component */
 .graph-info-panel {
-    width: 400px;
-
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 15px;
-    padding: 10px;
-    margin: 10px;
-
-    border-radius: 8px;
-    border: 2px #b1b1b1 solid;
+    margin-top: 10px;
+    max-height: 450px;
+    margin-left: -15px;
+    margin-right: -15px;
+    overflow-y: auto;
     background-color: rgb(241, 241, 241);
-}
-
-/* Info panel close button */
-.info-panel-close-btn {
-    position: absolute;
-    right: 5px;
-    top: 0;
-
-    cursor: pointer;
-    color: #c3000f;
 }
 
 .info-panel-content {
     height: 100%;
-    overflow-y: auto;
 }
 
 .info-panel-table {

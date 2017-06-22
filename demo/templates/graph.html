@@ -17,33 +17,7 @@
     <div class="row flex">
         <!--Graph-->
         <div class="col-md-9 flex">
-            <div class="graph-container flex">
-            </div>
-
-            <!--Info panel-->
-            <div class="graph-info-panel"
-                 ng-if="showInfoPanel">
-                <!--Close button-->
-                <div class="info-panel-close-btn" ng-click="closeInfoPanel()">
-                    <i class="fa fa-2x fa-times-circle" aria-hidden="true"></i>
-                </div>
-
-                <!--Content-->
-                <div class="info-panel-content">
-                    <table class="table table-striped table-condensed table-responsive info-panel-table">
-                        <thead>
-                        <tr>
-                            <th ng-repeat="val in infoPanelView">{{ val }}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="node in infoPanelContent track by $index">
-                            <td ng-repeat="val in node">{{ val }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <div class="graph-container flex"></div>
         </div>
 
         <!--Info panel-->
@@ -61,6 +35,26 @@
                         </div>
                         <div class="col-sm-9">
                             <strong>{{ clickedNode.name }}</strong>
+                        </div>
+                    </div>
+
+                    <!--Info panel-->
+                    <div class="graph-info-panel"
+                         ng-if="showInfoPanel">
+                        <!--Content-->
+                        <div class="info-panel-content">
+                            <table class="table table-striped table-condensed table-responsive info-panel-table">
+                                <thead>
+                                <tr>
+                                    <th ng-repeat="val in infoPanelView">{{ val }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="node in infoPanelContent track by $index">
+                                    <td ng-repeat="val in node">{{ val }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
