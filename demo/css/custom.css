@@ -116,6 +116,11 @@ body #main .container:first-child {
             flex-direction: column;
         }
 
+        /* Class for bootstrap rows to prevent vertical positioning all columns */
+        .row.flex {
+            flex-direction: row;
+        }
+
         .footer {
             position: relative;
         }
@@ -127,12 +132,9 @@ body #main .container:first-child {
     }
 }
 
-/* Tabbed Search facets positioning */
+/* Tabbed Search facets style */
 .tabbed-facet-container {
-    position: absolute;
-    right: 0;
-    top: 100px;
-    z-index: 0;
+    padding-left: 0;
 }
 
 /* Rules for hiding tabs in tabbed search */
