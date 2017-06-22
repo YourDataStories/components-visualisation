@@ -203,11 +203,20 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad",
                                     "text-wrap": "wrap",
                                     "label": function (ele) {
                                         var data = ele.data();
+                                        var value;
 
+                                        // If there is a label, use it, otherwise just use the value
                                         if (data.label.length > 0) {
-                                            return data.label + ": " + data.value
+                                            value = data.label + ": " + data.value
                                         } else {
-                                            return data.value;
+                                            value =  data.value;
+                                        }
+
+                                        // If the label is longer than 40 characters, trim it
+                                        if (value.length > 40) {
+                                            return value.substring(0, 40) + "…";
+                                        } else {
+                                            return value;
                                         }
                                     },
                                     "background-color": "data(bgcolor)",
