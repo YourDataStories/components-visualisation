@@ -12,7 +12,8 @@ angular.module("yds").factory("Graph", ["$http", "$q",
                         label: "",
                         value: "Βελτίωση οδού σύνδεσης Κομοτηνής - Καρυδιάς Ν. Ροδόπη",
                         icon: "road.svg",
-                        bgcolor: "#00b2c2"
+                        bgcolor: "#00b2c2",
+                        numberOfItems: 3
                     }
                 }, {
                     group: "nodes",

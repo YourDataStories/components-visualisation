@@ -174,6 +174,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                                             if (!clickedNodePredecessors.contains(cy.getElementById(nodeId))
                                                 && nodeId !== event.target.id()) {
                                                 console.log("=>", nodeId, "needs to be removed");
+                                                cy.remove("#" + nodeId);
                                             } else {
                                                 console.log(nodeId, "is a predecessor of clicked node, will not be removed");
                                             }
