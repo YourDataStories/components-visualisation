@@ -144,7 +144,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
 
                     if (_.has(targetNodeData, "numberOfItems")) {
                         // Get nodes & edges coming OUT from the clicked node
-                        var outgoers = node.outgoers();
+                        var outgoers = node.outgoers("node");
 
                         if (outgoers.length < targetNodeData.numberOfItems) {
                             // The node does not have children loaded, so load them
@@ -191,12 +191,16 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                             removeAllChildNodes(node);
 
                             // Check if the parent of the closed node has any other children. If so, load them
-                            var parent = node.incomers("node");
-                            if (parent.length === 1 && parent.data().numberOfItems > 1) {
-                                // Load the node's children
-                                loadNodeChildren(parent);
-                            } else {
-                                console.warn("Parents are more than 1?", parent);
+                            var parent = node;  // Start from current node
+                            for (var i = 0; i < scope.maxDepth; i++) {
+                                parent = parent.incomers("node");   // Get incomer nodes ("parents" of this node)
+
+                                // If there is only 1 parent, which should have more children than it does now, load them
+                                if (parent.length === 1 && parent.outgoers("node").length < parent.data().numberOfItems) {
+                                    loadNodeChildren(parent);
+                                } else if (parent.length > 1) {
+                                    console.warn("Parents are != 1?", parent);
+                                }
                             }
 
                             // Reload the graph layout
