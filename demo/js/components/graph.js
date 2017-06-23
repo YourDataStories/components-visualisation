@@ -40,6 +40,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                 scope.selectedLayout = _.first(scope.graphLayouts);
 
                 scope.showNodeInfo = false;
+                scope.maxDepth = 1;
 
                 // The Cytoscape instance for this graph component
                 var cy = null;
@@ -145,7 +146,40 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                         if (outgoers.length === 0) {
                             // The node does not have children loaded, so load them
                             Graph.getData(event.target.id())
-                                .then(addDataToGraph, function (error) {
+                                .then(function (data) {
+                                    addDataToGraph(data);
+
+                                    // Run BFS algorithm to find each node's depth
+                                    var nodeDepths = {};
+                                    cy.elements().bfs({
+                                        roots: '#main', // Start from main node
+                                        visit: function (v, e, u, i, depth) {
+                                            // Save the node's depth to the depth map
+                                            nodeDepths[v.id()] = depth;
+                                        }
+                                    });
+
+                                    // Check if there are any nodes that we should remove, based on the max depth
+                                    console.log("=============================================");
+                                    var clickedNodePredecessors = event.target.predecessors();
+                                    var clickedNodeDepth = nodeDepths[event.target.id()];
+                                    var newDepth = clickedNodeDepth + 1;
+
+                                    _.each(nodeDepths, function (depth, nodeId) {
+                                        // If the depth difference is larger than the max allowed depth, we should
+                                        // check if the node is a predecessor of the clicked one, and if not, remove it
+                                        if (Math.abs(depth - newDepth) >= scope.maxDepth) {
+                                            // If the node we are checking is not a predecessor of the clicked node,
+                                            // and it is not the clicked node, we need to remove it
+                                            if (!clickedNodePredecessors.contains(cy.getElementById(nodeId))
+                                                && nodeId !== event.target.id()) {
+                                                console.log("=>", nodeId, "needs to be removed");
+                                            } else {
+                                                console.log(nodeId, "is a predecessor of clicked node, will not be removed");
+                                            }
+                                        }
+                                    })
+                                }, function (error) {
                                     console.error("Error while loading more nodes: ", error);
                                 });
                         } else {

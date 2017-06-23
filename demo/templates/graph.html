@@ -1,6 +1,7 @@
 <div class="component-wrapper flex" ng-class="{'margin-bottom-30': enableRating == 'true'}">
-    <!--Layout selection combobox-->
+    <!--Graph display controls-->
     <div class="row">
+        <!--Layout selection-->
         <div class="col-md-3">
             <div class="form-group">
                 <label>Layout:</label>
@@ -9,6 +10,14 @@
                         ng-model="selectedLayout"
                         ng-change="selectLayout(selectedLayout)">
                 </select>
+            </div>
+        </div>
+
+        <!--Depth selection-->
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Depth:</label>
+                <input class="form-control" type="number" ng-model="maxDepth" min="1">
             </div>
         </div>
     </div>
