@@ -143,7 +143,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                         // Get nodes & edges coming OUT from the clicked node
                         var outgoers = event.target.outgoers();
 
-                        if (outgoers.length === 0) {
+                        if (outgoers.length < targetNodeData.numberOfItems) {
                             // The node does not have children loaded, so load them
                             Graph.getData(event.target.id())
                                 .then(function (data) {
