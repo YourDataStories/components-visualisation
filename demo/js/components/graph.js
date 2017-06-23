@@ -184,8 +184,21 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                                     console.error("Error while loading more nodes: ", error);
                                 });
                         } else {
-                            // Remove all children of the node and reload the graph layout
+                            // Remove all children of the node
                             removeAllChildNodes(event.target);
+
+                            // Check if the parent of the closed node has any other children. If so, load them
+                            var parent = event.target.incomers("node");
+                            if (parent.length === 1 && parent.data().numberOfItems > 1) {
+                                // Load the node's children using the handler
+                                nodeDoubleTapHandler({
+                                    target: parent
+                                });
+                            } else {
+                                console.warn("Parents are more than 1?", parent);
+                            }
+
+                            // Reload the graph layout
                             reloadLayout();
                         }
                     } else {
