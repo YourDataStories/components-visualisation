@@ -70,7 +70,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
 
                 graphContainer.style.minHeight = elementH + "px";
 
-                // Initialize counters for generated edges & nodes
+                // Variable to keep the currently applied layout of the graph (to be able to stop it)
                 var oldLayout = null;
 
                 scope.selectLayout = function () {
@@ -135,6 +135,24 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                 };
 
                 /**
+                 * Get a map of the node IDs that are currently in the graph, and their depth. Uses BFS algorithm,
+                 * starting from the "main" node.
+                 * @returns {{}}
+                 */
+                var getNodeDepths = function () {
+                    var nodeDepths = {};
+                    cy.elements().bfs({
+                        roots: '#main', // Start from main node
+                        visit: function (v, e, u, i, depth) {
+                            // Save the node's depth to the depth map
+                            nodeDepths[v.id()] = depth;
+                        }
+                    });
+
+                    return nodeDepths;
+                };
+
+                /**
                  * Get the children of the given node from the API, and add them to the graph. If the node already has
                  * the correct amount of children "close" it and navigate to the upper graph level.
                  * @param node  Node to load children for
@@ -152,15 +170,8 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                                 .then(function (data) {
                                     addDataToGraph(data);
 
-                                    // Run BFS algorithm to find each node's depth
-                                    var nodeDepths = {};
-                                    cy.elements().bfs({
-                                        roots: '#main', // Start from main node
-                                        visit: function (v, e, u, i, depth) {
-                                            // Save the node's depth to the depth map
-                                            nodeDepths[v.id()] = depth;
-                                        }
-                                    });
+                                    // Get each node's depth
+                                    var nodeDepths = getNodeDepths();
 
                                     // Check if there are any nodes that we should remove, based on the max depth
                                     console.log("=============================================");
@@ -190,16 +201,28 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                             // Remove all children of the node
                             removeAllChildNodes(node);
 
-                            // Check if the parent of the closed node has any other children. If so, load them
-                            var parent = node;  // Start from current node
-                            for (var i = 0; i < scope.maxDepth; i++) {
-                                parent = parent.incomers("node");   // Get incomer nodes ("parents" of this node)
+                            // If there are no other "opened" nodes at the clicked node's level, we will "navigate up"
+                            var nodeDepths = getNodeDepths();
+                            var clickedNodeDepth = nodeDepths[node.id()];
+                            var navigateUp = true;
+                            _.each(nodeDepths, function (depth) {
+                                if (navigateUp && depth > clickedNodeDepth) {
+                                    navigateUp = false;
+                                }
+                            });
 
-                                // If there is only 1 parent, which should have more children than it does now, load them
-                                if (parent.length === 1 && parent.outgoers("node").length < parent.data().numberOfItems) {
-                                    loadNodeChildren(parent);
-                                } else if (parent.length > 1) {
-                                    console.warn("Parents are != 1?", parent);
+                            if (navigateUp) {
+                                // Check if the parent of the closed node has any other children. If so, load them
+                                var parent = node;  // Start from current node
+                                for (var i = 0; i < scope.maxDepth; i++) {
+                                    parent = parent.incomers("node");   // Get incomer nodes ("parents" of this node)
+
+                                    // If there is only 1 parent, which should have more children than it does now, load them
+                                    if (parent.length === 1 && parent.outgoers("node").length < parent.data().numberOfItems) {
+                                        loadNodeChildren(parent);
+                                    } else if (parent.length > 1) {
+                                        console.warn("Parents are != 1?", parent);
+                                    }
                                 }
                             }
 
