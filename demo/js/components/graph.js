@@ -116,7 +116,9 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                         reloadLayout();
 
                         // Add double tap event to all nodes (after removing them (?))
-                        elements.nodes().on("doubleTap", nodeDoubleTapHandler);
+                        elements.nodes().on("doubleTap", function (event) {
+                            loadNodeChildren(event.target);
+                        });
                     } else {
                         // Too many nodes, show them in the info panel
                         var nodeIds = _.pluck(_.pluck(data.nodes, "data"), "id");
@@ -133,19 +135,20 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                 };
 
                 /**
-                 * Get the new nodes that need to be added to the graph for the double-clicked node and add them
-                 * @param event
+                 * Get the children of the given node from the API, and add them to the graph. If the node already has
+                 * the correct amount of children "close" it and navigate to the upper graph level.
+                 * @param node  Node to load children for
                  */
-                var nodeDoubleTapHandler = function (event) {
-                    var targetNodeData = event.target.data();
+                var loadNodeChildren = function (node) {
+                    var targetNodeData = node.data();
 
                     if (_.has(targetNodeData, "numberOfItems")) {
                         // Get nodes & edges coming OUT from the clicked node
-                        var outgoers = event.target.outgoers();
+                        var outgoers = node.outgoers();
 
                         if (outgoers.length < targetNodeData.numberOfItems) {
                             // The node does not have children loaded, so load them
-                            Graph.getData(event.target.id())
+                            Graph.getData(node.id())
                                 .then(function (data) {
                                     addDataToGraph(data);
 
@@ -161,8 +164,8 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
 
                                     // Check if there are any nodes that we should remove, based on the max depth
                                     console.log("=============================================");
-                                    var clickedNodePredecessors = event.target.predecessors();
-                                    var clickedNodeDepth = nodeDepths[event.target.id()];
+                                    var clickedNodePredecessors = node.predecessors();
+                                    var clickedNodeDepth = nodeDepths[node.id()];
                                     var newDepth = clickedNodeDepth + 1;
 
                                     _.each(nodeDepths, function (depth, nodeId) {
@@ -172,7 +175,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                                             // If the node we are checking is not a predecessor of the clicked node,
                                             // and it is not the clicked node, we need to remove it
                                             if (!clickedNodePredecessors.contains(cy.getElementById(nodeId))
-                                                && nodeId !== event.target.id()) {
+                                                && nodeId !== node.id()) {
                                                 console.log("=>", nodeId, "needs to be removed");
                                                 cy.remove("#" + nodeId);
                                             } else {
@@ -185,15 +188,13 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                                 });
                         } else {
                             // Remove all children of the node
-                            removeAllChildNodes(event.target);
+                            removeAllChildNodes(node);
 
                             // Check if the parent of the closed node has any other children. If so, load them
-                            var parent = event.target.incomers("node");
+                            var parent = node.incomers("node");
                             if (parent.length === 1 && parent.data().numberOfItems > 1) {
-                                // Load the node's children using the handler
-                                nodeDoubleTapHandler({
-                                    target: parent
-                                });
+                                // Load the node's children
+                                loadNodeChildren(parent);
                             } else {
                                 console.warn("Parents are more than 1?", parent);
                             }
@@ -335,7 +336,9 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                             cy.add(data);
                             reloadLayout(true);
 
-                            cy.nodes().on("doubleTap", nodeDoubleTapHandler);
+                            cy.nodes().on("doubleTap", function (event) {
+                                loadNodeChildren(event.target);
+                            });
 
                             // Fit the viewport to the initial nodes after 0.5 sec.
                             setTimeout(function () {
