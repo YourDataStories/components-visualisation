@@ -3,7 +3,8 @@
         <div class="col-md-12">
             <strong>Dashboard types: </strong>
             <div class="btn-group">
-                <label ng-repeat="type in dashboardsConfig.types" class="btn btn-default" ng-model="dashboardsConfig.selected" uib-btn-radio="'{{ type }}'">{{ type }}</label>
+                <label ng-repeat="type in dashboardsConfig.types" class="btn btn-default"
+                       ng-model="dashboardsConfig.selected" uib-btn-radio="'{{ type }}'">{{ type }}</label>
             </div>
         </div>
     </div>
@@ -23,73 +24,84 @@
             </yds-clear-filters-button>
         </div>
     </div>
-    <!--Maps-->
+
+    <!--Filters Container-->
     <div class="row">
-        <div class="col-md-5">
-            <!--Heatmap of Buyers-->
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Buyer</h3>
+        <div class="col-md-10">
+            <!--Filters-->
+            <div class="row">
+                <!--Buyers heatmap-->
+                <div class="col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Buyer</h3>
+                        </div>
+                        <div class="panel-body">
+                            <yds-heatmap
+                                    project-id="none"
+                                    view-type="contract.buyer.countries.all"
+                                    color-axis="true"
+                                    color-type="logarithmic"
+                                    legend="true"
+                                    legend-v-align="bottom"
+                                    use-dashboard-params="true"
+                                    dashboard-id="{{ dashboardsConfig.selected }}"
+                                    country-selection="true"
+                                    europe-only="true"
+                                    no-border="true"
+                                    exporting="false"
+                                    element-h="350"></yds-heatmap>
+                        </div>
+                    </div>
                 </div>
-                <div class="panel-body">
-                    <yds-heatmap
-                            project-id="none"
-                            view-type="contract.buyer.countries.all"
-                            color-axis="true"
-                            color-type="logarithmic"
-                            legend="true"
-                            legend-v-align="bottom"
-                            use-dashboard-params="true"
-                            dashboard-id="contract"
-                            country-selection="true"
-                            europe-only="true"
-                            no-border="true"
-                            exporting="false"
-                            element-h="350"></yds-heatmap>
+
+                <!--Sellers heatmap-->
+                <div class="col-md-6">
+                    <div class="panel panel-default panel-benefactor">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Seller</h3>
+                        </div>
+                        <div class="panel-body">
+                            <yds-heatmap
+                                    project-id="none"
+                                    view-type="contract.seller.countries.all"
+                                    color-axis="true"
+                                    color-type="logarithmic"
+                                    legend="true"
+                                    legend-v-align="bottom"
+                                    use-dashboard-params="true"
+                                    dashboard-id="{{ dashboardsConfig.selected }}"
+                                    country-selection="true"
+                                    no-border="true"
+                                    exporting="false"
+                                    element-h="350"></yds-heatmap>
+                        </div>
+                    </div>
                 </div>
-                <div class="panel-footer" style="padding: 3px 15px">
-                    <small>You can select one or more countries with the <kbd>CTRL</kbd> key.</small>
+
+                <!--Year selection slider-->
+                <div class="col-md-4">
+                    <yds-year-range
+                            title="Time Period for Contracts"
+                            dashboard-id="{{ dashboardsConfig.selected }}"
+                            min-year="1997"
+                            max-year="2018">
+                    </yds-year-range>
                 </div>
             </div>
         </div>
-
-        <div class="col-md-5">
-            <!--Heatmap of Sellers-->
-            <div class="panel panel-default panel-benefactor">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Seller</h3>
-                </div>
-                <div class="panel-body">
-                    <yds-heatmap
-                            project-id="none"
-                            view-type="contract.seller.countries.all"
-                            color-axis="true"
-                            color-type="logarithmic"
-                            legend="true"
-                            legend-v-align="bottom"
-                            use-dashboard-params="true"
-                            dashboard-id="contract"
-                            country-selection="true"
-                            no-border="true"
-                            exporting="false"
-                            element-h="350"></yds-heatmap>
-                </div>
-                <div class="panel-footer" style="padding: 3px 15px">
-                    <small>You can select one or more countries with the <kbd>CTRL</kbd> key.</small>
-                </div>
-            </div>
-        </div>
-
-        <!--Year selection slider-->
         <div class="col-md-2">
-            <yds-year-range
-                    title="Time Period for Contracts"
-                    dashboard-id="contract"
-                    min-year="1997"
-                    max-year="2018"
-                    vertical="true"
-                    height="350">
-            </yds-year-range>
+            <h4>Filters selection:</h4>
+
+            <div class="checkbox">
+                <label><input type="checkbox" value="Buyers" checked>Buyers</label>
+            </div>
+            <div class="checkbox">
+                <label><input type="checkbox" value="Sellers" checked>Sellers</label>
+            </div>
+            <div class="checkbox">
+                <label><input type="checkbox" value="Year Range" checked>Year Range</label>
+            </div>
         </div>
     </div>
 
