@@ -4,7 +4,8 @@ angular.module('yds').controller('DashboardDynamicController', ['$scope', '$time
 
         scope.dashboardsConfig = {
             types: DashboardService.getDashboardTypes(),
-            selected: "contract"
+            selected: "contract",
+            filters: DashboardService.getDashboardFilters("contract")
         };
 
         scope.showProjectInfo = false;

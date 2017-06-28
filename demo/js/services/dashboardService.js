@@ -201,6 +201,59 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
             public_project: "public-works"
         };
 
+        // Configuration for available filters for each Dashboard (test)
+        var dashboardFilters = {
+            "contract": [
+                {
+                    name: "Buyer Countries",
+                    type: "heatmap",
+                    params: {
+                        viewType: "contract.buyer.countries.all"
+                    }
+                }, {
+                    name: "Seller Countries",
+                    type: "heatmap",
+                    params: {
+                        viewType: "contract.seller.countries.all"
+                    }
+                }, {
+                    name: "Buyers",
+                    type: "grid",
+                    params: {
+                        //todo
+                    }
+                }, {
+                    name: "Sellers",
+                    type: "grid",
+                    params: {
+                        //todo
+                    }
+                }, {
+                    name: "CPVs",
+                    type: "grid",
+                    params: {
+                        //todo
+                    }
+                }, {
+                    name: "Year Range",
+                    type: "range",
+                    params: {
+                        label: "Time Period for Contracts"
+                    }
+                }
+            ]
+            //todo: filters for the rest of the dashboards should also be defined here..
+        };
+
+        /**
+         * Return the available filters and their parameters for a Dashboard
+         * @param dashboardId
+         * @returns {*}
+         */
+        var getDashboardFilters = function (dashboardId) {
+            return dashboardFilters[dashboardId];
+        };
+
         /**
          * For a given dashboardId, return true if there are cookies for that dashboard
          * @param dashboardId
@@ -721,7 +774,9 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
             getApiOptionsMapping: getApiOptionsMapping,
             getYearParamName: getYearParamName,
             getAggregates: getAggregates,
+
             getDashboardTypes: getDashboardTypes,
+            getDashboardFilters: getDashboardFilters,
 
             getSearchParams: getSearchParams,
             getApiOptions: getApiOptions,

@@ -93,23 +93,8 @@
         <div class="col-md-2">
             <h4>Filters selection:</h4>
 
-            <div class="checkbox">
-                <label><input type="checkbox" value="Buyer Countries" checked>Buyer Countries</label>
-            </div>
-            <div class="checkbox">
-                <label><input type="checkbox" value="Seller Countries" checked>Seller Countries</label>
-            </div>
-            <div class="checkbox">
-                <label><input type="checkbox" value="Buyers">Buyers</label>
-            </div>
-            <div class="checkbox">
-                <label><input type="checkbox" value="Sellers">Sellers</label>
-            </div>
-            <div class="checkbox">
-                <label><input type="checkbox" value="CPVs">CPVs</label>
-            </div>
-            <div class="checkbox">
-                <label><input type="checkbox" value="Year Range" checked>Year Range</label>
+            <div ng-repeat="filter in dashboardsConfig.filters" class="checkbox">
+                <label><input type="checkbox" value="{{ filter.name }}">{{ filter.name }}</label>
             </div>
         </div>
     </div>
