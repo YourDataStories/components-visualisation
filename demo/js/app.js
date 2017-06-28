@@ -101,6 +101,10 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
             url: '/country-comparison',
             templateUrl: 'templates-demo/country-comparison.html'
         })
+        .state('dashboard-dynamic', {
+            url: '/dashboard-dynamic',
+            templateUrl: 'templates-demo/dashboard-dynamic.html'
+        })
         .state('redirect', {
             url: '/redirect',
             template: '<div class="container"><h2>Redirecting...</h2></div>',
