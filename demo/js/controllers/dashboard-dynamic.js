@@ -2,7 +2,10 @@ angular.module('yds').controller('DashboardDynamicController', ['$scope', '$time
     function ($scope, $timeout, $location, $anchorScroll, $window, DashboardService) {
         var scope = $scope;
 
-        scope.dashboardTypes = DashboardService.getDashboardTypes();
+        scope.dashboardsConfig = {
+            types: DashboardService.getDashboardTypes(),
+            selected: "contract"
+        };
 
         scope.showProjectInfo = false;
         scope.aggregateToShow = 0;
