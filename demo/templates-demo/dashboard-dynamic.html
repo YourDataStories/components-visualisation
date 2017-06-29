@@ -30,16 +30,19 @@
         <div class="col-md-10">
             <!--Filters-->
             <div class="row">
-                <!--Buyers heatmap-->
-                <div class="col-md-6">
-                    <div class="panel panel-primary">
+                <div ng-repeat="filter in dashboardsConfig.selectedFilters"
+                     ng-switch="filter.type"
+                     ng-class="getFilterColumnClass(filter.type)">
+
+                    <!--Heatmap filter-->
+                    <div ng-switch-when="heatmap" class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Buyer Countries</h3>
+                            <h3 class="panel-title">{{ filter.name }}</h3>
                         </div>
                         <div class="panel-body">
                             <yds-heatmap
                                     project-id="none"
-                                    view-type="contract.buyer.countries.all"
+                                    view-type="{{ filter.params.viewType }}"
                                     color-axis="true"
                                     color-type="logarithmic"
                                     legend="true"
@@ -47,46 +50,26 @@
                                     use-dashboard-params="true"
                                     dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
                                     country-selection="true"
-                                    europe-only="true"
+                                    europe-only="{{ filter.params.europeOnly || 'false'}}"
                                     no-border="true"
                                     exporting="false"
-                                    element-h="350"></yds-heatmap>
+                                    element-h="350">
+                            </yds-heatmap>
                         </div>
                     </div>
-                </div>
 
-                <!--Sellers heatmap-->
-                <div class="col-md-6">
-                    <div class="panel panel-default panel-benefactor">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Seller Countries</h3>
-                        </div>
-                        <div class="panel-body">
-                            <yds-heatmap
-                                    project-id="none"
-                                    view-type="contract.seller.countries.all"
-                                    color-axis="true"
-                                    color-type="logarithmic"
-                                    legend="true"
-                                    legend-v-align="bottom"
-                                    use-dashboard-params="true"
-                                    dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
-                                    country-selection="true"
-                                    no-border="true"
-                                    exporting="false"
-                                    element-h="350"></yds-heatmap>
-                        </div>
-                    </div>
-                </div>
-
-                <!--Year selection slider-->
-                <div class="col-md-4">
+                    <!--Year Range filter-->
                     <yds-year-range
-                            title="Time Period for Contracts"
+                            ng-switch-when="year"
+                            title="{{ filter.params.label }}"
                             dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
                             min-year="1997"
                             max-year="2018">
                     </yds-year-range>
+
+                    <div ng-switch-default><span style="color: red; font-weight: bold">
+                        Filter not implemented. Configuration:</span> {{ filter }}
+                    </div>
                 </div>
             </div>
         </div>

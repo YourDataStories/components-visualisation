@@ -207,12 +207,15 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
                 {
                     name: "Buyer Countries",
                     type: "heatmap",
+                    checked: true,  // This filter is selected by default
                     params: {
-                        viewType: "contract.buyer.countries.all"
+                        viewType: "contract.buyer.countries.all",
+                        europeOnly: true
                     }
                 }, {
                     name: "Seller Countries",
                     type: "heatmap",
+                    checked: true,
                     params: {
                         viewType: "contract.seller.countries.all"
                     }
@@ -236,7 +239,8 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
                     }
                 }, {
                     name: "Year Range",
-                    type: "range",
+                    type: "year",
+                    checked: true,
                     params: {
                         label: "Time Period for Contracts"
                     }

@@ -22,9 +22,30 @@ angular.module('yds').controller('DashboardDynamicController', ['$scope', '$time
                 $filter('filter')(scope.dashboardsConfig.filters, {checked: true});
         };
 
+        /**
+         * Return the Bootstrap column class for a specified filter type
+         * @param filterType
+         * @returns {*}
+         */
+        scope.getFilterColumnClass = function (filterType) {
+            switch (filterType) {
+                case "grid":
+                    return "col-md-6";
+                case "heatmap":
+                    return "col-md-6";
+                case "year":
+                    return "col-md-4";
+                default:
+                    return "col-md-3";
+            }
+        };
+
         scope.selectTab = function (tabIndex) {
             scope.aggregateToShow = tabIndex;
         };
+
+        // Update selected filters, to select the ones that should be selected initially
+        scope.updateSelectedFilters();
 
         // Get aggregates for sector
         var aggregates = DashboardService.getAggregates("contract");
