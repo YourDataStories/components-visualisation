@@ -222,14 +222,17 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
                 }, {
                     name: "Buyers",
                     type: "grid",
+                    checked: true,
                     params: {
-                        //todo
+                        viewType: "contract.buyers.all",
+                        selectionId: "buyers"
                     }
                 }, {
                     name: "Sellers",
                     type: "grid",
                     params: {
-                        //todo
+                        viewType: "contract.sellers.all",
+                        selectionId: "sellers"
                     }
                 }, {
                     name: "CPVs",

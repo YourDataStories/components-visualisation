@@ -67,6 +67,21 @@
                             max-year="2018">
                     </yds-year-range>
 
+                    <!--Grid filter-->
+                    <!--todo: give true number of items..-->
+                    <yds-dashboard-updater
+                            ng-switch-when="grid"
+                            type="selection-paging-grid"
+                            project-id="none"
+                            view-type="{{ filter.params.viewType }}"
+                            dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
+                            selection-id="{{ filter.params.selectionId }}"
+                            number-of-items="20000"
+                            base-url="http://platform.yourdatastories.eu/project-details"
+                            min-height="225"
+                            lang="{{ filter.params.lang || 'en' }}">
+                    </yds-dashboard-updater>
+
                     <div ng-switch-default><span style="color: red; font-weight: bold">
                         Filter not implemented. Configuration:</span> {{ filter }}
                     </div>

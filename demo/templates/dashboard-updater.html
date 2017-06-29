@@ -115,6 +115,25 @@
             lang="{{ lang }}">
     </yds-grid>
 
+    <!--todo: make page size 1000-->
+    <yds-grid-selection-paging
+            ng-switch-when="selection-paging-grid"
+            project-id="{{ projectId }}"
+            view-type="{{ viewType }}"
+            selection-type="{{ selectionType }}"
+            extra-params="extraParams"
+            page-size="50"
+            number-of-items="{{ numberOfItems }}"
+            add-to-basket="false"
+            exporting="false"
+            embeddable="false"
+            col-resize="true"
+            selection-id="{{ selectionId }}"
+            dashboard-id="{{ dashboardId }}"
+            element-h="{{ minHeight }}"
+            lang="{{ lang }}">
+    </yds-grid-selection-paging>
+
     <yds-pie
             ng-switch-when="pie"
             project-id="{{ projectId }}"
