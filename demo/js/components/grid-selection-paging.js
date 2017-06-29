@@ -23,19 +23,6 @@ angular.module('yds').directive('ydsGridSelectionPaging', ['Data', 'Filters', 'D
                 dashboardId: '@',       // Used for setting/getting parameters to/from DashboardService
                 selectionId: '@',       // ID for saving the selection for the specified dashboardId
 
-                addToBasket: '@',       // Enable or disable "add to basket" functionality, values: true, false
-                basketBtnX: '@',        // X-axis position of the basket button
-                basketBtnY: '@',        // Y-axis position of the basket button
-
-                exporting: '@',         // Enable or disable export to CSV
-                exportBtnX: '@',        // X-axis position of the exporting button
-                exportBtnY: '@',        // Y-axis position of the exporting button
-
-                embeddable: '@',        // Enable or disable the embedding of the component
-                embedBtnX: '@',         // X-axis position of the embed button
-                embedBtnY: '@',         // Y-axis position of the embed button
-                popoverPos: '@',        // The side of the embed button from which the embed  window will appear
-
                 enableRating: '@'       // Enable rating buttons for this component
             },
             templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/grid.html',
@@ -45,7 +32,6 @@ angular.module('yds').directive('ydsGridSelectionPaging', ['Data', 'Filters', 'D
                 var gridContainer = _.first(angular.element(element[0].querySelector('.grid-container')));
 
                 // Set initial grid parameters
-                scope.quickFilterValue = "";
                 var grid = {
                     elementId: "grid" + Data.createRandomId(),
                     projectId: scope.projectId,
@@ -54,9 +40,6 @@ angular.module('yds').directive('ydsGridSelectionPaging', ['Data', 'Filters', 'D
                     sorting: scope.sorting,
                     colResize: scope.colResize,
                     pageSize: scope.pageSize,
-                    exporting: scope.exporting,
-                    exportBtnX: parseInt(scope.exportBtnX),
-                    exportBtnY: parseInt(scope.exportBtnY),
                     elementH: scope.elementH
                 };
 
@@ -68,6 +51,8 @@ angular.module('yds').directive('ydsGridSelectionPaging', ['Data', 'Filters', 'D
 
                 // If selection is enabled, this will be used to reselect rows after refreshing the grid data
                 var selection = [];
+                var hasColDefs = false; // Indicates if the column definitions have been loaded for the grid
+                var dataView = null;
                 var preventUpdate = false;
 
                 // If extra params exist, add them to Filters
@@ -75,7 +60,7 @@ angular.module('yds').directive('ydsGridSelectionPaging', ['Data', 'Filters', 'D
                     Filters.addExtraParamsFilter(grid.elementId, extraParams);
                 }
 
-                //check if project id or grid type are defined
+                // Check if project id or grid type are defined
                 if (_.isUndefined(grid.projectId) || grid.projectId.trim() === "") {
                     scope.ydsAlert = "The YDS component is not properly initialized " +
                         "because the projectId or the viewType attribute aren't configured properly. " +
@@ -83,74 +68,46 @@ angular.module('yds').directive('ydsGridSelectionPaging', ['Data', 'Filters', 'D
                     return false;
                 }
 
-                //check if view-type attribute is empty and assign the default value
+                // Check if view-type attribute is empty and assign the default value
                 if (_.isUndefined(grid.viewType) || grid.viewType.trim() === "")
                     grid.viewType = "default";
 
-                //check if the language attr is defined, else assign default value
+                // Check if the language attr is defined, else assign default value
                 if (_.isUndefined(grid.lang) || grid.lang.trim() === "")
                     grid.lang = "en";
 
-                //check if the sorting attr is defined, else assign the default value
+                // Check if the sorting attr is defined, else assign the default value
                 if (_.isUndefined(grid.sorting) || (grid.sorting !== "true" && grid.sorting !== "false"))
                     grid.sorting = "true";
 
-                //check if the colResize attr is defined, else assign default value
+                // Check if the colResize attr is defined, else assign default value
                 if (_.isUndefined(grid.colResize) || (grid.colResize !== "true" && grid.colResize !== "false"))
                     grid.colResize = "false";
 
-                //check if the exporting attr is defined, else assign default value
-                if (_.isUndefined(grid.exporting) || (grid.exporting !== "true" && grid.exporting !== "false"))
-                    grid.exporting = "false";
-
-                //check if the exportBtnX attr is defined, else assign default value
-                if (_.isUndefined(grid.exportBtnX) || _.isNaN(grid.exportBtnX))
-                    grid.exportBtnX = 0;
-
-                //check if the exportBtnY attr is defined, else assign default value
-                if (_.isUndefined(grid.exportBtnY) || _.isNaN(grid.exportBtnY))
-                    grid.exportBtnY = 0;
-
-                //check if the page size attr is defined, else assign default value
+                // Check if the page size attr is defined, else assign default value
                 if (_.isUndefined(grid.pageSize) || _.isNaN(grid.pageSize))
                     grid.pageSize = "100";
 
-                //check if the component's height attr is defined, else assign default value
+                // Check if the component's height attr is defined, else assign default value
                 if (_.isUndefined(grid.elementH) || _.isNaN(grid.elementH))
                     grid.elementH = 200;
 
-                //check if the selectionType attr is defined, else assign default value
+                // Check if the selectionType attr is defined, else assign default value
                 if (_.isUndefined(selectionType) || (selectionType !== "single" && selectionType !== "multiple"))
                     selectionType = "multiple";
 
                 // Show loading animation
                 scope.loading = true;
 
-                //set the id and the height of the grid component
+                // Set the id and the height of the grid
                 gridContainer.id = grid.elementId;
                 gridWrapper.style.height = grid.elementH + 'px';
-
-                // If exporting is enabled, set position of export button
-                if (grid.exporting === "true") {
-                    scope.exportBtnPos = {
-                        left: grid.exportBtnX + "px",
-                        top: grid.exportBtnY + "px"
-                    }
-                }
 
                 // Set cookie variables
                 var cookieKey = grid.viewType + "_" + dashboardId;
                 var firstLoad = true;
 
                 var preventSelectionEvent = false;
-
-                /**
-                 * Export grid data to CSV and download it
-                 */
-                scope.exportGrid = function () {
-                    //todo: this will not work with virtual paging
-                    scope.gridOptions.api.exportDataAsCsv();
-                };
 
                 /**
                  * Select the ones that are indicated in the selection parameter (matches them by their "id" attribute)
@@ -198,116 +155,159 @@ angular.module('yds').directive('ydsGridSelectionPaging', ['Data', 'Filters', 'D
                  * Create the grid
                  */
                 var createGrid = function () {
-                    // Get data and visualize grid
-                    var extraParams = _.clone(scope.extraParams);
+                    var dataSource = {
+                        rowCount: null, // behave as infinite scroll
+                        maxPagesInCache: 2,
+                        overflowSize: parseInt(grid.pageSize),
+                        pageSize: parseInt(grid.pageSize),
+                        getRows: function (params) {
+                            // Function to be called when grid results are retrieved successfully
+                            var getDataSuccess = function (response) {
+                                // Extract needed variables from server response
+                                var responseData = response.data;
+                                var responseView = response.view;
 
-                    if (!_.isUndefined(baseUrl)) {
-                        if (_.isUndefined(extraParams)) {
-                            extraParams = {};
-                        }
+                                // Get number of results
+                                scope.resultsNum = parseInt(scope.numberOfItems);
 
-                        extraParams.baseurl = baseUrl;
-                    }
+                                // Save the view in order to be able to use it for exporting
+                                if (_.isNull(dataView)) {
+                                    dataView = responseView;
+                                }
 
-                    // If extra params contains null value, prevent grid creation
-                    var prevent = false;
-                    _.each(extraParams, function (param) {
-                        if (_.isString(param) && param.indexOf("null") !== -1)
-                            prevent = true;
-                    });
-                    if (prevent)
-                        return;
+                                // Set number of loaded rows
+                                //todo: check if this is needed here
+                                if (params.endRow > scope.loadedRows) {
+                                    scope.loadedRows = params.endRow;
 
-                    Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang, extraParams)
-                        .then(function (response) {
-                            // Check for conditions in which the grid creation should be stopped
-                            if (!_.isUndefined(scope.extraParams) && !_.isEqual(extraParams, scope.extraParams)) {
-                                // If the extra parameters that were sent with the request are NOT the same with the
-                                // current ones, abort grid creation (in case the request takes some time, and
-                                // parameters change in the meantime)
-                                return;
-                            } else if (response.success === false || response.view.length === 0) {
-                                console.error("An error has occurred!");
-                                return false;
-                            }
+                                    if (scope.loadedRows > scope.resultsNum) {
+                                        scope.loadedRows = scope.resultsNum;
+                                    }
+                                }
 
-                            // If the grid exists already, get current selection and destroy the grid
-                            if (_.has(scope.gridOptions, "api")) {
-                                selection = scope.gridOptions.api.getSelectedRows();
-
-                                scope.gridOptions.api.destroy();
-                            }
-
-                            // Get column definitions
-                            var columnDefs = Data.prepareGridColumns(response.view);
-
-                            // Get data for the grid
-                            var rawData = Data.prepareGridData(response.data, response.view);
-
-                            // Add checkbox to the first column
-                            _.first(columnDefs).checkboxSelection = true;
-
-                            //Define the options of the grid component
-                            scope.gridOptions = {
-                                columnDefs: columnDefs,
-                                enableColResize: (grid.colResize === "true"),
-                                enableSorting: (grid.sorting === "true"),
-                                enableFilter: (grid.filtering === "true")
-                            };
-
-                            // If selection is enabled, add extra options for it in the gridOptions
-                            scope.gridOptions.rowSelection = selectionType;
-                            scope.gridOptions.suppressRowClickSelection = true;
-                            scope.gridOptions.onSelectionChanged = function (e) {
-                                // Ignore event if grid is loading, or it's marked to be skipped
-                                if (scope.loading || preventSelectionEvent) {
-                                    preventSelectionEvent = false;
-
+                                // If there are no results, show empty grid
+                                if (_.isEmpty(responseData)) {
+                                    params.successCallback(responseData, 0);
                                     return;
                                 }
 
-                                // Prevent next grid update if nothing was deselected
-                                preventUpdate = !(!_.isEmpty(selection) && e.selectedRows.length < selection.length);
+                                if (!hasColDefs) {
+                                    // Format the column definitions returned from the API and add 2 extra columns to them
+                                    var columnDefs = Data.prepareGridColumns(dataView);
 
-                                // Set selected rows in DashboardService
-                                DashboardService.setGridSelection(selectionId, e.selectedRows);
-                                selection = _.clone(e.selectedRows);
+                                    // Add checkboxes for selecting rows in the 1st column
+                                    //todo: add extra column for the checkboxes based on an attribute?
+                                    _.first(columnDefs).checkboxSelection = true;
 
-                                // Save selection to cookies too
-                                DashboardService.setCookieObject(cookieKey, e.selectedRows);
-                            };
-
-                            scope.gridOptions.rowData = rawData;
-
-                            new agGrid.Grid(gridContainer, scope.gridOptions);
-
-                            // Remove loading animation
-                            scope.loading = false;
-
-                            // At first load of grid, check if there are any cookies with a selection for this grid
-                            if (firstLoad) {
-                                var cookieSel = DashboardService.getCookieObject(cookieKey);
-
-                                if (!_.isEmpty(cookieSel)) {
-                                    // Add selection from cookie to the selection variable, so the rows will be selected
-                                    // below if selection is enabled
-                                    selection = cookieSel;
+                                    scope.gridOptions.api.setColumnDefs(columnDefs);
                                 }
 
-                                firstLoad = false;
+                                // Format the data returned from the API and add them to the grid
+                                var rowsThisPage = Data.prepareGridData(responseData, responseView);
+
+                                // Check if any rows have no value for some attribute
+                                _.each(rowsThisPage, function (row) {
+                                    // For each column of the table
+                                    _.each(responseView, function (column) {
+                                        var attr = column.attribute;
+
+                                        // If it's undefined, try to find it with similar attribute name
+                                        if (_.isUndefined(row[attr])) {
+                                            var newValue = Data.findValueInResult(row, attr, Search.geti18nLangs(), grid.lang);
+
+                                            if (_.isUndefined(newValue)) {
+                                                newValue = "";
+                                            } else if (_.isArray(newValue)) {
+                                                newValue = newValue.join(", ");
+                                            }
+
+                                            // If the new value is an object, prevent nested object creation
+                                            // (the grid will display "[object Object]" if we create it)
+                                            if (!_.isObject(newValue)) {
+                                                Data.createNestedObject(row, attr.split("."), newValue);
+                                            }
+                                        }
+                                    });
+                                });
+
+                                var lastRow = -1;
+                                if (scope.resultsNum <= params.endRow) {
+                                    // We reached the end, so set the last row to the number of total results
+                                    lastRow = scope.resultsNum;
+                                }
+
+                                params.successCallback(rowsThisPage, lastRow);
+                                hasColDefs = true;
+                            };
+
+                            // Function to be called when grid results retrieval fails
+                            var getDataError = function (error) {
+                                scope.ydsAlert = error.message;
+                            };
+
+                            var paramsToSend = _.clone(extraParams);
+                            if (_.isUndefined(paramsToSend)) {
+                                paramsToSend = {};
                             }
 
-                            // Select any points that were previously selected
-                            selectRows(selection);
-                        }, function (error) {
-                            if (_.isNull(error) || _.isUndefined(error) || _.isUndefined(error.message))
-                                scope.ydsAlert = "An error has occurred, please check the configuration of the component.";
-                            else
-                                scope.ydsAlert = error.message;
+                            if (!_.isUndefined(baseUrl)) {
+                                paramsToSend.baseurl = baseUrl;
+                            }
 
-                            // Remove loading animation
-                            scope.loading = false;
-                        });
+                            // Add page size, starting row and sorting parameters
+                            // (paging twice because in some cases rows/start is used, in others limit/offset)
+                            paramsToSend = _.extend(paramsToSend, {
+                                    rows: grid.pageSize,
+                                    limit: grid.pageSize,
+                                    start: params.startRow,
+                                    offset: params.startRow
+                                },
+                                Data.formatAgGridSortParams(params.sortModel));
+
+                            // If extra params contains null value, prevent grid creation
+                            var prevent = false;
+                            _.each(paramsToSend, function (param) {
+                                if (_.isString(param) && param.indexOf("null") !== -1)
+                                    prevent = true;
+                            });
+                            if (prevent)
+                                return;
+
+                            Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang, paramsToSend)
+                                .then(getDataSuccess, getDataError);
+                        }
+                    };
+
+                    scope.gridOptions = {
+                        columnDefs: [],
+                        enableColResize: (grid.colResize === "true"),
+                        enableSorting: (grid.sorting === "true"),
+                        rowSelection: selectionType,
+                        suppressRowClickSelection: true,
+                        virtualPaging: true,
+                        datasource: dataSource,
+                        onSelectionChanged: function (e) {
+                            // Ignore event if grid is loading, or it's marked to be skipped
+                            if (scope.loading || preventSelectionEvent) {
+                                preventSelectionEvent = false;
+                                return;
+                            }
+
+                            // Prevent next grid update if nothing was deselected
+                            preventUpdate = !(!_.isEmpty(selection) && e.selectedRows.length < selection.length);
+
+                            // Set selected rows in DashboardService
+                            DashboardService.setGridSelection(selectionId, e.selectedRows);
+                            selection = _.clone(e.selectedRows);
+
+                            // Save selection to cookies too
+                            DashboardService.setCookieObject(cookieKey, e.selectedRows);
+                        }
+                    };
+
+                    new agGrid.Grid(gridContainer, scope.gridOptions);
+
+                    scope.loading = false;
                 };
 
                 // Watch for changes in extra parameters and update the grid

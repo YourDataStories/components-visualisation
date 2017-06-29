@@ -45,31 +45,31 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 var prevAggregateType = "amount";
 
                 // If type is undefined, set default value
-                if (_.isUndefined(scope.type) || scope.type.trim() == "")
+                if (_.isUndefined(scope.type) || scope.type.trim() === "")
                     scope.type = "info";
 
                 // If viewType is undefined, set default value
-                if (_.isUndefined(scope.viewType) || scope.viewType.trim() == "")
+                if (_.isUndefined(scope.viewType) || scope.viewType.trim() === "")
                     scope.viewType = "default";
 
                 // If lang is undefined, set default value
-                if (_.isUndefined(scope.lang) || scope.lang.trim() == "")
+                if (_.isUndefined(scope.lang) || scope.lang.trim() === "")
                     scope.lang = "en";
 
                 // If addToBasket is undefined, set default value
-                if (_.isUndefined(scope.addToBasket) || scope.addToBasket.trim() == "")
+                if (_.isUndefined(scope.addToBasket) || scope.addToBasket.trim() === "")
                     scope.addToBasket = "false";
 
                 // If aggregateShowButton is undefined, set default value
-                if (_.isUndefined(scope.aggregateShowButton) || (scope.aggregateShowButton != "true" && scope.aggregateShowButton != "false"))
+                if (_.isUndefined(scope.aggregateShowButton) || (scope.aggregateShowButton !== "true" && scope.aggregateShowButton !== "false"))
                     scope.aggregateShowButton = "true";
 
                 // If enableAdvSearch is undefined, set default value
-                if (_.isUndefined(scope.enableAdvSearch) || (scope.enableAdvSearch != "true" && scope.enableAdvSearch != "false"))
+                if (_.isUndefined(scope.enableAdvSearch) || (scope.enableAdvSearch !== "true" && scope.enableAdvSearch !== "false"))
                     scope.enableAdvSearch = "true";
 
                 // If dashboardId is undefined, set default value
-                if (_.isUndefined(dashboardId) || dashboardId.trim() == "") {
+                if (_.isUndefined(dashboardId) || dashboardId.trim() === "") {
                     dashboardId = "default";
                 }
 
@@ -147,7 +147,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                             case "simple-grid":
                                 // Remove string values that contain null from the parameters
                                 scope.extraParams = _.omit(scope.extraParams, function (param) {
-                                    if (_.isString(param) && param.indexOf("null") != -1)
+                                    if (_.isString(param) && param.indexOf("null") !== -1)
                                         return true;
                                     else
                                         return false;
@@ -185,9 +185,9 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 DashboardService.subscribeSelectionChanges(scope, updateExtraParams);
                 DashboardService.subscribeYearChanges(scope, updateExtraParams);
 
-                if (scope.type == "selection-grid" || dashboardId == "public_project" || dashboardId == "comparison"
-                    || dashboardId == "comparison1" || dashboardId == "comparison2"
-                    || dashboardId == "comparison_details_1" || dashboardId == "comparison_details_2") {
+                if (scope.type === "selection-grid" || dashboardId === "public_project" || dashboardId === "comparison"
+                    || dashboardId === "comparison1" || dashboardId === "comparison2"
+                    || dashboardId === "comparison_details_1" || dashboardId === "comparison_details_2") {
                     DashboardService.subscribeGridSelectionChanges(scope, updateExtraParams);
                 }
 
