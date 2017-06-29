@@ -1,17 +1,26 @@
-angular.module('yds').controller('DashboardDynamicController', ['$scope', '$timeout', '$location', '$anchorScroll', '$window', 'DashboardService',
-    function ($scope, $timeout, $location, $anchorScroll, $window, DashboardService) {
+angular.module('yds').controller('DashboardDynamicController', ['$scope', '$timeout', '$location', '$anchorScroll', '$window', '$filter', 'DashboardService',
+    function ($scope, $timeout, $location, $anchorScroll, $window, $filter, DashboardService) {
         var scope = $scope;
 
         scope.dashboardsConfig = {
             types: DashboardService.getDashboardTypes(),
-            selected: "contract",
-            filters: DashboardService.getDashboardFilters("contract")
+            selectedDashboard: "contract",
+            filters: DashboardService.getDashboardFilters("contract"),
+            selectedFilters: []
         };
 
         scope.showProjectInfo = false;
         scope.aggregateToShow = 0;
         scope.aggregateClasses = [];
         scope.aggregateValues = {};
+
+        /**
+         * Update the selected filters array to include only the filters which are selected in the filters checkbox list
+         */
+        scope.updateSelectedFilters = function () {
+            scope.dashboardsConfig.selectedFilters =
+                $filter('filter')(scope.dashboardsConfig.filters, {checked: true});
+        };
 
         scope.selectTab = function (tabIndex) {
             scope.aggregateToShow = tabIndex;

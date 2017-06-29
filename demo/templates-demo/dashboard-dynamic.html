@@ -4,7 +4,7 @@
             <strong>Dashboard types: </strong>
             <div class="btn-group">
                 <label ng-repeat="type in dashboardsConfig.types" class="btn btn-default"
-                       ng-model="dashboardsConfig.selected" uib-btn-radio="'{{ type }}'">{{ type }}</label>
+                       ng-model="dashboardsConfig.selectedDashboard" uib-btn-radio="'{{ type }}'">{{ type }}</label>
             </div>
         </div>
     </div>
@@ -45,7 +45,7 @@
                                     legend="true"
                                     legend-v-align="bottom"
                                     use-dashboard-params="true"
-                                    dashboard-id="{{ dashboardsConfig.selected }}"
+                                    dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
                                     country-selection="true"
                                     europe-only="true"
                                     no-border="true"
@@ -70,7 +70,7 @@
                                     legend="true"
                                     legend-v-align="bottom"
                                     use-dashboard-params="true"
-                                    dashboard-id="{{ dashboardsConfig.selected }}"
+                                    dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
                                     country-selection="true"
                                     no-border="true"
                                     exporting="false"
@@ -83,7 +83,7 @@
                 <div class="col-md-4">
                     <yds-year-range
                             title="Time Period for Contracts"
-                            dashboard-id="{{ dashboardsConfig.selected }}"
+                            dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
                             min-year="1997"
                             max-year="2018">
                     </yds-year-range>
@@ -94,7 +94,13 @@
             <h4>Filters selection:</h4>
 
             <div ng-repeat="filter in dashboardsConfig.filters" class="checkbox">
-                <label><input type="checkbox" value="{{ filter.name }}">{{ filter.name }}</label>
+                <label>
+                    <input type="checkbox"
+                           ng-model="filter.checked"
+                           ng-change="updateSelectedFilters()"
+                           value="{{ filter.name }}">
+                    {{ filter.name }}
+                </label>
             </div>
         </div>
     </div>
