@@ -1,35 +1,36 @@
 /**
  * Grid that supports selection of items and paging (infinite scrolling) at the same time.
  */
-angular.module('yds').directive('ydsGridSelectionPaging', ['Data', 'Filters', 'DashboardService',
+angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "DashboardService",
     function (Data, Filters, DashboardService) {
         return {
-            restrict: 'E',
+            restrict: "E",
             scope: {
-                projectId: '@',         // ID of the project that the data belong
-                viewType: '@',          // Name of the array that contains the visualised data
-                lang: '@',              // Lang of the visualised data
+                projectId: "@",         // ID of the project that the data belong
+                viewType: "@",          // Name of the array that contains the visualised data
+                lang: "@",              // Lang of the visualised data
 
-                extraParams: '=',       // Extra attributes to pass to the API, if needed
-                baseUrl: '@',           // Base URL to send to API (optional)
+                extraParams: "=",       // Extra attributes to pass to the API, if needed
+                baseUrl: "@",           // Base URL to send to API (optional)
 
-                sorting: '@',           // Enable or disable array sorting, values: true, false
-                colResize: '@',         // Enable or disable column resize, values: true, false
-                numberOfItems: '@',     // This should be set to the number of total items that the grid will show
-                pageSize: '@',          // Set the number of rows of each page
-                elementH: '@',          // Set the height of the component
+                sorting: "@",           // Enable or disable array sorting, values: true, false
+                colResize: "@",         // Enable or disable column resize, values: true, false
+                numberOfItems: "@",     // This should be set to the number of total items that the grid will show
+                pageSize: "@",          // Set the number of rows of each page
+                elementH: "@",          // Set the height of the component
 
-                selectionType: '@',     // Selection type ("single" or "multiple")
-                dashboardId: '@',       // Used for setting/getting parameters to/from DashboardService
-                selectionId: '@',       // ID for saving the selection for the specified dashboardId
+                selectionType: "@",     // Selection type ("single" or "multiple")
+                dashboardId: "@",       // Used for setting/getting parameters to/from DashboardService
+                selectionId: "@",       // ID for saving the selection for the specified dashboardId
+                checkboxInNewCol: "@",  // If true, the grid will add the selection checkboxes in a new column
 
-                enableRating: '@'       // Enable rating buttons for this component
+                enableRating: "@"       // Enable rating buttons for this component
             },
-            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/grid.html',
+            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/grid.html",
             link: function (scope, element) {
                 // Get the DOM elements that will contain the grid
-                var gridWrapper = _.first(angular.element(element[0].querySelector('.component-wrapper')));
-                var gridContainer = _.first(angular.element(element[0].querySelector('.grid-container')));
+                var gridWrapper = _.first(angular.element(element[0].querySelector(".component-wrapper")));
+                var gridContainer = _.first(angular.element(element[0].querySelector(".grid-container")));
 
                 // Set initial grid parameters
                 var grid = {
@@ -72,36 +73,41 @@ angular.module('yds').directive('ydsGridSelectionPaging', ['Data', 'Filters', 'D
                 if (_.isUndefined(grid.viewType) || grid.viewType.trim() === "")
                     grid.viewType = "default";
 
-                // Check if the language attr is defined, else assign default value
+                // Check if the language attribute is defined, else assign default value
                 if (_.isUndefined(grid.lang) || grid.lang.trim() === "")
                     grid.lang = "en";
 
-                // Check if the sorting attr is defined, else assign the default value
+                // Check if the sorting attribute is defined, else assign the default value
                 if (_.isUndefined(grid.sorting) || (grid.sorting !== "true" && grid.sorting !== "false"))
                     grid.sorting = "true";
 
-                // Check if the colResize attr is defined, else assign default value
+                // Check if the colResize attribute is defined, else assign default value
                 if (_.isUndefined(grid.colResize) || (grid.colResize !== "true" && grid.colResize !== "false"))
                     grid.colResize = "false";
 
-                // Check if the page size attr is defined, else assign default value
+                // Check if the page size attribute is defined, else assign default value
                 if (_.isUndefined(grid.pageSize) || _.isNaN(grid.pageSize))
                     grid.pageSize = "100";
 
-                // Check if the component's height attr is defined, else assign default value
+                // Check if the component's height attribute is defined, else assign default value
                 if (_.isUndefined(grid.elementH) || _.isNaN(grid.elementH))
                     grid.elementH = 200;
 
-                // Check if the selectionType attr is defined, else assign default value
+                // Check if the selectionType attribute is defined, else assign default value
                 if (_.isUndefined(selectionType) || (selectionType !== "single" && selectionType !== "multiple"))
                     selectionType = "multiple";
+
+                // Check if the checkboxInNewCol attribute is defined, else assign default value
+                if (_.isUndefined(scope.checkboxInNewCol) || (scope.checkboxInNewCol !== "true" && scope.checkboxInNewCol !== "false")) {
+                    scope.checkboxInNewCol = "false";
+                }
 
                 // Show loading animation
                 scope.loading = true;
 
                 // Set the id and the height of the grid
                 gridContainer.id = grid.elementId;
-                gridWrapper.style.height = grid.elementH + 'px';
+                gridWrapper.style.height = grid.elementH + "px";
 
                 // Set cookie variables
                 var cookieKey = grid.viewType + "_" + dashboardId;
@@ -195,8 +201,15 @@ angular.module('yds').directive('ydsGridSelectionPaging', ['Data', 'Filters', 'D
                                     // Format the column definitions returned from the API and add 2 extra columns to them
                                     var columnDefs = Data.prepareGridColumns(dataView);
 
+                                    // Check if we should add a new column for the checkboxes to go to
+                                    if (scope.checkboxInNewCol === "true") {
+                                        columnDefs.unshift({
+                                            headerName: "",
+                                            width: 30
+                                        });
+                                    }
+
                                     // Add checkboxes for selecting rows in the 1st column
-                                    //todo: add extra column for the checkboxes based on an attribute?
                                     _.first(columnDefs).checkboxSelection = true;
 
                                     scope.gridOptions.api.setColumnDefs(columnDefs);
