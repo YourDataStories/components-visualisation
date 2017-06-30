@@ -76,6 +76,7 @@
                             view-type="{{ filter.params.viewType }}"
                             dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
                             selection-id="{{ filter.params.selectionId }}"
+                            dynamic-dashboard="true"
                             number-of-items="20000"
                             base-url="http://platform.yourdatastories.eu/project-details"
                             min-height="225"
@@ -120,6 +121,7 @@
                             type="{{ type }}"
                             add-to-basket="true"
                             enable-rating="true"
+                            dynamic-dashboard="true"
                             base-url="http://platform.yourdatastories.eu/project-details"
                             paging-threshold="10000"
                             number-of-items="{{ aggregateValues[type] }}"
@@ -137,6 +139,7 @@
                     dashboard-id="contract"
                     view-type="{{ type }}"
                     min-height="150"
+                    dynamic-dashboard="true"
                     aggregate-value-obj="aggregateValues"
                     aggregate-show-button="false"
                     aggregate-icon-size="3">
@@ -151,6 +154,7 @@
                     <yds-dashboard-updater
                             type="info-vertical"
                             view-type="contract.filters.selected"
+                            dynamic-dashboard="true"
                             dashboard-id="contract"
                             min-height="90"
                             lang="en">
@@ -190,6 +194,7 @@
                                     id="dashboard-contract-data-grid"
                                     view-type="contract.listitems.for.countries.and.period"
                                     dashboard-id="contract"
+                                    dynamic-dashboard="true"
                                     add-to-basket="true"
                                     enable-rating="true"
                                     min-height="420"
@@ -217,6 +222,7 @@
                                     ng-if="ctTab == 1"
                                     type="search"
                                     dashboard-id="contract"
+                                    dynamic-dashboard="true"
                                     add-to-basket="true"
                                     min-height="480"
                                     lang="en">

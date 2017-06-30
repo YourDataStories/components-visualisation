@@ -435,6 +435,19 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
         };
 
         /**
+         * Get the extra parameters that should be sent to the API with each (dynamic) Dashboard component request,
+         * using the filters that are enabled in that Dashboard.
+         * @param dashboardId       Dashboard ID to get filters for
+         * @param enabledFiltersKey Key that was used to save the enabled filters
+         * @returns {{}}
+         */
+        var getApiOptionsDynamic = function (dashboardId, enabledFiltersKey) {
+            //todo: implement this
+
+            return getApiOptions(dashboardId);
+        };
+
+        /**
          * Create and return the extra parameters that should be sent to the API
          * with each Dashboard component request, for a specific Dashboard section
          * @param dashboardId
@@ -832,6 +845,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
             getSearchParams: getSearchParams,
             getApiOptions: getApiOptions,
+            getApiOptionsDynamic: getApiOptionsDynamic,
 
             subscribeGridSelectionChanges: subscribeGridSelectionChanges,
             subscribeSelectionChanges: subscribeSelectionChanges,

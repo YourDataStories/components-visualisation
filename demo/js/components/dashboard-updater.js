@@ -1,33 +1,34 @@
-angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardService', '$timeout', '$location',
+angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardService", "$timeout", "$location",
     function (Data, DashboardService, $timeout, $location) {
         return {
-            restrict: 'E',
+            restrict: "E",
             scope: {
-                type: '@',                  // What type of component to show (grid, info etc.)
-                projectId: '@',             // Project ID
-                viewType: '@',              // Type to give to component
-                dashboardId: '@',           // ID used for getting selected year range from DashboardService
+                type: "@",                  // What type of component to show (grid, info etc.)
+                projectId: "@",             // Project ID
+                viewType: "@",              // Type to give to component
+                dashboardId: "@",           // ID used for getting selected year range from DashboardService
+                dynamicDashboard: "@",      // Set to true if you are using this in a Dashboard with dynamic filters
 
-                aggregateSetOnInit: '@',    // If the component shown is an aggregate, this indicates if it's the first
-                aggregateIconSize: '@',     // Aggregate icon size (used only if component shown is aggregate)
-                aggregateShowButton: '@',   // If true, the aggregate will show the "View details" button
-                aggregateValueObj: '=',     // If set, the aggregate should save its value in this object
+                aggregateSetOnInit: "@",    // If the component shown is an aggregate, this indicates if it"s the first
+                aggregateIconSize: "@",     // Aggregate icon size (used only if component shown is aggregate)
+                aggregateShowButton: "@",   // If true, the aggregate will show the "View details" button
+                aggregateValueObj: "=",     // If set, the aggregate should save its value in this object
 
-                addToBasket: '@',           // If true, will show basket button in the components that support it
-                selectionId: '@',           // ID for saving the selection for the specified dashboardId (used for grid)
-                selectionType: '@',         // Selection type for grid (single or multiple)
-                enableAdvSearch: '@',       // Enable/disable advanced search in Search Tabs component (default: true)
-                groupedData: '@',           // Used for grid, set to true if the data from the API will be grouped
-                numberOfItems: '@',         // Number of items for the grid, if needed
-                baseUrl: '@',               // Base URL to send to API
-                aggregateType: '@',         // Type of aggregation that the displayed chart should make (count/amount)
-                lang: '@',                  // Language of component
+                addToBasket: "@",           // If true, will show basket button in the components that support it
+                selectionId: "@",           // ID for saving the selection for the specified dashboardId (used for grid)
+                selectionType: "@",         // Selection type for grid (single or multiple)
+                enableAdvSearch: "@",       // Enable/disable advanced search in Search Tabs component (default: true)
+                groupedData: "@",           // Used for grid, set to true if the data from the API will be grouped
+                numberOfItems: "@",         // Number of items for the grid, if needed
+                baseUrl: "@",               // Base URL to send to API
+                aggregateType: "@",         // Type of aggregation that the displayed chart should make (count/amount)
+                lang: "@",                  // Language of component
 
-                minHeight: '@',             // Minimum height of this component's container
+                minHeight: "@",             // Minimum height of this component's container
 
-                enableRating: '@'           // Enable rating buttons (not supported for all components)
+                enableRating: "@"           // Enable rating buttons (not supported for all components)
             },
-            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/dashboard-updater.html',
+            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/dashboard-updater.html",
             link: function (scope) {
                 var dashboardId = scope.dashboardId;
                 var baseUrl = scope.baseUrl;
@@ -89,8 +90,14 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
 
                 var updateExtraParams = function () {
                     // Keep old parameters for comparison and get new parameters from DashboardService
-                    var newParams = DashboardService.getApiOptions(dashboardId);
-                    //todo: make getApiOptions get options for only the selected filters of the dynamic dashboard..
+                    var newParams;
+                    if (scope.dynamicDashboard === "true") {
+                        // Get options for the enabled filters
+                        newParams = DashboardService.getApiOptionsDynamic(dashboardId, "filter");
+                        // console.log(newParams);
+                    } else {
+                        newParams = DashboardService.getApiOptions(dashboardId);
+                    }
 
                     // If something changed in the parameters, update component
                     if (!_.isEqual(prevParams, newParams) || !_.isEqual(prevAggregateType, scope.aggregateType)) {

@@ -13,6 +13,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 baseUrl: '@',           // Base URL to send to API
                 title: '@',             // Title of component
                 elementH: '@',          // Height of component
+                dynamicDashboard: '@',  // Set to true if you are using this in a Dashboard with dynamic filters
 
                 numberOfItems: '@',     // Number of items that the charts are expected to show. If too big, will use paging
                 pagingThreshold: '@',   // Number of items that when exceeded, components with paging should be used
