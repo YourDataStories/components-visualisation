@@ -90,6 +90,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                 var updateExtraParams = function () {
                     // Keep old parameters for comparison and get new parameters from DashboardService
                     var newParams = DashboardService.getApiOptions(dashboardId);
+                    //todo: make getApiOptions get options for only the selected filters of the dynamic dashboard..
 
                     // If something changed in the parameters, update component
                     if (!_.isEqual(prevParams, newParams) || !_.isEqual(prevAggregateType, scope.aggregateType)) {
@@ -117,6 +118,7 @@ angular.module('yds').directive('ydsDashboardUpdater', ['Data', 'DashboardServic
                         //noinspection FallThroughInSwitchStatementJS
                         switch (scope.type) {
                             case "selection-grid":
+                            case "selection-paging-grid":
                             case "aggregate":
                                 // Aggregates and selection grid watch their extra params for changes, so do nothing
                                 break;

@@ -44,7 +44,6 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                     elementH: scope.elementH
                 };
 
-                var extraParams = scope.extraParams;
                 var baseUrl = scope.baseUrl;
                 var selectionType = scope.selectionType;
                 var dashboardId = scope.dashboardId;
@@ -57,9 +56,9 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                 var preventUpdate = false;
 
                 // If extra params exist, add them to Filters
-                if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
-                    Filters.addExtraParamsFilter(grid.elementId, extraParams);
-                }
+                // if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
+                //     Filters.addExtraParamsFilter(grid.elementId, extraParams);
+                // }
 
                 // Check if project id or grid type are defined
                 if (_.isUndefined(grid.projectId) || grid.projectId.trim() === "") {
@@ -111,7 +110,7 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
 
                 // Set cookie variables
                 var cookieKey = grid.viewType + "_" + dashboardId;
-                var firstLoad = true;
+                // var firstLoad = true;
 
                 var preventSelectionEvent = false;
 
@@ -181,15 +180,15 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                                     dataView = responseView;
                                 }
 
-                                // Set number of loaded rows
-                                //todo: check if this is needed here
-                                if (params.endRow > scope.loadedRows) {
-                                    scope.loadedRows = params.endRow;
-
-                                    if (scope.loadedRows > scope.resultsNum) {
-                                        scope.loadedRows = scope.resultsNum;
-                                    }
-                                }
+                                // // Set number of loaded rows
+                                // //todo: check if this is needed here
+                                // if (params.endRow > scope.loadedRows) {
+                                //     scope.loadedRows = params.endRow;
+                                //
+                                //     if (scope.loadedRows > scope.resultsNum) {
+                                //         scope.loadedRows = scope.resultsNum;
+                                //     }
+                                // }
 
                                 // If there are no results, show empty grid
                                 if (_.isEmpty(responseData)) {
@@ -258,12 +257,12 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                                 scope.ydsAlert = error.message;
                             };
 
-                            var paramsToSend = _.clone(extraParams);
+                            var paramsToSend = _.clone(scope.extraParams);
                             if (_.isUndefined(paramsToSend)) {
                                 paramsToSend = {};
                             }
 
-                            if (!_.isUndefined(baseUrl)) {
+                            if (!_.isUndefined(baseUrl) && !_.has(paramsToSend, "baseurl")) {
                                 paramsToSend.baseurl = baseUrl;
                             }
 
@@ -283,6 +282,7 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                                 if (_.isString(param) && param.indexOf("null") !== -1)
                                     prevent = true;
                             });
+
                             if (prevent)
                                 return;
 
@@ -291,34 +291,39 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                         }
                     };
 
-                    scope.gridOptions = {
-                        columnDefs: [],
-                        enableColResize: (grid.colResize === "true"),
-                        enableSorting: (grid.sorting === "true"),
-                        rowSelection: selectionType,
-                        suppressRowClickSelection: true,
-                        virtualPaging: true,
-                        datasource: dataSource,
-                        onSelectionChanged: function (e) {
-                            // Ignore event if grid is loading, or it's marked to be skipped
-                            if (scope.loading || preventSelectionEvent) {
-                                preventSelectionEvent = false;
-                                return;
+                    if (_.isUndefined(scope.gridOptions)) {
+                        scope.gridOptions = {
+                            columnDefs: [],
+                            enableColResize: (grid.colResize === "true"),
+                            enableServerSideSorting: (grid.sorting === "true"),
+                            rowSelection: selectionType,
+                            suppressRowClickSelection: true,
+                            virtualPaging: true,
+                            datasource: dataSource,
+                            onSelectionChanged: function (e) {
+                                // Ignore event if grid is loading, or it's marked to be skipped
+                                if (scope.loading || preventSelectionEvent) {
+                                    preventSelectionEvent = false;
+                                    return;
+                                }
+
+                                // Prevent next grid update if nothing was deselected
+                                preventUpdate = !(!_.isEmpty(selection) && e.selectedRows.length < selection.length);
+
+                                // Set selected rows in DashboardService
+                                DashboardService.setGridSelection(selectionId, e.selectedRows);
+                                selection = _.clone(e.selectedRows);
+
+                                // Save selection to cookies too
+                                DashboardService.setCookieObject(cookieKey, e.selectedRows);
                             }
+                        };
 
-                            // Prevent next grid update if nothing was deselected
-                            preventUpdate = !(!_.isEmpty(selection) && e.selectedRows.length < selection.length);
-
-                            // Set selected rows in DashboardService
-                            DashboardService.setGridSelection(selectionId, e.selectedRows);
-                            selection = _.clone(e.selectedRows);
-
-                            // Save selection to cookies too
-                            DashboardService.setCookieObject(cookieKey, e.selectedRows);
-                        }
-                    };
-
-                    new agGrid.Grid(gridContainer, scope.gridOptions);
+                        new agGrid.Grid(gridContainer, scope.gridOptions);
+                    } else {
+                        // Add new data source to the grid
+                        scope.gridOptions.api.setDatasource(dataSource);
+                    }
 
                     scope.loading = false;
                 };
