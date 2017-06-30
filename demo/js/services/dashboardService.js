@@ -1,9 +1,10 @@
-angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$cookies", "$window",
+angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$cookies", "$window",
     function ($rootScope, $timeout, $cookies, $window) {
         var countries = {};
         var yearRange = {};
         var selectedViewType = {};
         var gridSeletion = {};
+        var objectStore = {};   // For storing various objects (e.g. enabled filters on dynamic dashboard)
         var projectInfoType = "";
         var projectInfoId = "";
         var visualizationType = "";
@@ -253,6 +254,28 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
         };
 
         /**
+         * Save an key/value pair
+         * @param key
+         * @param object
+         */
+        var saveObject = function (key, object) {
+            if (!_.has(objectStore, "key") || !_.isEqual(objectStore[key], object)) {
+                objectStore[key] = object;
+
+                notifyObjectChange();
+            }
+        };
+
+        /**
+         * Get an object from the saved objects, by its key
+         * @param key
+         * @returns {*}
+         */
+        var getObject = function (key) {
+            return objectStore[key];
+        };
+
+        /**
          * Return the available filters and their parameters for a Dashboard
          * @param dashboardId
          * @returns {*}
@@ -490,15 +513,15 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
         };
 
         var subscribeSelectionChanges = function (scope, callback) {
-            var unregister = $rootScope.$on('dashboard-service-change', callback);
-            scope.$on('$destroy', unregister);
+            var unregister = $rootScope.$on("dashboard-service-change", callback);
+            scope.$on("$destroy", unregister);
 
             return unregister;
         };
 
         var subscribeGridSelectionChanges = function (scope, callback) {
-            var unregister = $rootScope.$on('dashboard-grid-sel-change', callback);
-            scope.$on('$destroy', unregister);
+            var unregister = $rootScope.$on("dashboard-grid-sel-change", callback);
+            scope.$on("$destroy", unregister);
 
             return unregister;
         };
@@ -510,8 +533,8 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
          * @returns {*}
          */
         var subscribeToYearChanges = function (scope, callback) {
-            var unregister = $rootScope.$on('dashboard-service-year-range-change', callback);
-            scope.$on('$destroy', unregister);
+            var unregister = $rootScope.$on("dashboard-service-year-range-change", callback);
+            scope.$on("$destroy", unregister);
 
             return unregister;
         };
@@ -523,8 +546,8 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
          * @returns {*}
          */
         var subscribeViewTypeChanges = function (scope, callback) {
-            var unregister = $rootScope.$on('dashboard-service-view-type-change', callback);
-            scope.$on('$destroy', unregister);
+            var unregister = $rootScope.$on("dashboard-service-view-type-change", callback);
+            scope.$on("$destroy", unregister);
 
             return unregister;
         };
@@ -536,10 +559,32 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
          * @returns {*}
          */
         var subscribeProjectChanges = function (scope, callback) {
-            var unregister = $rootScope.$on('dashboard-service-project-info-change', callback);
-            scope.$on('$destroy', unregister);
+            var unregister = $rootScope.$on("dashboard-service-project-info-change", callback);
+            scope.$on("$destroy", unregister);
 
             return unregister;
+        };
+
+        /**
+         * Subscribe to be notified about changes in the saved objects
+         * @param scope
+         * @param callback
+         * @returns {*}
+         */
+        var subscribeObjectChanges = function (scope, callback) {
+            var unregister = $rootScope.$on("dashboard-object-change", callback);
+            scope.$on("$destroy", unregister);
+
+            return unregister;
+        };
+
+        /**
+         * Emit event to notify about an object change
+         */
+        var notifyObjectChange = function () {
+            $timeout(function () {
+                $rootScope.$emit("dashboard-object-change");
+            }, 150);
         };
 
         /**
@@ -550,7 +595,7 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
                 notifyGridSelectionChangeLock = true;
 
                 $timeout(function () {
-                    $rootScope.$emit('dashboard-grid-sel-change');
+                    $rootScope.$emit("dashboard-grid-sel-change");
 
                     notifyGridSelectionChangeLock = false;
                 }, 150);
@@ -565,7 +610,7 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
                 notifyViewTypeChangeLock = true;
 
                 $timeout(function () {
-                    $rootScope.$emit('dashboard-service-view-type-change');
+                    $rootScope.$emit("dashboard-service-view-type-change");
 
                     notifyViewTypeChangeLock = false;
                 }, 150);
@@ -580,7 +625,7 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
                 notifySelectionChangeLock = true;
 
                 $timeout(function () {
-                    $rootScope.$emit('dashboard-service-change');
+                    $rootScope.$emit("dashboard-service-change");
 
                     notifySelectionChangeLock = false;
                 }, 150);
@@ -595,7 +640,7 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
                 notifyYearChangeLock = true;
 
                 $timeout(function () {
-                    $rootScope.$emit('dashboard-service-year-range-change');
+                    $rootScope.$emit("dashboard-service-year-range-change");
 
                     notifyYearChangeLock = false;
                 }, 150);
@@ -610,7 +655,7 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
                 notifyProjectInfoChangeLock = true;
 
                 $timeout(function () {
-                    $rootScope.$emit('dashboard-service-project-info-change');
+                    $rootScope.$emit("dashboard-service-project-info-change");
 
                     notifyProjectInfoChangeLock = false;
                 }, 150);
@@ -793,6 +838,10 @@ angular.module('yds').service('DashboardService', ["$rootScope", "$timeout", "$c
             subscribeYearChanges: subscribeToYearChanges,
             subscribeViewTypeChanges: subscribeViewTypeChanges,
             subscribeProjectChanges: subscribeProjectChanges,
+            subscribeObjectChanges: subscribeObjectChanges,
+
+            saveObject: saveObject,
+            getObject: getObject,
 
             setCountries: setCountries,
             getCountries: getCountries,

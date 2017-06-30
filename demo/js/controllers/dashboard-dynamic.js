@@ -20,6 +20,9 @@ angular.module('yds').controller('DashboardDynamicController', ['$scope', '$time
         scope.updateSelectedFilters = function () {
             scope.dashboardsConfig.selectedFilters =
                 $filter('filter')(scope.dashboardsConfig.filters, {checked: true});
+
+            // Save the selected filters to the DashboardService
+            DashboardService.saveObject("filter", scope.dashboardsConfig.selectedFilters);
         };
 
         /**
