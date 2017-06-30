@@ -482,8 +482,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             //todo: Gather data for any grid filters
 
             // console.log(apiOptions);
-            // return apiOptions;
-            return getApiOptions(dashboardId);
+            return apiOptions;
         };
 
         /**
