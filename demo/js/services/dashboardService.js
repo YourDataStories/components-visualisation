@@ -448,10 +448,28 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             var enabledFilters = getObject(enabledFiltersKey);
             var apiOptionsMap = getApiOptionsMapping(dashboardId);
 
-            //todo: Gather data for any map filters
+            // Gather data for any map filters
+            var filters = _.where(enabledFilters, {type: "heatmap"});
+
+            if (!_.isEmpty(filters)) {
+                // Keep only the filter view types
+                filters = _.pluck(_.pluck(filters, "params"), "viewType");
+
+                _.each(apiOptionsMap, function (viewType, key) {
+                    if (filters.indexOf(viewType) !== -1) {
+                        // The filter for this key is enabled, add its value to the parameters
+                        var countries = getCountries(viewType);
+                        countries = _.pluck(countries, "code").join(",");
+
+                        if (countries.length > 0) {
+                            apiOptions[key] = countries;
+                        }
+                    }
+                });
+            }
 
             // Gather data for any year range filters (only 1 supported right now)
-            var filters = _.findWhere(enabledFilters, {type: "year"});
+            filters = _.findWhere(enabledFilters, {type: "year"});
 
             if (_.has(filters, "checked") && filters.checked === true) {
                 // Get min and max selected year and create the year range string for request
