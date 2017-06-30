@@ -442,8 +442,29 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @returns {{}}
          */
         var getApiOptionsDynamic = function (dashboardId, enabledFiltersKey) {
-            //todo: implement this
+            var apiOptions = {};
 
+            // Get the required data
+            var enabledFilters = getObject(enabledFiltersKey);
+            var apiOptionsMap = getApiOptionsMapping(dashboardId);
+
+            //todo: Gather data for any map filters
+
+            // Gather data for any year range filters (only 1 supported right now)
+            var filters = _.findWhere(enabledFilters, {type: "year"});
+
+            if (_.has(filters, "checked") && filters.checked === true) {
+                // Get min and max selected year and create the year range string for request
+                var minYear = getMinYear(dashboardId);
+                var maxYear = getMaxYear(dashboardId);
+
+                apiOptions[getYearParamName(dashboardId)] = "[" + minYear + " TO " + maxYear + "]";
+            }
+
+            //todo: Gather data for any grid filters
+
+            // console.log(apiOptions);
+            // return apiOptions;
             return getApiOptions(dashboardId);
         };
 
