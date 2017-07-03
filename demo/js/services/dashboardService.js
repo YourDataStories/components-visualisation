@@ -239,7 +239,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     name: "CPVs",
                     type: "grid",
                     params: {
-                        //todo
+                        viewType: "contract.CPVs.for.countries.and.period",
+                        selectionId: "cpvs"
                     }
                 }, {
                     name: "Year Range",
