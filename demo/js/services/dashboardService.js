@@ -226,14 +226,14 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     checked: true,
                     params: {
                         viewType: "contract.buyers.all",
-                        selectionId: "buyers"
+                        selectionId: "buyer_organizations"
                     }
                 }, {
                     name: "Sellers",
                     type: "grid",
                     params: {
                         viewType: "contract.sellers.all",
-                        selectionId: "sellers"
+                        selectionId: "seller_organizations"
                     }
                 }, {
                     name: "CPVs",
@@ -479,9 +479,20 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 apiOptions[getYearParamName(dashboardId)] = "[" + minYear + " TO " + maxYear + "]";
             }
 
-            //todo: Gather data for any grid filters
+            // Gather data for any grid filters
+            filters = _.where(enabledFilters, {type: "grid"});
 
-            // console.log(apiOptions);
+            _.each(filters, function (gridFilter) {
+                var selectionId = gridFilter.params.selectionId;
+                var selection = getGridSelection(selectionId);
+
+                // Check that the selection is not undefined, and at least the 1st item has an "id" property
+                if (!_.isUndefined(selection) && _.has(_.first(selection), "id")) {
+                    selection = _.pluck(selection, "id");
+                    apiOptions[selectionId] = selection;
+                }
+            });
+
             return apiOptions;
         };
 
