@@ -75,19 +75,19 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                 }
 
                 // Check if the component's height attribute is defined, else assign default value
-                if (_.isUndefined(scope.elementH) || scope.elementH.trim() == "")
+                if (_.isUndefined(scope.elementH) || scope.elementH.trim() === "")
                     scope.elementH = 300;
 
                 // If dashboardId is undefined, show error
-                if (_.isUndefined(dashboardId) || dashboardId.trim() == "")
+                if (_.isUndefined(dashboardId) || dashboardId.trim() === "")
                     dashboardId = "default";
 
                 // If disableColor is undefined, show error
-                if (_.isUndefined(disableColor) || (disableColor != "true" && disableColor != "false"))
+                if (_.isUndefined(disableColor) || (disableColor !== "true" && disableColor !== "false"))
                     disableColor = "false";
 
                 // If disableAggregates is undefined, set it to false
-                if (_.isUndefined(scope.disableAggregates) || (scope.disableAggregates != "true" && scope.disableAggregates != "false"))
+                if (_.isUndefined(scope.disableAggregates) || (scope.disableAggregates !== "true" && scope.disableAggregates !== "false"))
                     scope.disableAggregates = "false";
 
                 // If defaultChart is undefined, show bar chart
@@ -150,7 +150,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                     if (!_.isUndefined(viewType) && !_.isEqual(prevViewType, viewType.type)) {
                         scope.selViewType = viewType.type;
 
-                        if (disableColor != "true") {
+                        if (disableColor !== "true") {
                             scope.panelStyle = viewType.panelStyle;
                             scope.panelHeadingStyle = _.omit(viewType.panelHeadingStyle, "min-height");
                         }
@@ -167,7 +167,7 @@ angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService'
                     updateVisualization();
                 };
 
-                if (_.isUndefined(type) || type.length == 0) {
+                if (_.isUndefined(type) || type.length === 0) {
                     // Subscribe to year selection and view type changes
                     DashboardService.subscribeViewTypeChanges(scope, viewTypeChangeHandler);
                 }

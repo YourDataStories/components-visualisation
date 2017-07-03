@@ -34,6 +34,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 var baseUrl = scope.baseUrl;
                 var minHeight = parseInt(scope.minHeight);
                 var originalType = scope.type;
+                var filterSubscriptions = [];
                 scope.showInfo = false;
 
                 // Variables needed in case Search Tabs are shown
@@ -68,6 +69,10 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 // If enableAdvSearch is undefined, set default value
                 if (_.isUndefined(scope.enableAdvSearch) || (scope.enableAdvSearch !== "true" && scope.enableAdvSearch !== "false"))
                     scope.enableAdvSearch = "true";
+
+                // If dynamicDashboard is undefined, set default value
+                if (_.isUndefined(scope.dynamicDashboard) || (scope.dynamicDashboard !== "true" && scope.dynamicDashboard !== "false"))
+                    scope.dynamicDashboard = "false";
 
                 // If dashboardId is undefined, set default value
                 if (_.isUndefined(dashboardId) || dashboardId.trim() === "") {
@@ -142,7 +147,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                                 }
 
                                 // Make request to get rules for QueryBuilder
-                                if (scope.enableAdvSearch == "true") {
+                                if (scope.enableAdvSearch === "true") {
                                     Data.getQueryBuilderRules(requestType, scope.extraParams).then(function (response) {
                                         var paramPrefix = searchParams.urlParamPrefix;
                                         var newRules = JSURL.stringify(response.data);
@@ -190,14 +195,56 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                     }
                 };
 
-                // Subscribe to be notified of changes in selected countries and year range
-                DashboardService.subscribeSelectionChanges(scope, updateExtraParams);
-                DashboardService.subscribeYearChanges(scope, updateExtraParams);
+                /**
+                 * Get the currently enabled filter types from the DashboardService, and subscribe to changes only for
+                 * the enabled filter types.
+                 */
+                var updateFilterSubscriptions = function () {
+                    var filterTypes = _.uniq(_.pluck(DashboardService.getObject("filter"), "type"));
 
-                if (scope.type === "selection-grid" || dashboardId === "public_project" || dashboardId === "comparison"
-                    || dashboardId === "comparison1" || dashboardId === "comparison2"
-                    || dashboardId === "comparison_details_1" || dashboardId === "comparison_details_2") {
-                    DashboardService.subscribeGridSelectionChanges(scope, updateExtraParams);
+                    // Unsubscribe from old filter types
+                    _.each(filterSubscriptions, function (unsubscribeFunction) {
+                        if (_.isFunction(unsubscribeFunction)) {
+                            unsubscribeFunction();
+                        }
+                    });
+
+                    // Subscribe to new filter changes
+                    _.each(filterTypes, function (type) {
+                        switch (type) {
+                            case "heatmap":
+                                filterSubscriptions.push(
+                                    DashboardService.subscribeSelectionChanges(scope, updateExtraParams));
+                                break;
+                            case "grid":
+                                filterSubscriptions.push(
+                                    DashboardService.subscribeGridSelectionChanges(scope, updateExtraParams));
+                                break;
+                            case "year":
+                                filterSubscriptions.push(
+                                    DashboardService.subscribeYearChanges(scope, updateExtraParams));
+                                break;
+                            default:
+                                console.warn("Unknown filter type in Dashboard Updater: " + type);
+                        }
+                    })
+                };
+
+                if (scope.dynamicDashboard !== "true") {
+                    // Subscribe to be notified of changes in selected countries and year range
+                    DashboardService.subscribeSelectionChanges(scope, updateExtraParams);
+                    DashboardService.subscribeYearChanges(scope, updateExtraParams);
+
+                    if (scope.type === "selection-grid" || dashboardId === "public_project" || dashboardId === "comparison"
+                        || dashboardId === "comparison1" || dashboardId === "comparison2"
+                        || dashboardId === "comparison_details_1" || dashboardId === "comparison_details_2") {
+                        DashboardService.subscribeGridSelectionChanges(scope, updateExtraParams);
+                    }
+                } else {
+                    // Subscribe to changes in filters (when filters change, will subscribe only to the required filter
+                    // types to watch for changes)
+                    DashboardService.subscribeObjectChanges(scope, updateFilterSubscriptions);
+                    updateFilterSubscriptions();
                 }
 
                 // If the aggregateType attribute is defined, watch it for changes and update the chart
