@@ -164,6 +164,7 @@
                 <div class="panel-body dashboard-info-container-default">
                     <yds-dashboard-updater
                             type="info-vertical"
+                            ng-if="aggregates.length > 0"
                             view-type="{{ dashboardsConfig.selectedDashboard + '.filters.selected' }}"
                             dynamic-dashboard="true"
                             dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
