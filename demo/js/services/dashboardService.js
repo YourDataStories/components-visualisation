@@ -250,8 +250,83 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                         label: "Time Period for Contracts"
                     }
                 }
+            ],
+            "aidactivity": [
+                {
+                    name: "Benefactor Countries",
+                    type: "heatmap",
+                    checked: true,
+                    params: {
+                        viewType: "aidactivity.benefactor.countries.all"
+                    }
+                }, {
+                    name: "Beneficiary Countries",
+                    type: "heatmap",
+                    checked: true,
+                    params: {
+                        viewType: "aidactivity.beneficiary.countries.all"
+                    }
+                }, {
+                    name: "Benefactor Organisations",
+                    type: "grid",
+                    params: {
+                        viewType: "aidactivity.benefactor.organisations.all",
+                        selectionId: "benefactor_orgs"
+                    }
+                }, {
+                    name: "Beneficiary Organisations",
+                    type: "grid",
+                    params: {
+                        viewType: "aidactivity.beneficiary.organisations.all",
+                        selectionId: "beneficiary_orgs"
+                    }
+                }, {
+                    name: "Sectors",
+                    type: "grid",
+                    params: {
+                        viewType: "aidactivity.sectors.for.countries.and.period",
+                        selectionId: "sectors"
+                    }
+                }, {
+                    name: "Year Range",
+                    type: "year",
+                    checked: true,
+                    params: {
+                        label: "Time Period for Aid Activities"
+                    }
+                }
+            ],
+            "tradeactivity": [
+                {
+                    name: "Origin Countries",
+                    type: "heatmap",
+                    checked: true,
+                    params: {
+                        viewType: "tradeactivity.hasorigin.countries.all"
+                    }
+                }, {
+                    name: "Destination Countries",
+                    type: "heatmap",
+                    checked: true,
+                    params: {
+                        viewType: "tradeactivity.hasdestination.countries.all"
+                    }
+                }, {
+                    name: "Sectors",
+                    type: "grid",
+                    params: {
+                        viewType: "tradeactivity.sectors.for.countries.and.period",
+                        selectionId: "sectors"
+                    }
+                }, {
+                    name: "Year Range",
+                    type: "year",
+                    checked: true,
+                    params: {
+                        label: "Time Period for Trade Activities"
+                    }
+                }
             ]
-            //todo: filters for the rest of the dashboards should also be defined here..
         };
 
         /**
