@@ -1,25 +1,36 @@
 <div class="container" ng-controller="DashboardDynamicController">
+    <!--Dashboard type selection buttons-->
     <div class="row">
         <div class="col-md-12">
             <strong>Dashboard types: </strong>
-            <div class="btn-group">
-                <label ng-repeat="type in dashboardsConfig.types" class="btn btn-default"
-                       ng-model="dashboardsConfig.selectedDashboard" uib-btn-radio="'{{ type }}'">{{ type }}</label>
+            <div class="btn-group" style="text-transform: capitalize;">
+                <label ng-repeat="type in dashboardsConfig.types track by $index"
+                       ng-model="dashboardsConfig.selectedDashboard"
+                       ng-click="changeDashboardType(type)"
+                       uib-uncheckable="$last"
+                       uib-btn-radio="type"
+                       class="btn btn-default">
+                    {{ type }}
+                </label>
             </div>
         </div>
     </div>
+
+    <!--Title & save/clear filters buttons-->
     <div class="row">
         <div class="col-md-9">
-            <h2>Contracts (Custom)</h2>
+            <h2 style="text-transform: capitalize;">
+                {{ dashboardsConfig.selectedDashboard }} Dashboard (Custom)
+            </h2>
         </div>
         <div class="col-md-3" style="text-align: right">
             <yds-save-filters-button
-                    dashboard-id="contract"
-                    info-type="contract.filters.selected"
+                    dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
+                    info-type="{{ dashboardsConfig.selectedDashboard }}.filters.selected"
                     lang="en">
             </yds-save-filters-button>
             <yds-clear-filters-button
-                    dashboard-id="contract"
+                    dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
                     lang="en">
             </yds-clear-filters-button>
         </div>
@@ -117,7 +128,7 @@
                             ng-if="dashboardVisActiveTab == $index"
                             class="{{ 'content-' + aggregateClasses[$index] }}"
                             project-id="none"
-                            dashboard-id="contract"
+                            dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
                             type="{{ type }}"
                             add-to-basket="true"
                             enable-rating="true"
@@ -136,7 +147,7 @@
                     ng-show="aggregateToShow == $index"
                     type="aggregate"
                     project-id="{{ projectId }}"
-                    dashboard-id="contract"
+                    dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
                     view-type="{{ type }}"
                     min-height="150"
                     dynamic-dashboard="true"
@@ -153,9 +164,9 @@
                 <div class="panel-body dashboard-info-container-default">
                     <yds-dashboard-updater
                             type="info-vertical"
-                            view-type="contract.filters.selected"
+                            view-type="{{ dashboardsConfig.selectedDashboard + '.filters.selected' }}"
                             dynamic-dashboard="true"
-                            dashboard-id="contract"
+                            dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
                             min-height="90"
                             lang="en">
                     </yds-dashboard-updater>
@@ -176,24 +187,27 @@
                     <uib-tabset active="ctTab"
                                 template-url="templates/tabset-panel-success.html">
                         <uib-tab heading="View Data" index="0">
-                            <p class="text-justify">The following table shows all Contracts for the selected seller and
+                            <p class="text-justify">The following table shows all {{ dashboardsConfig.selectedDashboard
+                                }}s for the selected seller and
                                 buyer countries that span the selected time period. You can obtain the same results
                                 through search: an example is provided on the
                                 <!--Because of extra scopes created by uib-tab we need
                                 to access the ctTab variable like this-->
                                 <a ng-click="$parent.$parent.ctTab = 1">search tab</a>.</p>
 
-                            <p class="text-justify">Each Contract has a set of related transactions and sectors.
-                                In order to see them, please select a Contract from the table below, and press its
+                            <p class="text-justify">Each {{ dashboardsConfig.selectedDashboard }} has a set of related
+                                transactions and sectors.
+                                In order to see them, please select a {{ dashboardsConfig.selectedDashboard }} from the
+                                table below, and press its
                                 “View” button. The related transactions and sectors will be listed in a new page.</p>
 
-                            <!--Contract grid-->
+                            <!--Items grid-->
                             <yds-dashboard-updater
                                     ng-if="ctTab == 0"
                                     type="grid"
-                                    id="dashboard-contract-data-grid"
-                                    view-type="contract.listitems.for.countries.and.period"
-                                    dashboard-id="contract"
+                                    id="dashboard-data-grid"
+                                    view-type="{{ dashboardsConfig.selectedDashboard + '.listitems.for.countries.and.period' }}"
+                                    dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
                                     dynamic-dashboard="true"
                                     add-to-basket="true"
                                     enable-rating="true"
@@ -221,7 +235,7 @@
                             <yds-dashboard-updater
                                     ng-if="ctTab == 1"
                                     type="search"
-                                    dashboard-id="contract"
+                                    dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
                                     dynamic-dashboard="true"
                                     add-to-basket="true"
                                     min-height="480"
