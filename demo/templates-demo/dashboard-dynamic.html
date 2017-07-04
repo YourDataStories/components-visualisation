@@ -69,7 +69,6 @@
                     </yds-year-range>
 
                     <!--Grid filter-->
-                    <!--todo: give true number of items..-->
                     <yds-dashboard-updater
                             ng-switch-when="grid"
                             type="selection-paging-grid"
@@ -78,7 +77,7 @@
                             dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
                             selection-id="{{ filter.params.selectionId }}"
                             dynamic-dashboard="true"
-                            number-of-items="20000"
+                            number-of-items="{{ aggregateValues[filter.params.viewType] }}"
                             base-url="http://platform.yourdatastories.eu/project-details"
                             min-height="225"
                             lang="{{ filter.params.lang || 'en' }}">
@@ -134,7 +133,7 @@
         <div class="col-md-2">
             <yds-dashboard-updater
                     ng-repeat="type in aggregates track by $index"
-                    ng-if="aggregateToShow == $index"
+                    ng-show="aggregateToShow == $index"
                     type="aggregate"
                     project-id="{{ projectId }}"
                     dashboard-id="contract"
