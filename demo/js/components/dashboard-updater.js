@@ -210,6 +210,13 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                     // types to watch for changes)
                     DashboardService.subscribeObjectChanges(scope, function () {
                         DashboardService.updateFilterSubscriptions(filterSubscriptions, scope, updateExtraParams);
+
+                        // Check if we should update the extra parameters in case a filter type was removed
+                        var newParams = DashboardService.getApiOptionsDynamic(dashboardId, "filter");
+
+                        if (!_.isEqual(newParams, prevParams)) {
+                            updateExtraParams();
+                        }
                     });
 
                     DashboardService.updateFilterSubscriptions(filterSubscriptions, scope, updateExtraParams);

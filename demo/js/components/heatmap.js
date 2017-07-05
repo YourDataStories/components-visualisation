@@ -59,7 +59,7 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                 var selectivity = null;
 
                 // Check if project id or grid type are defined
-                if (angular.isUndefined(projectId) || projectId.trim() == "") {
+                if (angular.isUndefined(projectId) || projectId.trim() === "") {
                     scope.ydsAlert = "The YDS component is not properly initialized " +
                         "because the projectId attribute isn't configured properly." +
                         "Please check the corresponding documentation section";
@@ -67,27 +67,27 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                 }
 
                 // Check if view-type attribute is empty and assign the default value
-                if (_.isUndefined(viewType) || viewType.trim() == "")
+                if (_.isUndefined(viewType) || viewType.trim() === "")
                     viewType = "default";
 
                 // Check if the language attribute is defined, else assign default value
-                if (angular.isUndefined(lang) || lang.trim() == "")
+                if (angular.isUndefined(lang) || lang.trim() === "")
                     lang = "en";
 
                 // Check if colorAxis attribute is defined, else assign default value
-                if (_.isUndefined(colorAxis) || colorAxis.trim() == "")
+                if (_.isUndefined(colorAxis) || colorAxis.trim() === "")
                     colorAxis = "false";
 
                 // Check if colorType attribute is defined, else assign default value
-                if (_.isUndefined(colorType) || colorType.trim() == "")
+                if (_.isUndefined(colorType) || colorType.trim() === "")
                     colorType = "linear";
 
                 // Check if legend attribute is defined, else assign default value
-                if (_.isUndefined(legend) || legend.trim() == "")
+                if (_.isUndefined(legend) || legend.trim() === "")
                     legend = "false";
 
                 // Check if legendVAlign attribute is defined, else assign default value
-                if (_.isUndefined(legendVAlign) || legendVAlign.trim() == "")
+                if (_.isUndefined(legendVAlign) || legendVAlign.trim() === "")
                     legendVAlign = "top";
 
                 // Check if legendVAlign attribute is defined, else assign default value
@@ -208,6 +208,13 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                         var filterSubscriptions = [];
                         DashboardService.subscribeObjectChanges(scope, function () {
                             DashboardService.updateFilterSubscriptions(filterSubscriptions, scope, createHeatmap);
+
+                            // Check if the Heatmap should be updated (in case a filter type was completely removed)
+                            var newParams = DashboardService.getApiOptionsDynamic(dashboardId, "filter");
+
+                            if (!_.isEqual(newParams, extraParams)) {
+                                createHeatmap();
+                            }
                         });
 
                         DashboardService.updateFilterSubscriptions(filterSubscriptions, scope, createHeatmap);
