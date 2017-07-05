@@ -1,5 +1,7 @@
 angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$cookies", "$window",
     function ($rootScope, $timeout, $cookies, $window) {
+        var dashboard = {}; // Public methods go in this object
+
         var countries = {};
         var yearRange = {};
         var selectedViewType = {};
@@ -330,11 +332,11 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
         };
 
         /**
-         * Save an key/value pair
+         * Save a key/value pair
          * @param key
          * @param object
          */
-        var saveObject = function (key, object) {
+        dashboard.saveObject = function (key, object) {
             if (!_.has(objectStore, "key") || !_.isEqual(objectStore[key], object)) {
                 objectStore[key] = object;
 
@@ -347,7 +349,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param key
          * @returns {*}
          */
-        var getObject = function (key) {
+        dashboard.getObject = function (key) {
             return objectStore[key];
         };
 
@@ -356,7 +358,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param dashboardId
          * @returns {*}
          */
-        var getDashboardFilters = function (dashboardId) {
+        dashboard.getDashboardFilters = function (dashboardId) {
             return dashboardFilters[dashboardId];
         };
 
@@ -365,7 +367,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param dashboardId
          * @returns {*}
          */
-        var dashboardIdHasCookies = function (dashboardId) {
+        dashboard.dashboardIdHasCookies = function (dashboardId) {
             return _.has(dashboardCookies, dashboardId);
         };
 
@@ -374,7 +376,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * "dashboardCookies" variable above.
          * @param dashboardId
          */
-        var clearDashboardCookies = function (dashboardId) {
+        dashboard.clearDashboardCookies = function (dashboardId) {
             // Get cookies for the specified Dashboard
             var cookieKeys = dashboardCookies[dashboardId];
 
@@ -387,7 +389,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param dashboardId
          * @returns {{}}
          */
-        var getDashboardCookies = function (dashboardId) {
+        dashboard.getDashboardCookies = function (dashboardId) {
             var cookiesToSave = dashboardCookies[dashboardId];
             var cookies = {};
 
@@ -408,7 +410,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param key
          * @returns {*|Object}
          */
-        var getCookieObject = function (key) {
+        dashboard.getCookieObject = function (key) {
             return $cookies.getObject(key.replace(/\./g, "_"));
         };
 
@@ -417,7 +419,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param key
          * @param valueObj
          */
-        var setCookieObject = function (key, valueObj) {
+        dashboard.setCookieObject = function (key, valueObj) {
             $cookies.putObject(key.replace(/\./g, "_"), valueObj);
         };
 
@@ -426,19 +428,19 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param dashboard
          * @param cookies
          */
-        var restoreCookies = function (dashboard, cookies) {
+        dashboard.restoreCookies = function (dashboard, cookies) {
             var url = dashboardUrlPrefix + dashboardPaths[dashboard];
 
             // Clear any previous cookies for the specified Dashboard
-            clearDashboardCookies(dashboard);
+            dashboard.clearDashboardCookies(dashboard);
 
             // Restore the new cookie values
             _.each(cookies, function (data, key) {
-                setCookieObject(key, data);
+                dashboard.setCookieObject(key, data);
             });
 
             // Go to the dashboard
-            if (url == $window.location.href) {
+            if (url === $window.location.href) {
                 // URL is the same, reload the page
                 $window.location.reload();
             } else {
@@ -452,11 +454,11 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param type      The request type
          * @returns {*}     Type of request
          */
-        var getProjectConceptForType = function (type) {
+        dashboard.getProjectConceptForType = function (type) {
             var concept = null;
 
             _.each(searchParams, function (searchParam) {
-                if (searchParam.requestType == type) {
+                if (searchParam.requestType === type) {
                     concept = searchParam.concept;
                 }
             });
@@ -469,7 +471,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param dashboardId
          * @returns {{countries: string, benefactors: string}}
          */
-        var getApiOptionsMapping = function (dashboardId) {
+        dashboard.getApiOptionsMapping = function (dashboardId) {
             return countryListMapping[dashboardId];
         };
 
@@ -478,7 +480,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param dashboardId
          * @returns {*}
          */
-        var getYearParamName = function (dashboardId) {
+        dashboard.getYearParamName = function (dashboardId) {
             return yearParamMapping[dashboardId];
         };
 
@@ -488,7 +490,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param dashboardId
          * @returns {*}
          */
-        var getAggregates = function (dashboardId) {
+        dashboard.getAggregates = function (dashboardId) {
             return aggregates[dashboardId];
         };
 
@@ -497,7 +499,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * for each available Dashboard)
          * @returns {*}
          */
-        var getDashboardTypes = function () {
+        dashboard.getDashboardTypes = function () {
             return _.keys(aggregates);
         };
 
@@ -506,7 +508,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param dashboardId
          * @returns {*}
          */
-        var getSearchParams = function (dashboardId) {
+        dashboard.getSearchParams = function (dashboardId) {
             return searchParams[dashboardId];
         };
 
@@ -517,12 +519,12 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param enabledFiltersKey Key that was used to save the enabled filters
          * @returns {{}}
          */
-        var getApiOptionsDynamic = function (dashboardId, enabledFiltersKey) {
+        dashboard.getApiOptionsDynamic = function (dashboardId, enabledFiltersKey) {
             var apiOptions = {};
 
             // Get the required data
-            var enabledFilters = getObject(enabledFiltersKey);
-            var apiOptionsMap = getApiOptionsMapping(dashboardId);
+            var enabledFilters = dashboard.getObject(enabledFiltersKey);
+            var apiOptionsMap = dashboard.getApiOptionsMapping(dashboardId);
 
             // Gather data for any map filters
             var filters = _.where(enabledFilters, {type: "heatmap"});
@@ -534,7 +536,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 _.each(apiOptionsMap, function (viewType, key) {
                     if (filters.indexOf(viewType) !== -1) {
                         // The filter for this key is enabled, add its value to the parameters
-                        var countries = getCountries(viewType);
+                        var countries = dashboard.getCountries(viewType);
                         countries = _.pluck(countries, "code").join(",");
 
                         if (countries.length > 0) {
@@ -549,10 +551,10 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
             if (_.has(filters, "checked") && filters.checked === true) {
                 // Get min and max selected year and create the year range string for request
-                var minYear = getMinYear(dashboardId);
-                var maxYear = getMaxYear(dashboardId);
+                var minYear = dashboard.getMinYear(dashboardId);
+                var maxYear = dashboard.getMaxYear(dashboardId);
 
-                apiOptions[getYearParamName(dashboardId)] = "[" + minYear + " TO " + maxYear + "]";
+                apiOptions[dashboard.getYearParamName(dashboardId)] = "[" + minYear + " TO " + maxYear + "]";
             }
 
             // Gather data for any grid filters
@@ -560,7 +562,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
             _.each(filters, function (gridFilter) {
                 var selectionId = gridFilter.params.selectionId;
-                var selection = getGridSelection(selectionId);
+                var selection = dashboard.getGridSelection(selectionId);
 
                 // Check that the selection is not undefined, and at least the 1st item has an "id" property
                 if (!_.isUndefined(selection) && _.has(_.first(selection), "id")) {
@@ -578,17 +580,17 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param dashboardId
          * @returns {{}}
          */
-        var getApiOptions = function (dashboardId) {
-            var apiOptionsMap = getApiOptionsMapping(dashboardId);
+        dashboard.getApiOptions = function (dashboardId) {
+            var apiOptionsMap = dashboard.getApiOptionsMapping(dashboardId);
 
             // Get min and max selected year and create the year range string for request
-            var minYear = getMinYear(dashboardId);
-            var maxYear = getMaxYear(dashboardId);
+            var minYear = dashboard.getMinYear(dashboardId);
+            var maxYear = dashboard.getMaxYear(dashboardId);
 
             var yearRange = "[" + minYear + " TO " + maxYear + "]";
 
             // Get name of parameter that should be used for sending year range
-            var yearParam = getYearParamName(dashboardId);
+            var yearParam = dashboard.getYearParamName(dashboardId);
 
             // Initialize extraParams object with year range
             var apiOptions = {};
@@ -597,7 +599,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
             // Get countries to send with request from DashboardService
             _.each(apiOptionsMap, function (viewType, key) {
-                var countries = getCountries(viewType);
+                var countries = dashboard.getCountries(viewType);
                 countries = _.pluck(countries, "code").join(",");
 
                 if (countries.length > 0) {
@@ -607,57 +609,56 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
             switch (dashboardId) {
                 case "public_project":
-                    if (!_.isEmpty(getGridSelection("sellers")))
-                        apiOptions.sellers = _.pluck(getGridSelection("sellers"), "id").join(",");
+                    if (!_.isEmpty(dashboard.getGridSelection("sellers")))
+                        apiOptions.sellers = _.pluck(dashboard.getGridSelection("sellers"), "id").join(",");
 
-                    if (!_.isEmpty(getGridSelection("buyers")))
-                        apiOptions.buyers = _.pluck(getGridSelection("buyers"), "id").join(",");
+                    if (!_.isEmpty(dashboard.getGridSelection("buyers")))
+                        apiOptions.buyers = _.pluck(dashboard.getGridSelection("buyers"), "id").join(",");
                     break;
                 case "comparison":
-                    if (!_.isEmpty(getGridSelection("cpv1")))
-                        apiOptions.cpv1 = _.pluck(getGridSelection("cpv1"), "id").join(",");
+                    if (!_.isEmpty(dashboard.getGridSelection("cpv1")))
+                        apiOptions.cpv1 = _.pluck(dashboard.getGridSelection("cpv1"), "id").join(",");
 
-                    if (!_.isEmpty(getGridSelection("cpv2")))
-                        apiOptions.cpv2 = _.pluck(getGridSelection("cpv2"), "id").join(",");
-
+                    if (!_.isEmpty(dashboard.getGridSelection("cpv2")))
+                        apiOptions.cpv2 = _.pluck(dashboard.getGridSelection("cpv2"), "id").join(",");
                     break;
                 case "comparison1":
                     // Add year from "comparison" dashboardId
-                    apiOptions.year = "[" + getMinYear("comparison") + " TO " + getMaxYear("comparison") + "]";
+                    apiOptions.year = "[" + dashboard.getMinYear("comparison") + " TO " + dashboard.getMaxYear("comparison") + "]";
                     break;
                 case "comparison2":
                     // Add year from "comparison" dashboardId
-                    apiOptions.year = "[" + getMinYear("comparison") + " TO " + getMaxYear("comparison") + "]";
+                    apiOptions.year = "[" + dashboard.getMinYear("comparison") + " TO " + dashboard.getMaxYear("comparison") + "]";
                     break;
                 case "comparison_details_1":
                     // Add CPV 1
-                    if (!_.isEmpty(getGridSelection("cpv1")))
-                        apiOptions.cpv1 = _.pluck(getGridSelection("cpv1"), "id").join(",");
+                    if (!_.isEmpty(dashboard.getGridSelection("cpv1")))
+                        apiOptions.cpv1 = _.pluck(dashboard.getGridSelection("cpv1"), "id").join(",");
 
                     // Add year from "comparison" dashboardId
-                    apiOptions.year = "[" + getMinYear("comparison") + " TO " + getMaxYear("comparison") + "]";
+                    apiOptions.year = "[" + dashboard.getMinYear("comparison") + " TO " + dashboard.getMaxYear("comparison") + "]";
                     break;
                 case "comparison_details_2":
                     // Add CPV 2
-                    if (!_.isEmpty(getGridSelection("cpv2")))
-                        apiOptions.cpv2 = _.pluck(getGridSelection("cpv2"), "id").join(",");
+                    if (!_.isEmpty(dashboard.getGridSelection("cpv2")))
+                        apiOptions.cpv2 = _.pluck(dashboard.getGridSelection("cpv2"), "id").join(",");
 
                     // Add year from "comparison" dashboardId
-                    apiOptions.year = "[" + getMinYear("comparison") + " TO " + getMaxYear("comparison") + "]";
+                    apiOptions.year = "[" + dashboard.getMinYear("comparison") + " TO " + dashboard.getMaxYear("comparison") + "]";
                     break;
             }
-            // console.log(dashboardId, apiOptions);
+
             return apiOptions;
         };
 
-        var subscribeSelectionChanges = function (scope, callback) {
+        dashboard.subscribeSelectionChanges = function (scope, callback) {
             var unregister = $rootScope.$on("dashboard-service-change", callback);
             scope.$on("$destroy", unregister);
 
             return unregister;
         };
 
-        var subscribeGridSelectionChanges = function (scope, callback) {
+        dashboard.subscribeGridSelectionChanges = function (scope, callback) {
             var unregister = $rootScope.$on("dashboard-grid-sel-change", callback);
             scope.$on("$destroy", unregister);
 
@@ -670,7 +671,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param callback
          * @returns {*}
          */
-        var subscribeToYearChanges = function (scope, callback) {
+        dashboard.subscribeYearChanges = function (scope, callback) {
             var unregister = $rootScope.$on("dashboard-service-year-range-change", callback);
             scope.$on("$destroy", unregister);
 
@@ -683,7 +684,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param callback
          * @returns {*}
          */
-        var subscribeViewTypeChanges = function (scope, callback) {
+        dashboard.subscribeViewTypeChanges = function (scope, callback) {
             var unregister = $rootScope.$on("dashboard-service-view-type-change", callback);
             scope.$on("$destroy", unregister);
 
@@ -696,7 +697,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param callback
          * @returns {*}
          */
-        var subscribeProjectChanges = function (scope, callback) {
+        dashboard.subscribeProjectChanges = function (scope, callback) {
             var unregister = $rootScope.$on("dashboard-service-project-info-change", callback);
             scope.$on("$destroy", unregister);
 
@@ -709,7 +710,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param callback
          * @returns {*}
          */
-        var subscribeObjectChanges = function (scope, callback) {
+        dashboard.subscribeObjectChanges = function (scope, callback) {
             var unregister = $rootScope.$on("dashboard-object-change", callback);
             scope.$on("$destroy", unregister);
 
@@ -805,7 +806,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param type
          * @param newSelection
          */
-        var setGridSelection = function (type, newSelection) {
+        dashboard.setGridSelection = function (type, newSelection) {
             gridSeletion[type] = newSelection;
 
             notifyGridSelectionChange();
@@ -816,11 +817,11 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param type          Type to set countries for
          * @param newCountries  Countries to set
          */
-        var setCountries = function (type, newCountries) {
+        dashboard.setCountries = function (type, newCountries) {
             if (_.isUndefined(countries[type]) || !_.isEqual(countries[type], newCountries)) {
                 countries[type] = newCountries;
 
-                setCookieObject(type, newCountries);
+                dashboard.setCookieObject(type, newCountries);
 
                 notifyCountrySelectionChange();
             }
@@ -831,7 +832,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param type  Type to get countries for
          * @returns {*}
          */
-        var getCountries = function (type) {
+        dashboard.getCountries = function (type) {
             return countries[type];
         };
 
@@ -840,7 +841,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param type
          * @returns {*}
          */
-        var getGridSelection = function (type) {
+        dashboard.getGridSelection = function (type) {
             return gridSeletion[type];
         };
 
@@ -848,7 +849,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * Clear selected countries for a given type
          * @param type
          */
-        var clearCountries = function (type) {
+        dashboard.clearCountries = function (type) {
             if (!_.isEmpty(countries[type])) {
                 countries[type] = [];
 
@@ -862,7 +863,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param minYear       Minimum year
          * @param maxYear       Maximum year
          */
-        var setYearRange = function (dashboardId, minYear, maxYear) {
+        dashboard.setYearRange = function (dashboardId, minYear, maxYear) {
             var newRange = [minYear, maxYear];
             if (!_.isEqual(newRange, yearRange[dashboardId])) {
                 yearRange[dashboardId] = newRange;
@@ -876,7 +877,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param dashboardId
          * @returns {Array}
          */
-        var getYearRange = function (dashboardId) {
+        dashboard.getYearRange = function (dashboardId) {
             return yearRange[dashboardId];
         };
 
@@ -885,7 +886,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param dashboardId
          * @returns {*}
          */
-        var getMinYear = function (dashboardId) {
+        dashboard.getMinYear = function (dashboardId) {
             return _.isEmpty(yearRange[dashboardId]) ? null : _.min(yearRange[dashboardId]);
         };
 
@@ -894,7 +895,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param dashboardId
          * @returns {*}
          */
-        var getMaxYear = function (dashboardId) {
+        dashboard.getMaxYear = function (dashboardId) {
             return _.isEmpty(yearRange[dashboardId]) ? null : _.max(yearRange[dashboardId]);
         };
 
@@ -903,7 +904,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param dashboardId
          * @returns {{}}
          */
-        var getViewType = function (dashboardId) {
+        dashboard.getViewType = function (dashboardId) {
             return selectedViewType[dashboardId];
         };
 
@@ -912,7 +913,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param dashboardID   Dashboard ID
          * @param viewType      View type object
          */
-        var setViewType = function (dashboardID, viewType) {
+        dashboard.setViewType = function (dashboardID, viewType) {
             if (!_.isEqual(selectedViewType[dashboardID], viewType)) {
                 selectedViewType[dashboardID] = viewType;
 
@@ -924,7 +925,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * Return selected project info
          * @returns {{id: string, type: string}}
          */
-        var getSelectedProjectInfo = function () {
+        dashboard.getSelectedProjectInfo = function () {
             return {
                 id: projectInfoId,
                 type: projectInfoType
@@ -935,7 +936,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * Return selected visualization type
          * @returns {string}
          */
-        var getSelectedVisType = function () {
+        dashboard.getSelectedVisType = function () {
             return visualizationType;
         };
 
@@ -944,7 +945,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param id
          * @param type
          */
-        var setSelectedProject = function (id, type) {
+        dashboard.setSelectedProject = function (id, type) {
             projectInfoId = id;
             projectInfoType = type;
 
@@ -955,7 +956,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * Set the properties for the selected visualization type
          * @param newVis
          */
-        var setVisType = function (newVis) {
+        dashboard.setVisType = function (newVis) {
             visualizationType = newVis;
         };
 
@@ -965,8 +966,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param scope         Scope to use for subscribing to new changes
          * @param changeHandler Function that will be called when the selection of a filter changes
          */
-        var updateFilterSubscriptions = function (subscriptions, scope, changeHandler) {
-            var filterTypes = _.uniq(_.pluck(getObject("filter"), "type"));
+        dashboard.updateFilterSubscriptions = function (subscriptions, scope, changeHandler) {
+            var filterTypes = _.uniq(_.pluck(dashboard.getObject("filter"), "type"));
 
             // Unsubscribe from old filter types
             _.each(subscriptions, function (unsubscribeFunction) {
@@ -980,15 +981,15 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 switch (type) {
                     case "heatmap":
                         subscriptions.push(
-                            subscribeSelectionChanges(scope, changeHandler));
+                            dashboard.subscribeSelectionChanges(scope, changeHandler));
                         break;
                     case "grid":
                         subscriptions.push(
-                            subscribeGridSelectionChanges(scope, changeHandler));
+                            dashboard.subscribeGridSelectionChanges(scope, changeHandler));
                         break;
                     case "year":
                         subscriptions.push(
-                            subscribeToYearChanges(scope, changeHandler));
+                            dashboard.subscribeYearChanges(scope, changeHandler));
                         break;
                     default:
                         console.warn("Unknown filter type in Dashboard Updater: " + type);
@@ -996,57 +997,6 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             })
         };
 
-        return {
-            getProjectConceptForType: getProjectConceptForType,
-            getApiOptionsMapping: getApiOptionsMapping,
-            getYearParamName: getYearParamName,
-            getAggregates: getAggregates,
-
-            getDashboardTypes: getDashboardTypes,
-            getDashboardFilters: getDashboardFilters,
-
-            getSearchParams: getSearchParams,
-            getApiOptions: getApiOptions,
-            getApiOptionsDynamic: getApiOptionsDynamic,
-
-            subscribeGridSelectionChanges: subscribeGridSelectionChanges,
-            subscribeSelectionChanges: subscribeSelectionChanges,
-            subscribeYearChanges: subscribeToYearChanges,
-            subscribeViewTypeChanges: subscribeViewTypeChanges,
-            subscribeProjectChanges: subscribeProjectChanges,
-            subscribeObjectChanges: subscribeObjectChanges,
-
-            saveObject: saveObject,
-            getObject: getObject,
-            updateFilterSubscriptions: updateFilterSubscriptions,
-
-            setCountries: setCountries,
-            getCountries: getCountries,
-            clearCountries: clearCountries,
-
-            setGridSelection: setGridSelection,
-            getGridSelection: getGridSelection,
-
-            setYearRange: setYearRange,
-            getYearRange: getYearRange,
-            getMinYear: getMinYear,
-            getMaxYear: getMaxYear,
-
-            setViewType: setViewType,
-            getViewType: getViewType,
-
-            getSelectedProjectInfo: getSelectedProjectInfo,
-            setSelectedProject: setSelectedProject,
-
-            getSelectedVisType: getSelectedVisType,
-            setVisType: setVisType,
-
-            getCookieObject: getCookieObject,
-            setCookieObject: setCookieObject,
-            dashboardIdHasCookies: dashboardIdHasCookies,
-            clearDashboardCookies: clearDashboardCookies,
-            getDashboardCookies: getDashboardCookies,
-            restoreCookies: restoreCookies
-        };
+        return dashboard;
     }]
 );
