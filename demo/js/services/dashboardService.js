@@ -959,6 +959,43 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             visualizationType = newVis;
         };
 
+        /**
+         * Subscribe to the
+         * @param subscriptions Array with functions to unsubscribe from the subscribed filters
+         * @param scope         Scope to use for subscribing to new changes
+         * @param changeHandler Function that will be called when the selection of a filter changes
+         */
+        var updateFilterSubscriptions = function (subscriptions, scope, changeHandler) {
+            var filterTypes = _.uniq(_.pluck(getObject("filter"), "type"));
+
+            // Unsubscribe from old filter types
+            _.each(subscriptions, function (unsubscribeFunction) {
+                if (_.isFunction(unsubscribeFunction)) {
+                    unsubscribeFunction();
+                }
+            });
+
+            // Subscribe to new filter changes
+            _.each(filterTypes, function (type) {
+                switch (type) {
+                    case "heatmap":
+                        subscriptions.push(
+                            subscribeSelectionChanges(scope, changeHandler));
+                        break;
+                    case "grid":
+                        subscriptions.push(
+                            subscribeGridSelectionChanges(scope, changeHandler));
+                        break;
+                    case "year":
+                        subscriptions.push(
+                            subscribeToYearChanges(scope, changeHandler));
+                        break;
+                    default:
+                        console.warn("Unknown filter type in Dashboard Updater: " + type);
+                }
+            })
+        };
+
         return {
             getProjectConceptForType: getProjectConceptForType,
             getApiOptionsMapping: getApiOptionsMapping,
@@ -981,6 +1018,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
             saveObject: saveObject,
             getObject: getObject,
+            updateFilterSubscriptions: updateFilterSubscriptions,
 
             setCountries: setCountries,
             getCountries: getCountries,

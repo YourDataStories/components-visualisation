@@ -195,41 +195,6 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                     }
                 };
 
-                /**
-                 * Get the currently enabled filter types from the DashboardService, and subscribe to changes only for
-                 * the enabled filter types.
-                 */
-                var updateFilterSubscriptions = function () {
-                    var filterTypes = _.uniq(_.pluck(DashboardService.getObject("filter"), "type"));
-
-                    // Unsubscribe from old filter types
-                    _.each(filterSubscriptions, function (unsubscribeFunction) {
-                        if (_.isFunction(unsubscribeFunction)) {
-                            unsubscribeFunction();
-                        }
-                    });
-
-                    // Subscribe to new filter changes
-                    _.each(filterTypes, function (type) {
-                        switch (type) {
-                            case "heatmap":
-                                filterSubscriptions.push(
-                                    DashboardService.subscribeSelectionChanges(scope, updateExtraParams));
-                                break;
-                            case "grid":
-                                filterSubscriptions.push(
-                                    DashboardService.subscribeGridSelectionChanges(scope, updateExtraParams));
-                                break;
-                            case "year":
-                                filterSubscriptions.push(
-                                    DashboardService.subscribeYearChanges(scope, updateExtraParams));
-                                break;
-                            default:
-                                console.warn("Unknown filter type in Dashboard Updater: " + type);
-                        }
-                    })
-                };
-
                 if (scope.dynamicDashboard !== "true") {
                     // Subscribe to be notified of changes in selected countries and year range
                     DashboardService.subscribeSelectionChanges(scope, updateExtraParams);
@@ -243,8 +208,11 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 } else {
                     // Subscribe to changes in filters (when filters change, will subscribe only to the required filter
                     // types to watch for changes)
-                    DashboardService.subscribeObjectChanges(scope, updateFilterSubscriptions);
-                    updateFilterSubscriptions();
+                    DashboardService.subscribeObjectChanges(scope, function () {
+                        DashboardService.updateFilterSubscriptions(filterSubscriptions, scope, updateExtraParams);
+                    });
+
+                    DashboardService.updateFilterSubscriptions(filterSubscriptions, scope, updateExtraParams);
                 }
 
                 // If the aggregateType attribute is defined, watch it for changes and update the chart

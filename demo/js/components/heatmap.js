@@ -198,17 +198,26 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                         drupalPath + "lib/highcharts-maps/europe.js"],
                     cache: true
                 }).then(function () {
-                    if (useDashboardParams === "true") {
+                    // Check if we should subscribe to parameter changes (used in Dashboards)
+                    if (useDashboardParams === "true" && scope.dynamicDashboard !== "true") {
+                        // For non-dynamic dashboards, subscribe only to year & selection changes
                         DashboardService.subscribeYearChanges(scope, createHeatmap);
                         DashboardService.subscribeSelectionChanges(scope, createHeatmap);
+                    } else if (useDashboardParams === "true") {
+                        // For dynamic dashboards, we should subscribe to the selected filters in the Dashboard
+                        var filterSubscriptions = [];
+                        DashboardService.subscribeObjectChanges(scope, function () {
+                            DashboardService.updateFilterSubscriptions(filterSubscriptions, scope, createHeatmap);
+                        });
+
+                        DashboardService.updateFilterSubscriptions(filterSubscriptions, scope, createHeatmap);
                     }
 
                     createHeatmap();
                 });
 
                 /**
-                 * Function that takes array of points from Highmaps and keeps only the
-                 * country names, codes and values
+                 * Take Highmaps points array and keep only the country names, codes and values
                  * @param points
                  * @returns {*}
                  */
