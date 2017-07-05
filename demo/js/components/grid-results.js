@@ -1,48 +1,48 @@
-angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 'Basket', 'YDS_CONSTANTS', 'DashboardService', '$compile', '$location', '$q', '$uibModal',
+angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", "Basket", "YDS_CONSTANTS", "DashboardService", "$compile", "$location", "$q", "$uibModal",
     function (Data, Filters, Search, Basket, YDS_CONSTANTS, DashboardService, $compile, $location, $q, $uibModal) {
         return {
-            restrict: 'E',
+            restrict: "E",
             scope: {
-                projectId: '@',         // Project ID of data
-                viewType: '@',          // Name of the view to use for the grid
-                projectDetailsType: '@',// Type to use when viewing details. If undefined, will use the viewType
-                lang: '@',              // Lang of the visualised data
-                extraParams: '=',       // Extra attributes to pass to the API (optional)
+                projectId: "@",         // Project ID of data
+                viewType: "@",          // Name of the view to use for the grid
+                projectDetailsType: "@",// Type to use when viewing details. If undefined, will use the viewType
+                lang: "@",              // Lang of the visualised data
+                extraParams: "=",       // Extra attributes to pass to the API (optional)
 
-                useGridApi: '@',        // If true, grid will use the grid API for the request
-                numberOfItems: '@',     // If grid processing is used, give the number of total items to the grid
+                useGridApi: "@",        // If true, grid will use the grid API for the request
+                numberOfItems: "@",     // If grid processing is used, give the number of total items to the grid
 
-                urlParamPrefix: '@',    // Prefix to add before all url parameters (optional)
-                viewInDashboard: '@',   // If true, the view button for each row will set the clicked value in DashboardService
+                urlParamPrefix: "@",    // Prefix to add before all url parameters (optional)
+                viewInDashboard: "@",   // If true, the view button for each row will set the clicked value in DashboardService
 
-                sorting: '@',           // Enable or disable array sorting, values: true, false
-                quickFiltering: '@',    // Enable or disable array quick filtering, values: true, false
-                colResize: '@',         // Enable or disable column resize, values: true, false
-                pageSize: '@',          // Set the number of rows of each page
-                elementH: '@',          // Set the height of the component
-                showResultsNum: '@',    // If true, will show the results number below the grid
-                enableViewButton: '@',  // Enable the view button in each row (Default: true)
+                sorting: "@",           // Enable or disable array sorting, values: true, false
+                quickFiltering: "@",    // Enable or disable array quick filtering, values: true, false
+                colResize: "@",         // Enable or disable column resize, values: true, false
+                pageSize: "@",          // Set the number of rows of each page
+                elementH: "@",          // Set the height of the component
+                showResultsNum: "@",    // If true, will show the results number below the grid
+                enableViewButton: "@",  // Enable the view button in each row (Default: true)
 
-                addToBasket: '@',       // Enable or disable "add to basket" functionality, values: true, false
-                basketBtnX: '@',        // X-axis position of the basket button
-                basketBtnY: '@',        // Y-axis position of the basket button
+                addToBasket: "@",       // Enable or disable "add to basket" functionality, values: true, false
+                basketBtnX: "@",        // X-axis position of the basket button
+                basketBtnY: "@",        // Y-axis position of the basket button
 
-                exporting: '@',         // Enable or disable export to CSV
-                exportBtnX: '@',        // X-axis position of the exporting button
-                exportBtnY: '@',        // Y-axis position of the exporting button
+                exporting: "@",         // Enable or disable export to CSV
+                exportBtnX: "@",        // X-axis position of the exporting button
+                exportBtnY: "@",        // Y-axis position of the exporting button
 
-                embeddable: '@',        // Enable or disable the embedding of the component
-                embedBtnX: '@',         // X-axis position of the embed button
-                embedBtnY: '@',         // Y-axis position of the embed button
-                popoverPos: '@',        // The side of the embed button from which the embed  window will appear
+                embeddable: "@",        // Enable or disable the embedding of the component
+                embedBtnX: "@",         // X-axis position of the embed button
+                embedBtnY: "@",         // Y-axis position of the embed button
+                popoverPos: "@",        // The side of the embed button from which the embed  window will appear
 
-                enableRating: '@'       // Enable rating buttons for this component
+                enableRating: "@"       // Enable rating buttons for this component
             },
-            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/grid-results.html',
+            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/grid-results.html",
             link: function (scope, element) {
                 // Reference the dom elements in which the yds-grid is rendered
-                var gridWrapper = angular.element(element[0].querySelector('.component-wrapper'));
-                var gridContainer = angular.element(element[0].querySelector('.grid-container'));
+                var gridWrapper = angular.element(element[0].querySelector(".component-wrapper"));
+                var gridContainer = angular.element(element[0].querySelector(".grid-container"));
 
                 var prevTab = "";     // Keeps the previous tab to check if the tab has changed
 
@@ -76,7 +76,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 var enableViewButton = scope.enableViewButton;
 
                 // If viewType is undefined we can't show the grid
-                if (_.isUndefined(grid.viewType) || grid.viewType.trim() == "") {
+                if (_.isUndefined(grid.viewType) || grid.viewType.trim() === "") {
                     scope.ydsAlert = "The YDS component is not properly initialized " +
                         "because the viewType attribute isn't configured properly. " +
                         "Please check the corresponding documentation section";
@@ -84,47 +84,47 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 }
 
                 // Check if the projectDetailsType attr is defined, else assign default value
-                if (_.isUndefined(projectDetailsType) || projectDetailsType.trim() == "")
+                if (_.isUndefined(projectDetailsType) || projectDetailsType.trim() === "")
                     projectDetailsType = grid.viewType;
 
                 // Check if the language attr is defined, else assign default value
-                if (_.isUndefined(grid.projectId) || grid.projectId.trim() == "")
+                if (_.isUndefined(grid.projectId) || grid.projectId.trim() === "")
                     grid.projectId = "none";
 
                 // Check if the language attr is defined, else assign default value
-                if (_.isUndefined(grid.lang) || grid.lang.trim() == "")
+                if (_.isUndefined(grid.lang) || grid.lang.trim() === "")
                     grid.lang = "en";
 
                 // if no url parameter prefix is defined or it is only whitespace, use not parameter prefix
-                if (_.isUndefined(paramPrefix) || (paramPrefix.trim() == "" && paramPrefix.length > 0))
+                if (_.isUndefined(paramPrefix) || (paramPrefix.trim() === "" && paramPrefix.length > 0))
                     paramPrefix = "";
 
                 // Check if the sorting attr is defined, else assign the default value
-                if (_.isUndefined(grid.sorting) || (grid.sorting != "true" && grid.sorting != "false"))
+                if (_.isUndefined(grid.sorting) || (grid.sorting !== "true" && grid.sorting !== "false"))
                     grid.sorting = "true";
 
                 // Check if the useGridApi attr is defined, else assign the default value
-                if (_.isUndefined(useGridApi) || (useGridApi != "true" && useGridApi != "false"))
+                if (_.isUndefined(useGridApi) || (useGridApi !== "true" && useGridApi !== "false"))
                     useGridApi = "false";
 
                 // Check if the enableViewButton attr is defined, else assign the default value
-                if (_.isUndefined(enableViewButton) || (enableViewButton != "true" && enableViewButton != "false"))
+                if (_.isUndefined(enableViewButton) || (enableViewButton !== "true" && enableViewButton !== "false"))
                     enableViewButton = "true";
 
                 // Check if the viewInDashboard attr is defined, else assign the default value
-                if (_.isUndefined(viewInDashboard) || (viewInDashboard != "true" && viewInDashboard != "false"))
+                if (_.isUndefined(viewInDashboard) || (viewInDashboard !== "true" && viewInDashboard !== "false"))
                     viewInDashboard = "false";
 
                 // Check if the showResultsNum attr is defined, else assign the default value
-                if (_.isUndefined(scope.showResultsNum) || (scope.showResultsNum != "true" && scope.showResultsNum != "false"))
+                if (_.isUndefined(scope.showResultsNum) || (scope.showResultsNum !== "true" && scope.showResultsNum !== "false"))
                     scope.showResultsNum = "false";
 
                 // Check if the quick filtering attr is defined, else assign the default value
-                if (_.isUndefined(grid.quickFiltering) || (grid.quickFiltering != "true" && grid.quickFiltering != "false"))
+                if (_.isUndefined(grid.quickFiltering) || (grid.quickFiltering !== "true" && grid.quickFiltering !== "false"))
                     grid.quickFiltering = "false";
 
                 // Check if the colResize attr is defined, else assign default value
-                if (_.isUndefined(grid.colResize) || (grid.colResize != "true" && grid.colResize != "false"))
+                if (_.isUndefined(grid.colResize) || (grid.colResize !== "true" && grid.colResize !== "false"))
                     grid.colResize = "false";
 
                 // Check if the page size attr is defined, else assign default value
@@ -132,7 +132,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     grid.pageSize = "100";
 
                 //check if the exporting attr is defined, else assign default value
-                if (_.isUndefined(grid.exporting) || (grid.exporting != "true" && grid.exporting != "false"))
+                if (_.isUndefined(grid.exporting) || (grid.exporting !== "true" && grid.exporting !== "false"))
                     grid.exporting = "false";
 
                 //check if the exportBtnX attr is defined, else assign default value
@@ -151,17 +151,17 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                 gridContainer[0].id = grid.elementId;
 
                 if (grid.quickFiltering === "true") {
-                    gridWrapper[0].style.height = (grid.elementH) + 'px';
-                    gridContainer[0].style.height = (grid.elementH - 35) + 'px';
-                    gridContainer[0].style.minHeight = (grid.elementH - 35) + 'px';
+                    gridWrapper[0].style.height = (grid.elementH) + "px";
+                    gridContainer[0].style.height = (grid.elementH - 35) + "px";
+                    gridContainer[0].style.minHeight = (grid.elementH - 35) + "px";
                 } else {
-                    gridWrapper[0].style.height = grid.elementH + 'px';
-                    gridContainer[0].style.height = grid.elementH + 'px';
-                    gridContainer[0].style.minHeight = grid.elementH + 'px';
+                    gridWrapper[0].style.height = grid.elementH + "px";
+                    gridContainer[0].style.height = grid.elementH + "px";
+                    gridContainer[0].style.minHeight = grid.elementH + "px";
                 }
 
                 // If exporting is enabled, set position of export button
-                if (grid.exporting == "true") {
+                if (grid.exporting === "true") {
                     scope.exportBtnPos = {
                         left: grid.exportBtnX + "px",
                         top: grid.exportBtnY + "px"
@@ -177,7 +177,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
 
                     //if quick filtering is enabled and has length>0, get its value and create an extra filter
                     if (grid.quickFiltering === "true")
-                        gridFilters['_ydsQuickFilter_'] = scope.quickFilterValue;
+                        gridFilters["_ydsQuickFilter_"] = scope.quickFilterValue;
 
                     Filters.addGridFilter(grid.elementId, gridFilters);
                 };
@@ -189,7 +189,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     //if the grid filtering is enabled remove the filter event listener
                     if (grid.quickFiltering === "true") {
                         if (!_.isUndefined(scope.gridOptions) && _.has(scope.gridOptions, "api")) {
-                            scope.gridOptions.api.removeEventListener('afterFilterChanged', filterModifiedListener);
+                            scope.gridOptions.api.removeEventListener("afterFilterChanged", filterModifiedListener);
                         }
 
                         Filters.remove(grid.elementId);
@@ -259,14 +259,14 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
 
                     var newKeyword = $location.search()[paramPrefix + "q"];
 
-                    if (_.isUndefined(newKeyword) || newKeyword.trim() == "") {
+                    if (_.isUndefined(newKeyword) || newKeyword.trim() === "") {
                         newKeyword = "*";
                     }
 
                     if (_.isUndefined(extraParams) || _.isEmpty(extraParams)) {
                         deferred.resolve(newKeyword);
                     } else {
-                        if (query.length == 0) {
+                        if (query.length === 0) {
                             Data.getType2SolrQuery(grid.viewType, extraParams).then(function (response) {
                                 // Remember query so we don't need to call this API every time the page changes
                                 query = response.data.q;
@@ -297,7 +297,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                  * Show modal to export grid data to CSV
                  */
                 scope.exportGrid = function () {
-                    if (scope.exportBtnClass != "disabled") {
+                    if (scope.exportBtnClass !== "disabled") {
                         var modalInput = {
                             view: dataView,
                             lang: scope.lang,
@@ -354,7 +354,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                  * @returns {Array.<*>} New column definitions
                  */
                 var addLinkRendererToColumnDefs = function (columnDefs) {
-                    if (viewInDashboard == "true") {
+                    if (viewInDashboard === "true") {
                         _.first(columnDefs).cellRenderer = function (params) {
                             var value = params.value || "";
                             if (!_.isUndefined(params.data) && !_.isEmpty(params.data) && (_.isNull(params.value) || params.value.length === 0)) {
@@ -459,7 +459,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                     // Format the column definitions returned from the API and add 2 extra columns to them
                                     var columnDefs = Data.prepareGridColumns(responseView);
 
-                                    if (enableViewButton == "true") {
+                                    if (enableViewButton === "true") {
                                         // Make the 1st column have links to more details
                                         columnDefs = addLinkRendererToColumnDefs(columnDefs);
                                     }
@@ -506,7 +506,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                 // Call sizeColumnsToFit, if this grid is in the selected tab of Tabbed Search (so
                                 // tab url parameter will be the same as this grid's view type) or if query length
                                 // is > 0 (so this grid is using extraParams, which means it's shown in the Dashboard)
-                                if (!hasColDefs && (scope.viewType == $location.search()[paramPrefix + "tab"] || query.length > 0)) {
+                                if (!hasColDefs && (scope.viewType === $location.search()[paramPrefix + "tab"] || query.length > 0)) {
                                     scope.gridOptions.api.sizeColumnsToFit();
                                 }
 
@@ -518,7 +518,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                 scope.ydsAlert = error.message;
                             };
 
-                            if (useGridApi == "false") {
+                            if (useGridApi === "false") {
                                 // If extra parameters have a "q" parameter, then use that as a query. This happens when
                                 // a grid is saved to the basket as a visualization and is then embedded
                                 if (_.has(extraParams, "q")) {
@@ -533,12 +533,13 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                                     }
 
                                     // Try to find any selected facets
+                                    var facets;
                                     if (_.has(extraParams, "fq")) {
                                         // If facets exist in extra params, get them from there
-                                        var facets = extraParams.fq;
+                                        facets = extraParams.fq;
                                     } else {
                                         // Get facets from URL parameters
-                                        var facets = $location.search()[paramPrefix + "fq"];
+                                        facets = $location.search()[paramPrefix + "fq"];
                                     }
 
                                     // Try to find advanced search rules (if no rules are found, perform normal search)
@@ -609,8 +610,8 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                         // Define the options of the grid component
                         scope.gridOptions = {
                             columnDefs: [],
-                            enableColResize: (grid.colResize == "true"),
-                            enableServerSideSorting: (grid.sorting == "true"),
+                            enableColResize: (grid.colResize === "true"),
+                            enableServerSideSorting: (grid.sorting === "true"),
                             virtualPaging: true,
                             datasource: dataSource
                         };
@@ -622,7 +623,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                     }
                 };
 
-                if (_.isUndefined(extraParams) && useGridApi == "false") {
+                if (_.isUndefined(extraParams) && useGridApi === "false") {
                     // If any URL parameters change act accordingly
                     scope.$watch(function () {
                         return JSON.stringify($location.search()) + getSearchQuery();
@@ -630,7 +631,7 @@ angular.module('yds').directive('ydsGridResults', ['Data', 'Filters', 'Search', 
                         var urlParams = $location.search();
 
                         // Only look for changes if this grid is in the active tab
-                        if (urlParams[paramPrefix + "tab"] == scope.viewType) {
+                        if (urlParams[paramPrefix + "tab"] === scope.viewType) {
                             // Update prevTab variable to the new tab
                             prevTab = urlParams[paramPrefix + "tab"];
 

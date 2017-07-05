@@ -1,34 +1,34 @@
-angular.module('yds').directive('ydsBar', ['Data', 'Filters', function (Data, Filters) {
+angular.module("yds").directive("ydsBar", ["Data", "Filters", function (Data, Filters) {
     return {
-        restrict: 'E',
+        restrict: "E",
         scope: {
-            projectId: '@',     // Id of the project that the data belong
-            viewType: '@',      // Name of the array that contains the visualised data
-            lang: '@',          // Lang of the visualised data
+            projectId: "@",     // Id of the project that the data belong
+            viewType: "@",      // Name of the array that contains the visualised data
+            lang: "@",          // Lang of the visualised data
 
-            extraParams: '=',   // Extra attributes to pass to the API, if needed
-            enablePaging: '@',  // Enable paging (default is false)
-            pageSize: '@',      // Page size for paging
-            numberOfItems: '@', // Number of items, required for paging
+            extraParams: "=",   // Extra attributes to pass to the API, if needed
+            enablePaging: "@",  // Enable paging (default is false)
+            pageSize: "@",      // Page size for paging
+            numberOfItems: "@", // Number of items, required for paging
 
-            exporting: '@',     // Enable or disable the export of the chart
-            elementH: '@',      // Set the height of the component
-            titleSize: '@',     // The size of the chart's main title
+            exporting: "@",     // Enable or disable the export of the chart
+            elementH: "@",      // Set the height of the component
+            titleSize: "@",     // The size of the chart's main title
 
-            addToBasket: '@',   // Enable or disable "add to basket" functionality, values: true, false
-            basketBtnX: '@',    // X-axis position of the basket button
-            basketBtnY: '@',    // Y-axis position of the basket button
+            addToBasket: "@",   // Enable or disable "add to basket" functionality, values: true, false
+            basketBtnX: "@",    // X-axis position of the basket button
+            basketBtnY: "@",    // Y-axis position of the basket button
 
-            embeddable: '@',    // Enable or disabled the embedding of the component
-            embedBtnX: '@',     // X-axis position of the embed button
-            embedBtnY: '@',     // Y-axis position of the embed button
-            popoverPos: '@',    // The side of the embed button from which the embed information window will appear
+            embeddable: "@",    // Enable or disabled the embedding of the component
+            embedBtnX: "@",     // X-axis position of the embed button
+            embedBtnY: "@",     // Y-axis position of the embed button
+            popoverPos: "@",    // The side of the embed button from which the embed information window will appear
 
-            enableRating: '@'   // Enable rating buttons for this component
+            enableRating: "@"   // Enable rating buttons for this component
         },
-        templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/bar.html',
-        link: function (scope, element, attrs) {
-            var barContainer = angular.element(element[0].querySelector('.bar-container'));
+        templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/bar.html",
+        link: function (scope, element) {
+            var barContainer = angular.element(element[0].querySelector(".bar-container"));
 
             //create a random id for the element that will render the chart
             var elementId = "bar" + Data.createRandomId();
@@ -65,11 +65,11 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function (Data, Fi
                 lang = "en";
 
             // Check if the exporting attr is defined, else assign default value
-            if (_.isUndefined(exporting) || (exporting != "true" && exporting != "false"))
+            if (_.isUndefined(exporting) || (exporting !== "true" && exporting !== "false"))
                 exporting = "true";
 
             // Check if the enablePaging attr is defined, else assign default value
-            if (_.isUndefined(scope.enablePaging) || (scope.enablePaging != "true" && scope.enablePaging != "false"))
+            if (_.isUndefined(scope.enablePaging) || (scope.enablePaging !== "true" && scope.enablePaging !== "false"))
                 scope.enablePaging = "false";
 
             // Check if the pageSize attr is defined, else assign default value
@@ -102,9 +102,9 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function (Data, Fi
 
             // Set the height of the chart
             if (scope.enablePaging === "true") {
-                barContainer[0].style.height = (parseInt(elementH) - 35) + 'px';
+                barContainer[0].style.height = (parseInt(elementH) - 35) + "px";
             } else {
-                barContainer[0].style.height = elementH + 'px';
+                barContainer[0].style.height = elementH + "px";
             }
 
             /**
@@ -166,7 +166,7 @@ angular.module('yds').directive('ydsBar', ['Data', 'Filters', function (Data, Fi
                             options.exporting = {
                                 buttons: {
                                     contextButton: {
-                                        symbol: 'url(' + ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'img/fa-download-small.png)',
+                                        symbol: "url(" + ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "img/fa-download-small.png)",
                                         symbolX: 19,
                                         symbolY: 19
                                     }

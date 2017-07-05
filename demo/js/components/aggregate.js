@@ -1,25 +1,25 @@
-angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$sce',
+angular.module("yds").directive("ydsAggregate", ["Data", "DashboardService", "$sce",
     function (Data, DashboardService, $sce) {
         return {
-            restrict: 'E',
+            restrict: "E",
             scope: {
-                projectId: '@',     // Project ID of chart
-                viewType: '@',      // View type of chart
-                lang: '@',          // Language
-                baseUrl: '@',       // Base URL to send to API (optional)
-                extraParams: '=',   // Extra parameters to send
+                projectId: "@",     // Project ID of chart
+                viewType: "@",      // View type of chart
+                lang: "@",          // Language
+                baseUrl: "@",       // Base URL to send to API (optional)
+                extraParams: "=",   // Extra parameters to send
 
-                dashboardId: '@',   // ID used for getting selected year range from DashboardService
-                setOnInit: '@',     // If true, will set this aggregate's view type in DashboardService on init
-                valueObj: '=',      // If set, the Dashboard aggregates will try to save their value in this object
+                dashboardId: "@",   // ID used for getting selected year range from DashboardService
+                setOnInit: "@",     // If true, will set this aggregate's view type in DashboardService on init
+                valueObj: "=",      // If set, the Dashboard aggregates will try to save their value in this object
 
-                iconSize: '@',      // Icon size for FontAwesome icon (2-5)
-                showViewBtn: '@',   // If true, will show the "view details" button in the layouts where it is available
+                iconSize: "@",      // Icon size for FontAwesome icon (2-5)
+                showViewBtn: "@",   // If true, will show the "view details" button in the layouts where it is available
 
-                elementH: '@',      // Minimum height of Aggregate
-                maxHeight: '@'      // Max height (if exceeded will scroll). Currently works on "title" layout
+                elementH: "@",      // Minimum height of Aggregate
+                maxHeight: "@"      // Max height (if exceeded will scroll). Currently works on "title" layout
             },
-            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/aggregate.html',
+            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/aggregate.html",
             link: function (scope) {
                 var projectId = scope.projectId;
                 var viewType = scope.viewType;
@@ -36,26 +36,26 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                 scope.detailsButton = false;
 
                 // If project attribute is undefined, set default value
-                if (_.isUndefined(projectId) || projectId.trim() == "")
+                if (_.isUndefined(projectId) || projectId.trim() === "")
                     projectId = "none";
 
                 // If view type is undefined, show error
-                if (_.isUndefined(viewType) || viewType.trim() == "") {
+                if (_.isUndefined(viewType) || viewType.trim() === "") {
                     console.error("View type not defined!");
                     return;
                 }
 
                 // If dashboardId is undefined, show error
-                if (_.isUndefined(dashboardId) || dashboardId.trim() == "") {
+                if (_.isUndefined(dashboardId) || dashboardId.trim() === "") {
                     dashboardId = "default";
                 }
 
                 // If language is undefined, set default value
-                if (_.isUndefined(lang) || lang.trim() == "")
+                if (_.isUndefined(lang) || lang.trim() === "")
                     lang = "en";
 
                 // If iconSize is undefined, set default value
-                if (_.isUndefined(iconSize) || iconSize.trim() == "")
+                if (_.isUndefined(iconSize) || iconSize.trim() === "")
                     iconSize = "4";
 
                 // If elementH is undefined, set default value
@@ -112,7 +112,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                             }
 
                             // Check if view has layout and set appropriate options
-                            if (_.has(view, "layout") && view.layout != "default") {
+                            if (_.has(view, "layout") && view.layout !== "default") {
                                 scope.layout = view.layout;
 
                                 switch (scope.layout) {
@@ -137,8 +137,8 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                                 // Set default layout options
                                 scope.layout = "default";
 
-                                if (!_.isUndefined(scope.showViewBtn) && (scope.showViewBtn == "true" || scope.showViewBtn == "false")) {
-                                    scope.detailsButton = (scope.showViewBtn == "true");
+                                if (!_.isUndefined(scope.showViewBtn) && (scope.showViewBtn === "true" || scope.showViewBtn === "false")) {
+                                    scope.detailsButton = (scope.showViewBtn === "true");
                                 } else {
                                     scope.detailsButton = true;
                                 }
@@ -159,7 +159,7 @@ angular.module('yds').directive('ydsAggregate', ['Data', 'DashboardService', '$s
                                 "min-height": elementH + "px"
                             });
 
-                            if (setOnInit == "true" && !initialized && _.isEmpty(DashboardService.getViewType(dashboardId))) {
+                            if (setOnInit === "true" && !initialized && _.isEmpty(DashboardService.getViewType(dashboardId))) {
                                 scope.setViewType();
                             }
                         }
