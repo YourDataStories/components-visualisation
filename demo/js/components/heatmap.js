@@ -216,6 +216,13 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                     createHeatmap();
                 });
 
+                // When the heatmap is destroyed, clear the selected countries of it
+                if (countrySelection === "true") {
+                    scope.$on("$destroy", function () {
+                        DashboardService.clearCountries(scope.viewType);
+                    });
+                }
+
                 /**
                  * Take Highmaps points array and keep only the country names, codes and values
                  * @param points
