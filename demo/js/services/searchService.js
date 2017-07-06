@@ -247,14 +247,14 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
                 url: "http://" + YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_SEARCH,
                 params: searchParameters,
                 headers: {'Content-Type': 'application/json'}
-            }).success(function (response) {
+            }).then(function (response) {
                 //if the search query is successful, copy the results in a local variable
-                searchResults = angular.copy(response);
+                searchResults = angular.copy(response.data);
 
-                saveFacets(response);
+                saveFacets(searchResults);
 
                 deferred.resolve(searchResults);
-            }).error(function (error) {
+            }, function (error) {
                 deferred.reject(error);
             });
 
@@ -323,12 +323,12 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
                 url: "http://" + (_.isUndefined(filterId) ? YDS_CONSTANTS.API_SEARCH_SUGGESTIONS : YDS_CONSTANTS.API_FILTER_SUGGESTIONS),
                 params: suggestionParams,
                 headers: {'Content-Type': 'application/json'}
-            }).success(function (response) {
+            }).then(function (response) {
                 // Format the returned suggestions and resolve the promise
-                var formattedSuggestions = formatSuggestions(val, response, maxSuggestions);
+                var formattedSuggestions = formatSuggestions(val, response.data, maxSuggestions);
 
                 deferred.resolve(formattedSuggestions);
-            }).error(function (error) {
+            }, function (error) {
                 deferred.reject(error);
             });
 
@@ -350,9 +350,9 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
                     lang: lang
                 },
                 headers: {'Content-Type': 'application/json'}
-            }).success(function (response) {
-                deferred.resolve(response.data);
-            }).error(function (error) {
+            }).then(function (response) {
+                deferred.resolve(response.data.data);
+            }, function (error) {
                 deferred.reject(error);
             });
 
@@ -473,9 +473,9 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
                     id: id
                 },
                 headers: {'Content-Type': 'application/json'}
-            }).success(function (response) {
-                deferred.resolve(response.data.filters);
-            }).error(function (error) {
+            }).then(function (response) {
+                deferred.resolve(response.data.data.filters);
+            }, function (error) {
                 deferred.reject(error);
             });
 

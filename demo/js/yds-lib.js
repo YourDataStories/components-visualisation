@@ -75,7 +75,6 @@ app.directive('clipboard', ['$document', function () {
     }
 }]);
 
-
 app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANTS', function ($http, $q, $window, DashboardService, YDS_CONSTANTS) {
     var dataService = {};
 
@@ -89,8 +88,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         var monthNumber = date.substring(3, 5);
         var dayNumber = date.substring(0, 2);
 
-        var result = (yearNumber * 10000) + (monthNumber * 100) + dayNumber;
-        return result;
+        return (yearNumber * 10000) + (monthNumber * 100) + dayNumber;
     };
 
     dataService.getYearMonthFromTimestamp = function (timestamp, yearToMonth) {
@@ -190,9 +188,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             transformRequest: customRequestTransform,
             data: {geoData: angular.toJson(inputData)}
-        }).success(function (data) {
-            deferred.resolve(data);
-        }).error(function (error) {
+        }).then(function (response) {
+            deferred.resolve(response.data);
+        }, function (error) {
             deferred.reject(error);
         });
 
@@ -210,9 +208,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             data: {
                 geoData: angular.toJson(geoObj)
             }
-        }).success(function (data) {
-            deferred.resolve(data);
-        }).error(function (error) {
+        }).then(function (response) {
+            deferred.resolve(response.data);
+        }, function (error) {
             deferred.reject(error);
         });
 
@@ -226,9 +224,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             method: 'GET',
             url: geoRouteUrl + "/" + projectId,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).success(function (data) {
-            deferred.resolve(data);
-        }).error(function (error) {
+        }).then(function (response) {
+            deferred.resolve(response.data);
+        }, function (error) {
             deferred.reject(error);
         });
 
@@ -250,9 +248,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                 "view_type": viewType,
                 "lang": lang
             }
-        }).success(function (data) {
-            deferred.resolve(data);
-        }).error(function (error) {
+        }).then(function (response) {
+            deferred.resolve(response.data);
+        }, function (error) {
             deferred.reject(error);
         });
 
@@ -265,9 +263,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         $http({
             method: 'GET',
             url: YDS_CONSTANTS.API_EMBED + embedCode
-        }).success(function (data) {
-            deferred.resolve(data);
-        }).error(function (error) {
+        }).then(function (response) {
+            deferred.resolve(response.data);
+        }, function (error) {
             deferred.reject(error);
         });
 
@@ -329,9 +327,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             method: 'GET',
             url: "http://" + YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_YDS_MODEL_HIERARCHY,
             headers: {'Content-Type': 'application/json'}
-        }).success(function (data) {
-            deferred.resolve(data);
-        }).error(function (error) {
+        }).then(function (response) {
+            deferred.resolve(response.data);
+        }, function (error) {
             deferred.reject(error);
         });
 
@@ -636,9 +634,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             method: 'GET',
             url: "http://" + YDS_CONSTANTS.API_YDS_STATISTICS,
             headers: {'Content-Type': 'application/json; charset=UTF-8'}
-        }).success(function (data) {
-            deferred.resolve(data);
-        }).error(function (error) {
+        }).then(function (response) {
+            deferred.resolve(response.data);
+        }, function (error) {
             deferred.reject(error);
         });
 
@@ -662,9 +660,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                 lang: lang
             },
             headers: {'Content-Type': 'application/json; charset=UTF-8'}
-        }).success(function (data) {
-            deferred.resolve(data);
-        }).error(function (error) {
+        }).then(function (response) {
+            deferred.resolve(response.data);
+        }, function (error) {
             deferred.reject(error);
         });
 
@@ -723,9 +721,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             url: "http://" + YDS_CONSTANTS.API_TYPE2SOLRQUERY,
             headers: {'Content-Type': 'application/json; charset=UTF-8'},
             params: params
-        }).success(function (data) {
-            deferred.resolve(data);
-        }).error(function (error) {
+        }).then(function (response) {
+            deferred.resolve(response.data);
+        }, function (error) {
             deferred.reject(error);
         });
 
@@ -806,9 +804,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             url: "http://" + YDS_CONSTANTS.API_SEARCH,
             headers: {'Content-Type': 'application/json; charset=UTF-8'},
             params: params
-        }).success(function (data) {
-            deferred.resolve(data);
-        }).error(function (error) {
+        }).then(function (response) {
+            deferred.resolve(response.data);
+        }, function (error) {
             deferred.reject(error);
         });
 
@@ -1043,9 +1041,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             url: visualizationUrl,
             headers: {'Content-Type': 'application/json; charset=UTF-8'},
             params: params
-        }).success(function (data) {
-            deferred.resolve(data);
-        }).error(function (error) {
+        }).then(function (response) {
+            deferred.resolve(response.data);
+        }, function (error) {
             deferred.reject(error);
         });
 
@@ -1095,9 +1093,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             url: visualizationUrl,
             headers: {'Content-Type': 'application/json; charset=UTF-8'},
             params: inputParams
-        }).success(function (data) {
-            deferred.resolve(data);
-        }).error(function (error) {
+        }).then(function (response) {
+            deferred.resolve(response.data);
+        }, function (error) {
             deferred.reject(error);
         });
 
@@ -1118,9 +1116,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                 lang: lang,
                 context: 0
             }
-        }).success(function (data) {
-            deferred.resolve(data);
-        }).error(function (error) {
+        }).then(function (response) {
+            deferred.resolve(response.data);
+        }, function (error) {
             deferred.reject(error);
         });
 
@@ -1148,9 +1146,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             url: url,
             headers: {'Content-Type': 'application/json; charset=UTF-8'},
             params: params
-        }).success(function (data) {
-            deferred.resolve(data);
-        }).error(function (error) {
+        }).then(function (response) {
+            deferred.resolve(response.data);
+        }, function (error) {
             deferred.reject(error);
         });
 
@@ -1304,9 +1302,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             method: 'GET',
             url: url,
             headers: {'Content-Type': 'application/json; charset=UTF-8'}
-        }).success(function (data) {
-            deferred.resolve(data);
-        }).error(function (error) {
+        }).then(function (response) {
+            deferred.resolve(response.data);
+        }, function (error) {
             deferred.reject(error);
         });
 

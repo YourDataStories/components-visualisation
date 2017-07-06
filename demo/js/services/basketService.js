@@ -102,9 +102,9 @@ angular.module('yds').factory('Basket', ['YDS_CONSTANTS', '$q', '$http', '$uibMo
                     url: YDS_CONSTANTS.BASKET_URL + "exists_item",
                     headers: {'Content-Type': 'application/json; charset=UTF-8'},
                     params: bskItem
-                }).success(function (data) {
-                    deferred.resolve(data);
-                }).error(function (error) {
+                }).then(function (response) {
+                    deferred.resolve(response.data);
+                }, function (error) {
                     deferred.reject(error);
                 });
 
@@ -126,10 +126,10 @@ angular.module('yds').factory('Basket', ['YDS_CONSTANTS', '$q', '$http', '$uibMo
                     url: YDS_CONSTANTS.BASKET_URL + urlSuffix,
                     headers: {'Content-Type': 'application/json'},
                     data: JSON.stringify(bskItem)
-                }).success(function (data) {
+                }).then(function (response) {
                     notifyObservers(basketCallbacks);
-                    deferred.resolve(data);
-                }).error(function (error) {
+                    deferred.resolve(response.data);
+                }, function (error) {
                     deferred.reject(error);
                 });
 
@@ -142,9 +142,9 @@ angular.module('yds').factory('Basket', ['YDS_CONSTANTS', '$q', '$http', '$uibMo
                     method: 'GET',
                     url: YDS_CONSTANTS.BASKET_URL + "retrieve/" + userId + "/" + basketItemId,
                     headers: {'Content-Type': 'application/json'}
-                }).success(function (data) {
-                    deferred.resolve(data);
-                }).error(function (error) {
+                }).then(function (response) {
+                    deferred.resolve(response.data);
+                }, function (error) {
                     deferred.reject(error);
                 });
 
@@ -170,9 +170,9 @@ angular.module('yds').factory('Basket', ['YDS_CONSTANTS', '$q', '$http', '$uibMo
                     method: 'GET',
                     url: YDS_CONSTANTS.BASKET_URL + "get/" + userId + contType,
                     headers: {'Content-Type': 'application/json'}
-                }).success(function (data) {
-                    deferred.resolve(data);
-                }).error(function (error) {
+                }).then(function (response) {
+                    deferred.resolve(response.data);
+                }, function (error) {
                     deferred.reject(error);
                 });
 
@@ -199,9 +199,9 @@ angular.module('yds').factory('Basket', ['YDS_CONSTANTS', '$q', '$http', '$uibMo
                     data: {
                         "basket_item_id": bskID
                     }
-                }).success(function (data) {
-                    deferred.resolve(data);
-                }).error(function (error) {
+                }).then(function (response) {
+                    deferred.resolve(response.data);
+                }, function (error) {
                     deferred.reject(error);
                 });
 
