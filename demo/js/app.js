@@ -58,6 +58,11 @@ ydsDemo.controller('ProjectDetailsController', ['$scope', '$location', 'YDS_CONS
                 $scope.lang = "el";
 
                 projectId = projectId || "http://linkedeconomy.org/resource/PublicWork/216004";
+                break;
+            case "/graph":
+                $scope.lang = "el";
+
+                projectId = projectId || "http://linkedeconomy.org/resource/PublicWork/216004";
         }
 
         $scope.projectId = projectId;
