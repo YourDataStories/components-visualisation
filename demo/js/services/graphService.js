@@ -186,7 +186,7 @@ angular.module("yds").factory("Graph", ["YDS_CONSTANTS", "$http", "$q",
         //                 id: decisionId + "_type",
         //                 label: "Type",
         //                 value: "ΕΓΚΡΙΣΗ ΔΑΠΑΝΗΣ",
-        //                 icon: "question.svg",
+        //                 icon: "unknown.svg",
         //                 bgcolor: "#00c5cf"
         //             }
         //         }
