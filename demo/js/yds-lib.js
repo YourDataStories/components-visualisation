@@ -39,6 +39,7 @@ app.constant("YDS_CONSTANTS", {
     "API_RELATED_ITEMS": "platform.yourdatastories.eu/api/json-ld/social/relateditems.tcl",
     "API_GEOJSON_GR": "platform.yourdatastories.eu/api/json-ld/geo/greece",
     "API_DESCRIBE": "platform.yourdatastories.eu/api/json-ld/model/describe.tcl",
+    "API_GRAPH_NODE": "platform.yourdatastories.eu/api/json-ld/graph/node.tcl",
 
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search",
     "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search-el",

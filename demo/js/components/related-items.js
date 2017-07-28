@@ -1,14 +1,14 @@
-angular.module('yds').directive('ydsRelatedItems', ['Data',
+angular.module("yds").directive("ydsRelatedItems", ["Data",
     function (Data) {
         return {
-            restrict: 'E',
+            restrict: "E",
             scope: {
-                projectId: '@',     // ID of the project to display related items for
-                period: '@',        // Set period of related items ("before", "during" or "after" the project)
-                elementH: '@',      // Height of the component in pixels,
-                totalItems: '=',    // The related items component will set the total number of items to this value
+                projectId: "@",     // ID of the project to display related items for
+                period: "@",        // Set period of related items ("before", "during" or "after" the project)
+                elementH: "@",      // Height of the component in pixels,
+                totalItems: "="     // The related items component will set the total number of items to this value
             },
-            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/related-items.html',
+            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/related-items.html",
             link: function (scope, element) {
                 var elementH = parseInt(scope.elementH);
                 scope.totalItems = 0;
@@ -16,12 +16,12 @@ angular.module('yds').directive('ydsRelatedItems', ['Data',
                 var pageSize = 10;
 
                 // Check if project ID is defined
-                if (_.isUndefined(scope.projectId) || scope.projectId.trim() == "") {
+                if (_.isUndefined(scope.projectId) || scope.projectId.trim() === "") {
                     scope.projectId = "none";
                 }
 
                 // Check if period is defined
-                if (_.isUndefined(scope.period) || scope.period.trim() == "") {
+                if (_.isUndefined(scope.period) || scope.period.trim() === "") {
                     scope.period = "during";
                 }
 
@@ -30,7 +30,7 @@ angular.module('yds').directive('ydsRelatedItems', ['Data',
                     elementH = 150;
                 }
 
-                var relatedItemsContainer = angular.element(element[0].querySelector('.related-items-container'));
+                var relatedItemsContainer = angular.element(element[0].querySelector(".related-items-container"));
                 relatedItemsContainer[0].style.height = elementH + "px";
 
                 scope.listContainerStyle = {
@@ -44,7 +44,7 @@ angular.module('yds').directive('ydsRelatedItems', ['Data',
                         viewType: "news",       // Type of the tab, defines how it is shown in the template
                         apiType: "news",        // Type of items that the tab will show from the API
                         icon: "fa-newspaper-o", // FontAwesome icon for the tab heading
-                        data: []                // Array with the tab's data
+                        data: []                // Array with the tab"s data
                     },
                     blogs: {
                         title: "Blog posts",

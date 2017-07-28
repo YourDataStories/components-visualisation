@@ -33,6 +33,8 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                 var exporting = scope.exporting;
                 var elementH = parseInt(scope.elementH);
 
+                var mainNodeId = projectId;
+
                 scope.showInfoPanel = false;
                 scope.infoPanelContent = "";
 
@@ -142,7 +144,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                 var getNodeDepths = function () {
                     var nodeDepths = {};
                     cy.elements().bfs({
-                        roots: '#main', // Start from main node
+                        roots: "node[id='" + mainNodeId + "']", // Start from main node
                         visit: function (v, e, u, i, depth) {
                             // Save the node's depth to the depth map
                             nodeDepths[v.id()] = depth;
@@ -166,7 +168,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
 
                         if (outgoers.length < targetNodeData.numberOfItems) {
                             // The node does not have children loaded, so load them
-                            Graph.getData(node.id())
+                            Graph.getData(node.id(), lang)
                                 .then(function (data) {
                                     addDataToGraph(data);
 
@@ -188,7 +190,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                                             if (!clickedNodePredecessors.contains(cy.getElementById(nodeId))
                                                 && nodeId !== node.id()) {
                                                 console.log("=>", nodeId, "needs to be removed");
-                                                cy.remove("#" + nodeId);
+                                                cy.remove("[id='" + nodeId + "']");
                                             } else {
                                                 console.log(nodeId, "is a predecessor of clicked node, will not be removed");
                                             }
@@ -318,7 +320,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                                     "background-height-relative-to": "inner"
                                 }
                             }, {
-                                selector: "node#main",
+                                selector: "node[id='" + mainNodeId + "']",
                                 style: {
                                     "width": "80",
                                     "height": "80"
@@ -358,7 +360,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                     cy.on("tap", "node", nodeClickHandler);
 
                     // Add initial data
-                    Graph.getData("main")
+                    Graph.getData(projectId, lang)
                         .then(function (data) {
                             cy.add(data);
                             reloadLayout(true);
