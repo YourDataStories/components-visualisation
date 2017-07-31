@@ -58,20 +58,24 @@ angular.module("yds").factory("Graph", ["YDS_CONSTANTS", "$http", "$q",
             var deferred = $q.defer();
 
             // Gather the data for every given ID
-            var data = _.chain(fakeData)
-                .pick(idArray)
-                .map(function (item) {
-                    return _.pluck(_.pluck(item, "data"), "value");
-                })
-                .value();
+            var promises = idArray.map(function (id) {
+                //todo: use correct language here (get with function parameter)
+                return getData(id, "el");
+            });
 
-            // Gather the table headers, assuming that all nodes have the same values in them
-            var sampleNodes = fakeData[_.first(idArray)];
-            var labels = _.pluck(_.pluck(sampleNodes, "data"), "label");
+            $q.all(promises).then(function (response) {
+                var data = response.map(function (item) {
+                    return _.pluck(_.pluck(item.nodes, "data"), "value");
+                });
 
-            deferred.resolve({
-                data: data,
-                view: labels
+                // Gather the table headers, assuming that all nodes have the same values in them
+                var sampleNodes = response[_.first(idArray)];
+                var labels = _.pluck(_.pluck(sampleNodes, "data"), "label");
+
+                deferred.resolve({
+                    data: data,
+                    view: labels
+                });
             });
 
             return deferred.promise;
