@@ -42,6 +42,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                 scope.selectedLayout = _.first(scope.graphLayouts);
 
                 scope.showNodeInfo = false;
+                scope.showNodeInfoComponent = false;
                 scope.maxDepth = 1;
 
                 // The Cytoscape instance for this graph component
@@ -253,6 +254,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
 
                         // Add clicked node data to scope
                         scope.clickedNode = {
+                            id: event.target.id(),
                             name: newName,
                             icon: iconPath + data.icon,
                             iconStyle: {
@@ -263,6 +265,15 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                         scope.showNodeInfo = true;
                     });
                 };
+
+                // Refresh the info component
+                //todo: possibly improve this??
+                scope.$watch("clickedNode", function() {
+                    scope.showNodeInfoComponent = false;
+                    $timeout(function() {
+                        scope.showNodeInfoComponent = true;
+                    })
+                });
 
                 /**
                  * Create the graph

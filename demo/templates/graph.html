@@ -45,6 +45,15 @@
                         <div class="col-sm-9">
                             <strong>{{ clickedNode.name }}</strong>
                         </div>
+                        <div class="col-sm-12">
+                            <yds-info
+                                    ng-if="showNodeInfoComponent"
+                                    project-id="{{ clickedNode.id }}"
+                                    vertical="true"
+                                    view-type="graph.node"
+                                    lang="{{ lang }}">
+                            </yds-info>
+                        </div>
                     </div>
 
                     <!--Info panel-->
