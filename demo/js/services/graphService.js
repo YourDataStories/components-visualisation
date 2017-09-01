@@ -55,13 +55,17 @@ angular.module("yds").factory("Graph", ["YDS_CONSTANTS", "$http", "$q",
             return deferred.promise;
         };
 
-        var getDataMultiple = function (idArray) {
+        /**
+         * Get data for multiple node IDs, and turn them into a grid format
+         * @param idArray   Array with node IDs to get data for
+         * @param lang      Language of data
+         */
+        var getDataMultiple = function (idArray, lang) {
             var deferred = $q.defer();
 
             // Gather the data for every given ID
             var promises = idArray.map(function (id) {
-                //todo: use correct language here (get with function parameter)
-                return getData(id, "el");
+                return getData(id, lang);
             });
 
             $q.all(promises).then(function (response) {

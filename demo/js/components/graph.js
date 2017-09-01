@@ -126,7 +126,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                         // Too many nodes, show them in the info panel
                         var nodeIds = _.pluck(_.pluck(data.nodes, "data"), "id");
 
-                        Graph.getDataMultiple(nodeIds)
+                        Graph.getDataMultiple(nodeIds, lang)
                             .then(function (response) {
                                 scope.showInfoPanel = true;
                                 scope.infoPanelContent = response.data;
