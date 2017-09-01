@@ -1,18 +1,24 @@
 <div class="container" ng-controller="DashboardPilot1Controller">
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-8">
             <h2>Contracts</h2>
         </div>
-        <div class="col-md-3" style="text-align: right">
+        <div class="col-md-4" style="text-align: right">
             <yds-save-filters-button
                     dashboard-id="contract"
                     info-type="contract.filters.selected"
                     lang="en">
             </yds-save-filters-button>
+
             <yds-clear-filters-button
                     dashboard-id="contract"
                     lang="en">
             </yds-clear-filters-button>
+
+            <yds-dashboard-sharing
+                    dashboard-id="contract"
+                    lang="en">
+            </yds-dashboard-sharing>
         </div>
     </div>
     <!--Maps-->

@@ -997,6 +997,18 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             })
         };
 
+        /**
+         * Create and return a URL which goes to a Dashboard and restores specific filter values (the ones selected
+         * when this is called).
+         * @param dashboardId   Dashboard to get URL for
+         * @returns {string}    URL
+         */
+        dashboard.getSharingUrl = function (dashboardId) {
+            var cookies = dashboard.getDashboardCookies(dashboardId);
+
+            return dashboardUrlPrefix + dashboardPaths[dashboardId] + "?filters=" + JSURL.stringify(cookies);
+        };
+
         return dashboard;
     }]
 );
