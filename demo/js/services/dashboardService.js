@@ -425,14 +425,14 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
         /**
          * Restore the cookies for a specific Dashboard and go to its page
-         * @param dashboard
+         * @param dashboardName
          * @param cookies
          */
-        dashboard.restoreCookies = function (dashboard, cookies) {
-            var url = dashboardUrlPrefix + dashboardPaths[dashboard];
+        dashboard.restoreCookies = function (dashboardName, cookies) {
+            var url = dashboardUrlPrefix + dashboardPaths[dashboardName];
 
             // Clear any previous cookies for the specified Dashboard
-            dashboard.clearDashboardCookies(dashboard);
+            dashboard.clearDashboardCookies(dashboardName);
 
             // Restore the new cookie values
             _.each(cookies, function (data, key) {
