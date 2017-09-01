@@ -268,9 +268,9 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
 
                 // Refresh the info component
                 //todo: possibly improve this??
-                scope.$watch("clickedNode", function() {
+                scope.$watch("clickedNode", function () {
                     scope.showNodeInfoComponent = false;
-                    $timeout(function() {
+                    $timeout(function () {
                         scope.showNodeInfoComponent = true;
                     })
                 });
@@ -342,6 +342,12 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                                     "background-color": "#0089ff",
                                     "border-color": "#707070",
                                     "border-width": "1"
+                                }
+                            },
+                            {
+                                selector: "edge",
+                                style: {
+                                    "line-color": "data(bgcolor)"
                                 }
                             }
                         ]

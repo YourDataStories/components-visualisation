@@ -29,7 +29,8 @@ angular.module("yds").factory("Graph", ["YDS_CONSTANTS", "$http", "$q",
                             data: {
                                 id: "edge_" + item.data.id,
                                 source: id,
-                                target: item.data.id
+                                target: item.data.id,
+                                bgcolor: item.data.bgcolor
                             }
                         });
                     }
