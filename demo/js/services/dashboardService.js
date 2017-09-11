@@ -393,18 +393,18 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          */
         var filterCookieObject = function (obj) {
             if (_.isArray(obj)) {
-                // If the object is an array, filter each item in it instead
+                // If the object is an array, filter each item in it
                 _.each(obj, function (arrayItem, index) {
                     obj[index] = filterCookieObject(arrayItem);
                 });
             } else if (_.has(obj, "id")) {
-                // If there is an "id" attribute, keep only that
+                // Keep only "id" attribute
                 return _.pick(obj, "id");
             } else if (_.has(obj, "code")) {
-                // If there is a "code" attribute, keep only that
+                // Keep only "code" attribute
                 return _.pick(obj, "code");
             } else if (_.has(obj, "minValue") || _.has(obj, "maxValue")) {
-                // If there are min/max year values, keep those
+                // Keep only "minValue" and "maxValue" attributes
                 return _.pick(obj, ["minValue", "maxValue"]);
             }
 

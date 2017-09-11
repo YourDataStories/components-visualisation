@@ -14,8 +14,9 @@ angular.module("yds").directive("ydsDashboardSharing", ["DashboardService", "$lo
                 }
 
                 // Setup popover parameters
+                var drupalPath = ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "");
                 scope.popover = {
-                    template: "templates/dashboard-sharing-popover.html",
+                    template: drupalPath + "templates/dashboard-sharing-popover.html",
                     title: "Dashboard Sharing URL",
                     url: ""
                 };
