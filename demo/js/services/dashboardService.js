@@ -397,7 +397,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             _.each(cookiesToSave, function (cookieKey) {
                 var value = $cookies.getObject(cookieKey);
 
-                if (!_.isUndefined(value)) {
+                if (!_.isUndefined(value) && !_.isEmpty(value)) {
                     cookies[cookieKey] = value;
                 }
             });
