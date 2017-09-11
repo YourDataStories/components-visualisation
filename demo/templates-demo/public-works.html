@@ -1,16 +1,22 @@
 <div class="container" ng-controller="PublicWorksController">
     <!--Clear filters button-->
     <div class="row">
-        <div class="col-md-offset-9 col-md-3" style="text-align: right;">
+        <div class="col-md-offset-8 col-md-4" style="text-align: right;">
             <yds-save-filters-button
                     dashboard-id="public_project"
                     info-type="publicproject.filters.selected"
                     lang="el">
             </yds-save-filters-button>
+
             <yds-clear-filters-button
                     dashboard-id="public_project"
                     lang="el">
             </yds-clear-filters-button>
+
+            <yds-dashboard-sharing
+                    dashboard-id="public_project"
+                    lang="en">
+            </yds-dashboard-sharing>
         </div>
     </div>
 
