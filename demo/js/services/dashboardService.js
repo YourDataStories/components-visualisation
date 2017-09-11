@@ -197,8 +197,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
         // var dashboardUrlPrefix = "http://yds-lib.dev/#!/";
 
         var dashboardPaths = {
-            aidactivity: "dashboard",
-            tradeactivity: "dashboard",
+            aidactivity: "dashboard2",
+            tradeactivity: "dashboard2",
             contract: "dashboardp1",
             comparison: "country-comparison",
             public_project: "public-works"
@@ -1006,7 +1006,9 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
         dashboard.getSharingUrl = function (dashboardId) {
             var cookies = dashboard.getDashboardCookies(dashboardId);
 
-            return dashboardUrlPrefix + dashboardPaths[dashboardId] + "?filters=" + JSURL.stringify(cookies);
+            return dashboardUrlPrefix + dashboardPaths[dashboardId]
+                + "?dashboard=" + dashboardId
+                + "&filters=" + JSURL.stringify(cookies);
         };
 
         return dashboard;

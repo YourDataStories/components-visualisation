@@ -86,8 +86,15 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
             scope.status.countryOpen = true;
         };
 
-        // Set default selected sector
-        scope.setSelectedSector("aidactivity", false);
+        // Set default selected sector (Aid Activity, or if there is a "dashboard" URL parameter, use that)
+        var sectorToSet = "aidactivity";
+
+        var urlParams = $location.search();
+        if (_.has(urlParams, "dashboard")) {
+            sectorToSet = urlParams.dashboard;
+        }
+
+        scope.setSelectedSector(sectorToSet, false);
 
         // Fix for angular slider rendering wrong when inside tabs
         // (https://github.com/angular-slider/angularjs-slider/issues/79#issuecomment-121141586)
