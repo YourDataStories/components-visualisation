@@ -1,5 +1,5 @@
-angular.module("yds").directive("ydsDashboardSharing", ["DashboardService", "$window",
-    function (DashboardService, $window) {
+angular.module("yds").directive("ydsDashboardSharing", ["DashboardService", "$location",
+    function (DashboardService, $location) {
         return {
             restrict: "E",
             scope: {
@@ -9,7 +9,7 @@ angular.module("yds").directive("ydsDashboardSharing", ["DashboardService", "$wi
             templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/dashboard-sharing.html",
             link: function (scope) {
                 // Set default language if it is undefined
-                if (_.isUndefined(scope.lang) || scope.lang.trim().length == 0) {
+                if (_.isUndefined(scope.lang) || scope.lang.trim().length === 0) {
                     scope.lang = "en";
                 }
 
@@ -21,6 +21,17 @@ angular.module("yds").directive("ydsDashboardSharing", ["DashboardService", "$wi
 
                     console.log(url);
                     //todo: show in window
+                };
+
+                // When loading, check if there is a "filters" URL parameter and restore filters from it
+                var params = $location.search();
+
+                if (_.has(params, "filters")) {
+                    // Parse the JSURL-formatted filters
+                    var filters = JSURL.parse(params.filters);
+
+                    // Restore the filters
+                    DashboardService.restoreCookies(scope.dashboardId, filters);
                 }
             }
         };
