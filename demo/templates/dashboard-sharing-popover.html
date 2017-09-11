@@ -1,0 +1,16 @@
+<div>
+    <!--Label-->
+    <span class="label label-primary pull-left">{{popover.title}}</span>
+
+    <!--Copy button-->
+    <button type="button" class="btn btn-default btn-xs pull-right" clipboard>
+        <span class="glyphicon glyphicon glyphicon-copy" aria-hidden="true"></span>
+    </button>
+
+    <div style="clear:both;"></div>
+
+    <!--Well-->
+    <div class="well well-sm" style="word-break: break-all; min-width: 240px; margin-bottom: 5px; margin-top: 5px">
+        <a href="{{ popover.url }}" target="_blank">{{ popover.url }}</a>
+    </div>
+</div>

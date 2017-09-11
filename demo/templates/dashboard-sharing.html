@@ -1,4 +1,10 @@
-<button type="button" ng-disabled="disableBtn" class="btn btn-info" ng-click="shareDashboard()">
+<button
+        type="button"
+        ng-disabled="disableBtn"
+        class="btn btn-info"
+        ng-click="shareDashboard()"
+        uib-popover-template="popover.template"
+        popover-placement="bottom-right">
     <span class="glyphicon glyphicon-share"></span>
     <span ng-if="lang != 'el'">Share</span>
     <span ng-if="lang == 'el'">Share (el)</span>

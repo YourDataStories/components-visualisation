@@ -13,14 +13,18 @@ angular.module("yds").directive("ydsDashboardSharing", ["DashboardService", "$lo
                     scope.lang = "en";
                 }
 
+                // Setup popover parameters
+                scope.popover = {
+                    template: "templates/dashboard-sharing-popover.html",
+                    title: "Dashboard Sharing URL",
+                    url: ""
+                };
+
                 // Make the button disabled if the given dashboardId is not set up in DashboardService
                 scope.disableBtn = !DashboardService.dashboardIdHasCookies(scope.dashboardId);
 
                 scope.shareDashboard = function () {
-                    var url = DashboardService.getSharingUrl(scope.dashboardId);
-
-                    console.log(url);
-                    //todo: show in window
+                    scope.popover.url = DashboardService.getSharingUrl(scope.dashboardId);
                 };
 
                 // When loading, check if there is a "filters" URL parameter and restore filters from it
