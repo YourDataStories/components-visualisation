@@ -385,6 +385,34 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
         };
 
         /**
+         * Filter a selection object in order to keep only the required values. Those are (in order): "id", "code" and
+         * "min/maxValue". If any of those is found, the object is filtered to contain only that. If none are found, the
+         * object is returned without any filtering. If the object is an array, the items inside it are filtered.
+         * @param obj   Object to filter
+         * @returns {*} Filtered object
+         */
+        var filterCookieObject = function (obj) {
+            if (_.isArray(obj)) {
+                // If the object is an array, filter each item in it instead
+                _.each(obj, function (arrayItem, index) {
+                    obj[index] = filterCookieObject(arrayItem);
+                });
+            } else if (_.has(obj, "id")) {
+                // If there is an "id" attribute, keep only that
+                return _.pick(obj, "id");
+            } else if (_.has(obj, "code")) {
+                // If there is a "code" attribute, keep only that
+                return _.pick(obj, "code");
+            } else if (_.has(obj, "minValue") || _.has(obj, "maxValue")) {
+                // If there are min/max year values, keep those
+                return _.pick(obj, ["minValue", "maxValue"]);
+            }
+
+            // No values matched or object was array, so return the entire object
+            return obj;
+        };
+
+        /**
          * Get the saved cookies for a specific Dashboard
          * @param dashboardId
          * @returns {{}}
@@ -398,7 +426,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 var value = $cookies.getObject(cookieKey);
 
                 if (!_.isUndefined(value) && !_.isEmpty(value)) {
-                    cookies[cookieKey] = value;
+                    cookies[cookieKey] = filterCookieObject(value);
                 }
             });
 
