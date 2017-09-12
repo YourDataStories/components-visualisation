@@ -68,7 +68,9 @@ angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile
 
                     _.each(attributes, function (attrValue, attrKey) {
                         // Add attribute to the URL
-                        dataAnalysisUrl += "&" + attrKey + "=" + attrValue;
+                        if (!_.isUndefined(attrValue) && !_.isNull(attrValue)) {
+                            dataAnalysisUrl += "&" + attrKey + "=" + encodeURIComponent(attrValue);
+                        }
                     });
 
                     // Redirect to the URL
