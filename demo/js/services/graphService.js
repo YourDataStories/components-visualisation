@@ -25,14 +25,22 @@ angular.module("yds").factory("Graph", ["YDS_CONSTANTS", "$http", "$q",
                 var edges = [];
                 _.each(nodes, function (item) {
                     if (id !== item.data.id) {  // Prevent creating edge from the main node to itself
-                        edges.push({
+                        var edge = {
                             data: {
                                 id: "edge_" + item.data.id,
                                 source: id,
                                 target: item.data.id,
                                 bgcolor: item.data.bgcolor
                             }
-                        });
+                        };
+
+                        // Add edge label if the parent node has one
+                        if (_.has(item.data, "edgeLabel")) {
+                            edge.data.label = item.data.edgeLabel;
+                            console.log(edge.data);
+                        }
+
+                        edges.push(edge);
                     }
                 });
 

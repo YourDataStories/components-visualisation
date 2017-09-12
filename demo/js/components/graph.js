@@ -9,8 +9,6 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
 
                 extraParams: "=",   // Extra attributes to pass to the API, if needed
                 baseUrl: "@",       // Base URL to send to API (optional)
-
-                exporting: "@",     // Enable or disable the export of the plot
                 elementH: "@",      // Set the height of the component
 
                 enableRating: "@"   // Enable rating buttons for this component
@@ -30,7 +28,6 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                 var lang = scope.lang;
                 var extraParams = scope.extraParams;
                 var baseUrl = scope.baseUrl;
-                var exporting = scope.exporting;
                 var elementH = parseInt(scope.elementH);
 
                 var mainNodeId = projectId;
@@ -67,10 +64,6 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                 // Check if lang is defined, otherwise set default value
                 if (_.isUndefined(lang) || lang.trim() === "")
                     lang = "en";
-
-                // Check if exporting is defined, otherwise set default value
-                if (_.isUndefined(exporting) || (exporting !== "true" && exporting !== "false"))
-                    exporting = "false";
 
                 // Check if the element height is defined, otherwise set default value
                 if (_.isUndefined(elementH) || _.isNaN(elementH))
@@ -352,6 +345,10 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                             {
                                 selector: "edge",
                                 style: {
+                                    "label": "data(label)",
+                                    "text-rotation": "autorotate",
+                                    "text-outline-color": "white",
+                                    "text-outline-width": "2",
                                     "line-color": "data(bgcolor)"
                                 }
                             }
