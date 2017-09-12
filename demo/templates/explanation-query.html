@@ -1,3 +1,22 @@
 <div>
-    {{ queries }}
+    <table class="table table-striped">
+        <thead>
+        <th>Method</th>
+        <th>URL</th>
+        <th>Data</th>
+        </thead>
+        <tbody>
+        <tr ng-repeat="query in queries">
+            <td class="explanation-query-method">
+                <span class="label label-info">
+                    {{ query.method }}
+                </span>
+            </td>
+            <td class="explanation-query-url">
+                {{ query.url }}
+            </td>
+            <td>{{ query.data || "-" }}</td>
+        </tr>
+        </tbody>
+    </table>
 </div>

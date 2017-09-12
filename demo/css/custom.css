@@ -1481,3 +1481,14 @@ div.dcat-value {
     width: 24px;
     height: 20px;
 }
+
+/* Style for request method in explanation query component */
+.explanation-query-method {
+    text-transform: uppercase;
+    font-size: 20px;
+}
+
+/* Style for URLs in explanation query component */
+.explanation-query-url {
+    font-family: monospace;
+}
