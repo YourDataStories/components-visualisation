@@ -48,6 +48,9 @@ app.constant("YDS_CONSTANTS", {
     // "SEARCH_RESULTS_URL_EL": "http://yds-lib.dev/#!/search-el",
     // "SEARCH_RESULTS_URL_TABBED": "http://yds-lib.dev/#!/search-tabbed",
 
+    "DATA_ANALYSIS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/trustworthiness",
+    // "DATA_ANALYSIS_URL": "http://yds-lib.dev/#!/trustworthiness",
+
     "API_PERSONALIZATION": "http://dev.yourdatastories.eu/personalaiz/recommendation/",
 
     "PROJECT_DETAILS_URL": "http://platform.yourdatastories.eu/project-details",

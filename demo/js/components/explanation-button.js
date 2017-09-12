@@ -1,20 +1,22 @@
-angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile", "$location", "Data", "Basket",
-    function ($templateRequest, $compile, $location, Data, Basket) {
+angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile", "$window", "$location", "YDS_CONSTANTS",
+    function ($templateRequest, $compile, $window, $location, YDS_CONSTANTS) {
         return {
             restrict: "A",
             link: function (scope, element, attrs) {
                 // Get the possible attributes for any chart
-                var projectId = scope.projectId;
-                var viewType = scope.viewType;
-                var lang = scope.lang;
+                var attributes = _.extend({
+                    id: scope.projectId,
+                    viewType: scope.viewType,
+                    lang: scope.lang
+                }, scope.extraParams);
 
                 var elementClass = attrs.class;
                 var visualisationType = "";
                 var defaultVisTypes = ["pie", "line", "scatter", "bubble", "bar", "tree", "map", "grid"];
 
                 // Set default language if it's not defined
-                if (_.isUndefined(lang) || lang.trim().length === 0) {
-                    lang = "en";
+                if (_.isUndefined(attributes.lang) || attributes.lang.trim().length === 0) {
+                    attributes.lang = "en";
                 }
 
                 // Find the visualisation type from its class
@@ -51,11 +53,27 @@ angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile
                     // Position this element
                     var yPosition = _.first(element.parent()).offsetWidth / 2;
                     compiledTemplate.css("left", yPosition + "px");
-                    console.log(compiledTemplate);
 
                     // Add element as a child to the parent
                     element.parent().append(compiledTemplate);
                 });
+
+                /**
+                 * Go to the Data Analysis page for this chart
+                 */
+                scope.viewDataAnalysis = function () {
+                    // Generate the URL for the data analysis page
+                    var dataAnalysisUrl = YDS_CONSTANTS.DATA_ANALYSIS_URL
+                        + "?chart=" + visualisationType;
+
+                    _.each(attributes, function (attrValue, attrKey) {
+                        // Add attribute to the URL
+                        dataAnalysisUrl += "&" + attrKey + "=" + attrValue;
+                    });
+
+                    // Redirect to the URL
+                    $window.location.href = dataAnalysisUrl;
+                }
             }
         }
     }
