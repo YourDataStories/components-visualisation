@@ -1,5 +1,5 @@
-angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$timeout",
-    function (Data, Graph, $ocLazyLoad, $timeout) {
+angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$ocLazyLoad", "$timeout",
+    function (Data, Graph, Translations, $ocLazyLoad, $timeout) {
         return {
             restrict: "E",
             scope: {
@@ -34,6 +34,11 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "$ocLazyLoad", "$t
                 var elementH = parseInt(scope.elementH);
 
                 var mainNodeId = projectId;
+
+                scope.translations = {
+                    showMore: Translations.get(lang, "showMore"),
+                    showLess: Translations.get(lang, "showLess")
+                };
 
                 scope.showInfoPanel = false;
                 scope.infoPanelContent = "";

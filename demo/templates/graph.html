@@ -33,7 +33,13 @@
         <div class="col-md-3">
             <div class="panel panel-info node-info-panel">
                 <div class="panel-heading">
-                    Information for: {{ clickedNode.name || "-" }}
+                    <strong>Information for:</strong>
+                    <span ng-tt-more-label="{{ translations.showMore }}"
+                          ng-tt-less-label="{{ translations.showLess }}"
+                          ng-text-truncate="clickedNode.name"
+                          ng-tt-words-threshold="15">
+                        {{ clickedNode.name || "-" }}
+                    </span>
                 </div>
                 <div class="panel-body">
                     <div ng-if="showNodeInfo" class="row">
@@ -43,7 +49,14 @@
                             </div>
                         </div>
                         <div class="col-sm-9">
-                            <strong>{{ clickedNode.name }}</strong>
+                            <strong>
+                                <span ng-tt-more-label="{{ translations.showMore }}"
+                                      ng-tt-less-label="{{ translations.showLess }}"
+                                      ng-text-truncate="clickedNode.name"
+                                      ng-tt-words-threshold="15">
+                                    {{ clickedNode.name || "-" }}
+                                </span>
+                            </strong>
                         </div>
                         <div class="col-sm-12">
                             <yds-info
