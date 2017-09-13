@@ -1,5 +1,5 @@
-angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile", "$window", "$location", "YDS_CONSTANTS",
-    function ($templateRequest, $compile, $window, $location, YDS_CONSTANTS) {
+angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile", "$window", "$location", "YDS_CONSTANTS", "Filters",
+    function ($templateRequest, $compile, $window, $location, YDS_CONSTANTS, Filters) {
         return {
             restrict: "A",
             link: function (scope, element, attrs) {
@@ -83,7 +83,6 @@ angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile
 
                         // Add grid type to the URL
                         dataAnalysisUrl += keyValueToUrlParam("gridtype", gridType);
-                        //todo: Add facets to the URL
 
                         // For grid-results grid, we also need to specify which API to use
                         if (gridType === "grid-results") {
@@ -97,7 +96,19 @@ angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile
                                 dataAnalysisUrl += keyValueToUrlParam("gridapi", useGridApi);
                             }
 
-                            //todo: Add query & rules to the URL
+                            // Add query, rules & facets to the URL
+                            var gridId = _.first(element).id;
+                            var filters = Filters.get(gridId);
+
+                            // Keep only attributes from the filters
+                            filters = _.first(filters).attrs;
+
+                            // Add the filters to the URL parameters
+                            _.each(filters, function (filterValue, key) {
+                                if (!_.isUndefined(filterValue)) {
+                                    dataAnalysisUrl += keyValueToUrlParam(key, filterValue);
+                                }
+                            })
                         }
                     }
 
