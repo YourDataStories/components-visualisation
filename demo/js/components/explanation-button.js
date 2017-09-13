@@ -3,21 +3,9 @@ angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile
         return {
             restrict: "A",
             link: function (scope, element, attrs) {
-                // Get the possible attributes for any chart
-                var attributes = _.extend({
-                    id: scope.projectId,
-                    viewType: scope.viewType,
-                    lang: scope.lang
-                }, scope.extraParams);
-
                 var elementClass = attrs.class;
                 var visualisationType = "";
                 var defaultVisTypes = ["pie", "line", "scatter", "bubble", "bar", "tree", "map", "grid"];
-
-                // Set default language if it's not defined
-                if (_.isUndefined(attributes.lang) || attributes.lang.trim().length === 0) {
-                    attributes.lang = "en";
-                }
 
                 // Find the visualisation type from its class
                 if (!_.isUndefined(elementClass) && elementClass.trim().length > 0) {
@@ -58,10 +46,26 @@ angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile
                     element.parent().append(compiledTemplate);
                 });
 
+                var keyValueToUrlParam = function (key, value) {
+                    return "&" + key + "=" + encodeURIComponent(value);
+                };
+
                 /**
                  * Go to the Data Analysis page for this chart
                  */
                 scope.viewDataAnalysis = function () {
+                    // Get the attributes for the chart
+                    var attributes = _.extend({
+                        id: scope.projectId,
+                        viewType: scope.viewType,
+                        lang: scope.lang
+                    }, scope.extraParams);
+
+                    // Set default language if it's not defined
+                    if (_.isUndefined(attributes.lang) || attributes.lang.trim().length === 0) {
+                        attributes.lang = "en";
+                    }
+
                     // Generate the URL for the data analysis page
                     var dataAnalysisUrl = YDS_CONSTANTS.DATA_ANALYSIS_URL
                         + "?chart=" + visualisationType;
@@ -69,11 +73,36 @@ angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile
                     _.each(attributes, function (attrValue, attrKey) {
                         // Add attribute to the URL
                         if (!_.isUndefined(attrValue) && !_.isNull(attrValue)) {
-                            dataAnalysisUrl += "&" + attrKey + "=" + encodeURIComponent(attrValue);
+                            dataAnalysisUrl += keyValueToUrlParam(attrKey, attrValue);
                         }
                     });
 
+                    // If the component is a grid, specify which grid it was in the URL
+                    if (visualisationType === "grid") {
+                        var gridType = attrs.ydsExplanation;
+
+                        // Add grid type to the URL
+                        dataAnalysisUrl += keyValueToUrlParam("gridtype", gridType);
+                        //todo: Add facets to the URL
+
+                        // For grid-results grid, we also need to specify which API to use
+                        if (gridType === "grid-results") {
+                            var useGridApi = scope.useGridApi;
+
+                            if (_.isUndefined(useGridApi)) {
+                                useGridApi = "false";
+                            }
+
+                            if (useGridApi === "true" || useGridApi === "false") {
+                                dataAnalysisUrl += keyValueToUrlParam("gridapi", useGridApi);
+                            }
+
+                            //todo: Add query & rules to the URL
+                        }
+                    }
+
                     // Redirect to the URL
+                    // console.log(dataAnalysisUrl);
                     $window.location.href = dataAnalysisUrl;
                 }
             }
