@@ -103,9 +103,22 @@ angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile
                             // Keep only attributes from the filters
                             filters = _.first(filters).attrs;
 
+                            // Map the filter keys to new ones so that they are not removed from the URL parameters
+                            var toChange = _.pick(filters, "q", "fq", "rules");
+                            filters = _.omit(filters, "q", "fq", "rules");
+
+                            filters.query = toChange.q;
+                            filters.facets = toChange.fq;
+                            filters.searchRules = toChange.rules;
+
                             // Add the filters to the URL parameters
                             _.each(filters, function (filterValue, key) {
                                 if (!_.isUndefined(filterValue)) {
+                                    // Stringify value
+                                    if (_.isObject(filterValue)) {
+                                        filterValue = JSURL.stringify(filterValue);
+                                    }
+
                                     dataAnalysisUrl += keyValueToUrlParam(key, filterValue);
                                 }
                             })
@@ -113,7 +126,6 @@ angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile
                     }
 
                     // Redirect to the URL
-                    // console.log(dataAnalysisUrl);
                     $window.location.href = dataAnalysisUrl;
                 }
             }

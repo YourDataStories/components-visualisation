@@ -772,16 +772,17 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
 
     /**
      * Gets the results for a tabbed search
-     * @param query     Search query
-     * @param facets    Array with facets
-     * @param viewType  Concept (eg. TradeActivity, AidActivity...)
-     * @param start     Starting row
-     * @param rows      Result rows to fetch
-     * @param lang      Language of results
-     * @param sortModel Parameters for how the server should sort the data
+     * @param query         Search query
+     * @param facets        Array with facets
+     * @param viewType      Concept (eg. TradeActivity, AidActivity...)
+     * @param start         Starting row
+     * @param rows          Result rows to fetch
+     * @param lang          Language of results
+     * @param sortModel     Parameters for how the server should sort the data
+     * @param extraParams   Any other parameters that should be send to the API. Can be undefined if there are none.
      * @returns {d|a|s}
      */
-    dataService.getGridResultData = function (query, facets, viewType, start, rows, lang, sortModel) {
+    dataService.getGridResultData = function (query, facets, viewType, start, rows, lang, sortModel, extraParams) {
         var deferred = $q.defer();
 
         var sortParams = dataService.formatAgGridSortParams(sortModel);
@@ -803,6 +804,11 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         // Add facets to the parameters of the request
         params.fq = facets;
 
+        // Add any extra parameters to the request
+        if (!_.isUndefined(extraParams)) {
+            params = _.extend(params, extraParams);
+        }
+
         $http({
             method: 'GET',
             url: "http://" + YDS_CONSTANTS.API_SEARCH,
@@ -819,17 +825,18 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
 
     /**
      * Gets the results for an advanced tabbed search
-     * @param query     Search query
-     * @param facets    Array with facets
-     * @param rules     Query Builder rules
-     * @param viewType  Concept (eg. TradeActivity, AidActivity...)
-     * @param start     Starting row
-     * @param rows      Result rows to fetch
-     * @param lang      Language of results
-     * @param sortModel Parameters for how the server should sort the data
+     * @param query         Search query
+     * @param facets        Array with facets
+     * @param rules         Query Builder rules
+     * @param viewType      Concept (eg. TradeActivity, AidActivity...)
+     * @param start         Starting row
+     * @param rows          Result rows to fetch
+     * @param lang          Language of results
+     * @param sortModel     Parameters for how the server should sort the data
+     * @param extraParams   Any other parameters that should be send to the API. Can be undefined if there are none.
      * @returns {d|a|s}
      */
-    dataService.getGridResultDataAdvanced = function (query, facets, rules, viewType, start, rows, lang, sortModel) {
+    dataService.getGridResultDataAdvanced = function (query, facets, rules, viewType, start, rows, lang, sortModel, extraParams) {
         var deferred = $q.defer();
 
         // Create facets array
@@ -845,6 +852,11 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             rows: rows,
             start: start
         }, sortParams);
+
+        // Add any extra parameters to the request
+        if (!_.isUndefined(extraParams)) {
+            searchParameters = _.extend(searchParameters, extraParams);
+        }
 
         $http({
             method: "POST",

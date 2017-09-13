@@ -5,6 +5,14 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
             scope: {},
             templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/explanation-query.html",
             link: function (scope) {
+                var responseSuccess = function (response) {
+                    scope.queries = response.data;
+                };
+
+                var responseError = function (error) {
+                    console.error("Error while getting explanation for component!", error);
+                };
+
                 // Get parameters
                 var params = $location.search();
 
@@ -27,11 +35,7 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
                 if (chartType !== "grid" || gridType === "grid") {
                     // Use regular project visualization function
                     Data.getProjectVis(chartType, projectId, viewType, lang, extraParams)
-                        .then(function (response) {
-                            scope.queries = response.data;
-                        }, function (error) {
-                            console.error("Error while getting explanation for component!", error);
-                        });
+                        .then(responseSuccess, responseError);
                 } else if (gridType === "grid-results") {
                     // Remove regular parameters from extraParams
                     extraParams = _.omit(extraParams, "projectId", "pagingGrid");
@@ -44,13 +48,23 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
                     // For grid-results we need to check which API to call
                     if (useGridApi === "true") {
                         Data.getProjectVis("grid", projectId, viewType, lang, extraParams)
-                            .then(function (response) {
-                                scope.queries = response.data;
-                            }, function (error) {
-                                console.error("Error while getting explanation for component!", error);
-                            });
+                            .then(responseSuccess, responseError);
                     } else {
-                        //todo: search API should be used
+                        // Search API should be used
+                        var query = extraParams.query;
+                        var facets = JSURL.parse(extraParams.facets);
+
+                        if (!_.has(extraParams, "searchRules")) {
+                            // Use GET request
+                            Data.getGridResultData(query, facets, viewType, 0, 1, lang, undefined, _.pick(extraParams, "explain_calls"))
+                                .then(responseSuccess, responseError)
+                        } else {
+                            // Use POST request
+                            var rules = JSURL.parse(extraParams.searchRules);
+
+                            Data.getGridResultDataAdvanced(query, facets, rules, viewType, 0, 1, lang, undefined, _.pick(extraParams, "explain_calls"))
+                                .then(responseSuccess, responseError);
+                        }
                     }
                 }
             }
