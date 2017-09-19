@@ -9,7 +9,6 @@ angular.module("yds").factory("Graph", ["YDS_CONSTANTS", "$http", "$q",
         var getData = function (id, lang) {
             var deferred = $q.defer();
 
-            // var nodes = fakeData[id];
             $http({
                 method: "GET",
                 url: "http://" + YDS_CONSTANTS.API_GRAPH_NODE,
@@ -37,7 +36,6 @@ angular.module("yds").factory("Graph", ["YDS_CONSTANTS", "$http", "$q",
                         // Add edge label if the parent node has one
                         if (_.has(item.data, "edgeLabel")) {
                             edge.data.label = item.data.edgeLabel;
-                            console.log(edge.data);
                         }
 
                         edges.push(edge);

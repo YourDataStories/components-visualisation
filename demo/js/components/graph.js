@@ -4,13 +4,8 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
             restrict: "E",
             scope: {
                 projectId: "@",     // ID of the project to display
-                viewType: "@",      // View type of the graph
                 lang: "@",          // Lang of the visualised data
-
-                extraParams: "=",   // Extra attributes to pass to the API, if needed
-                baseUrl: "@",       // Base URL to send to API (optional)
                 elementH: "@",      // Set the height of the component
-
                 enableRating: "@"   // Enable rating buttons for this component
             },
             templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/graph.html",
@@ -24,10 +19,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                 graphContainer.id = elementId;
 
                 var projectId = scope.projectId;
-                var viewType = scope.viewType;
                 var lang = scope.lang;
-                var extraParams = scope.extraParams;
-                var baseUrl = scope.baseUrl;
                 var elementH = parseInt(scope.elementH);
 
                 var mainNodeId = projectId;
@@ -56,10 +48,6 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                         "Please check the corresponding documentation section.";
                     return false;
                 }
-
-                // Check if view type is defined, otherwise set default value
-                if (_.isUndefined(viewType) || viewType.trim() === "")
-                    viewType = "default";
 
                 // Check if lang is defined, otherwise set default value
                 if (_.isUndefined(lang) || lang.trim() === "")
@@ -175,7 +163,6 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                                     var nodeDepths = getNodeDepths();
 
                                     // Check if there are any nodes that we should remove, based on the max depth
-                                    console.log("=============================================");
                                     var clickedNodePredecessors = node.predecessors();
                                     var clickedNodeDepth = nodeDepths[node.id()];
                                     var newDepth = clickedNodeDepth + 1;
@@ -188,10 +175,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                                             // and it is not the clicked node, we need to remove it
                                             if (!clickedNodePredecessors.contains(cy.getElementById(nodeId))
                                                 && nodeId !== node.id()) {
-                                                console.log("=>", nodeId, "needs to be removed");
                                                 cy.remove("[id='" + nodeId + "']");
-                                            } else {
-                                                console.log(nodeId, "is a predecessor of clicked node, will not be removed");
                                             }
                                         }
                                     })
@@ -230,8 +214,6 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                             // Reload the graph layout
                             reloadLayout();
                         }
-                    } else {
-                        console.log("No extra data for this node");
                     }
                 };
 
