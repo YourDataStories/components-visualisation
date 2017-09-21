@@ -175,6 +175,10 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                                             // and it is not the clicked node, we need to remove it
                                             if (!clickedNodePredecessors.contains(cy.getElementById(nodeId))
                                                 && nodeId !== node.id()) {
+                                                // Remove the node's children (if any)
+                                                removeAllChildNodes(cy.getElementById(nodeId));
+
+                                                // Remove the node
                                                 cy.remove("[id='" + nodeId + "']");
                                             }
                                         }
