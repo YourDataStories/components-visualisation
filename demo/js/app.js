@@ -63,6 +63,12 @@ ydsDemo.controller('ProjectDetailsController', ['$scope', '$location', 'YDS_CONS
                 $scope.lang = "el";
 
                 projectId = projectId || "http://linkedeconomy.org/resource/PublicWork/216004";
+                break;
+            case "/country":
+                $scope.lang = "en";
+
+                projectId = projectId || "http://linkedeconomy.org/resource/Country/GR";
+                break;
         }
 
         $scope.projectId = projectId;
@@ -143,6 +149,9 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
                         case "DcatAp":
                             $location.path("/dcat-ap");
                             break;
+                        case "Country":
+                            $location.path("/country");
+                            break;
                     }
                 }
             }
@@ -170,6 +179,11 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
         .state('trustworthiness', {
             url: '/trustworthiness',
             templateUrl: 'templates-demo/trustworthiness.html'
+        })
+        .state('country', {
+            url: '/country',
+            templateUrl: 'templates-demo/country.html',
+            controller: 'ProjectDetailsController'
         })
         .state('contract-ted', {
             url: '/contract-ted',
