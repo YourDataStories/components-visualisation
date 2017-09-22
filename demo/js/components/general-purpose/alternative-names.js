@@ -9,7 +9,9 @@ angular.module("yds").directive("ydsAlternativeNames", ["Data",
                 elementH: "@"   // Height of the component
             },
             templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/general-purpose/alternative-names.html",
-            link: function (scope) {
+            link: function (scope, element) {
+                var listWrapper = _.first(angular.element(element[0].querySelector(".alternative-names-list")));
+
                 var elementH = parseInt(scope.elementH);
 
                 // Check that projectId has been set, or show error
@@ -30,7 +32,8 @@ angular.module("yds").directive("ydsAlternativeNames", ["Data",
                 if (_.isUndefined(elementH) || _.isNaN(elementH))
                     elementH = 300;
 
-                //todo: Set component height
+                // Set component height
+                listWrapper.style["max-height"] = elementH + "px";
 
                 // Get alternative names
                 Data.getProjectVis("info", scope.projectId, scope.viewType, scope.lang)

@@ -1492,3 +1492,25 @@ div.dcat-value {
 .explanation-query-url {
     font-family: monospace;
 }
+
+/* Alternative Names component list styles */
+.alternative-names-list {
+    overflow-y: auto;
+    border: 1px solid #ddd;
+}
+
+.alternative-names-list > li.alternative-names-list-item {
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+}
+
+.alternative-names-list-item:first-child {
+    border-top: 0;
+}
+
+.alternative-names-list-item:last-child {
+    border-bottom: 0;
+}
+
+
