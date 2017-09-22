@@ -1496,7 +1496,8 @@ div.dcat-value {
 /* Alternative Names component list styles */
 .alternative-names-list {
     overflow-y: auto;
-    border: 1px solid #ddd;
+    border: 0;
+    margin-bottom: 0;
 }
 
 .alternative-names-list > li.alternative-names-list-item {
@@ -1511,6 +1512,19 @@ div.dcat-value {
 
 .alternative-names-list-item:last-child {
     border-bottom: 0;
+}
+
+.alternative-names-panel {
+    border-color: #16c5c5;
+}
+
+.alternative-names-panel > .panel-body {
+    padding: 0;
+}
+
+.alternative-names-panel > .panel-heading {
+    background-color: #9fdedb;
+    border-color: #16c5c5;
 }
 
 

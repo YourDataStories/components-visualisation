@@ -7,13 +7,17 @@
     </div>
 
     <!--Names list-->
-    <h3>
-        <small>Alternative Names:</small>
-    </h3>
-    <ul class="list-group alternative-names-list">
-        <li ng-repeat="name in names"
-            class="list-group-item list-group-item-sm alternative-names-list-item">
-            {{ name }}
-        </li>
-    </ul>
+    <div class="panel panel-default alternative-names-panel">
+        <div class="panel-heading">
+            <strong>Alternative Names</strong>
+        </div>
+        <div class="panel-body">
+            <ul class="list-group alternative-names-list">
+                <li ng-repeat="name in names"
+                    class="list-group-item list-group-item-sm alternative-names-list-item">
+                    {{ name }}
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
