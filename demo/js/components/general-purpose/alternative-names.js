@@ -11,12 +11,13 @@ angular.module("yds").directive("ydsAlternativeNames", ["Data",
             templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/general-purpose/alternative-names.html",
             link: function (scope, element) {
                 var listWrapper = _.first(angular.element(element[0].querySelector(".alternative-names-list")));
+                scope.ydsAlert = "";
 
                 var elementH = parseInt(scope.elementH);
 
                 // Check that projectId has been set, or show error
                 if (_.isUndefined(scope.projectId) || scope.projectId.trim().length === 0) {
-                    scope.ydsAlert = "Organisation ID is a required parameter! Please check the documentation!";
+                    scope.ydsAlert = "The Project ID is a required parameter, please check the documentation!";
                     return false;
                 }
 
@@ -39,6 +40,8 @@ angular.module("yds").directive("ydsAlternativeNames", ["Data",
                 Data.getProjectVis("info", scope.projectId, scope.viewType, scope.lang)
                     .then(function (response) {
                         scope.names = response.data.names;
+                    }, function (error) {
+                        scope.ydsAlert = error.data.message;
                     });
             }
         };

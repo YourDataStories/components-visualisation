@@ -1,21 +1,29 @@
 <div class="component-wrapper">
     <!--Error message-->
-    <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length>0">
+    <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length > 0">
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
         <span class="sr-only">Error:</span>
         {{ydsAlert}}
     </div>
 
     <!--Names list-->
-    <div class="panel panel-default alternative-names-panel">
+    <div ng-show="ydsAlert.length === 0"
+         class="panel panel-default alternative-names-panel">
         <div class="panel-heading">
             <strong>Alternative Names</strong>
         </div>
         <div class="panel-body">
             <ul class="list-group alternative-names-list">
+                <!--Alternative names-->
                 <li ng-repeat="name in names"
                     class="list-group-item list-group-item-sm alternative-names-list-item">
                     {{ name }}
+                </li>
+
+                <!--No names found message-->
+                <li ng-if="names.length === 0"
+                    class="list-group-item list-group-item-sm alternative-names-list-item">
+                    <i>No alternative names were found!</i>
                 </li>
             </ul>
         </div>
