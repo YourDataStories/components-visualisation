@@ -1,5 +1,5 @@
-angular.module("yds").directive("ydsAlternativeNames", ["Data",
-    function (Data) {
+angular.module("yds").directive("ydsAlternativeNames", ["Data", "Translations",
+    function (Data, Translations) {
         return {
             restrict: "E",
             scope: {
@@ -32,6 +32,12 @@ angular.module("yds").directive("ydsAlternativeNames", ["Data",
                 // Set default component height
                 if (_.isUndefined(elementH) || _.isNaN(elementH))
                     elementH = 300;
+
+                // Get translations
+                scope.translations = {
+                    title: Translations.get(scope.lang, "alternativeNamesTitle"),
+                    noNames: Translations.get(scope.lang, "noAlternativeNamesMsg")
+                };
 
                 // Set component height
                 listWrapper.style["max-height"] = elementH + "px";

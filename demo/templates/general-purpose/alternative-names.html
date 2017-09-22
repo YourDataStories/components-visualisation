@@ -10,7 +10,7 @@
     <div ng-show="ydsAlert.length === 0"
          class="panel panel-default alternative-names-panel">
         <div class="panel-heading">
-            <strong>Alternative Names</strong>
+            <strong>{{ translations.title }}</strong>
         </div>
         <div class="panel-body">
             <ul class="list-group alternative-names-list">
@@ -23,7 +23,7 @@
                 <!--No names found message-->
                 <li ng-if="names.length === 0"
                     class="list-group-item list-group-item-sm alternative-names-list-item">
-                    <i>No alternative names were found!</i>
+                    <i>{{ translations.noNames }}</i>
                 </li>
             </ul>
         </div>
