@@ -1495,15 +1495,21 @@ div.dcat-value {
 
 /* Alternative Names component list styles */
 .alternative-names-list {
-    overflow-y: auto;
+    display: inline-block;
+    min-width: 100%;
     border: 0;
+    margin-top: 0;
     margin-bottom: 0;
+    padding-left: 0;
 }
 
-.alternative-names-list > li.alternative-names-list-item {
+.alternative-names-list > .alternative-names-list-item {
     border-radius: 0;
     border-left: 0;
     border-right: 0;
+    border-bottom: 1px solid #ddd;
+    padding: 6px 10px;
+    white-space: nowrap;
 }
 
 .alternative-names-list-item:first-child {
@@ -1518,8 +1524,9 @@ div.dcat-value {
     border-color: #16c5c5;
 }
 
-.alternative-names-panel > .panel-body {
+.alternative-names-panel-body {
     padding: 0;
+    overflow-y: auto;
 }
 
 .alternative-names-panel > .panel-heading {

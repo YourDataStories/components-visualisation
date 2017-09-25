@@ -12,20 +12,20 @@
         <div class="panel-heading">
             <strong>{{ translations.title }}</strong>
         </div>
-        <div class="panel-body">
-            <ul class="list-group alternative-names-list">
+        <div class="panel-body alternative-names-panel-body">
+            <div class="alternative-names-list">
                 <!--Alternative names-->
-                <li ng-repeat="name in names"
-                    class="list-group-item list-group-item-sm alternative-names-list-item">
+                <div ng-repeat="name in names"
+                     class="alternative-names-list-item">
                     {{ name }}
-                </li>
+                </div>
 
                 <!--No names found message-->
-                <li ng-if="names.length === 0"
-                    class="list-group-item list-group-item-sm alternative-names-list-item">
+                <div ng-if="names.length === 0"
+                     class="alternative-names-list-item">
                     <i>{{ translations.noNames }}</i>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>

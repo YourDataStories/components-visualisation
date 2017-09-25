@@ -10,7 +10,7 @@ angular.module("yds").directive("ydsAlternativeNames", ["Data", "Translations",
             },
             templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/general-purpose/alternative-names.html",
             link: function (scope, element) {
-                var listWrapper = _.first(angular.element(element[0].querySelector(".alternative-names-list")));
+                var altNamesPanel = _.first(angular.element(element[0].querySelector(".alternative-names-panel-body")));
                 scope.ydsAlert = "";
 
                 var elementH = parseInt(scope.elementH);
@@ -40,7 +40,7 @@ angular.module("yds").directive("ydsAlternativeNames", ["Data", "Translations",
                 };
 
                 // Set component height
-                listWrapper.style["max-height"] = elementH + "px";
+                altNamesPanel.style["max-height"] = elementH + "px";
 
                 // Get alternative names
                 Data.getProjectVis("info", scope.projectId, scope.viewType, scope.lang)
