@@ -1,0 +1,28 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Dataset Correlations</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <input ng-show="loaded"
+                   id="file"
+                   name="file"
+                   type="file"
+                   accept="text/csv,text/comma-separated-values,text/plain,.csv"/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <h4>P Values</h4>
+            <ul class="list-group">
+                <li ng-repeat="item in varNames track by $index" class="list-group-item list-group-item-sm">
+                    {{ ($index + 1) + ". " + item }}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
