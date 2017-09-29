@@ -179,18 +179,6 @@ angular.module("yds").factory("PValues", [
                 return [countA, countB];
             }
 
-            // Turn categorical values into numbers, or parse the values of numerical variables as floats
-            if (typeA === CATEGORICAL) {
-                dataA = categoricalToNum(dataA);
-            } else {
-                dataA = dataA.map(parseFloat);
-            }
-            if (typeB === CATEGORICAL) {
-                dataB = categoricalToNum(dataB);
-            } else {
-                dataB = dataB.map(parseFloat);
-            }
-
             var size = dataA.length;
             var sqSize = parseInt(Math.sqrt(size / 2));
             var lcount, icount, res;
@@ -274,6 +262,113 @@ angular.module("yds").factory("PValues", [
         };
 
         /**
+         * Round a number to the specified number of places.
+         * From: https://stackoverflow.com/a/12830454
+         * @param num
+         * @param scale
+         * @returns {number}
+         */
+        var roundNumber = function (num, scale) {
+            if (!("" + num).includes("e")) {
+                return +(Math.round(num + "e+" + scale) + "e-" + scale);
+            } else {
+                var arr = ("" + num).split("e");
+                var sig = "";
+                if (+arr[1] + scale > 0) {
+                    sig = "+";
+                }
+                return +(Math.round(+arr[0] + "e" + sig + (+arr[1] + scale)) + "e-" + scale);
+            }
+        };
+
+        var mutualInformation = function (dataA, typeA, dataB, typeB, nbinx, nbiny) {
+            if (nbinx < 2 || nbiny < 2)
+                return 0;
+
+            var sbinx = roundNumber(1.0 / nbinx, 8),
+                sbiny = roundNumber(1.0 / nbiny, 8);
+            // console.log("sbins: ", sbinx, sbiny);
+
+            var countsx = new Array(nbinx),
+                countsy = new Array(nbiny),
+                counts = twoDimArray(nbinx, nbiny, 0);
+
+            // Fill countsx & countsy with zeros
+            countsx.fill(0);
+            countsy.fill(0);
+
+            var singlebx = true,
+                singleby = true,
+                lastbx = -1,
+                lastby = -1,
+                total = 0,
+                valueW = 1.0;   // We don't have weights, using 1.0 as weight always
+
+            var bx, by;
+            for (var i = 0; i < dataA.length; i++) {
+                var valX = dataA[i];
+                var valY = dataB[i];
+
+                bx = Math.floor(Math.min(valX / sbinx, nbinx - 1));
+                by = Math.floor(Math.min(valY / sbiny, nbiny - 1));
+                // console.log("\tbx, by", bx, by);
+
+                if (bx < 0 || by < 0) {
+                    console.error("A bin index is negative:", bx, nbinx, "|", by, nbiny);
+                    continue;
+                }
+
+                counts[bx][by] += valueW;
+                countsx[bx] += valueW;
+                countsy[by] += valueW;
+
+                if (lastbx !== -1 && lastbx !== bx) {
+                    singlebx = false;
+                }
+                if (lastby !== -1 && lastby !== by) {
+                    singleby = false;
+                }
+
+                lastbx = bx;
+                lastby = by;
+                total += valueW;
+            }
+
+            // Pairs with only 1 occupied bin are considered independent
+            if (singlebx || singleby) {
+                return 0;
+            }
+
+            var information = 0;
+            var nonzero = 0;
+            for (bx = 0; bx < nbinx; bx++) {
+                var px = countsx[bx] / total;
+                for (by = 0; by < nbiny; by++) {
+                    var pxy = counts[bx][by] / total;
+                    var py = countsy[by] / total;
+
+                    var ibin = 0;
+                    if (pxy > 0 && px > 0 && py > 0) {
+                        nonzero++;
+                        ibin = pxy * (Math.log(pxy / (px * py)));
+                    }
+
+                    information += ibin;
+                }
+            }
+
+            if (information < 0 || _.isNaN(information)) {
+                return 0;
+            }
+
+            // Finite size correction
+            var correction = (nonzero - nbinx - nbiny + 1) / (2 * total);
+            // console.log("Information:", information);
+            // console.log("Correction:", correction);
+            return Math.max(0, information - correction);
+        };
+
+        /**
          * Calculate the PValues
          */
         var calculatePValues = function (variables, data) {
@@ -310,15 +405,55 @@ angular.module("yds").factory("PValues", [
                     var dataB = varData[varB];
                     var typeB = varTypes[varB];
 
-                    var res = binOptimizer(dataA, typeA, dataB, typeB, "??");
-                    console.log("bins: ", res);
+                    // Turn categorical values into numbers, or parse the values of numerical variables as floats
+                    if (typeA === CATEGORICAL) {
+                        dataA = categoricalToNum(dataA);
+                    } else {
+                        dataA = dataA.map(parseFloat);
+                    }
+                    if (typeB === CATEGORICAL) {
+                        dataB = categoricalToNum(dataB);
+                    } else {
+                        dataB = dataB.map(parseFloat);
+                    }
 
-                    //todo: find actual p value
-                    pValues[i][j] = 0.01;
-                    pValues[j][i] = 0.01;
+                    var res = binOptimizer(dataA, typeA, dataB, typeB, "??");
+                    var binx = res[0];
+                    var biny = res[1];
+                    console.log("Bins:", binx, ",", biny);
+
+                    if (binx < 2 || biny < 2) {
+                        // Set pvalue to 1 and continue
+                        pValues[i][j] = 1;
+                        pValues[j][i] = 1;
+                        return;
+                    }
+
+                    // Calculate mutual information
+                    var ixy = mutualInformation(
+                        (typeA === NUMERICAL) ? normalizeArray(dataA) : dataA,
+                        typeA,
+                        (typeB === NUMERICAL) ? normalizeArray(dataB) : dataB,
+                        typeB,
+                        binx,
+                        biny);
+                    console.log("Mutual info:", ixy);
+                    var pval = 0;
+
+                    if (varA === varB) {
+                        // Set pvalue to 0 and continue
+                        pValues[i][j] = pval;
+                        pValues[j][i] = pval;
+                        return;
+                    }
+
+                    //todo: dependency checks here
+
+                    pValues[i][j] = pval;
+                    pValues[j][i] = pval;
                 });
             });
-
+            console.log("CALCULATIONS DONE!");
             return pValues;
         };
 
