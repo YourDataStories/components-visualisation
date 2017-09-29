@@ -12,7 +12,8 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
                 "https://www.stat.auckland.ac.nz/~wild/TwoWay/probability.js",
                 "https://www.stat.auckland.ac.nz/~wild/TwoWay/probModel.js",
                 "https://www.stat.auckland.ac.nz/~wild/TwoWay/probView.js",
-                "https://www.stat.auckland.ac.nz/~wild/TwoWay/eiko.js"
+                "https://www.stat.auckland.ac.nz/~wild/TwoWay/eiko.js",
+                "//cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js"
             ],
             cache: true
         }).then(function () {
@@ -27,7 +28,8 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
                 controller.finishedModelSU = function () {
                     $timeout(function () {
                         // window.dataHeadings variable should be available by now...
-                        PValues.calculate(window.dataHeadings, controller.model.getData());
+                        var pvalues = PValues.calculate(window.dataHeadings, controller.model.getData());
+                        console.log(pvalues);
                     });
 
                     // Do other things that this function did before..

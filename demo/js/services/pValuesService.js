@@ -281,7 +281,15 @@ angular.module("yds").factory("PValues", [
             }
         };
 
-        var mutualInformation = function (dataA, typeA, dataB, typeB, nbinx, nbiny) {
+        /**
+         * Calculate the mutual information
+         * @param dataA Data of variable A
+         * @param dataB Data of variable B
+         * @param nbinx Number of bins for variable A
+         * @param nbiny Number of bins for variable B
+         * @returns {number}
+         */
+        var mutualInformation = function (dataA, dataB, nbinx, nbiny) {
             if (nbinx < 2 || nbiny < 2)
                 return 0;
 
@@ -368,6 +376,14 @@ angular.module("yds").factory("PValues", [
             return Math.max(0, information - correction);
         };
 
+        var gammaTest = function (ixy, binx, biny, count) {
+            var shapePar = (binx - 1) * (biny - 1) / 2.0;
+            var scalePar = 1.0 / count;
+
+            // Return cumulative probability from Gamma distribution
+            return 1 - jStat.gamma.cdf(ixy, shapePar, scalePar);
+        };
+
         /**
          * Calculate the PValues
          */
@@ -432,9 +448,7 @@ angular.module("yds").factory("PValues", [
                     // Calculate mutual information
                     var ixy = mutualInformation(
                         (typeA === NUMERICAL) ? normalizeArray(dataA) : dataA,
-                        typeA,
                         (typeB === NUMERICAL) ? normalizeArray(dataB) : dataB,
-                        typeB,
                         binx,
                         biny);
                     console.log("Mutual info:", ixy);
@@ -447,8 +461,15 @@ angular.module("yds").factory("PValues", [
                         return;
                     }
 
-                    //todo: dependency checks here
+                    if (_.isNaN(ixy) || !Number.isFinite(ixy)) {
+                        pval = 0;
+                    } else {
+                        // Gamma test
+                        pval = gammaTest(ixy, binx, biny, count);
+                    }
+                    //todo: implement surrogate/surrogateGeneral here?
 
+                    console.log("Final pvalue:", pval);
                     pValues[i][j] = pval;
                     pValues[j][i] = pval;
                 });
