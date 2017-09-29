@@ -490,7 +490,8 @@ angular.module("yds").factory("PValues", [
 
         return {
             calculate: calculatePValues,
-            getVarNames: getVarNames
+            getVarNames: getVarNames,
+            roundNumber: roundNumber
         }
     }
 ]);

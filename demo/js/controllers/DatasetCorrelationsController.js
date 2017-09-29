@@ -105,6 +105,13 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
                         [1, "#ff7272"]
                     ]
                 },
+                tooltip: {
+                    pointFormatter: function () {
+                        return variableNames[this.x] + " & "
+                            + variableNames[this.y] + ": <b>"
+                            + PValues.roundNumber(this.value, 8) + "</b><br/>";
+                    }
+                },
                 series: [{
                     name: "P Values",
                     borderWidth: 1,
