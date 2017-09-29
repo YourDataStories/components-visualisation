@@ -8,6 +8,8 @@ angular.module("yds").factory("PValues", [
         const MAX_SEARCH_SAMPLE_SIZE = 1000;
         const MAX_HIST_SAMPLE_SIZE = 10000;
 
+        var varNames = null;
+
         /**
          * Create a 2D array with the specified initial value
          * @param x Number of rows
@@ -388,7 +390,7 @@ angular.module("yds").factory("PValues", [
          * Calculate the PValues
          */
         var calculatePValues = function (variables, data) {
-            var varNames = variables.map(_.first);
+            varNames = variables.map(_.first);
             var varsNum = varNames.length;
 
             // Gather the types of the variables into an object instead of an array as given
@@ -415,7 +417,7 @@ angular.module("yds").factory("PValues", [
 
                 _.each(varNames, function (varB, j) {
                     if (pValues[i][j] > -1) return; // Move on, score exists
-                    console.log("\nFinding correlation of", varA, "and", varB);
+                    // console.log("\nFinding correlation of", varA, "and", varB);
 
                     // Get variable data & type
                     var dataB = varData[varB];
@@ -436,7 +438,7 @@ angular.module("yds").factory("PValues", [
                     var res = binOptimizer(dataA, typeA, dataB, typeB, "??");
                     var binx = res[0];
                     var biny = res[1];
-                    console.log("Bins:", binx, ",", biny);
+                    // console.log("Bins:", binx, ",", biny);
 
                     if (binx < 2 || biny < 2) {
                         // Set pvalue to 1 and continue
@@ -451,7 +453,7 @@ angular.module("yds").factory("PValues", [
                         (typeB === NUMERICAL) ? normalizeArray(dataB) : dataB,
                         binx,
                         biny);
-                    console.log("Mutual info:", ixy);
+                    // console.log("Mutual info:", ixy);
                     var pval = 0;
 
                     if (varA === varB) {
@@ -469,17 +471,26 @@ angular.module("yds").factory("PValues", [
                     }
                     //todo: implement surrogate/surrogateGeneral here?
 
-                    console.log("Final pvalue:", pval);
+                    // console.log("Final pvalue:", pval);
                     pValues[i][j] = pval;
                     pValues[j][i] = pval;
                 });
             });
-            console.log("CALCULATIONS DONE!");
+
             return pValues;
         };
 
+        /**
+         * Return the saved variable names from the last calculation, if any.
+         * @returns {*}
+         */
+        var getVarNames = function () {
+            return varNames;
+        };
+
         return {
-            calculate: calculatePValues
+            calculate: calculatePValues,
+            getVarNames: getVarNames
         }
     }
 ]);

@@ -16,13 +16,9 @@
     </div>
 
     <div class="row">
-        <div class="col-md-3">
-            <h4>P Values</h4>
-            <ul class="list-group">
-                <li ng-repeat="item in varNames track by $index" class="list-group-item list-group-item-sm">
-                    {{ ($index + 1) + ". " + item }}
-                </li>
-            </ul>
+        <div class="col-md-offset-1 col-md-10">
+            <!--Heatmap container-->
+            <div id="p-value-heatmap-container" style="height: 600px"></div>
         </div>
     </div>
 </div>
