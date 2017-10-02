@@ -66,6 +66,13 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
                     controller.view.getFont = function () {
                         return 1.0;
                     };
+
+                    // Make the function that is called when the animation is paused to continue the animation
+                    controller.canContinue = function () {
+                        $timeout(function () {
+                            controller.continue();
+                        });
+                    }
                 });
             });
         });
