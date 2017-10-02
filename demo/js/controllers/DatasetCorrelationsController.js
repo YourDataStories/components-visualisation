@@ -2,6 +2,7 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
     function ($scope, $ocLazyLoad, $timeout, PValues) {
         var scope = $scope;
         scope.loaded = false;
+        scope.eikosogramTitle = "None";
         var controller, pvalues, chart;
         var categoryA, categoryB;
 
@@ -43,9 +44,6 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
 
                             createPValueHeatmap(PValues.getVarNames(), pValuesToHighcharts(pvalues));
                         });
-
-                        // Do other things that this function did before..
-                        // this.view.suManipTools(this.model.getCategorical(), self.finToolSU);
                     };
 
                     // Use only eikosogram when creating display
@@ -118,9 +116,11 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
             categoryA = variableNames[e.point.x];
             categoryB = variableNames[e.point.y];
 
-            console.log("Categories for eikosogram:", categoryA, categoryB);
+            // Create display
             controller.createDisplay();
 
+            // Show which eikosogram was created
+            scope.eikosogramTitle = categoryA + " & " + categoryB;
         };
 
         /**
