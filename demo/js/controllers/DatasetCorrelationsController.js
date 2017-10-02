@@ -121,6 +121,9 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
 
             // Show which eikosogram was created
             scope.eikosogramTitle = categoryA + " & " + categoryB;
+
+            // Because the eikosogram code adds "height: 100%" to a row's style, remove it (causes problem in Firefox)
+            $("div.row[style*='height: 100%']").css("height", "")
         };
 
         /**
