@@ -6,12 +6,31 @@
     </div>
 
     <div class="row">
+        <!--File selector-->
         <div class="col-md-4">
             <input ng-show="loaded"
                    id="file"
                    name="file"
                    type="file"
                    accept="text/csv,text/comma-separated-values,text/plain,.csv"/>
+        </div>
+
+        <!--P Value input-->
+        <div class="col-md-4">
+            <div class="form-inline">
+                <div class="form-group">
+                    <label for="p-value-input">P Value</label>
+                    <div class="input-group">
+                        <input id="p-value-input"
+                               class="form-control"
+                               type="number"
+                               min="0" max="100"
+                               ng-change="pValueChange()"
+                               ng-model="pValue"/>
+                        <span class="input-group-addon">%</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

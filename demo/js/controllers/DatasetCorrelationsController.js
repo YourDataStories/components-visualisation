@@ -2,9 +2,9 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
     function ($scope, $ocLazyLoad, $timeout, PValues) {
         var scope = $scope;
         scope.loaded = false;
-        var controller;
+        var controller, pvalues, chart;
 
-        var pValue = 0.05;
+        scope.pValue = 95;
 
         // Load required files from:
         // http://new.censusatschool.org.nz/resource/using-the-eikosogram-to-teach-conditional-and-joint-probability/
@@ -38,7 +38,7 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
                     controller.finishedModelSU = function () {
                         $timeout(function () {
                             // window.dataHeadings variable should be available by now...
-                            var pvalues = PValues.calculate(window.dataHeadings, controller.model.getData());
+                            pvalues = PValues.calculate(window.dataHeadings, controller.model.getData());
 
                             createPValueHeatmap(PValues.getVarNames(), pValuesToHighcharts(pvalues));
                         });
@@ -85,7 +85,7 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
          */
         var createPValueHeatmap = function (variableNames, data) {
             // Create the chart
-            Highcharts.chart("p-value-heatmap-container", {
+            chart = Highcharts.chart("p-value-heatmap-container", {
                 chart: {
                     type: "heatmap"
                 },
@@ -108,7 +108,7 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
                     maxColor: "#ff7272",
                     stops: [
                         [0, "#00FF00"],
-                        [pValue, "#ffffff"],
+                        [1 - scope.pValue / 100, "#ffffff"],
                         [1, "#ff7272"]
                     ]
                 },
@@ -126,5 +126,15 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
                 }]
             });
         };
+
+        /**
+         * Redraw the P Values chart when the selected p-value changes
+         */
+        scope.pValueChange = function () {
+            // If there is a chart, recreate it
+            if (!_.isUndefined(chart)) {
+                createPValueHeatmap(PValues.getVarNames(), pValuesToHighcharts(pvalues));
+            }
+        }
     }
 ]);
