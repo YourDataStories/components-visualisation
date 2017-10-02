@@ -22,25 +22,32 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
             // Show the file selector now that everything is loaded
             scope.loaded = true;
 
-            // Get the controller
-            controller = window.mainControl;
+            // Initialize controller (The 2 timeouts make it work in Firefox...)
+            $timeout(function () {
+                $timeout(function () {
+                    // Get the mainControl and save it to the controller variable
+                    if (!_.isNull(window.mainControl) && !_.isUndefined(window.mainControl)) {
+                        controller = window.mainControl;
+                    } else {
+                        //todo: Show the error?
+                        console.error("Controller is not initialized, cannot continue!");
+                        return;
+                    }
 
-            if (!_.isUndefined(controller)) {
-                // Set custom functions in the controller
-                controller.finishedModelSU = function () {
-                    $timeout(function () {
-                        // window.dataHeadings variable should be available by now...
-                        var pvalues = PValues.calculate(window.dataHeadings, controller.model.getData());
+                    // Set custom functions in the controller
+                    controller.finishedModelSU = function () {
+                        $timeout(function () {
+                            // window.dataHeadings variable should be available by now...
+                            var pvalues = PValues.calculate(window.dataHeadings, controller.model.getData());
 
-                        createPValueHeatmap(PValues.getVarNames(), pValuesToHighcharts(pvalues));
-                    });
+                            createPValueHeatmap(PValues.getVarNames(), pValuesToHighcharts(pvalues));
+                        });
 
-                    // Do other things that this function did before..
-                    // this.view.suManipTools(this.model.getCategorical(), self.finToolSU);
-                };
-            } else {
-                //todo: Show error...
-            }
+                        // Do other things that this function did before..
+                        // this.view.suManipTools(this.model.getCategorical(), self.finToolSU);
+                    };
+                });
+            });
         });
 
         /**
