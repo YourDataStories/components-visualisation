@@ -9,6 +9,7 @@ angular.module("yds").factory("PValues", [
         const MAX_HIST_SAMPLE_SIZE = 10000;
 
         var varNames = null;
+        var varTypes = null;
 
         /**
          * Create a 2D array with the specified initial value
@@ -394,7 +395,7 @@ angular.module("yds").factory("PValues", [
             var varsNum = varNames.length;
 
             // Gather the types of the variables into an object instead of an array as given
-            var varTypes = {};
+            varTypes = {};
             _.each(variables, function (varArray) {
                 varTypes[varArray[0]] = varArray[1];
             });
@@ -488,9 +489,18 @@ angular.module("yds").factory("PValues", [
             return varNames;
         };
 
+        /**
+         * Return the saved variable types from the last calculation, if any.
+         * @returns {*}
+         */
+        var getVarTypes = function () {
+            return varTypes;
+        };
+
         return {
             calculate: calculatePValues,
             getVarNames: getVarNames,
+            getVarTypes: getVarTypes,
             roundNumber: roundNumber
         }
     }

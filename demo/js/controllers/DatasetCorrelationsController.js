@@ -3,6 +3,7 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
         var scope = $scope;
         scope.loaded = false;
         var controller, pvalues, chart;
+        var categoryA, categoryB;
 
         scope.pValue = 95;
 
@@ -46,6 +47,25 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
                         // Do other things that this function did before..
                         // this.view.suManipTools(this.model.getCategorical(), self.finToolSU);
                     };
+
+                    // Use only eikosogram when creating display
+                    controller.createDisplay = function () {
+                        // Get factors
+                        var varTypes = PValues.getVarTypes();
+                        var factors = [
+                            [categoryA, varTypes[categoryA]],
+                            [categoryB, varTypes[categoryB]]
+                        ];
+
+                        // Create eikosogram
+                        controller.eiko = new eiko(controller, factors, controller.model.getData(), 5);
+                        controller.dataDisplay = controller.eiko;
+                    };
+
+                    // Set font size
+                    controller.view.getFont = function () {
+                        return 1.0;
+                    };
                 });
             });
         });
@@ -76,6 +96,24 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
             });
 
             return newData;
+        };
+
+        /**
+         * Show eikosogram for the clicked point in the Highcharts heatmap.
+         * @param e Highcharts click event
+         */
+        var pValueClickHandler = function (e) {
+            // Clear any previously generated eikosogram
+            $("#eikosogram").html("");
+
+            // Get variables and create eikosogram
+            var variableNames = PValues.getVarNames();
+            categoryA = variableNames[e.point.x];
+            categoryB = variableNames[e.point.y];
+
+            console.log("Categories for eikosogram:", categoryA, categoryB);
+            controller.createDisplay();
+
         };
 
         /**
@@ -117,6 +155,15 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
                         return variableNames[this.x] + " & "
                             + variableNames[this.y] + ": <b>"
                             + PValues.roundNumber(this.value, 8) + "</b><br/>";
+                    }
+                },
+                plotOptions: {
+                    heatmap: {
+                        point: {
+                            events: {
+                                click: pValueClickHandler
+                            }
+                        }
                     }
                 },
                 series: [{
