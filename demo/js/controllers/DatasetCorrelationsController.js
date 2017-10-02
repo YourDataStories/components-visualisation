@@ -39,6 +39,9 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
                     // Set custom functions in the controller
                     controller.finishedModelSU = function () {
                         $timeout(function () {
+                            // Clear any previous eikosogram
+                            clearEikosogram();
+
                             // window.dataHeadings variable should be available by now...
                             pvalues = PValues.calculate(window.dataHeadings, controller.model.getData());
 
@@ -76,6 +79,14 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
         });
 
         /**
+         * Clear the currently displayed eikosogram from the page
+         */
+        var clearEikosogram = function () {
+            $("#eikosogram").html("");
+            scope.eikosogramTitle = "None";
+        };
+
+        /**
          * Transform the p-values from a 2D array, to the format that Highcharts heatmaps accept.
          * @param data  2D array of values (as returned from PValues service)
          * @returns {Array} Data formatted for Highcharts heatmap
@@ -109,7 +120,7 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
          */
         var pValueClickHandler = function (e) {
             // Clear any previously generated eikosogram
-            $("#eikosogram").html("");
+            clearEikosogram();
 
             // Get variables and create eikosogram
             var variableNames = PValues.getVarNames();
