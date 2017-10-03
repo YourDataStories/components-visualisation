@@ -1,5 +1,5 @@
-angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$ocLazyLoad", "$timeout", "PValues",
-    function ($scope, $ocLazyLoad, $timeout, PValues) {
+angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$ocLazyLoad", "$timeout", "$uibModal", "PValues",
+    function ($scope, $ocLazyLoad, $timeout, $uibModal, PValues) {
         var scope = $scope;
         scope.loaded = false;
         scope.eikosogramTitle = "None";
@@ -39,9 +39,6 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
                     // Set custom functions in the controller
                     controller.finishedModelSU = function () {
                         $timeout(function () {
-                            // Clear any previous eikosogram
-                            clearEikosogram();
-
                             // window.dataHeadings variable should be available by now...
                             pvalues = PValues.calculate(window.dataHeadings, controller.model.getData());
 
@@ -79,14 +76,6 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
         });
 
         /**
-         * Clear the currently displayed eikosogram from the page
-         */
-        var clearEikosogram = function () {
-            $("#eikosogram").html("");
-            scope.eikosogramTitle = "None";
-        };
-
-        /**
          * Transform the p-values from a 2D array, to the format that Highcharts heatmaps accept.
          * @param data  2D array of values (as returned from PValues service)
          * @returns {Array} Data formatted for Highcharts heatmap
@@ -115,26 +104,39 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
         };
 
         /**
-         * Show eikosogram for the clicked point in the Highcharts heatmap.
+         * Show eikosogram for the clicked point in a modal popup.
          * @param e Highcharts click event
          */
         var pValueClickHandler = function (e) {
-            // Clear any previously generated eikosogram
-            clearEikosogram();
-
             // Get variables and create eikosogram
             var variableNames = PValues.getVarNames();
             categoryA = variableNames[e.point.x];
             categoryB = variableNames[e.point.y];
 
-            // Create display
-            controller.createDisplay();
+            // Create eikosogram "title"
+            var eikosogramTitle = categoryA + " & " + categoryB;
 
-            // Show which eikosogram was created
-            scope.eikosogramTitle = categoryA + " & " + categoryB;
+            // Open the modal
+            $uibModal.open({
+                animation: true,
+                template:
+                "<div class='modal-header'>" +
+                "   <h4 class='modal-title' id='modal-title'>Eikosogram: <i>" + eikosogramTitle + "</i></h4>" +
+                "</div>" +
+                "<div class='modal-body' id='modal-body'>" +
+                "   <div class='eikosogram-container tab-content'>" +
+                "       <div id='eikosogram' style='height: 420px;'></div>" +
+                "   </div>" +
+                "</div>"
+            });
 
-            // Because the eikosogram code adds "height: 100%" to a row's style, remove it (causes problem in Firefox)
-            $("div.row[style*='height: 100%']").css("height", "")
+            $timeout(function () {
+                // Create display
+                controller.createDisplay();
+
+                // Because the eikosogram code adds "height: 100%" to a row's style, remove it (causes problem in Firefox)
+                $("div.row[style*='height: 100%']").css("height", "");
+            });
         };
 
         /**
