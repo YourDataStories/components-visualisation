@@ -5,11 +5,19 @@
         </div>
     </div>
 
-    <div class="row">
+    <!--Loading message-->
+    <div class="row" ng-if="!loaded">
+        <div class="col-md-offset-5 col-md-2">
+            <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+            <span style="font-size: 24px">Loading...</span>
+        </div>
+    </div>
+
+    <!--File selector & p-value input-->
+    <div class="row" ng-show="loaded">
         <!--File selector-->
         <div class="col-md-4">
-            <input ng-show="loaded"
-                   id="file"
+            <input id="file"
                    name="file"
                    type="file"
                    accept="text/csv,text/comma-separated-values,text/plain,.csv"/>
