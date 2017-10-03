@@ -117,7 +117,7 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
             var eikosogramTitle = categoryA + " & " + categoryB;
 
             // Open the modal
-            $uibModal.open({
+            var modalInstance = $uibModal.open({
                 animation: true,
                 template:
                 "<div class='modal-header'>" +
@@ -128,6 +128,11 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
                 "       <div id='eikosogram' style='height: 420px;'></div>" +
                 "   </div>" +
                 "</div>"
+            });
+
+            // Handle modal closing (by doing nothing)
+            modalInstance.result.then(function (success) {
+            }, function (error) {
             });
 
             $timeout(function () {
