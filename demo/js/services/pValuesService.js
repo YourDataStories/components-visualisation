@@ -192,7 +192,6 @@ angular.module("yds").factory("PValues", [
             } else {
                 minNBins0 = 2;
                 lcount = countA;
-                // console.log("lcount (A)", lcount);
                 if (_.has(Number, "MAX_SAFE_INTEGER")) {
                     icount = Number.MAX_SAFE_INTEGER < lcount ? Number.MAX_SAFE_INTEGER : lcount;
                 } else {
@@ -209,7 +208,6 @@ angular.module("yds").factory("PValues", [
             } else {
                 minNBins1 = 2;
                 lcount = countB;
-                // console.log("lcount (B)", lcount);
                 if (_.has(Number, "MAX_SAFE_INTEGER")) {
                     icount = Number.MAX_SAFE_INTEGER < lcount ? Number.MAX_SAFE_INTEGER : lcount;
                 } else {
@@ -418,7 +416,6 @@ angular.module("yds").factory("PValues", [
 
                 _.each(varNames, function (varB, j) {
                     if (pValues[i][j] > -1) return; // Move on, score exists
-                    // console.log("\nFinding correlation of", varA, "and", varB);
 
                     // If variables are the same, skip the calculations.
                     if (varA === varB) {
@@ -430,6 +427,8 @@ angular.module("yds").factory("PValues", [
                     // Get variable data & type
                     var dataB = varData[varB];
                     var typeB = varTypes[varB];
+
+                    // console.log("\nFinding correlation of", varA, " (", typeA, ") and", varB, "(", typeB, ")");
 
                     // Turn categorical values into numbers, or parse the values of numerical variables as floats
                     if (typeA === CATEGORICAL) {
