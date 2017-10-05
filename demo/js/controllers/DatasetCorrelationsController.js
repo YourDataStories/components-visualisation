@@ -85,18 +85,7 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
 
             _.each(data, function (row, i) {
                 _.each(row, function (value, j) {
-                    var point = {
-                        x: i,
-                        y: j,
-                        value: value
-                    };
-
-                    // For the points in the diagonal, make them a specific color
-                    if (i === j) {
-                        point.color = "#828282";
-                    }
-
-                    newData.push(point);
+                    newData.push([i, j, value]);
                 });
             });
 

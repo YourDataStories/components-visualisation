@@ -44,7 +44,7 @@ angular.module("yds").factory("PValues", [
                     count++;
                 }
             });
-            // console.log(seenValues);
+            // console.log("seen values", seenValues);
             return count;
         };
 
@@ -86,11 +86,11 @@ angular.module("yds").factory("PValues", [
 
             var bsizex = 1.0 / bNumX;
             var bsizey = 1.0 / bNumY;
-            var mod = Math.max(1.0, numOfValues / MAX_HIST_SAMPLE_SIZE);
+            var mod = Math.round(Math.max(1.0, numOfValues / MAX_HIST_SAMPLE_SIZE));
 
             for (var i = 0; i < numOfValues; i += mod) {
-                var binx = constrainNumber(dataA[i] / bsizex, 0, bNumX - 1);
-                var biny = constrainNumber(dataB[i] / bsizey, 0, bNumY - 1);
+                var binx = constrainNumber(Math.floor(dataA[i] / bsizex), 0, bNumX - 1);
+                var biny = constrainNumber(Math.floor(dataB[i] / bsizey), 0, bNumY - 1);
                 counts[binx][biny] += valueW;
             }
 
@@ -241,8 +241,8 @@ angular.module("yds").factory("PValues", [
             var mod = Math.max(1, numValues / MAX_SEARCH_SAMPLE_SIZE);
 
             for (var i = 0; i < numValues; i += mod) {
-                var n0 = parseInt(i / blen1) + minNBins0;   // Make sure it's an integer
-                var n1 = i % blen1 + minNBins1;
+                var n0 = Math.floor(i / blen1) + minNBins0;   // Make sure it's an integer
+                var n1 = Math.floor(i % blen1) + minNBins1;
 
                 var bsize0 = 1.0 / n0;
                 var bsize1 = 1.0 / n1;
@@ -420,6 +420,13 @@ angular.module("yds").factory("PValues", [
                     if (pValues[i][j] > -1) return; // Move on, score exists
                     // console.log("\nFinding correlation of", varA, "and", varB);
 
+                    // If variables are the same, skip the calculations.
+                    if (varA === varB) {
+                        pValues[i][j] = 0.0;
+                        pValues[j][i] = 0.0;
+                        return;
+                    }
+
                     // Get variable data & type
                     var dataB = varData[varB];
                     var typeB = varTypes[varB];
@@ -428,12 +435,26 @@ angular.module("yds").factory("PValues", [
                     if (typeA === CATEGORICAL) {
                         dataA = categoricalToNum(dataA);
                     } else {
-                        dataA = dataA.map(parseFloat);
+                        dataA = dataA.map(function (item) {
+                            var value = parseFloat(item);
+                            if (_.isNaN(value)) {
+                                return 0;
+                            }
+
+                            return value;
+                        });
                     }
                     if (typeB === CATEGORICAL) {
                         dataB = categoricalToNum(dataB);
                     } else {
-                        dataB = dataB.map(parseFloat);
+                        dataB = dataB.map(function (item) {
+                            var value = parseFloat(item);
+                            if (_.isNaN(value)) {
+                                return 0;
+                            }
+
+                            return value;
+                        });
                     }
 
                     var res = binOptimizer(dataA, typeA, dataB, typeB, "??");
@@ -456,13 +477,6 @@ angular.module("yds").factory("PValues", [
                         biny);
                     // console.log("Mutual info:", ixy);
                     var pval = 0;
-
-                    if (varA === varB) {
-                        // Set pvalue to 0 and continue
-                        pValues[i][j] = pval;
-                        pValues[j][i] = pval;
-                        return;
-                    }
 
                     if (_.isNaN(ixy) || !Number.isFinite(ixy)) {
                         pval = 0;
