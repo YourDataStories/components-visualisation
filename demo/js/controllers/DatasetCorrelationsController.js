@@ -187,6 +187,7 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
                 series: [{
                     name: "P Values",
                     borderWidth: 1,
+                    borderColor: "#868686",
                     data: data
                 }]
             });
