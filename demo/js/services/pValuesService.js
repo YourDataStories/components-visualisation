@@ -228,7 +228,7 @@ angular.module("yds").factory("PValues", [
             var blen1 = maxNBins1 - minNBins1 + 1;
             var numValues = blen0 * blen1;
 
-            if (minNBins0 <= 0 || maxNBins0 <= 0 || blen0 <= 0 || minNBins1 <= 0 || maxNBins1 <= 0 || blen1 <= 0) {
+            if (minNBins0 <= 0 || maxNBins0 <= 0 || blen0 <= 0 || minNBins1 <= 0 || maxNBins1 <= 1 || blen1 <= 0) {
                 console.error("Unexpected number of bins");
                 return [1, 1];
             }
