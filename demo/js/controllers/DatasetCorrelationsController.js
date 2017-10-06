@@ -27,54 +27,64 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
 
             // Initialize controller (The 2 timeouts make it work in Firefox...)
             $timeout(function () {
-                $timeout(function () {
-                    // Get the mainControl and save it to the controller variable
-                    if (!_.isNull(window.mainControl) && !_.isUndefined(window.mainControl)) {
-                        controller = window.mainControl;
-                    } else {
-                        // Show error
-                        scope.ydsAlert = "Initialization error, cannot continue.";
-                        return;
-                    }
-
-                    // Set custom functions in the controller
-                    controller.finishedModelSU = function () {
-                        $timeout(function () {
-                            // window.dataHeadings variable should be available by now...
-                            pvalues = PValues.calculate(window.dataHeadings, controller.model.getData());
-
-                            createPValueHeatmap(PValues.getVarNames(), pValuesToHighcharts(pvalues));
-                        });
-                    };
-
-                    // Use only eikosogram when creating display
-                    controller.createDisplay = function () {
-                        // Get factors
-                        var varTypes = PValues.getVarTypes();
-                        var factors = [
-                            [categoryA, varTypes[categoryA]],
-                            [categoryB, varTypes[categoryB]]
-                        ];
-
-                        // Create eikosogram
-                        controller.eiko = new eiko(controller, factors, controller.model.getData(), 5);
-                        controller.dataDisplay = controller.eiko;
-                    };
-
-                    // Set font size
-                    controller.view.getFont = function () {
-                        return 1.0;
-                    };
-
-                    // Make the function that is called when the animation is paused to continue the animation
-                    controller.canContinue = function () {
-                        $timeout(function () {
-                            controller.continue();
-                        });
-                    }
-                });
+                $timeout(initController);
             });
         });
+
+        /**
+         * Initialize the eikosogram & CSV parsing controller.
+         */
+        var initController = function () {
+            // Initialize controller object if it doesn't exist, or show error
+            if (_.isNull(window.mainControl) || _.isUndefined(window.mainControl)) {
+                // Create the controller manually...
+                window.mainControl = new probability();
+
+                // Show error if it wasn't created successfully, or continue
+                if (_.isNull(window.mainControl)) {
+                    scope.ydsAlert = "Initialization error, cannot continue.";
+                    return;
+                }
+            }
+
+            controller = window.mainControl;
+
+            // Set custom functions in the controller
+            controller.finishedModelSU = function () {
+                $timeout(function () {
+                    // window.dataHeadings variable should be available by now...
+                    pvalues = PValues.calculate(window.dataHeadings, controller.model.getData());
+
+                    createPValueHeatmap(PValues.getVarNames(), pValuesToHighcharts(pvalues));
+                });
+            };
+
+            // Use only eikosogram when creating display
+            controller.createDisplay = function () {
+                // Get factors
+                var varTypes = PValues.getVarTypes();
+                var factors = [
+                    [categoryA, varTypes[categoryA]],
+                    [categoryB, varTypes[categoryB]]
+                ];
+
+                // Create eikosogram
+                controller.eiko = new eiko(controller, factors, controller.model.getData(), 5);
+                controller.dataDisplay = controller.eiko;
+            };
+
+            // Set font size
+            controller.view.getFont = function () {
+                return 1.0;
+            };
+
+            // Make the function that is called when the animation is paused to continue the animation
+            controller.canContinue = function () {
+                $timeout(function () {
+                    controller.continue();
+                });
+            }
+        };
 
         /**
          * Transform the p-values from a 2D array, to the format that Highcharts heatmaps accept.
