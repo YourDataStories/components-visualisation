@@ -142,7 +142,8 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
             // Create the chart
             chart = Highcharts.chart("p-value-heatmap-container", {
                 chart: {
-                    type: "heatmap"
+                    type: "heatmap",
+                    zoomType: "xy"
                 },
                 title: {
                     text: "P Values"
