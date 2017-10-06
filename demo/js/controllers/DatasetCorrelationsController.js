@@ -3,6 +3,7 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
         var scope = $scope;
         scope.loaded = false;
         scope.eikosogramTitle = "None";
+        scope.ydsAlert = "";
         var controller, pvalues, chart;
         var categoryA, categoryB;
 
@@ -31,8 +32,8 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
                     if (!_.isNull(window.mainControl) && !_.isUndefined(window.mainControl)) {
                         controller = window.mainControl;
                     } else {
-                        //todo: Show the error?
-                        console.error("Controller is not initialized, cannot continue!");
+                        // Show error
+                        scope.ydsAlert = "Initialization error, cannot continue.";
                         return;
                     }
 

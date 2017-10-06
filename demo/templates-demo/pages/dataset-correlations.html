@@ -1,4 +1,4 @@
-<div class="container container-fluid">
+<div class="container">
     <div class="row">
         <div class="col-md-12">
             <h2>Dataset Correlations</h2>
@@ -13,8 +13,15 @@
         </div>
     </div>
 
+    <!--Error message-->
+    <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length>0">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        {{ydsAlert}}
+    </div>
+
     <!--File selector & p-value input-->
-    <div class="row" ng-show="loaded">
+    <div class="row" ng-show="loaded && ydsAlert.length === 0">
         <!--File selector-->
         <div class="col-md-4">
             <input id="file"
