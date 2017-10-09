@@ -210,7 +210,13 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
         scope.pValueChange = function () {
             // If there is a chart, recreate it
             if (!_.isUndefined(chart)) {
-                createPValueHeatmap(PValues.getVarNames(), pValuesToHighcharts(pvalues));
+                _.first(chart.colorAxis).update({
+                    stops: [
+                        [0, "#00FF00"],
+                        [1 - scope.pValue / 100, "#ffffff"],
+                        [1, "#ff7272"]
+                    ]
+                });
             }
         }
     }
