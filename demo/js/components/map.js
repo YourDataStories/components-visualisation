@@ -23,7 +23,7 @@ angular.module("yds").directive("ydsMap", ["Data", function (Data) {
         templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/map.html",
         link: function (scope, element) {
             var mapContainer = angular.element(element[0].querySelector(".map-container"));
-            var drupalPath = ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "lib/images/marker-icon-start.png";
+            var drupalPath = (typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "";
 
             // Create a random id for the element that will render the chart
             var elementId = "map" + Data.createRandomId();
@@ -73,12 +73,12 @@ angular.module("yds").directive("ydsMap", ["Data", function (Data) {
             // Create the default map pins for the start and the end of route
             var mapPins = {
                 start: L.icon({
-                    iconUrl: drupalPath,
+                    iconUrl: drupalPath + "lib/images/marker-icon-start.png",
                     iconSize: [26, 41],
                     iconAnchor: [13, 41]
                 }),
                 end: L.icon({
-                    iconUrl: drupalPath,
+                    iconUrl: drupalPath + "lib/images/marker-icon-end.png",
                     iconSize: [26, 41],
                     iconAnchor: [13, 41]
                 })
