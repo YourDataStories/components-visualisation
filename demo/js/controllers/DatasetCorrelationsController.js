@@ -205,7 +205,7 @@ angular.module("yds").controller("DatasetCorrelationsController", ["$scope", "$o
         };
 
         /**
-         * Redraw the P Values chart when the selected p-value changes
+         * Update the color axis of the P Values chart when the selected p-value changes, to highlight the correct cells
          */
         scope.pValueChange = function () {
             // If there is a chart, recreate it

@@ -187,7 +187,7 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
         })
         .state("contract-ted", {
             url: "/contract-ted",
-            templateUrl: "templates-demo/contract-ted.html",
+            templateUrl: "templates-demo/pages/contract-ted.html",
             controller: "ProjectDetailsController"
         })
         .state("graph", {
@@ -197,7 +197,7 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
         })
         .state("contract-ted-n6", {
             url: "/contract-ted-n6",
-            templateUrl: "templates-demo/contract-ted.html",
+            templateUrl: "templates-demo/pages/contract-ted.html",
             controller: "ProjectDetailsController"
         })
         .state("contract-notice", {
