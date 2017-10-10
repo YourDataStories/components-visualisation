@@ -1,10 +1,12 @@
-angular.module("yds").directive("ydsMap", ["Data", function (Data) {
+angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $timeout) {
     return {
         restrict: "E",
         scope: {
             projectId: "@",     // ID of the project that the data belong
             viewType: "@",      // Name of the array that contains the visualised data
             lang: "@",          // Lang of the visualised data
+
+            clickedPoint: "=",  // Set this to an existing object, to make the map add the clicked point's ID to it
 
             zoomControl: "@",   // Enable or disable map's zoom control
             elementH: "@",      // Set the height of the component
@@ -37,6 +39,9 @@ angular.module("yds").directive("ydsMap", ["Data", function (Data) {
 
             // When the points are more than the number here, clustering will be used
             var clusterThreshold = 100;
+
+            // Check if point selection should be enabled
+            var pointSelection = !_.isUndefined(scope.clickedPoint);
 
             // Check if the projectId is defined, else stop the process
             if (_.isUndefined(projectId) || projectId.trim() === "") {
@@ -84,6 +89,7 @@ angular.module("yds").directive("ydsMap", ["Data", function (Data) {
                 })
             };
 
+            // Add OpenStreetMap tile layer
             L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
                 maxZoom: 18,
                 attribution: "Map data © <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors"
@@ -133,7 +139,7 @@ angular.module("yds").directive("ydsMap", ["Data", function (Data) {
                                 projectLayer.addLayer(startMarker);
 
                                 // If the route has more than one point, create the end marker of the route and add it to the featureGroup layer
-                                if (route.length !== 1) {
+                                if (route.length > 1) {
                                     var endMarker = makeMarker(routeTitle, _.last(route), mapPins.end);
                                     projectLayer.addLayer(endMarker);
                                 }
@@ -172,8 +178,23 @@ angular.module("yds").directive("ydsMap", ["Data", function (Data) {
                 var newMarker = L.marker([parseFloat(point.lng), parseFloat(point.lat)], {icon: icon});
                 newMarker.bindPopup(title, {offset: new L.Point(0, -33)});
 
+                // If point selection is enabled, add click event
+                if (pointSelection) {
+                    newMarker.on("click", markerClickHandler);
+                }
+
                 return newMarker;
-            }
+            };
+
+            /**
+             * Set the clicked point to the target of the given Leaflet event.
+             * @param e Leaflet (click) event
+             */
+            var markerClickHandler = function (e) {
+                $timeout(function () {
+                    scope.clickedPoint["point"] = e.target.getLatLng();
+                });
+            };
         }
     };
 }]);
