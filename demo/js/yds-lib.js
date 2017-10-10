@@ -195,7 +195,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -215,7 +215,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -231,7 +231,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -255,7 +255,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -270,7 +270,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -298,7 +298,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -334,7 +334,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -374,10 +374,10 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             //if it is 'amount', apply custom filter to remove the currency and sort them
             if (gridView[i].type == "amount") {
                 columnInfo.comparator = function (value1, value2) {
-                    if (_.isUndefined(value1) || value1 == null)
+                    if (_.isUndefined(value1) || _.isNull(value1))
                         value1 = "-1";
 
-                    if (_.isUndefined(value2) || value2 == null)
+                    if (_.isUndefined(value2) || _.isNull(value2))
                         value2 = "-1";
 
                     value1 = parseFloat(String(value1).split(" ")[0].replace(/,/g, ""));
@@ -641,7 +641,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -667,7 +667,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -694,7 +694,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -728,7 +728,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -817,7 +817,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -866,7 +866,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).then(function successCallback(response) {
             deferred.resolve(response.data);
         }, function errorCallback(error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -987,7 +987,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -1060,7 +1060,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -1112,7 +1112,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -1135,7 +1135,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -1165,7 +1165,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -1231,7 +1231,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                 total: totalResults
             });
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -1291,7 +1291,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
 
             deferred.resolve(newData);
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
@@ -1321,7 +1321,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
-            deferred.reject(error);
+            deferred.reject(error.data);
         });
 
         return deferred.promise;
