@@ -1,4 +1,4 @@
-var app = angular.module('yds', ['ui.bootstrap', 'rzModule', 'ui.checkbox', 'oc.lazyLoad', 'angularUtils.directives.dirDisqus', 'ngTextTruncate', 'ngCookies', 'ui.select', 'TreeWidget']);
+var app = angular.module("yds", ["ui.bootstrap", "rzModule", "ui.checkbox", "oc.lazyLoad", "angularUtils.directives.dirDisqus", "ngTextTruncate", "ngCookies", "ui.select", "TreeWidget"]);
 
 var host = "http://ydsdev.iit.demokritos.gr:8085";
 var geoRouteUrl = host + "/YDSAPI/yds/geo/route";
@@ -59,11 +59,11 @@ app.constant("YDS_CONSTANTS", {
     "BASKET_URL": "http://dev.yourdatastories.eu/api/tomcat/YDSAPI/yds/basket/"
 });
 
-app.directive('clipboard', ['$document', function () {
+app.directive("clipboard", ["$document", function () {
     return {
-        restrict: 'A',
+        restrict: "A",
         link: function (scope, element, attrs) {
-            element.on('click', function (e) {
+            element.on("click", function (e) {
                 var iframeURL = angular.element(element.parent()[0].getElementsByClassName("well"));
 
                 var range = document.createRange();         // create a Range object
@@ -72,14 +72,14 @@ app.directive('clipboard', ['$document', function () {
                 var selection = document.getSelection();
                 selection.addRange(range);                  // add the Range to the set of window selections
 
-                document.execCommand('copy');               // execute 'copy', can't 'cut' in this case
+                document.execCommand("copy");               // execute 'copy', can't 'cut' in this case
                 selection.removeAllRanges();                // clear the selection
             });
         }
     }
 }]);
 
-app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANTS', function ($http, $q, $window, DashboardService, YDS_CONSTANTS) {
+app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANTS", function ($http, $q, $window, DashboardService, YDS_CONSTANTS) {
     var dataService = {};
 
     //function to convert date to timestamp
@@ -117,7 +117,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
 
     dataService.deepObjSearch = function (obj, path) {
         //function to get the value of an object property, by defining its path
-        for (var i = 0, path = path.split('.'), len = path.length; i < len; i++) {
+        for (var i = 0, path = path.split("."), len = path.length; i < len; i++) {
             if (_.isUndefined(obj)) {
                 obj = "";
                 break;
@@ -131,7 +131,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
 
     dataService.transform = function (data) {
         if (!angular.isObject(data))		    	 // If this is not an object, defer to native stringification.
-            return ( ( data == null ) ? "" : data.toString() );
+            return _.isNull(data) ? "" : data.toString();
 
         var buffer = [];
         for (var name in data) {
@@ -139,7 +139,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                 continue;
 
             var value = data[name];
-            buffer.push(encodeURIComponent(name) + "=" + encodeURIComponent(( value == null ) ? "" : value));
+            buffer.push(encodeURIComponent(name) + "=" + encodeURIComponent(_.isNull(value) ? "" : value));
         }
 
         var source = buffer.join("&").replace(/%20/g, "+");
@@ -187,9 +187,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             viaPoints: via
         };
         $http({
-            method: 'POST',
+            method: "POST",
             url: geoRouteUrl,
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            headers: {"Content-Type": "application/x-www-form-urlencoded"},
             transformRequest: customRequestTransform,
             data: {geoData: angular.toJson(inputData)}
         }).then(function (response) {
@@ -205,9 +205,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         var deferred = $q.defer();
 
         $http({
-            method: 'POST',
+            method: "POST",
             url: geoRouteUrl + "/save/" + projectId,
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            headers: {"Content-Type": "application/x-www-form-urlencoded"},
             transformRequest: customRequestTransform,
             data: {
                 geoData: angular.toJson(geoObj)
@@ -225,9 +225,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         var deferred = $q.defer();
 
         $http({
-            method: 'GET',
+            method: "GET",
             url: geoRouteUrl + "/" + projectId,
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            headers: {"Content-Type": "application/x-www-form-urlencoded"}
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
@@ -241,9 +241,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         var deferred = $q.defer();
 
         $http({
-            method: 'POST',
+            method: "POST",
             url: YDS_CONSTANTS.API_EMBED + "save",
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            headers: {"Content-Type": "application/x-www-form-urlencoded"},
             transformRequest: customRequestTransform,
             data: {
                 "project_id": projectId,
@@ -265,7 +265,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         var deferred = $q.defer();
 
         $http({
-            method: 'GET',
+            method: "GET",
             url: YDS_CONSTANTS.API_EMBED + embedCode
         }).then(function (response) {
             deferred.resolve(response.data);
@@ -328,9 +328,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         var deferred = $q.defer();
 
         $http({
-            method: 'GET',
+            method: "GET",
             url: "http://" + YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_YDS_MODEL_HIERARCHY,
-            headers: {'Content-Type': 'application/json'}
+            headers: {"Content-Type": "application/json"}
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
@@ -341,7 +341,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
     };
 
     dataService.createRandomId = function () {
-        return '_' + Math.random().toString(36).substr(2, 9);
+        return "_" + Math.random().toString(36).substr(2, 9);
     };
 
     dataService.prepareGridColumns = function (gridView) {
@@ -367,12 +367,12 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             }
 
             //if it is not string add number filtering
-            if (gridView[i].type.indexOf("string") == -1 && gridView[i].type.indexOf("url") == -1 && gridView[i].type.indexOf("date") == -1) {
-                columnInfo.filter = 'number';
+            if (gridView[i].type.indexOf("string") === -1 && gridView[i].type.indexOf("url") === -1 && gridView[i].type.indexOf("date") === -1) {
+                columnInfo.filter = "number";
             }
 
-            //if it is 'amount', apply custom filter to remove the currency and sort them
-            if (gridView[i].type == "amount") {
+            //if it is "amount", apply custom filter to remove the currency and sort them
+            if (gridView[i].type === "amount") {
                 columnInfo.comparator = function (value1, value2) {
                     if (_.isUndefined(value1) || _.isNull(value1))
                         value1 = "-1";
@@ -385,7 +385,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
 
                     return value1 - value2;
                 }
-            } else if (gridView[i].type == "date") {
+            } else if (gridView[i].type === "date") {
                 columnInfo.comparator = function (date1, date2) {
                     var date1Number = monthToComparableNumber(date1);
                     var date2Number = monthToComparableNumber(date2);
@@ -467,12 +467,12 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         var value = result[attribute];
 
         //if the value of a result doesn't exist
-        if (_.isUndefined(value) || String(value).trim().length == 0) {
+        if (_.isUndefined(value) || String(value).trim().length === 0) {
             //extract the last 3 characters of the specific attribute of the result
             var last3chars = attribute.substr(attribute.length - 3);
 
             //if it is internationalized
-            if (last3chars == ("." + prefLang)) {
+            if (last3chars === ("." + prefLang)) {
                 //split the attribute in tokens
                 var attributeTokens = attribute.split(".");
                 //extract the attribute without the i18n tokens
@@ -484,7 +484,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                 value = result [nonInternationalizedAttr + "." + alternativeLang];
 
                 //if no value was acquired from the i18n attributes, try with non-internationalized attribute
-                if (_.isUndefined(value) || String(value).trim().length == 0)
+                if (_.isUndefined(value) || String(value).trim().length === 0)
                     value = result [nonInternationalizedAttr];
             }
         }
@@ -542,7 +542,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                 // Find value of attribute
                 var attrValue = newData[i][viewVal.attribute];
                 var attributeTokens = viewVal.attribute.split(".");
-                if (_.isUndefined(attrValue) || (_.isString(attrValue) && attrValue.trim().length == 0)) {
+                if (_.isUndefined(attrValue) || (_.isString(attrValue) && attrValue.trim().length === 0)) {
                     // If the attribute is empty, maybe it is a nested attribute, so try deep object search
                     attrValue = dataService.deepObjSearch(newData[i], viewVal.attribute);
                 }
@@ -553,12 +553,12 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                 }
 
                 // If the column type is year, date or amount of money, format it accordingly
-                if (viewVal.type == "year") {
+                if (viewVal.type === "year") {
                     attrValue = new Date(attrValue).getFullYear();
-                } else if (viewVal.type == "date" && !_.isUndefined(attrValue) && attrValue.indexOf("/") == -1) {
+                } else if (viewVal.type === "date" && !_.isUndefined(attrValue) && attrValue.indexOf("/") === -1) {
                     // Format date to DD/MM/YYYY format (if it contains "/" it was already formatted)
                     attrValue = formatDateToDDMMYYYY(attrValue);
-                } else if (viewVal.type == "format_to_amount" && !_.isUndefined(attrValue)) {
+                } else if (viewVal.type === "format_to_amount" && !_.isUndefined(attrValue)) {
                     // Make attribute a string so we can do more checks
                     var attrStr = attrValue.toString().trim();
 
@@ -635,9 +635,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         var deferred = $q.defer();
 
         $http({
-            method: 'GET',
+            method: "GET",
             url: "http://" + YDS_CONSTANTS.API_YDS_STATISTICS,
-            headers: {'Content-Type': 'application/json; charset=UTF-8'}
+            headers: {"Content-Type": "application/json; charset=UTF-8"}
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
@@ -663,7 +663,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                 id: conceptId,
                 lang: lang
             },
-            headers: {'Content-Type': 'application/json; charset=UTF-8'}
+            headers: {"Content-Type": "application/json; charset=UTF-8"}
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
@@ -690,7 +690,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             method: "GET",
             url: "http://" + YDS_CONSTANTS.API_TYPE2_ADVANCED_QUERY,
             params: params,
-            headers: {'Content-Type': 'application/json; charset=UTF-8'}
+            headers: {"Content-Type": "application/json; charset=UTF-8"}
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
@@ -714,7 +714,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         // Remove any string values that contain "null"
         params = _.omit(params, function (param) {
             if (_.isString(param)) {
-                return param.indexOf("null") != -1;
+                return param.indexOf("null") !== -1;
             } else {
                 return false;
             }
@@ -723,7 +723,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         $http({
             method: "GET",
             url: "http://" + YDS_CONSTANTS.API_TYPE2SOLRQUERY,
-            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            headers: {"Content-Type": "application/json; charset=UTF-8"},
             params: params
         }).then(function (response) {
             deferred.resolve(response.data);
@@ -747,7 +747,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         if (_.isArray(facets)) {
             // facets is an array, add new facet to it (if it exists, union will not add it again)
             facets = _.union(facets, [newFacet]);
-        } else if (_.isString(facets) && newFacet != facets) {
+        } else if (_.isString(facets) && newFacet !== facets) {
             // facets is a single facet and is not an array, so make it an array with both facets
             facets = [facets, newFacet];
         } else if (_.isUndefined(facets)) {
@@ -810,9 +810,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }
 
         $http({
-            method: 'GET',
+            method: "GET",
             url: "http://" + YDS_CONSTANTS.API_SEARCH,
-            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            headers: {"Content-Type": "application/json; charset=UTF-8"},
             params: params
         }).then(function (response) {
             deferred.resolve(response.data);
@@ -862,7 +862,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             method: "POST",
             url: "http://" + YDS_CONSTANTS.API_ADVANCED_SEARCH,
             data: searchParameters,
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            headers: {"Content-Type": "application/x-www-form-urlencoded"}
         }).then(function successCallback(response) {
             deferred.resolve(response.data);
         }, function errorCallback(error) {
@@ -918,17 +918,17 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
                 method: "POST",
                 url: "http://" + YDS_CONSTANTS.API_ADVANCED_SEARCH,
                 data: params,
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                headers: {"Content-Type": "application/x-www-form-urlencoded"}
             }).then(function (response) {
                 // Download the received CSV data as a file
                 var csvData = response.data;
                 var filename = "YourDataStories-Export.csv";
 
-                var blob = new Blob([csvData], {type: 'text/csv'});
+                var blob = new Blob([csvData], {type: "text/csv"});
                 if (window.navigator.msSaveOrOpenBlob) {
                     window.navigator.msSaveBlob(blob, filename);
                 } else {
-                    var elem = window.document.createElement('a');
+                    var elem = window.document.createElement("a");
                     elem.href = window.URL.createObjectURL(blob);
                     elem.download = filename;
                     document.body.appendChild(elem);
@@ -943,7 +943,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
             var url = "http://" + YDS_CONSTANTS.API_SEARCH + "?export=csv";
 
             _.each(params, function (value, key) {
-                if (key == "fq") {
+                if (key === "fq") {
                     _.each(value, function (value) {
                         url += "&" + key + "=" + encodeURIComponent(value);
                     });
@@ -980,9 +980,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }
 
         $http({
-            method: 'GET',
+            method: "GET",
             url: "http://" + YDS_CONSTANTS.API_AGGREGATE,
-            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            headers: {"Content-Type": "application/json; charset=UTF-8"},
             params: params
         }).then(function (response) {
             deferred.resolve(response.data);
@@ -1053,9 +1053,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }
 
         $http({
-            method: 'GET',
+            method: "GET",
             url: visualizationUrl,
-            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            headers: {"Content-Type": "application/json; charset=UTF-8"},
             params: params
         }).then(function (response) {
             deferred.resolve(response.data);
@@ -1105,9 +1105,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         }
 
         $http({
-            method: 'GET',
+            method: "GET",
             url: visualizationUrl,
-            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            headers: {"Content-Type": "application/json; charset=UTF-8"},
             params: inputParams
         }).then(function (response) {
             deferred.resolve(response.data);
@@ -1122,9 +1122,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         var deferred = $q.defer();
 
         $http({
-            method: 'GET',
+            method: "GET",
             url: "http://" + YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_COMBOBOX_FILTER,
-            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            headers: {"Content-Type": "application/json; charset=UTF-8"},
             params: {
                 id: resourceId,
                 type: filterType,
@@ -1158,9 +1158,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         var url = "http://" + (_.isUndefined(tableToTruncate) ? YDS_CONSTANTS.API_CACHE_INFO : YDS_CONSTANTS.API_CACHE_TRUNCATE);
 
         $http({
-            method: 'GET',
+            method: "GET",
             url: url,
-            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            headers: {"Content-Type": "application/json; charset=UTF-8"},
             params: params
         }).then(function (response) {
             deferred.resolve(response.data);
@@ -1192,9 +1192,9 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         };
 
         $http({
-            method: 'GET',
+            method: "GET",
             url: "http://" + YDS_CONSTANTS.API_RELATED_ITEMS,
-            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            headers: {"Content-Type": "application/json; charset=UTF-8"},
             params: params
         }).then(function (response) {
             // Transform the data to the format expected by the component
@@ -1253,10 +1253,10 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
         };
 
         $http({
-            method: 'GET',
+            method: "GET",
             url: "http://" + YDS_CONSTANTS.API_DESCRIBE,
             params: params,
-            headers: {'Content-Type': 'application/json; charset=UTF-8'}
+            headers: {"Content-Type": "application/json; charset=UTF-8"}
         }).then(function (response) {
             // Get data and remove the context
             var data = response.data.data;
@@ -1308,16 +1308,16 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
 
         var url = "http://" + YDS_CONSTANTS.API_GEOJSON_GR + "/";
 
-        if (detailLevel == "high") {
+        if (detailLevel === "high") {
             url += region + ".json";
         } else {
             url += "greece_low_detail.json";
         }
 
         $http({
-            method: 'GET',
+            method: "GET",
             url: url,
-            headers: {'Content-Type': 'application/json; charset=UTF-8'}
+            headers: {"Content-Type": "application/json; charset=UTF-8"}
         }).then(function (response) {
             deferred.resolve(response.data);
         }, function (error) {
@@ -1330,7 +1330,7 @@ app.factory('Data', ['$http', '$q', '$window', 'DashboardService', 'YDS_CONSTANT
     return dataService;
 }]);
 
-app.factory('Filters', [function () {
+app.factory("Filters", [function () {
     var filters = [];
 
     var updateFilters = function (newFilter, newCompId, allFilters) {
@@ -1394,14 +1394,15 @@ app.factory('Filters', [function () {
                 var filterVal = gridFilters[property];
 
                 if (gridFilters.hasOwnProperty(property)) {
+                    var tmpAttrs;
                     if (property == "_ydsQuickFilter_") {		//quick filter applied on grid
-                        var tmpAttrs = {};
+                        tmpAttrs = {};
 
                         if (filterVal.length > 0) {
                             tmpAttrs[filterVal] = true;
 
                             chartFilters.push({
-                                applied_to: '_quick_bar_',
+                                applied_to: "_quick_bar_",
                                 attrs: tmpAttrs
                             });
                         }
@@ -1412,24 +1413,24 @@ app.factory('Filters', [function () {
                             attrsArray.push(filterVal[j]);
                         }
 
-                        var tmpAttr = {'rows': attrsArray};
+                        var tmpAttr = {"rows": attrsArray};
 
                         chartFilters.push({
                             applied_to: property,
                             attrs: tmpAttr
                         });
-                    } else if (filterVal.hasOwnProperty('filter') && filterVal.hasOwnProperty('type')) { //numeric filter applied on grid
-                        var tmpAttrs = {};
+                    } else if (filterVal.hasOwnProperty("filter") && filterVal.hasOwnProperty("type")) { //numeric filter applied on grid
+                        tmpAttrs = {};
 
-                        switch (filterVal['type']) {
+                        switch (filterVal["type"]) {
                             case 1:
-                                tmpAttrs["eq"] = filterVal['filter'];
+                                tmpAttrs["eq"] = filterVal["filter"];
                                 break;
                             case 2:
-                                tmpAttrs["lte"] = filterVal['filter'];
+                                tmpAttrs["lte"] = filterVal["filter"];
                                 break;
                             case 3:
-                                tmpAttrs["gte"] = filterVal['filter'];
+                                tmpAttrs["gte"] = filterVal["filter"];
                                 break;
                         }
 
@@ -1444,7 +1445,7 @@ app.factory('Filters', [function () {
             updateFilters(chartFilters, compId, filters);
         },
         get: function (compId) {
-            var filterFound = _.findWhere(filters, {componentId: compId})
+            var filterFound = _.findWhere(filters, {componentId: compId});
 
             if (!angular.isUndefined(filterFound))
                 return filterFound.filters;
