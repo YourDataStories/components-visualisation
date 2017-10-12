@@ -65,8 +65,9 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
 
                 scope.loadedRows = 0;
                 var query = "";
-                var hasColDefs = false; // Indicates if the column definitions have been loaded for the grid
-                var dataView = null;
+                var hasColDefs = false;     // Indicates if the column definitions have been loaded for the grid
+                var dataView = null;        // The view of the grid will be kept here, to use for exporting
+                var dataSampleObj = null;   // A sample object from the grid's results, for use in exporting
 
                 var paramPrefix = scope.urlParamPrefix;
                 var projectDetailsType = scope.projectDetailsType;
@@ -298,12 +299,28 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                  */
                 scope.exportGrid = function () {
                     if (scope.exportBtnClass !== "disabled") {
+                        // Get required modal input
                         var modalInput = {
                             view: dataView,
                             lang: scope.lang,
                             title: "Export to CSV"
                         };
 
+                        // Get any extra attributes that should be shown to export, based on an object from the results
+                        if (!_.isNull(dataSampleObj)) {
+                            var objKeys = _.chain(dataSampleObj)
+                                .keys()
+                                .map(function (attr) {
+                                    return {
+                                        attribute: attr,
+                                        header: attr
+                                    };
+                                })
+                                .valueOf();
+                            modalInput.view = _.union(modalInput.view, objKeys);
+                        }
+
+                        // Open the modal
                         var exportModal = $uibModal.open({
                             controller: "GridResultsExportModalCtrl",
                             templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/grid-results-export-modal.html",
@@ -428,11 +445,6 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                     responseView = response.view;
                                 }
 
-                                // Save the view in order to be able to use it for exporting
-                                if (_.isNull(dataView)) {
-                                    dataView = responseView;
-                                }
-
                                 // Disable the export button if there are more than 5000 results
                                 if (scope.resultsNum > 5000) {
                                     scope.exportBtnClass = "disabled";
@@ -501,6 +513,18 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                     lastRow = scope.resultsNum;
                                 }
 
+                                // Save any variables needed for exporting
+                                if (_.isNull(dataView)) {
+                                    // Save the grid view
+                                    dataView = responseView;
+                                }
+
+                                if (_.isNull(dataSampleObj) && !useGridProcessing) {
+                                    // Save a sample object
+                                    dataSampleObj = _.first(rowsThisPage);
+                                }
+
+                                // Notify the grid with the new rows
                                 params.successCallback(rowsThisPage, lastRow);
 
                                 // Call sizeColumnsToFit, if this grid is in the selected tab of Tabbed Search (so

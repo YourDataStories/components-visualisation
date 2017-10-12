@@ -1,4 +1,4 @@
-angular.module('yds').controller('GridResultsExportModalCtrl', ['$scope', 'modalInput',
+angular.module("yds").controller("GridResultsExportModalCtrl", ["$scope", "modalInput",
     function ($scope, modalInput) {
         $scope.modalConfig = {
             title: modalInput.title,

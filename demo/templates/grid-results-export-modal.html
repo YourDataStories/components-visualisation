@@ -9,13 +9,15 @@
     </div>
 
     <!--View items-->
-    <form>
-        <div class="checkbox" ng-repeat="col in modalConfig.view track by $index">
-            <label>
-                <input type="checkbox" ng-model="col.selected"/> {{ col.header }}
-            </label>
-        </div>
-    </form>
+    <div style="max-height: 350px; overflow-y: auto">
+        <form>
+            <div class="checkbox" ng-repeat="col in modalConfig.view track by $index">
+                <label>
+                    <input type="checkbox" ng-model="col.selected"/> {{ col.header }}
+                </label>
+            </div>
+        </form>
+    </div>
 </div>
 <div class="modal-footer">
     <button class="btn btn-success" type="button" ng-click="exportGrid()">Export</button>
