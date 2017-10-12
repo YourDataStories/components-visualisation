@@ -1,31 +1,3 @@
-<!--Traffic check point selection map-->
-<div class="row">
-    <div class="col-md-12">
-        <h3>Galway Traffic Counts</h3>
-    </div>
-</div>
-<div class="row" ng-controller="TrafficCountsController">
-    <!--Point selection map-->
-    <div class="col-md-4">
-        <yds-map
-                project-id="{{ projectId }}"
-                view-type="contract.trafficobservation.all"
-                enable-rating="true"
-                element-h="400"
-                clicked-point="clickedTrafficPoint"
-                lang="en">
-        </yds-map>
-    </div>
-
-    <!--Detailed traffic data-->
-    <div class="col-md-4">
-        <!--Placeholder to show clicked point-->
-        <div class="well well-sm">
-            Clicked point: {{ clickedTrafficPoint.point || "none" }}
-        </div>
-    </div>
-</div>
-
 <!--Traffic observation map & pictures-->
 <div class="row">
     <div class="col-md-12">

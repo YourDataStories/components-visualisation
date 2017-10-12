@@ -1,0 +1,50 @@
+<div class="container" ng-controller="TrafficCountsController">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Galway Traffic</h2>
+        </div>
+        <div class="col-md-4" style="text-align: right">
+            <yds-save-filters-button
+                    dashboard-id="galway"
+                    lang="en">
+            </yds-save-filters-button>
+
+            <yds-clear-filters-button
+                    dashboard-id="galway"
+                    lang="en">
+            </yds-clear-filters-button>
+
+            <yds-dashboard-sharing
+                    dashboard-id="galway"
+                    lang="en">
+            </yds-dashboard-sharing>
+        </div>
+    </div>
+
+    <div class="row">
+        <!--Point selection map-->
+        <div class="col-md-4">
+            <yds-map
+                    project-id="{{ projectId }}"
+                    view-type="contract.trafficobservation.all"
+                    enable-rating="true"
+                    element-h="400"
+                    clicked-point="clickedTrafficPoint"
+                    lang="en">
+            </yds-map>
+        </div>
+
+        <!--Detailed traffic data-->
+        <div class="col-md-4">
+            <!--Placeholder to show clicked point-->
+            <div class="well well-sm">
+                Clicked point: {{ clickedTrafficPoint.point || "none" }}
+            </div>
+        </div>
+    </div>
+
+    <!--Basket-->
+    <yds-basket-preview
+            user-id="ydsUser">
+    </yds-basket-preview>
+</div>
