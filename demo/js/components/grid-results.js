@@ -308,6 +308,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
 
                         // Get any extra attributes that should be shown to export, based on an object from the results
                         if (!_.isNull(dataSampleObj)) {
+                            // Get the extra object keys
                             var objKeys = _.chain(dataSampleObj)
                                 .keys()
                                 .map(function (attr) {
@@ -316,8 +317,15 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                         header: attr
                                     };
                                 })
-                                .valueOf();
-                            modalInput.view = _.union(modalInput.view, objKeys);
+                                .value();
+
+                            // Merge the view's attributes with the ones from the object, discarding any duplicates
+                            modalInput.view = _.chain(modalInput.view)
+                                .union(objKeys)
+                                .uniq(false, function (obj) {
+                                    return obj.attribute;
+                                })
+                                .value();
                         }
 
                         // Open the modal
@@ -521,7 +529,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
 
                                 if (_.isNull(dataSampleObj) && !useGridProcessing) {
                                     // Save a sample object
-                                    dataSampleObj = _.first(rowsThisPage);
+                                    dataSampleObj = _.first(responseData);
                                 }
 
                                 // Notify the grid with the new rows
