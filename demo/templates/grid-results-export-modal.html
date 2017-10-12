@@ -20,6 +20,13 @@
     </div>
 </div>
 <div class="modal-footer">
+    <!--Select/Deselect all buttons-->
+    <div class="btn-group pull-left">
+        <button class="btn btn-default" type="button" ng-click="selectAll(false)">Deselect All</button>
+        <button class="btn btn-default" type="button" ng-click="selectAll(true)">Select All</button>
+    </div>
+
+    <!--Export/Cancel buttons-->
     <button class="btn btn-success" type="button" ng-click="exportGrid()">Export</button>
     <button class="btn btn-active" type="button" ng-click="$dismiss()">Cancel</button>
 </div>
