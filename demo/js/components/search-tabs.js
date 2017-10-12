@@ -1,25 +1,25 @@
-angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location', 'Translations',
+angular.module("yds").directive("ydsSearchTabs", ["Data", "Search", "$location", "Translations",
     function (Data, Search, $location, Translations) {
         return {
-            restrict: 'E',
+            restrict: "E",
             scope: {
-                defaultTab: '@',        // Default tab to select when page loads
-                urlParamPrefix: '@',    // Prefix to add before all url parameters (optional)
-                watchRuleUrlParam: '@', // If Advanced Search should watch URL parameter for rule changes and apply them
-                viewInDashboard: '@',   // If true, the view button for each grid-results row will set the clicked value in DashboardService
-                hideTabs: '@',          // If true, tabs will be hidden and only the default tab will show
-                enableAdvSearch: '@',   // Enable/disable advanced search
-                addToBasket: '@',       // If true, the grids will have an "add to basket" button
-                lang: '@'               // Language of component
+                defaultTab: "@",        // Default tab to select when page loads
+                urlParamPrefix: "@",    // Prefix to add before all url parameters (optional)
+                watchRuleUrlParam: "@", // If Advanced Search should watch URL parameter for rule changes and apply them
+                viewInDashboard: "@",   // If true, the view button for each grid-results row will set the clicked value in DashboardService
+                hideTabs: "@",          // If true, tabs will be hidden and only the default tab will show
+                enableAdvSearch: "@",   // Enable/disable advanced search
+                addToBasket: "@",       // If true, the grids will have an "add to basket" button
+                lang: "@"               // Language of component
             },
-            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/search-tabs.html',
+            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/search-tabs.html",
             link: function (scope) {
                 scope.initialized = false;	    // flag that indicated when the component is initialized
                 scope.tabs = {};                // Object with tab information
                 scope.translations = Translations.getAll(scope.lang);   // Translations used for no results message
 
                 // Add flex class to grid results if we are not hiding tabs
-                if (scope.hideTabs != "true") {
+                if (scope.hideTabs !== "true") {
                     scope.flexClass = "flex";
                 }
 
@@ -31,15 +31,15 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                 var prevTab = "";               // Keeps previous tab name value
 
                 // check if the language attr is defined, else assign default value
-                if (_.isUndefined(scope.lang) || scope.lang.trim() == "")
+                if (_.isUndefined(scope.lang) || scope.lang.trim() === "")
                     scope.lang = "en";
 
                 // If enableAdvSearch is undefined, set default value
-                if (_.isUndefined(scope.enableAdvSearch) || (scope.enableAdvSearch != "true" && scope.enableAdvSearch != "false"))
+                if (_.isUndefined(scope.enableAdvSearch) || (scope.enableAdvSearch !== "true" && scope.enableAdvSearch !== "false"))
                     scope.enableAdvSearch = "true";
 
                 // if no url parameter prefix is defined or it is only whitespace, use not parameter prefix
-                if (_.isUndefined(paramPrefix) || (paramPrefix.trim() == "" && paramPrefix.length > 0)) {
+                if (_.isUndefined(paramPrefix) || (paramPrefix.trim() === "" && paramPrefix.length > 0)) {
                     paramPrefix = "";
                     scope.urlParamPrefix = "";
                 }
@@ -105,7 +105,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                     // Get url parameters to see if the tab or the query/rules changed
                     var urlParams = $location.search();
 
-                    if (urlParams[paramPrefix + "q"] != prevQ || urlParams[paramPrefix + "rules"] != prevRules) {
+                    if (urlParams[paramPrefix + "q"] !== prevQ || urlParams[paramPrefix + "rules"] !== prevRules) {
                         // The query or rules changed, need to update tab result counts
                         prevQ = urlParams[paramPrefix + "q"];
                         prevRules = urlParams[paramPrefix + "rules"];
@@ -128,9 +128,9 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                                 scope.tabs = response.tabs;
 
                                 // If there is a default tab set and tabs are hidden, load only the default tab
-                                if (!_.isUndefined(defaultTab) && defaultTab.trim().length > 0 && scope.hideTabs == "true") {
+                                if (!_.isUndefined(defaultTab) && defaultTab.trim().length > 0 && scope.hideTabs === "true") {
                                     _.each(response.tabs, function (tab) {
-                                        if (tab.concept == defaultTab) {
+                                        if (tab.concept === defaultTab) {
                                             scope.tabs = [tab];
                                         }
                                     });
@@ -142,7 +142,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                                 if (!_.isUndefined(prevSelTab)) {
                                     // Select the previously selected tab
                                     scope.activeTab = prevSelTab;
-                                } else if (_.isUndefined(defaultTab) || defaultTab.length == 0) {
+                                } else if (_.isUndefined(defaultTab) || defaultTab.length === 0) {
                                     // Select first tab
                                     var tabToSel = _.first(scope.tabs).concept;
                                     scope.activeTab = tabToSel;
@@ -156,7 +156,7 @@ angular.module('yds').directive('ydsSearchTabs', ['Data', 'Search', '$location',
                         } else {
                             updateTabResultCounts(rules);
                         }
-                    } else if (urlParams[paramPrefix + "tab"] != prevTab && scope.hideTabs != "true") {
+                    } else if (urlParams[paramPrefix + "tab"] !== prevTab && scope.hideTabs !== "true") {
                         // The tab changed
                         prevTab = urlParams[paramPrefix + "tab"];
 
