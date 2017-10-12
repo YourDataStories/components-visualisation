@@ -1,10 +1,9 @@
-app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
+app.factory("Search", ["$http", "$q", "$location", "YDS_CONSTANTS", "Data",
     function ($http, $q, $location, YDS_CONSTANTS, Data) {
         var i18nLangs = ["en", "el"];
         var keyword = "";
         var facetsCallbacks = [];
         var facetsView = {};
-        var searchResults = [];
         var fieldFacets = [];
         var rangeFacets = [];
 
@@ -22,17 +21,21 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
          * @param response
          */
         var saveFacets = function (response) {
-            //get the facet view from the response of the search API
-            facetsView = _.find(response.view, function (view) {
-                return "SearchFacets" in view
-            })["SearchFacets"];
+            var responseQ = response.data.responseHeader.params.q;
 
-            //copy the available facets in a local variable
-            fieldFacets = saveFieldFacets(response.data.facet_counts.facet_fields, facetsView);
-            rangeFacets = saveRangeFacets(response.data.facet_counts.facet_ranges, facetsView);
-            //format the facets returned from the search API based on the facet view
+            // Check that the response is for the current keyword
+            if (responseQ === keyword) {
+                // Get the facet view from the response of the search API
+                facetsView = _.find(response.view, function (view) {
+                    return "SearchFacets" in view
+                })["SearchFacets"];
 
-            notifyObservers(facetsCallbacks);
+                // Format the facets returned from the search API based on the facet view and save them in a local variable
+                fieldFacets = saveFieldFacets(response.data.facet_counts.facet_fields, facetsView);
+                rangeFacets = saveRangeFacets(response.data.facet_counts.facet_ranges, facetsView);
+
+                notifyObservers(facetsCallbacks);
+            }
         };
 
         /**
@@ -79,7 +82,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
                                 resultRow.value = "";
                             else if (_.isArray(resultRow.value))
                                 resultRow.value = resultRow.value.join(", ");
-                            else if (resultRow.type == "date")
+                            else if (resultRow.type === "date")
                                 resultRow.value = resultRow.value.split("T")[0].replace(/-/g, "/");
 
                             //push the formatted row of the result in the array of the corresponding result
@@ -161,12 +164,12 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
             var formattedFacets = [];
 
             _.each(_.keys(newFacets), function (facetAttr) {
-                //get the facet object based on its key value
+                // Get the facet object based on its key value
                 var rawFacetOptions = newFacets[facetAttr];
                 var rawFacetView = _.findWhere(facetsView, {attribute: facetAttr});
                 var facetTypeTokens = rawFacetView.type.split("-");
 
-                //initialize a basic object which will hold the required attributes of each range facet
+                // Initialize a basic object which will hold the required attributes of each range facet
                 var newFacet = {
                     facet_name: rawFacetView.header,
                     facet_type: facetTypeTokens[1],
@@ -179,17 +182,17 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
                     }
                 };
 
-                //if the facet is of type "date"
-                if (facetTypeTokens[1] == "date") {
-                    //make its step to be around a month and set the slider's floor and ceil values
+                // If the facet is of type "date"
+                if (facetTypeTokens[1] === "date") {
+                    // Make its step to be around a month and set the slider's floor and ceil values
                     newFacet.facet_options.options.step = 2629746;
                     newFacet.facet_options.options.enforceStep = false;
                     newFacet.facet_options.options.floor = Data.getTimestampFromDate(rawFacetOptions.start);
                     newFacet.facet_options.options.ceil = Data.getTimestampFromDate(rawFacetOptions.end);
 
-                    //if the user has selected a specific range, assign the desired values on the slider
+                    // If the user has selected a specific range, assign the desired values on the slider
                     //else asign the default ceil/floor values defined above
-                    if (rawFacetView.value.length == 2) {
+                    if (rawFacetView.value.length === 2) {
                         newFacet.facet_options.model = Data.getTimestampFromDate(rawFacetView.value[0]);
                         newFacet.facet_options.high = Data.getTimestampFromDate(rawFacetView.value[1]);
                     } else {
@@ -197,18 +200,18 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
                         newFacet.facet_options.high = newFacet.facet_options.options.ceil;
                     }
 
-                    //define the way that the date will be shown to the user
+                    // Define the way that the date will be shown to the user
                     newFacet.facet_options.options.translate = function (timestamp) {
                         return Data.getYearMonthFromTimestamp(timestamp, false)
                     };
-                } else if (facetTypeTokens[1] == "float") { //if the facet is of type "float"
-                    //set the slider's floor and ceil values
+                } else if (facetTypeTokens[1] === "float") { //if the facet is of type "float"
+                    // Set the slider's floor and ceil values
                     newFacet.facet_options.options.floor = parseFloat(rawFacetOptions.start);
                     newFacet.facet_options.options.ceil = parseFloat(rawFacetOptions.end);
 
-                    //if the user has selected a specific range, assign the desired values on the slider
-                    //else asign the default ceil/floor values defined above
-                    if (rawFacetView.value.length == 2) {
+                    // If the user has selected a specific range, assign the desired values on the slider
+                    // else asign the default ceil/floor values defined above
+                    if (rawFacetView.value.length === 2) {
                         newFacet.facet_options.model = parseFloat(rawFacetView.value[0]);
                         newFacet.facet_options.high = parseInt(rawFacetView.value[1]);
                     } else {
@@ -224,36 +227,34 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
         };
 
         /**
-         * Formats the applied facets located inside the search url
-         * @param {String} newKeyword, the search term
-         * @param {Integer} pageLimit, the max number of results returned from the API
-         * @param {Integer} pageNumber, the page number of the results
-         **/
+         * Format the applied facets located inside the search url
+         * @param newKeyword    The search term
+         * @param prefLang      Prefered results language
+         * @param pageLimit     The max number of results returned from the API
+         * @param pageNumber    The page number of the results
+         */
         var performSearch = function (newKeyword, prefLang, pageLimit, pageNumber) {
             var deferred = $q.defer();
 
-            //define an object with the standard params required for the search query
+            // Define an object with the standard params required for the search query
             var searchParameters = {
                 lang: prefLang,
                 rows: pageLimit,
                 start: pageNumber
             };
 
-            //merge the url params with the aforementioned object
+            // Merge the url params with the aforementioned object
             _.extend(searchParameters, $location.search());
 
             $http({
-                method: 'GET',
+                method: "GET",
                 url: "http://" + YDS_CONSTANTS.PROXY + YDS_CONSTANTS.API_SEARCH,
                 params: searchParameters,
-                headers: {'Content-Type': 'application/json'}
+                headers: {"Content-Type": "application/json"}
             }).then(function (response) {
-                //if the search query is successful, copy the results in a local variable
-                searchResults = angular.copy(response.data);
+                saveFacets(response.data);
 
-                saveFacets(searchResults);
-
-                deferred.resolve(searchResults);
+                deferred.resolve(response.data);
             }, function (error) {
                 deferred.reject(error);
             });
@@ -269,7 +270,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
          */
         var formatSuggestions = function (val, rawSuggestions, maxSuggestions) {
             // Check for success of query
-            if (rawSuggestions.success != true) {
+            if (rawSuggestions.success !== true) {
                 return [];
             }
 
@@ -322,7 +323,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
                 method: "GET",
                 url: "http://" + (_.isUndefined(filterId) ? YDS_CONSTANTS.API_SEARCH_SUGGESTIONS : YDS_CONSTANTS.API_FILTER_SUGGESTIONS),
                 params: suggestionParams,
-                headers: {'Content-Type': 'application/json'}
+                headers: {"Content-Type": "application/json"}
             }).then(function (response) {
                 // Format the returned suggestions and resolve the promise
                 var formattedSuggestions = formatSuggestions(val, response.data, maxSuggestions);
@@ -349,7 +350,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
                 params: {
                     lang: lang
                 },
-                headers: {'Content-Type': 'application/json'}
+                headers: {"Content-Type": "application/json"}
             }).then(function (response) {
                 deferred.resolve(response.data.data);
             }, function (error) {
@@ -411,7 +412,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 
             // Get the current search keyword (if empty, get total results in each tab)
             var query = keyword;
-            if (_.isUndefined(query) || query.trim().length == 0) {
+            if (_.isUndefined(query) || query.trim().length === 0) {
                 query = "*";
             }
 
@@ -428,7 +429,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
                     method: "GET",
                     url: "http://" + YDS_CONSTANTS.API_SEARCH,
                     params: params,
-                    headers: {'Content-Type': 'application/json'}
+                    headers: {"Content-Type": "application/json"}
                 }).then(
                     tabResultCountsSuccess,
                     tabResultCountsError
@@ -447,7 +448,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
                     method: "POST",
                     url: "http://" + YDS_CONSTANTS.API_ADVANCED_SEARCH,
                     data: params,
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"}
                 }).then(
                     tabResultCountsSuccess,
                     tabResultCountsError
@@ -472,7 +473,7 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
                 params: {
                     id: id
                 },
-                headers: {'Content-Type': 'application/json'}
+                headers: {"Content-Type": "application/json"}
             }).then(function (response) {
                 deferred.resolve(response.data.data.filters);
             }, function (error) {
@@ -495,12 +496,6 @@ app.factory('Search', ['$http', '$q', '$location', 'YDS_CONSTANTS', 'Data',
 
             formatResults: formatResults,
             performSearch: performSearch,
-            getResults: function () {
-                return searchResults;
-            },
-            clearResults: function () {
-                searchResults = [];
-            },
             getTabResultCounts: getTabResultCounts,
             getSearchTabs: getSearchTabs,
             getSuggestions: getSuggestions,

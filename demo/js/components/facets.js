@@ -13,15 +13,15 @@ angular.module("yds").directive("ydsFacets", ["Data", "Search", "$location", "$w
                 scope.rangeFacets = [];			// Array which contains the range facets which are shown to the user
                 scope.applyBtnText = "";		// Variable that contains the text shown inside the apply button (used for internationalization)
 
-                //check if the tabbed attr is defined, else assign default value
+                // Check if the tabbed attr is defined, else assign default value
                 if (angular.isUndefined(scope.tabbed) || scope.tabbed.trim() === "")
                     scope.tabbed = "false";
 
-                //check if the language attr is defined, else assign default value
+                // Check if the language attr is defined, else assign default value
                 if (angular.isUndefined(scope.lang) || scope.lang.trim() === "")
                     scope.lang = "en";
 
-                //define the text of the "Apply" button based on the components language
+                // Define the text of the "Apply" button based on the components language
                 switch (scope.lang) {
                     case "el":
                         scope.applyBtnText = "Εφαρμογή";
@@ -54,13 +54,12 @@ angular.module("yds").directive("ydsFacets", ["Data", "Search", "$location", "$w
                 /**
                  * Return a string valid for Solr for a range facet.
                  * @param tag
-                 * @param option
                  * @param min
                  * @param max
                  * @returns {string}
                  */
-                var toSorlRange = function (tag, option, min, max) {
-                    return "{!tag=" + tag.toUpperCase() + "}" + option + ":[" + min + "+TO+" + max + "]";
+                var toSorlRange = function (tag, min, max) {
+                    return "{!tag=" + tag.toUpperCase() + "}" + tag + ":[" + min + "+TO+" + max + "]";
                 };
 
                 /**
@@ -90,9 +89,9 @@ angular.module("yds").directive("ydsFacets", ["Data", "Search", "$location", "$w
                             facet.facet_options.high !== facet.facet_options.options.ceil) {
 
                             if (facet.facet_type === "float") {
-                                facetUrlParts.push(toSorlRange(facet.facet_options.options.id, facet.facet_options.options.id, facet.facet_options.model, facet.facet_options.high));
+                                facetUrlParts.push(toSorlRange(facet.facet_options.options.id, facet.facet_options.model, facet.facet_options.high));
                             } else if (facet.facet_type === "date") {
-                                facetUrlParts.push(toSorlRange(facet.facet_options.options.id, facet.facet_options.options.id, Data.getYearMonthFromTimestamp(facet.facet_options.model, true), Data.getYearMonthFromTimestamp(facet.facet_options.high, true)));
+                                facetUrlParts.push(toSorlRange(facet.facet_options.options.id, Data.getYearMonthFromTimestamp(facet.facet_options.model, true), Data.getYearMonthFromTimestamp(facet.facet_options.high, true)));
                             }
                         }
                     });

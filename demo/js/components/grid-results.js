@@ -40,7 +40,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
             },
             templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/grid-results.html",
             link: function (scope, element) {
-                // Reference the dom elements in which the yds-grid is rendered
+                // Reference the DOM elements of the grid
                 var gridWrapper = angular.element(element[0].querySelector(".component-wrapper"));
                 var gridContainer = angular.element(element[0].querySelector(".grid-container"));
 
@@ -96,7 +96,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 if (_.isUndefined(grid.lang) || grid.lang.trim() === "")
                     grid.lang = "en";
 
-                // if no url parameter prefix is defined or it is only whitespace, use not parameter prefix
+                // If no url parameter prefix is defined or it is only whitespace, use not parameter prefix
                 if (_.isUndefined(paramPrefix) || (paramPrefix.trim() === "" && paramPrefix.length > 0))
                     paramPrefix = "";
 
@@ -132,15 +132,15 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 if (_.isUndefined(grid.pageSize) || _.isNaN(grid.pageSize))
                     grid.pageSize = "100";
 
-                //check if the exporting attr is defined, else assign default value
+                // Check if the exporting attr is defined, else assign default value
                 if (_.isUndefined(grid.exporting) || (grid.exporting !== "true" && grid.exporting !== "false"))
                     grid.exporting = "false";
 
-                //check if the exportBtnX attr is defined, else assign default value
+                // Check if the exportBtnX attr is defined, else assign default value
                 if (_.isUndefined(grid.exportBtnX) || _.isNaN(grid.exportBtnX))
                     grid.exportBtnX = 0;
 
-                //check if the exportBtnY attr is defined, else assign default value
+                // Check if the exportBtnY attr is defined, else assign default value
                 if (_.isUndefined(grid.exportBtnY) || _.isNaN(grid.exportBtnY))
                     grid.exportBtnY = 0;
 
@@ -148,7 +148,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 if (_.isUndefined(grid.elementH) || _.isNaN(grid.elementH))
                     grid.elementH = 200;
 
-                // Set the id and the height of the grid component
+                // Set the id and the height of the grid
                 gridContainer[0].id = grid.elementId;
 
                 if (grid.quickFiltering === "true") {
@@ -170,8 +170,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 }
 
                 /**
-                 * function which is being registered to the FilterModified event
-                 * when a filter is updated, it updates the filter obj of the component by using the Filters Service
+                 * When a filter is updated, update the filter object of the component by using the Filters service
                  */
                 var filterModifiedListener = function () {
                     var gridFilters = {};
@@ -184,7 +183,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 };
 
                 /**
-                 * function to be called on destroy of the component
+                 * Remove filters when the component is destroyed
                  */
                 scope.$on("$destroy", function () {
                     //if the grid filtering is enabled remove the filter event listener
@@ -198,7 +197,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 });
 
                 /**
-                 * Function called when the "Apply" button is clicked
+                 * Apply the quick filter
                  */
                 scope.applyComboFilters = function () {
                     var trimmedQFValue = scope.quickFilterValue.trim();
@@ -214,7 +213,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 };
 
                 /**
-                 * Clears the quick filter
+                 * Clear the quick filter
                  */
                 scope.clearComboFilters = function () {
                     scope.loadedRows = 0;
@@ -231,7 +230,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 };
 
                 /**
-                 * Finds the first available view for a data type
+                 * Find the first available view for a data type
                  * @param possibleViewNames
                  * @param availableViews
                  * @returns {*}
@@ -252,7 +251,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 };
 
                 /**
-                 * Gets the current keyword from the search service
+                 * Get the current keyword from the search service
                  * @returns {*}
                  */
                 var getSearchQuery = function () {
@@ -430,6 +429,11 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
 
                                 // If grid processing is not enabled, Solr results are expected.
                                 if (!useGridProcessing) {
+                                    // Sanity check: confirm that the response's query is the same as the last one
+                                    if (useGridApi === "false" && query !== response.data.responseHeader.params.q) {
+                                        return;
+                                    }
+
                                     // Get grid data
                                     responseData = response.data.response.docs;
 
@@ -559,9 +563,9 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
 
                                 // Get the search query, and merge it with the quick filter if it's defined
                                 getSearchQuery().then(function (searchQuery) {
-                                    var query = searchQuery;
+                                    query = searchQuery;
                                     if (!_.isUndefined(quickFilter)) {
-                                        query = "" + query + " AND " + quickFilter;
+                                        query += " AND " + quickFilter;
                                     }
 
                                     // Try to find any selected facets
@@ -637,7 +641,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                         }
                     };
 
-                    // If the grid is being rendered for the first time, create it with the datasource
+                    // If the grid is being rendered for the first time, create it with the data source
                     if (_.isUndefined(scope.gridOptions)) {
                         // Define the options of the grid component
                         scope.gridOptions = {
