@@ -1,18 +1,18 @@
-angular.module('yds').directive('ydsHybrid', ['Data', 'DashboardService', '$http', '$stateParams', '$location',
+angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http", "$stateParams", "$location",
     function (Data, DashboardService, $http, $stateParams, $location) {
         return {
-            restrict: 'E',
+            restrict: "E",
             scope: {},
-            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/hybrid.html',
+            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/hybrid.html",
             compile: function (tElem, tAttrs) {
                 return {
                     pre: function (scope, element, iAttrs) {
                         scope.ydsAlert = "";
                         var embedCode = $stateParams.embedCode;
 
-                        var hybridContainer = angular.element(element[0].querySelector('.hybrid-container'));
+                        var hybridContainer = angular.element(element[0].querySelector(".hybrid-container"));
 
-                        //create a random id for the element that will render the chart
+                        // Create a random id for the element that will render the chart
                         var elementId = "hybrid" + Data.createRandomId();
                         hybridContainer[0].id = elementId;
 
@@ -42,7 +42,7 @@ angular.module('yds').directive('ydsHybrid', ['Data', 'DashboardService', '$http
                                 // If there are "pagingGrid" = true, and numberOfItems attributes, we should use grid-results
                                 // in order to take advantage of paging.
                                 if (_.has(filters, "pagingGrid") && _.has(filters, "numberOfItems")
-                                    && filters.pagingGrid == true && !_.isNaN(filters.numberOfItems)) {
+                                    && filters.pagingGrid === true && !_.isNaN(filters.numberOfItems)) {
                                     // Force the grid-paging visualization type
                                     response.embedding.type = "grid-paging";
 
@@ -72,7 +72,7 @@ angular.module('yds').directive('ydsHybrid', ['Data', 'DashboardService', '$http
                             scope.lang = lang;
                             scope.extraParams = filters;
                             scope.viewType = viewType;
-                            if (_.isUndefined(scope.viewType) || scope.viewType == "undefined") {
+                            if (_.isUndefined(scope.viewType) || scope.viewType === "undefined") {
                                 scope.viewType = "default";
                             }
 
@@ -86,7 +86,7 @@ angular.module('yds').directive('ydsHybrid', ['Data', 'DashboardService', '$http
                             scope.vizType = vizType.toLowerCase();
 
                             // If there is a q parameter and the visualisation type is grid, the use grid-results
-                            if (_.has(scope.extraParams, "q") && scope.vizType == "grid") {
+                            if (_.has(scope.extraParams, "q") && scope.vizType === "grid") {
                                 scope.vizType = "grid-results";
 
                                 // Find concept type and add it as the project details type for grid-results
@@ -103,4 +103,5 @@ angular.module('yds').directive('ydsHybrid', ['Data', 'DashboardService', '$http
                 }
             }
         }
-    }]);
+    }
+]);

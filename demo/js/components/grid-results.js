@@ -36,7 +36,8 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 embedBtnY: "@",         // Y-axis position of the embed button
                 popoverPos: "@",        // The side of the embed button from which the embed  window will appear
 
-                enableRating: "@"       // Enable rating buttons for this component
+                enableRating: "@",      // Enable rating buttons for this component
+                disableExplanation: "@" // Set to true to disable the explanation button
             },
             templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/grid-results.html",
             link: function (scope, element) {

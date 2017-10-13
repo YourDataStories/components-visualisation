@@ -2,25 +2,26 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
     return {
         restrict: "E",
         scope: {
-            projectId: "@",     // ID of the project that the data belong
-            viewType: "@",      // Name of the array that contains the visualised data
-            lang: "@",          // Lang of the visualised data
+            projectId: "@",         // ID of the project that the data belong
+            viewType: "@",          // Name of the array that contains the visualised data
+            lang: "@",              // Lang of the visualised data
 
-            clickedPoint: "=",  // Set this to an existing object, to make the map add the clicked point's ID to it
+            clickedPoint: "=",      // Set this to an existing object, to make the map add the clicked point's ID to it
 
-            zoomControl: "@",   // Enable or disable map's zoom control
-            elementH: "@",      // Set the height of the component
+            zoomControl: "@",       // Enable or disable map's zoom control
+            elementH: "@",          // Set the height of the component
 
-            addToBasket: "@",   // Enable or disable "add to basket" functionality, values: true, false
-            basketBtnX: "@",    // X-axis position of the basket button
-            basketBtnY: "@",    // Y-axis position of the basket button
+            addToBasket: "@",       // Enable or disable "add to basket" functionality, values: true, false
+            basketBtnX: "@",        // X-axis position of the basket button
+            basketBtnY: "@",        // Y-axis position of the basket button
 
-            embeddable: "@",    // Enable or disable the embedding of the component
-            embedBtnX: "@",     // X-axis position of the embed button
-            embedBtnY: "@",     // Y-axis position of the embed button
-            popoverPos: "@",    // The side of the embed button from which the embed information window will appear
+            embeddable: "@",        // Enable or disable the embedding of the component
+            embedBtnX: "@",         // X-axis position of the embed button
+            embedBtnY: "@",         // Y-axis position of the embed button
+            popoverPos: "@",        // The side of the embed button from which the embed information window will appear
 
-            enableRating: "@"   // Enable rating buttons for this component
+            enableRating: "@",      // Enable rating buttons for this component
+            disableExplanation: "@" // Set to true to disable the explanation button
         },
         templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/map.html",
         link: function (scope, element) {
@@ -55,15 +56,15 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
                 viewType = "default";
 
             // Check if the language attr is defined, else assign default value
-            if (angular.isUndefined(lang))
+            if (_.isUndefined(lang))
                 lang = "en";
 
             // Check if the zoom-control attr is defined, else assign default value
-            if (angular.isUndefined(zoomControl) || (zoomControl !== "true" && zoomControl !== "false"))
+            if (_.isUndefined(zoomControl) || (zoomControl !== "true" && zoomControl !== "false"))
                 zoomControl = "true";
 
             // Check if the component's height attr is defined, else assign default value
-            if (angular.isUndefined(elementH) || isNaN(elementH))
+            if (_.isUndefined(elementH) || _.isNaN(elementH))
                 elementH = 200;
 
             // Set the height of the chart

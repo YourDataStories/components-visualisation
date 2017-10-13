@@ -2,29 +2,30 @@ angular.module("yds").directive("ydsBar", ["Data", "Filters", function (Data, Fi
     return {
         restrict: "E",
         scope: {
-            projectId: "@",     // Id of the project that the data belong
-            viewType: "@",      // Name of the array that contains the visualised data
-            lang: "@",          // Lang of the visualised data
+            projectId: "@",         // Id of the project that the data belong
+            viewType: "@",          // Name of the array that contains the visualised data
+            lang: "@",              // Lang of the visualised data
 
-            extraParams: "=",   // Extra attributes to pass to the API, if needed
-            enablePaging: "@",  // Enable paging (default is false)
-            pageSize: "@",      // Page size for paging
-            numberOfItems: "@", // Number of items, required for paging
+            extraParams: "=",       // Extra attributes to pass to the API, if needed
+            enablePaging: "@",      // Enable paging (default is false)
+            pageSize: "@",          // Page size for paging
+            numberOfItems: "@",     // Number of items, required for paging
 
-            exporting: "@",     // Enable or disable the export of the chart
-            elementH: "@",      // Set the height of the component
-            titleSize: "@",     // The size of the chart's main title
+            exporting: "@",         // Enable or disable the export of the chart
+            elementH: "@",          // Set the height of the component
+            titleSize: "@",         // The size of the chart's main title
 
-            addToBasket: "@",   // Enable or disable "add to basket" functionality, values: true, false
-            basketBtnX: "@",    // X-axis position of the basket button
-            basketBtnY: "@",    // Y-axis position of the basket button
+            addToBasket: "@",       // Enable or disable "add to basket" functionality, values: true, false
+            basketBtnX: "@",        // X-axis position of the basket button
+            basketBtnY: "@",        // Y-axis position of the basket button
 
-            embeddable: "@",    // Enable or disabled the embedding of the component
-            embedBtnX: "@",     // X-axis position of the embed button
-            embedBtnY: "@",     // Y-axis position of the embed button
-            popoverPos: "@",    // The side of the embed button from which the embed information window will appear
+            embeddable: "@",        // Enable or disabled the embedding of the component
+            embedBtnX: "@",         // X-axis position of the embed button
+            embedBtnY: "@",         // Y-axis position of the embed button
+            popoverPos: "@",        // The side of the embed button from which the embed information window will appear
 
-            enableRating: "@"   // Enable rating buttons for this component
+            enableRating: "@",      // Enable rating buttons for this component
+            disableExplanation: "@" // Set to true to disable the explanation button
         },
         templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/bar.html",
         link: function (scope, element) {

@@ -4,8 +4,14 @@ angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile
             restrict: "A",
             link: function (scope, element, attrs) {
                 var elementClass = attrs.class;
+                var disableExplanation = scope.disableExplanation;
                 var visualisationType = "";
                 var defaultVisTypes = ["pie", "line", "scatter", "bubble", "bar", "tree", "map", "grid"];
+
+                // If the disableExplanation scope variable is set to true, stop here
+                if (!_.isUndefined(disableExplanation) && disableExplanation === "true") {
+                    return false;
+                }
 
                 // Find the visualisation type from its class
                 if (!_.isUndefined(elementClass) && elementClass.trim().length > 0) {
