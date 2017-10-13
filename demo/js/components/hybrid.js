@@ -10,11 +10,11 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
                         scope.ydsAlert = "";
                         var embedCode = $stateParams.embedCode;
 
-                        var hybridContainer = angular.element(element[0].querySelector(".hybrid-container"));
+                        var hybridContainer = _.first(angular.element(element[0].querySelector(".hybrid-container")));
 
                         // Create a random id for the element that will render the chart
                         var elementId = "hybrid" + Data.createRandomId();
-                        hybridContainer[0].id = elementId;
+                        hybridContainer.id = elementId;
 
                         // Recover saved object from embed code and visualise it
                         Data.recoverEmbedCode(embedCode)
@@ -81,6 +81,13 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
                             if (_.has(urlParams, "titlesize")) {
                                 scope.titleSize = urlParams.titlesize;
                             }
+
+                            // Get the current height of the container and set the chart to that height
+                            var currH = hybridContainer.offsetHeight;
+                            if (_.isNaN(currH) || _.isUndefined(currH) || currH < 300) {
+                                currH = 300;
+                            }
+                            scope.elementH = currH;
 
                             // Set visualization type so the ng-switch shows the component
                             scope.vizType = vizType.toLowerCase();

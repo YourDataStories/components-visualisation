@@ -1,9 +1,9 @@
-<div class="hybrid-container col-md-12" style="min-height: 300px; padding: 0">
+<div class="hybrid-container col-md-12" style="min-height: 300px; height: 100vh; padding: 0">
     <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length>0">
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-        <b>Error:</b> {{ydsAlert}}
+        <b>Error:</b> {{ ydsAlert }}
     </div>
-    <div ng-switch="vizType" style="height: 300px">
+    <div ng-switch="vizType" style="min-height: 300px; height: 100vh" id="hybrid-vis-container">
         <yds-bar
                 ng-switch-when="bar"
                 project-id="{{ projectId }}"
@@ -12,7 +12,7 @@
                 title-size="{{ titleSize }}"
                 lang="{{ lang }}"
                 disable-explanation="true"
-                element-h="300">
+                element-h="{{ elementH }}">
         </yds-bar>
 
         <yds-pie
@@ -23,7 +23,7 @@
                 title-size="{{ titleSize }}"
                 lang="{{ lang }}"
                 disable-explanation="true"
-                element-h="300">
+                element-h="{{ elementH }}">
         </yds-pie>
 
         <yds-line
@@ -33,7 +33,7 @@
                 title-size="{{ titleSize }}"
                 lang="{{ lang }}"
                 disable-explanation="true"
-                element-h="300">
+                element-h="{{ elementH }}">
         </yds-line>
 
         <yds-scatter
@@ -43,7 +43,7 @@
                 title-size="{{ titleSize }}"
                 lang="{{ lang }}"
                 disable-explanation="true"
-                element-h="300">
+                element-h="{{ elementH }}">
         </yds-scatter>
 
         <yds-bubble
@@ -54,7 +54,7 @@
                 title-size="{{ titleSize }}"
                 lang="{{ lang }}"
                 disable-explanation="true"
-                element-h="300">
+                element-h="{{ elementH }}">
         </yds-bubble>
 
         <yds-tree-map
@@ -65,7 +65,7 @@
                 title-size="{{ titleSize }}"
                 lang="{{ lang }}"
                 disable-explanation="true"
-                element-h="300">
+                element-h="{{ elementH }}">
         </yds-tree-map>
 
         <yds-map
@@ -74,7 +74,7 @@
                 view-type="{{ viewType }}"
                 lang="{{ lang }}"
                 disable-explanation="true"
-                element-h="300">
+                element-h="{{ elementH }}">
         </yds-map>
 
         <yds-grid-results
@@ -84,7 +84,7 @@
                 project-details-type="{{ projectDetailsType }}"
                 extra-params="extraParams"
                 page-size="50"
-                element-h="300"
+                element-h="{{ elementH }}"
                 view-in-dashboard="false"
                 col-resize="true"
                 add-to-basket="false"
@@ -101,7 +101,7 @@
                 extra-params="extraParams"
                 lang="{{ lang }}"
                 disable-explanation="true"
-                element-h="300">
+                element-h="{{ elementH }}">
         </yds-grid>
 
         <yds-grid-results
@@ -112,7 +112,7 @@
                 number-of-items="{{ numberOfItems }}"
                 extra-params="extraParams"
                 page-size="50"
-                element-h="300"
+                element-h="{{ elementH }}"
                 col-resize="true"
                 use-grid-api="true"
                 quick-filtering="false"
