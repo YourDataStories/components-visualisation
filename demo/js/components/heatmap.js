@@ -48,15 +48,16 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
 
                 var heatmapContainer = angular.element(elem[0].querySelector(".heatmap-container"));
 
-                //create a random id for the element that will render the chart
+                // Create a random id for the element that will render the chart
                 var elementId = "heatmap" + Data.createRandomId();
                 heatmapContainer[0].id = elementId;
 
                 // Any extra parameters will be saved to check if something changed before refreshing the heatmap
                 var extraParams = {};
 
-                // Selectivity instance
+                // Selectivity instance & last colorAxis parameters used
                 var selectivity = null;
+                var colorAxisParams = null;
 
                 // Check if project id or grid type are defined
                 if (angular.isUndefined(projectId) || projectId.trim() === "") {
@@ -71,7 +72,7 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                     viewType = "default";
 
                 // Check if the language attribute is defined, else assign default value
-                if (angular.isUndefined(lang) || lang.trim() === "")
+                if (_.isUndefined(lang) || lang.trim() === "")
                     lang = "en";
 
                 // Check if colorAxis attribute is defined, else assign default value
@@ -148,7 +149,6 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                             style: {display: "none"}
                         }
                     },
-                    legend: {enabled: false},
                     exporting: {
                         buttons: {
                             contextButton: {
@@ -181,15 +181,14 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                 if (legend === "true") {
                     heatmapOptions.legend = {
                         layout: legendLayout,
-                        borderWidth: 0,
                         backgroundColor: "rgba(255,255,255,0.85)",
                         floating: true,
                         verticalAlign: legendVAlign,
                         align: legendHAlign
-                    }
+                    };
                 }
 
-                //set the height of the chart
+                // Set the height of the chart
                 heatmapContainer[0].style.height = elementH + "px";
 
                 // Load map data from highcharts and create the heatmap
@@ -309,7 +308,7 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                 };
 
                 /**
-                 * Creates the heatmap on the page if it doesn't exist, or updates it
+                 * Create the heatmap on the page if it doesn't exist, or update it
                  * with the new data if it is initialized already
                  * @param response    Server response from heatmap API
                  */
@@ -327,6 +326,7 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                         var view = _.first(response.view);
 
                         if (_.has(view, "colorAxis")) {
+                            colorAxisParams = view.colorAxis;
                             scope.heatmap.colorAxis[0].update(view.colorAxis);
                         }
                     }
@@ -460,6 +460,12 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                             });
                         }
 
+                        // Force an update of the legend and the colorAxis to make the legend show correctly
+                        scope.heatmap.legend.update();
+                        if (!_.isNull(colorAxisParams)) {
+                            _.first(scope.heatmap.colorAxis).update(colorAxisParams);
+                        }
+
                         firstLoad = false;
                     }
                 };
@@ -483,7 +489,7 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                 };
 
                 /**
-                 * Shows an error to the user (for when heatmap API returns error)
+                 * Show an error to the user (for when heatmap API returns error)
                  * @param error
                  */
                 var createHeatmapError = function (error) {
