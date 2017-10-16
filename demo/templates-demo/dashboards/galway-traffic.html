@@ -6,17 +6,17 @@
         <div class="col-md-4" style="text-align: right">
             <yds-save-filters-button
                     dashboard-id="galway"
-                    lang="en">
+                    lang="{{ lang }}">
             </yds-save-filters-button>
 
             <yds-clear-filters-button
                     dashboard-id="galway"
-                    lang="en">
+                    lang="{{ lang }}">
             </yds-clear-filters-button>
 
             <yds-dashboard-sharing
                     dashboard-id="galway"
-                    lang="en">
+                    lang="{{ lang }}">
             </yds-dashboard-sharing>
         </div>
     </div>
@@ -30,13 +30,25 @@
                     enable-rating="true"
                     element-h="400"
                     clicked-point="clickedTrafficPoint"
-                    lang="en">
+                    lang="{{ lang }}">
             </yds-map>
         </div>
 
-        <!--Detailed traffic data-->
-        <div class="col-md-4">
-            <!--Placeholder to show clicked point-->
+        <!--Related Contracts grid-->
+        <div class="col-md-6">
+            <yds-grid
+                    ng-if="clickedTrafficPoint.point.length > 0"
+                    project-id="{{ clickedTrafficPoint.point }}"
+                    view-type="contract.for.trafficobservation"
+                    allow-selection="true"
+                    lang="{{ lang }}">
+            </yds-grid>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <!--Temporary placeholder to show clicked point-->
             <div class="well well-sm" style="word-break: break-all">
                 Clicked point: <code>{{ clickedTrafficPoint.point || "none" }}</code>
             </div>
