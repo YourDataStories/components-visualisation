@@ -20,7 +20,7 @@ angular.module("yds").controller("Dashboard2Controller", ["$scope", "$timeout", 
         scope.aggregateToShow = 0;
         scope.aggregateClasses = [];
 
-        scope.infoPopoverUrl = Data.templatePath + "templates-demo/dashboard2-info.html";
+        scope.infoPopoverUrl = Data.templatePath + "templates-demo/dashboards/dashboard2-info.html";
 
         scope.selectTab = function (tabIndex) {
             scope.aggregateToShow = tabIndex;

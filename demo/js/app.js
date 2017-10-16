@@ -98,27 +98,27 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
         })
         .state("dashboard", {
             url: "/dashboard",
-            templateUrl: "templates-demo/dashboard.html"
+            templateUrl: "templates-demo/dashboards/dashboard.html"
         })
         .state("dashboard2", {
             url: "/dashboard2",
-            templateUrl: "templates-demo/dashboard2.html"
+            templateUrl: "templates-demo/dashboards/dashboard2.html"
         })
         .state("dashboardp1", {
             url: "/dashboardp1",
-            templateUrl: "templates-demo/dashboard-p1.html"
+            templateUrl: "templates-demo/dashboards/dashboard-p1.html"
         })
         .state("public-works", {
             url: "/public-works",
-            templateUrl: "templates-demo/public-works.html"
+            templateUrl: "templates-demo/dashboards/public-works.html"
         })
         .state("country-comparison", {
             url: "/country-comparison",
-            templateUrl: "templates-demo/country-comparison.html"
+            templateUrl: "templates-demo/dashboards/country-comparison.html"
         })
         .state("dashboard-dynamic", {
             url: "/dashboard-dynamic",
-            templateUrl: "templates-demo/dashboard-dynamic.html"
+            templateUrl: "templates-demo/dashboards/dashboard-dynamic.html"
         })
         .state("redirect", {
             url: "/redirect",
@@ -211,22 +211,22 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
         })
         .state("organisation-buyer", {
             url: "/organisation-buyer",
-            templateUrl: "templates-demo/organisation-buyer.html",
+            templateUrl: "templates-demo/pages/organisation-buyer.html",
             controller: "ProjectDetailsController"
         })
         .state("organisation-seller", {
             url: "/organisation-seller",
-            templateUrl: "templates-demo/organisation-seller.html",
+            templateUrl: "templates-demo/pages/organisation-seller.html",
             controller: "ProjectDetailsController"
         })
         .state("organisation-buyer-ted", {
             url: "/organisation-buyer-ted",
-            templateUrl: "templates-demo/organisation-buyer-ted.html",
+            templateUrl: "templates-demo/pages/organisation-buyer-ted.html",
             controller: "ProjectDetailsController"
         })
         .state("organisation-seller-ted", {
             url: "/organisation-seller-ted",
-            templateUrl: "templates-demo/organisation-seller-ted.html",
+            templateUrl: "templates-demo/pages/organisation-seller-ted.html",
             controller: "ProjectDetailsController"
         })
         .state("map", {
