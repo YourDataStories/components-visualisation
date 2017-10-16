@@ -1,12 +1,12 @@
-angular.module("yds").directive("ydsDashboardSharing", ["DashboardService", "$location",
-    function (DashboardService, $location) {
+angular.module("yds").directive("ydsDashboardSharing", ["DashboardService", "Data", "$location",
+    function (DashboardService, Data, $location) {
         return {
             restrict: "E",
             scope: {
                 lang: "@",          // Language of component
                 dashboardId: "@"    // Dashboard ID
             },
-            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/dashboard-sharing.html",
+            templateUrl: Data.templatePath + "templates/dashboard-sharing.html",
             link: function (scope) {
                 // Set default language if it is undefined
                 if (_.isUndefined(scope.lang) || scope.lang.trim().length === 0) {
@@ -14,9 +14,8 @@ angular.module("yds").directive("ydsDashboardSharing", ["DashboardService", "$lo
                 }
 
                 // Setup popover parameters
-                var drupalPath = ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "");
                 scope.popover = {
-                    template: drupalPath + "templates/dashboard-sharing-popover.html",
+                    template: Data.templatePath + "templates/dashboard-sharing-popover.html",
                     title: "Dashboard Sharing URL",
                     url: ""
                 };

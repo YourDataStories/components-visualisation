@@ -4,7 +4,7 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
         scope: {
             projectId: '@'
         },
-        templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/geo-editing.html',
+        templateUrl: Data.templatePath + 'templates/geo-editing.html',
         link: function(scope, elem, attrs) {
             scope.annotationType="line";
             scope.routeService=false;
@@ -96,19 +96,19 @@ angular.module('yds').directive('ydsGeoEditing', ['Data', '$timeout', function(D
 
             //set marker icons
             var startIcon = L.icon({
-                iconUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'lib/images/marker-icon-start.png',
+                iconUrl: Data.templatePath + 'lib/images/marker-icon-start.png',
                 iconSize:   [26, 41],
                 iconAnchor:   [13, 41]
             });
 
             var endIcon = L.icon({
-                iconUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'lib/images/marker-icon-end.png',
+                iconUrl: Data.templatePath + 'lib/images/marker-icon-end.png',
                 iconSize:   [26, 41],
                 iconAnchor:   [13, 41]
             });
 
             var viaIcon = L.icon({
-                iconUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'lib/images/marker-icon-via.png',
+                iconUrl: Data.templatePath + 'lib/images/marker-icon-via.png',
                 iconSize:   [26, 41],
                 iconAnchor:   [13, 41]
             });

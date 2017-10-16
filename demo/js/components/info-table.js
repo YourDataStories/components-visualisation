@@ -1,15 +1,15 @@
-angular.module('yds').directive('ydsInfoTable', ['Data', 'Translations', '$sce', function (Data, Translations, $sce) {
+angular.module("yds").directive("ydsInfoTable", ["Data", "Translations", "$sce", function (Data, Translations, $sce) {
     return {
-        restrict: 'E',
+        restrict: "E",
         scope: {
-            projectId: '@',     // Id of the project that the data belong
-            viewType: '@',      // Type of the info object
-            lang: '@',          // Lang of the visualised data
-            baseUrl: '@',       // Base URL to send to API
-            isEmptyObj: '=',    // Object that the component will set to true when there is no data to display
-            extraParams: '='    // Extra parameters to send with API call
+            projectId: "@",     // Id of the project that the data belong
+            viewType: "@",      // Type of the info object
+            lang: "@",          // Lang of the visualised data
+            baseUrl: "@",       // Base URL to send to API
+            isEmptyObj: "=",    // Object that the component will set to true when there is no data to display
+            extraParams: "="    // Extra parameters to send with API call
         },
-        templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/info-table.html',
+        templateUrl: Data.templatePath + "templates/info-table.html",
         link: function (scope) {
             var projectId = scope.projectId;
             var viewType = scope.viewType;
@@ -18,7 +18,7 @@ angular.module('yds').directive('ydsInfoTable', ['Data', 'Translations', '$sce',
             var extraParams = scope.extraParams;
 
             // Check if project id or grid type are defined
-            if (_.isUndefined(projectId) || projectId.trim() == "") {
+            if (_.isUndefined(projectId) || projectId.trim() === "") {
                 scope.ydsAlert = "The YDS component is not properly initialized " +
                     "because the projectId or the viewType attribute aren't configured properly. " +
                     "Please check the corresponding documentation section.";
@@ -26,11 +26,11 @@ angular.module('yds').directive('ydsInfoTable', ['Data', 'Translations', '$sce',
             }
 
             // Check if info-type attribute is empty and assign the default value
-            if (_.isUndefined(viewType) || viewType.trim() == "")
+            if (_.isUndefined(viewType) || viewType.trim() === "")
                 viewType = "default";
 
             // Check if the language attr is defined, else assign default value
-            if (_.isUndefined(lang) || lang.trim() == "")
+            if (_.isUndefined(lang) || lang.trim() === "")
                 lang = "en";
 
             scope.info = {};

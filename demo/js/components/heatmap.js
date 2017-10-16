@@ -25,7 +25,7 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                 noBorder: "@",			// If true, the component will have no border
                 elementH: "@"		    // Set the height of the component
             },
-            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/heatmap.html",
+            templateUrl: Data.templatePath + "templates/heatmap.html",
             link: function (scope, elem) {
                 var projectId = scope.projectId;
                 var viewType = scope.viewType;
@@ -43,8 +43,6 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                 var exporting = scope.exporting;
                 var elementH = scope.elementH;
                 var europeOnly = scope.europeOnly;
-
-                var drupalPath = (typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "";
 
                 var heatmapContainer = angular.element(elem[0].querySelector(".heatmap-container"));
 
@@ -152,7 +150,7 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                     exporting: {
                         buttons: {
                             contextButton: {
-                                symbol: "url(" + drupalPath + "img/fa-download-small.png)",
+                                symbol: "url(" + Data.templatePath + "img/fa-download-small.png)",
                                 symbolX: 19,
                                 symbolY: 19
                             }
@@ -193,8 +191,8 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
 
                 // Load map data from highcharts and create the heatmap
                 $ocLazyLoad.load({
-                    files: [drupalPath + "lib/highcharts-maps/world.js",
-                        drupalPath + "lib/highcharts-maps/europe.js"],
+                    files: [Data.templatePath + "lib/highcharts-maps/world.js",
+                        Data.templatePath + "lib/highcharts-maps/europe.js"],
                     cache: true
                 }).then(function () {
                     // Check if we should subscribe to parameter changes (used in Dashboards)

@@ -82,7 +82,14 @@ app.directive("clipboard", ["$document", function () {
 app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANTS", function ($http, $q, $window, DashboardService, YDS_CONSTANTS) {
     var dataService = {};
 
-    //function to convert date to timestamp
+    // Set template path
+    dataService.templatePath = (typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "";
+
+    /**
+     * Convert date to timestamp
+     * @param date
+     * @returns {*}
+     */
     var monthToComparableNumber = function (date) {
         if (date === undefined || date === null || date.length !== 10) {
             return null;

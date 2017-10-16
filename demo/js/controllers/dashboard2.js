@@ -1,5 +1,5 @@
-angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', '$location', '$anchorScroll', '$window', 'DashboardService',
-    function($scope, $timeout, $location, $anchorScroll, $window, DashboardService) {
+angular.module("yds").controller("Dashboard2Controller", ["$scope", "$timeout", "$location", "$anchorScroll", "$window", "DashboardService", "Data",
+    function ($scope, $timeout, $location, $anchorScroll, $window, DashboardService, Data) {
         var scope = $scope;
 
         // Set initial panel titles
@@ -20,9 +20,9 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
         scope.aggregateToShow = 0;
         scope.aggregateClasses = [];
 
-        scope.infoPopoverUrl = ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + "templates-demo/dashboard2-info.html";
+        scope.infoPopoverUrl = Data.templatePath + "templates-demo/dashboard2-info.html";
 
-        scope.selectTab = function(tabIndex) {
+        scope.selectTab = function (tabIndex) {
             scope.aggregateToShow = tabIndex;
         };
 
@@ -31,14 +31,14 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
          * @param newSector Sector to select
          * @param setTitle  If true will set the title of the 1st accordion heading
          */
-        scope.setSelectedSector = function(newSector, setTitle) {
-            if (scope.selectedSector != newSector) {
+        scope.setSelectedSector = function (newSector, setTitle) {
+            if (scope.selectedSector !== newSector) {
                 if (!_.isUndefined(scope.selectedSector)) {
                     // Get country types for previously selected sector
                     var map = DashboardService.getApiOptionsMapping(scope.selectedSector);
 
                     // For country type of previous sector, clear its selected countries
-                    _.each(map, function(countryType) {
+                    _.each(map, function (countryType) {
                         DashboardService.clearCountries(countryType);
                     });
                 }
@@ -56,8 +56,8 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
 
                 // Set classes for tabs
                 scope.aggregateClasses = [];
-                _.each(aggregates.types, function(aggregate) {
-                    scope.aggregateClasses.push(aggregate.replace(/\./g , "-"));
+                _.each(aggregates.types, function (aggregate) {
+                    scope.aggregateClasses.push(aggregate.replace(/\./g, "-"));
                 });
 
                 // Select new sector
@@ -67,7 +67,7 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
                 // Reset selected project
                 scope.selectedProject = {};
 
-                $timeout(function() {
+                $timeout(function () {
                     // Set new aggregates
                     scope.aggregates = aggregates.types;
                     scope.aggregateTitles = aggregates.titles;
@@ -79,7 +79,7 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
 
             // If setTitle is true, set the panel's title to show the selection
             if (setTitle) {
-                var selSectorStr = (newSector == "aidactivity") ? "Aid Activities" : "Trade Activities";
+                var selSectorStr = (newSector === "aidactivity") ? "Aid Activities" : "Trade Activities";
                 scope.panelSectorTitle = "You have chosen: " + selSectorStr;
             }
 
@@ -98,15 +98,15 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
 
         // Fix for angular slider rendering wrong when inside tabs
         // (https://github.com/angular-slider/angularjs-slider/issues/79#issuecomment-121141586)
-        scope.$watch("status.periodOpen", function() {
-            scope.$broadcast('reCalcViewDimensions');
+        scope.$watch("status.periodOpen", function () {
+            scope.$broadcast("reCalcViewDimensions");
         });
 
         // Subscribe to be notified of selected project changes
-        DashboardService.subscribeProjectChanges(scope, function() {
+        DashboardService.subscribeProjectChanges(scope, function () {
             if ($window.pageYOffset < 1000) {
                 // Scroll a bit to make details visible
-                if (scope.selectedSector == "aidactivity") {
+                if (scope.selectedSector === "aidactivity") {
                     $location.hash("dashboard-aid-data-grid");
                 } else {
                     $location.hash("dashboard-trade-data-grid");
@@ -118,7 +118,7 @@ angular.module('yds').controller('Dashboard2Controller', ['$scope', '$timeout', 
             // Select new project
             scope.selectedProject = {};
 
-            $timeout(function() {
+            $timeout(function () {
                 scope.selectedProject = DashboardService.getSelectedProjectInfo();
             });
         });

@@ -1,5 +1,5 @@
-angular.module("yds").directive("ydsSearch", ["$window", "$timeout", "$location", "YDS_CONSTANTS", "Search", "queryBuilderService",
-    function ($window, $timeout, $location, YDS_CONSTANTS, Search, queryBuilderService) {
+angular.module("yds").directive("ydsSearch", ["$window", "$timeout", "$location", "YDS_CONSTANTS", "Search", "Data", "queryBuilderService",
+    function ($window, $timeout, $location, YDS_CONSTANTS, Search, Data, queryBuilderService) {
         return {
             restrict: "E",
             scope: {
@@ -13,7 +13,7 @@ angular.module("yds").directive("ydsSearch", ["$window", "$timeout", "$location"
                 concept: "@",           // Concept for adv. search, used by QB for restoring rules from url parameters
                 conceptId: "@"          // Concept id, used by advanced search for getting query builder rules
             },
-            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/search.html",
+            templateUrl: Data.templatePath + "templates/search.html",
             link: function (scope) {
                 scope.searchOptions = {
                     lang: scope.lang,

@@ -1,22 +1,22 @@
-angular.module('yds').directive('ydsDashboardVisualizationGridBubble', ['DashboardService', '$ocLazyLoad', '$timeout',
-    function(DashboardService, $ocLazyLoad, $timeout) {
+angular.module("yds").directive("ydsDashboardVisualizationGridBubble", ["DashboardService", "Data", "$ocLazyLoad", "$timeout",
+    function (DashboardService, Data, $ocLazyLoad, $timeout) {
         return {
-            restrict: 'E',
+            restrict: "E",
             scope: {
-                projectId: '@',     // Project ID of chart
-                dashboardId: '@',   // ID used for getting selected year range from DashboardService
-                addToBasket: '@',   // If true, the save to basket button will appear in visualizations
-                disableColor: '@',  // If true, the component will ignore the color of the selected aggregate type
-                defaultChart: '@',  // Chart to show on initialization of the component. Default is "bar".
-                type: '@',          // View type of component. If not set, will get it from DashboardService
-                lang: '@',          // Language of charts
-                baseUrl: '@',       // Base URL to send to API
-                title: '@',         // Title of component
-                elementH: '@',      // Height of component
+                projectId: "@",     // Project ID of chart
+                dashboardId: "@",   // ID used for getting selected year range from DashboardService
+                addToBasket: "@",   // If true, the save to basket button will appear in visualizations
+                disableColor: "@",  // If true, the component will ignore the color of the selected aggregate type
+                defaultChart: "@",  // Chart to show on initialization of the component. Default is "bar".
+                type: "@",          // View type of component. If not set, will get it from DashboardService
+                lang: "@",          // Language of charts
+                baseUrl: "@",       // Base URL to send to API
+                title: "@",         // Title of component
+                elementH: "@",      // Height of component
 
-                enableRating: '@'   // Enable rating buttons for this component
+                enableRating: "@"   // Enable rating buttons for this component
             },
-            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + 'templates/dashboard-visualisation-grid-bubble.html',
+            templateUrl: Data.templatePath + "templates/dashboard-visualisation-grid-bubble.html",
             link: function (scope) {
                 var dashboardId = scope.dashboardId;
                 var disableColor = scope.disableColor;
@@ -25,7 +25,7 @@ angular.module('yds').directive('ydsDashboardVisualizationGridBubble', ['Dashboa
 
                 // Check if the component's title attribute is defined, else assign default value
                 if (_.isUndefined(scope.title)) {
-                    if (scope.lang == "el") {
+                    if (scope.lang === "el") {
                         scope.title = "Λεπτομέρειες";
                     } else {
                         scope.title = "Details";
@@ -33,15 +33,15 @@ angular.module('yds').directive('ydsDashboardVisualizationGridBubble', ['Dashboa
                 }
 
                 // Check if the component's height attribute is defined, else assign default value
-                if (_.isUndefined(scope.elementH) || scope.elementH.trim() == "")
+                if (_.isUndefined(scope.elementH) || scope.elementH.trim() === "")
                     scope.elementH = 300;
 
                 // If dashboardId is undefined, show error
-                if (_.isUndefined(dashboardId) || dashboardId.trim() == "")
+                if (_.isUndefined(dashboardId) || dashboardId.trim() === "")
                     dashboardId = "default";
 
                 // If disableColor is undefined, show error
-                if (_.isUndefined(disableColor) || (disableColor != "true" && disableColor != "false"))
+                if (_.isUndefined(disableColor) || (disableColor !== "true" && disableColor !== "false"))
                     disableColor = "false";
 
                 // If defaultChart is undefined, show bar chart
@@ -67,7 +67,7 @@ angular.module('yds').directive('ydsDashboardVisualizationGridBubble', ['Dashboa
                 /**
                  * Re-render the selected visualization
                  */
-                var updateVisualization = function() {
+                var updateVisualization = function () {
                     if (updateVis) {
                         var selectedVis = defaultChart;
                         if (scope.selectedVis.length > 0) {
@@ -78,7 +78,7 @@ angular.module('yds').directive('ydsDashboardVisualizationGridBubble', ['Dashboa
                         scope.selectedVis = "";
 
                         // Postpone to end of digest queue
-                        $timeout(function() {
+                        $timeout(function () {
                             scope.selectVis(selectedVis);
 
                             updateVis = false;
@@ -90,7 +90,7 @@ angular.module('yds').directive('ydsDashboardVisualizationGridBubble', ['Dashboa
                  * Update the view type from the DashboardService
                  * Also sets the Visualization panel's color
                  */
-                var updateViewType = function() {
+                var updateViewType = function () {
                     prevViewType = scope.selViewType;
                     var viewType = DashboardService.getViewType(dashboardId);
 
@@ -104,7 +104,7 @@ angular.module('yds').directive('ydsDashboardVisualizationGridBubble', ['Dashboa
                     if (!_.isUndefined(viewType) && !_.isEqual(prevViewType, viewType.type)) {
                         scope.selViewType = viewType.type;
 
-                        if (disableColor != "true") {
+                        if (disableColor !== "true") {
                             scope.panelStyle = viewType.panelStyle;
                             scope.panelHeadingStyle = _.omit(viewType.panelHeadingStyle, "min-height");
                         }
@@ -116,12 +116,12 @@ angular.module('yds').directive('ydsDashboardVisualizationGridBubble', ['Dashboa
                 /**
                  * Handles view type selection changes
                  */
-                var viewTypeChangeHandler = function() {
+                var viewTypeChangeHandler = function () {
                     updateViewType();
                     updateVisualization();
                 };
 
-                if (_.isUndefined(type) || type.length == 0) {
+                if (_.isUndefined(type) || type.length === 0) {
                     // Subscribe to year selection and view type changes
                     DashboardService.subscribeViewTypeChanges(scope, viewTypeChangeHandler);
                 }
@@ -130,7 +130,7 @@ angular.module('yds').directive('ydsDashboardVisualizationGridBubble', ['Dashboa
                  * Change selected visualization type
                  * @param visType
                  */
-                scope.selectVis = function(visType) {
+                scope.selectVis = function (visType) {
                     scope.selectedVis = visType;
 
                     DashboardService.setVisType(visType);

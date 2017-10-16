@@ -8,7 +8,7 @@ angular.module("yds").directive("ydsRelatedItems", ["Data",
                 elementH: "@",      // Height of the component in pixels,
                 totalItems: "="     // The related items component will set the total number of items to this value
             },
-            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/related-items.html",
+            templateUrl: Data.templatePath + "templates/related-items.html",
             link: function (scope, element) {
                 var elementH = parseInt(scope.elementH);
                 scope.totalItems = 0;

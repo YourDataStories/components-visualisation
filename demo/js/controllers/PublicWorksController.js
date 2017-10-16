@@ -1,5 +1,5 @@
-angular.module('yds').controller('PublicWorksController', ['$scope', '$timeout', '$location', '$anchorScroll', '$window', 'DashboardService',
-    function($scope, $timeout, $location, $anchorScroll, $window, DashboardService) {
+angular.module('yds').controller('PublicWorksController', ['$scope', '$timeout', '$location', '$anchorScroll', '$window', 'DashboardService', 'Data',
+    function($scope, $timeout, $location, $anchorScroll, $window, DashboardService, Data) {
         var scope = $scope;
 
         scope.showProjectInfo = false;
@@ -27,7 +27,7 @@ angular.module('yds').controller('PublicWorksController', ['$scope', '$timeout',
         scope.aggregates = aggregates.types;
         scope.aggregateTitles = aggregates.titles;
 
-        scope.infoPopoverUrl = ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath +'/' : '') + "templates-demo/publicworks-info.html";
+        scope.infoPopoverUrl = Data.templatePath + "templates-demo/publicworks-info.html";
 
         // Subscribe to be notified of selected project changes
         DashboardService.subscribeProjectChanges(scope, function() {

@@ -2,7 +2,7 @@ angular.module('yds').directive('ydsCacheInfo', ['Data', '$timeout', function(Da
     return {
         restrict: 'E',
         scope: {},
-        templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/cache-info.html',
+        templateUrl: Data.templatePath + 'templates/cache-info.html',
         link: function (scope, element, attrs) {
             scope.showMinfo = false;
 

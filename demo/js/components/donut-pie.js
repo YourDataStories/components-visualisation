@@ -12,7 +12,7 @@ angular.module("yds").directive("ydsDonutPie", ["Data", "DashboardService", func
             exporting: "@",     // Enable or disable the export of the chart
             elementH: "@"       // Set the height of the component
         },
-        templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/donut-pie.html",
+        templateUrl: Data.templatePath + "templates/donut-pie.html",
         link: function (scope, element) {
             var pieContainer = angular.element(element[0].querySelector(".pie-container"));
 
@@ -72,7 +72,7 @@ angular.module("yds").directive("ydsDonutPie", ["Data", "DashboardService", func
                     options.exporting = {
                         buttons: {
                             contextButton: {
-                                symbol: "url(" + ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "img/fa-download-small.png)",
+                                symbol: "url(" + Data.templatePath + "img/fa-download-small.png)",
                                 symbolX: 19,
                                 symbolY: 19
                             }

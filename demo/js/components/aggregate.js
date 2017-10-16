@@ -19,7 +19,7 @@ angular.module("yds").directive("ydsAggregate", ["Data", "DashboardService", "$s
                 elementH: "@",      // Minimum height of Aggregate
                 maxHeight: "@"      // Max height (if exceeded will scroll). Currently works on "title" layout
             },
-            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/aggregate.html",
+            templateUrl: Data.templatePath + "templates/aggregate.html",
             link: function (scope) {
                 var projectId = scope.projectId;
                 var viewType = scope.viewType;

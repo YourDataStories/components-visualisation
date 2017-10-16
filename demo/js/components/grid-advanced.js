@@ -12,7 +12,7 @@ angular.module('yds').directive('ydsGridAdvanced', ['Data', 'Filters', '$timeout
 			comboboxLabels: '@',	//set the labels that will be used for each combobox
 			comboboxAttrs: '@'		//set the parameter each combobox will sent to the the server
 		},
-		templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/grid-advanced.html',
+		templateUrl: Data.templatePath + 'templates/grid-advanced.html',
 		link: function(scope, element, attrs) {
 			//reference the dom elements in which the yds-grid-advanced is rendered
 			var gridWrapper = angular.element(element[0].querySelector('.component-wrapper'));

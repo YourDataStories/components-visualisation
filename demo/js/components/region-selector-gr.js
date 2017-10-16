@@ -1,21 +1,21 @@
-angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardService', '$q',
+angular.module("yds").directive("ydsRegionSelectorGr", ["Data", "DashboardService", "$q",
     function (Data, DashboardService, $q) {
         return {
-            restrict: 'E',
+            restrict: "E",
             scope: {
-                regionType: '@',        // Type used for getting the regions from the API
-                regionalUnitType: '@',  // Type used for getting the regional units from the API
-                dashboardId: '@',       // Dashboard ID to use for getting parameters from DashboardService
-                elementH: '@'           // Height of the component in pixels
+                regionType: "@",        // Type used for getting the regions from the API
+                regionalUnitType: "@",  // Type used for getting the regional units from the API
+                dashboardId: "@",       // Dashboard ID to use for getting parameters from DashboardService
+                elementH: "@"           // Height of the component in pixels
             },
-            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/region-selector-gr.html',
+            templateUrl: Data.templatePath + "templates/region-selector-gr.html",
             link: function (scope, element) {
                 var regionType = scope.regionType;
                 var regionalUnitType = scope.regionalUnitType;
                 var dashboardId = scope.dashboardId;
                 var elementH = parseInt(scope.elementH);
 
-                var regionSelContainer = angular.element(element[0].querySelector('.region-selector-container'));
+                var regionSelContainer = angular.element(element[0].querySelector(".region-selector-container"));
                 var initialized = false;
 
                 // Create a random id for the element that will render the plot
@@ -23,8 +23,8 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                 regionSelContainer[0].id = elementId;
 
                 // Check that the regionType and regionalUnitType attributes are defined, else show error
-                if (_.isUndefined(regionType) || regionType.trim() == "" ||
-                    _.isUndefined(regionalUnitType) || regionalUnitType.trim() == "") {
+                if (_.isUndefined(regionType) || regionType.trim() === "" ||
+                    _.isUndefined(regionalUnitType) || regionalUnitType.trim() === "") {
                     scope.ydsAlert = "The YDS component is not properly configured. " +
                         "Please check the corresponding documentation section.";
                     return false;
@@ -49,12 +49,12 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                 // Declare states of map points object, used in the configuration of the map later
                 var states = {
                     hover: {
-                        color: '#e5ed04'
+                        color: "#e5ed04"
                     },
                     select: {
-                        color: '#a4edba',
-                        borderColor: 'black',
-                        dashStyle: 'shortdot'
+                        color: "#a4edba",
+                        borderColor: "black",
+                        dashStyle: "shortdot"
                     }
                 };
 
@@ -243,7 +243,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                                 allowPointSelect: true,
                                 dataLabels: {
                                     enabled: true,
-                                    format: '{point.NAME_ENG}'
+                                    format: "{point.NAME_ENG}"
                                 },
                                 colorAxis: colorAxis,
                                 tooltip: {
@@ -311,7 +311,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
 
                 var visualizeHeatmap = function (results) {
                     // Create new series to add to heatmap
-                    var mapData = Highcharts.geojson(Highcharts.maps['countries/gr-low-res']);
+                    var mapData = Highcharts.geojson(Highcharts.maps["countries/gr-low-res"]);
 
                     // Get number of items in each region and the colorAxis
                     var data = results.data;
@@ -555,10 +555,10 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                         mapData: mapData,
                         dataLabels: {
                             enabled: true,
-                            format: '{point.properties.name}'
+                            format: "{point.properties.name}"
                         },
-                        joinBy: ['hasc', 'code'],
-                        keys: ['hasc', 'value'],
+                        joinBy: ["hasc", "code"],
+                        keys: ["hasc", "value"],
                         name: "Regions of Greece",
                         allowPointSelect: true,
                         states: states,
@@ -587,7 +587,7 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                         },
                         legend: {enabled: false},
                         title: {
-                            text: 'Greece'
+                            text: "Greece"
                         },
                         tooltip: {
                             enabled: true,
@@ -611,11 +611,11 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                         series: [],
                         drilldown: {
                             activeDataLabelStyle: {
-                                color: '#FFFFFF',
-                                textDecoration: 'none'
+                                color: "#FFFFFF",
+                                textDecoration: "none"
                             },
                             drillUpButton: {
-                                relativeTo: 'spacingBox',
+                                relativeTo: "spacingBox",
                                 position: {
                                     x: 0,
                                     y: 60
@@ -686,12 +686,12 @@ angular.module('yds').directive('ydsRegionSelectorGr', ['Data', 'DashboardServic
                     });
 
                     // Use jQuery to initialize Selectivity
-                    var dropdownContainer = _.first(angular.element(element[0].querySelector('.selectivity-container')));
+                    var dropdownContainer = _.first(angular.element(element[0].querySelector(".selectivity-container")));
 
                     selectivity = $(dropdownContainer).selectivity({
                         items: items,
                         multiple: true,
-                        placeholder: 'Type to search a region or prefecture'
+                        placeholder: "Type to search a region or prefecture"
                     });
 
                     // Set Selectivity selection change event handler

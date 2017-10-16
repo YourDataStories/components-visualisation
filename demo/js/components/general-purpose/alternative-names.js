@@ -8,7 +8,7 @@ angular.module("yds").directive("ydsAlternativeNames", ["Data", "Translations",
                 lang: "@",      // Language of data
                 elementH: "@"   // Height of the component
             },
-            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/general-purpose/alternative-names.html",
+            templateUrl: Data.templatePath + "templates/general-purpose/alternative-names.html",
             link: function (scope, element) {
                 var altNamesPanel = _.first(angular.element(element[0].querySelector(".alternative-names-panel-body")));
                 scope.ydsAlert = "";

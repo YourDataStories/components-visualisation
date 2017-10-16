@@ -1,28 +1,26 @@
 angular.module('yds').factory('Workbench', ['YDS_CONSTANTS', '$q', '$http', 'Data',
     function (YDS_CONSTANTS, $q, $http, Data) {
 
-        var drupalPath = ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '');
-
         var slidesConfig = {
             noWrap: false,
             active: 0,
             slides: [{
                 images: [{
-                    src: drupalPath + "img/thumbnails/line_chart.png",
+                    src: Data.templatePath + "img/thumbnails/line_chart.png",
                     name: "Line Chart",
                     type: "linechart"
                 }, {
-                    src: drupalPath + "img/thumbnails/bar_chart.png",
+                    src: Data.templatePath + "img/thumbnails/bar_chart.png",
                     name: "Bar Chart",
                     type: "barchart"
                 }, {
-                    src: drupalPath + "img/thumbnails/scatter_chart.png",
+                    src: Data.templatePath + "img/thumbnails/scatter_chart.png",
                     name: "Scatter Chart",
                     type: "scatterchart"
                 }]
             }, {
                 images: [{
-                    src: drupalPath + "img/thumbnails/pie_chart.png",
+                    src: Data.templatePath + "img/thumbnails/pie_chart.png",
                     name: "Pie Chart",
                     type: "piechart"
                 }]

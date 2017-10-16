@@ -1,15 +1,15 @@
-angular.module("yds").directive("ydsClearFiltersButton", ["DashboardService", "$window",
-    function (DashboardService, $window) {
+angular.module("yds").directive("ydsClearFiltersButton", ["DashboardService", "Data", "$window",
+    function (DashboardService, Data, $window) {
         return {
             restrict: "E",
             scope: {
                 lang: "@",          // Language of component
                 dashboardId: "@"    // Dashboard ID
             },
-            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/clear-filters-button.html",
+            templateUrl: Data.templatePath + "templates/clear-filters-button.html",
             link: function (scope) {
                 // Set default language if it is undefined
-                if (_.isUndefined(scope.lang) || scope.lang.trim().length == 0) {
+                if (_.isUndefined(scope.lang) || scope.lang.trim().length === 0) {
                     scope.lang = "en";
                 }
 

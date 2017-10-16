@@ -24,7 +24,7 @@ angular.module("yds").directive("ydsTreeMap", ["Data", "Filters", function (Data
             enableRating: "@",      // Enable rating buttons for this component
             disableExplanation: "@" // Set to true to disable the explanation button
         },
-        templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/treemap.html",
+        templateUrl: Data.templatePath + "templates/treemap.html",
         link: function (scope, element, attrs) {
             var treemapContainer = angular.element(element[0].querySelector(".treemap-container"));
 
@@ -105,7 +105,7 @@ angular.module("yds").directive("ydsTreeMap", ["Data", "Filters", function (Data
                         exporting: {
                             buttons: {
                                 contextButton: {
-                                    symbol: "url(" + ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "img/fa-download-small.png)",
+                                    symbol: "url(" + Data.templatePath + "img/fa-download-small.png)",
                                     symbolX: 19,
                                     symbolY: 19
                                 }

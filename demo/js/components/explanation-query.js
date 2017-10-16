@@ -3,7 +3,7 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
         return {
             restrict: "E",
             scope: {},
-            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/explanation-query.html",
+            templateUrl: Data.templatePath + "templates/explanation-query.html",
             link: function (scope) {
                 var responseSuccess = function (response) {
                     scope.queries = response.data;

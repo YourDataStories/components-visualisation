@@ -1,17 +1,17 @@
-angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$location', 'Data', 'Search', 'queryBuilderService',
+angular.module("yds").directive("queryBuilder", ["$compile", "$ocLazyLoad", "$location", "Data", "Search", "queryBuilderService",
     function ($compile, $ocLazyLoad, $location, Data, Search, queryBuilderService) {
         return {
-            restrict: 'E',
+            restrict: "E",
             scope: {
-                lang:'@',               // Language of the query builder
-                urlParamPrefix: '@',	// Prefix to add before all url parameters (optional)
-                maxSuggestions: '@',    // Max suggestions to show in typeahead popups
-                concept: '@',           // Concept to get filters for
-                conceptId: '@',         // ID of concept for making requests to API
-                watchRuleUrlParam: '@', // If the builder should watch URL parameter for rule changes and apply them
-                builderId: '='          // Builder ID. '=' so it binds to the parent scope & search component can see it
+                lang: "@",               // Language of the query builder
+                urlParamPrefix: "@",	// Prefix to add before all url parameters (optional)
+                maxSuggestions: "@",    // Max suggestions to show in typeahead popups
+                concept: "@",           // Concept to get filters for
+                conceptId: "@",         // ID of concept for making requests to API
+                watchRuleUrlParam: "@", // If the builder should watch URL parameter for rule changes and apply them
+                builderId: "="          // Builder ID. "=" so it binds to the parent scope & search component can see it
             },
-            templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/query-builder.html',
+            templateUrl: Data.templatePath + "templates/query-builder.html",
             link: function (scope) {
                 scope.qbInputs = {};		// Keeps the QueryBuilder's typeahead ng models
                 scope.noFilters = false;    // If there are no filters, show it on the page
@@ -23,26 +23,23 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                 scope.builderId = "builder" + Data.createRandomId();
 
                 // Only load QueryBuilder if a concept and concept ID are specified
-                if (_.isUndefined(scope.conceptId) || scope.conceptId.trim().length == 0 || _.isUndefined(scope.concept) || scope.concept.trim().length == 0) {
+                if (_.isUndefined(scope.conceptId) || scope.conceptId.trim().length === 0 || _.isUndefined(scope.concept) || scope.concept.trim().length === 0) {
                     return;
                 }
 
                 // If no url parameter prefix is defined or it is only whitespace, use no parameter prefix
-                if (_.isUndefined(paramPrefix) || (paramPrefix.trim()=="" && paramPrefix.length > 0))
+                if (_.isUndefined(paramPrefix) || (paramPrefix.trim() === "" && paramPrefix.length > 0))
                     paramPrefix = "";
 
                 // If watchRuleUrlParam is invalid, set it to false
-                if (_.isUndefined(watchRuleUrlParam) || watchRuleUrlParam.trim().length == 0)
+                if (_.isUndefined(watchRuleUrlParam) || watchRuleUrlParam.trim().length === 0)
                     watchRuleUrlParam = "false";
-
-		        // Lazy load jQuery QueryBuilder and add it to the page
-                var drupalpath = ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath  +'/' :'');
 
                 /**
                  * Get query builder rules from URL parameter and set them in the QueryBuilder service
                  * @returns {*}     Rules from URL parameter
                  */
-                var getRulesFromUrlParam = function() {
+                var getRulesFromUrlParam = function () {
                     var rulesStr = $location.search()[paramPrefix + "rules"];
 
                     if (!_.isUndefined(rulesStr)) {
@@ -54,26 +51,27 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                     return rules;
                 };
 
+                // Lazy load jQuery QueryBuilder and add it to the page
                 $ocLazyLoad.load({
                     files: [
-                        drupalpath + "lib/bootstrap-popover.min.js",                // Bootstrap JS (only Popover, for filter description)
-                        drupalpath + "css/query-builder.default.min.css",           // QueryBuilder's CSS
-                        drupalpath + "lib/query-builder.standalone.min.js",         // QueryBuilder JavaScript
+                        Data.templatePath + "lib/bootstrap-popover.min.js",                // Bootstrap JS (only Popover, for filter description)
+                        Data.templatePath + "css/query-builder.default.min.css",           // QueryBuilder's CSS
+                        Data.templatePath + "lib/query-builder.standalone.min.js",         // QueryBuilder JavaScript
 
-                        drupalpath + "css/bootstrap-datepicker3.min.css",           // Bootstrap Datepicker's CSS
-                        drupalpath + "lib/bootstrap-datepicker.min.js",             // Bootstrap Datepicker's JavaScript
+                        Data.templatePath + "css/bootstrap-datepicker3.min.css",           // Bootstrap Datepicker's CSS
+                        Data.templatePath + "lib/bootstrap-datepicker.min.js",             // Bootstrap Datepicker's JavaScript
 
-                        drupalpath + "css/bootstrap-slider.min.css",                // Bootstrap Slider CSS
-                        drupalpath + "lib/bootstrap-slider.min.js",                 // Bootstrap Slider JavaScript
+                        Data.templatePath + "css/bootstrap-slider.min.css",                // Bootstrap Slider CSS
+                        Data.templatePath + "lib/bootstrap-slider.min.js",                 // Bootstrap Slider JavaScript
 
-                        drupalpath + "lib/querybuilder-selectivity-plugin.js",      // Selectivity QueryBuilder plugin
+                        Data.templatePath + "lib/querybuilder-selectivity-plugin.js",      // Selectivity QueryBuilder plugin
 
-                        drupalpath + "css/selectize.bootstrap3.css",                // Selectize Bootstrap 3 theme
-                        drupalpath + "lib/selectize.min.js",                        // Selectize javaScript
-                        drupalpath + "lib/yds-country-selector.js",                 // Country selection jQuery plugin
-                        drupalpath + "lib/yds-currency-selector.js",                // Currency selection jQuery plugin
-                        drupalpath + "lib/yds-year-selector.js",                    // Year selection jQuery plugin
-                        drupalpath + "lib/yds-map-selector.js"                      // Map point selection jQuery plugin
+                        Data.templatePath + "css/selectize.bootstrap3.css",                // Selectize Bootstrap 3 theme
+                        Data.templatePath + "lib/selectize.min.js",                        // Selectize javaScript
+                        Data.templatePath + "lib/yds-country-selector.js",                 // Country selection jQuery plugin
+                        Data.templatePath + "lib/yds-currency-selector.js",                // Currency selection jQuery plugin
+                        Data.templatePath + "lib/yds-year-selector.js",                    // Year selection jQuery plugin
+                        Data.templatePath + "lib/yds-map-selector.js"                      // Map point selection jQuery plugin
                     ],
                     cache: true,
                     serie: true
@@ -82,7 +80,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
 
                     // Get filters for query builder from API
                     Search.getQueryBuilderFilters(scope.conceptId)
-                        .then(function(filters) {
+                        .then(function (filters) {
                             // Format filters in the format that QueryBuilder expects
                             var formattedFilters = formatFiltersForQueryBuilder(filters);
 
@@ -91,7 +89,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                                 // If the builder is in the active tab and there are rules, give them to the builder
                                 var curTab = $location.search()[paramPrefix + "tab"];
 
-                                if (!_.isUndefined(curTab) && scope.concept == curTab) {
+                                if (!_.isUndefined(curTab) && scope.concept === curTab) {
                                     var rules = getRulesFromUrlParam();
                                 }
 
@@ -101,7 +99,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                                         "filter-description": null,
                                         "selectivity-plugin": {
                                             filters: formatFiltersForSelectivity(formattedFilters),
-                                            plainFilters: formattedFilters.map(function(filter) {
+                                            plainFilters: formattedFilters.map(function (filter) {
                                                 return {
                                                     id: filter.id,
                                                     text: filter.label[scope.lang]
@@ -131,14 +129,16 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                                     $(e.target).data("bs.popover").inState.click = false;
                                 });
 
-                                if (watchRuleUrlParam == "true") {
+                                if (watchRuleUrlParam === "true") {
                                     // Watch for changes in the rules URL parameter
                                     var rulesParamName = paramPrefix + "rules";
 
-                                    scope.$watch(function() { return $location.search()[rulesParamName] }, function(urlParams) {
+                                    scope.$watch(function () {
+                                        return $location.search()[rulesParamName]
+                                    }, function (urlParams) {
                                         var curTab = $location.search()[paramPrefix + "tab"];
 
-                                        if (!_.isUndefined(curTab) && scope.concept == curTab) {
+                                        if (!_.isUndefined(curTab) && scope.concept === curTab) {
                                             var newRules = getRulesFromUrlParam();
 
                                             if (!_.isUndefined(newRules)) {
@@ -161,10 +161,10 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                  * @param filters       Filters as returned from the server
                  * @returns {Array}     Formatted filters
                  */
-                var formatFiltersForQueryBuilder = function(filters) {
+                var formatFiltersForQueryBuilder = function (filters) {
                     var availLangs = Search.geti18nLangs();
 
-                    var newFilters = filters.map(function(obj) {
+                    var newFilters = filters.map(function (obj) {
                         var filter = obj;
 
                         // Manually use the localized description because filter-description plugin does not support
@@ -181,40 +181,40 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                         filter.description = description;
 
                         // If filter is string add typeahead, if it's date add Datepicker plugin
-                        if (filter.type == "string" && !_.has(filter, "plugin")) {
-                            filter.input = function(rule, name) {
+                        if (filter.type === "string" && !_.has(filter, "plugin")) {
+                            filter.input = function (rule, name) {
                                 // Return html of text input element with typeahead
                                 return $compile('<input type="text" class="form-control" name="typeahead"\
                                     placeholder="Type here..." ng-model="qbInputs.' + rule.id + '" \
-                                    typeahead-popup-template-url="' + drupalpath + 'templates/search-typeahead-popup-small.html"\
+                                    typeahead-popup-template-url="' + Data.templatePath + 'templates/search-typeahead-popup-small.html"\
                                     uib-typeahead="suggestion for suggestion in getFilterSuggestions($viewValue, \'' + filter.id + '\')" \
                                     typeahead-focus-first="false" autocomplete="off" \
                                     typeahead-on-select="typeaheadSelectHandler(\'' + rule.id + '\', $item)" \
-                                    typeahead-append-to-body="true">')( scope );
+                                    typeahead-append-to-body="true">')(scope);
                             };
 
-                            filter.valueGetter = function(rule) {
+                            filter.valueGetter = function (rule) {
                                 return scope.qbInputs[rule.id];
                             };
 
-                            filter.valueSetter = function(rule, value) {
+                            filter.valueSetter = function (rule, value) {
                                 scope.qbInputs[rule.id] = value;
                             };
-                        } else if (_.has(filter, "plugin") && filter.plugin == "slider") {
+                        } else if (_.has(filter, "plugin") && filter.plugin === "slider") {
                             // Add setter and getter for the slider
-                            filter.valueSetter = function(rule, value) {
-                                if (rule.operator.nb_inputs == 1) value = [value];
-                                rule.$el.find('.rule-value-container input').each(function(i) {
+                            filter.valueSetter = function (rule, value) {
+                                if (rule.operator.nb_inputs === 1) value = [value];
+                                rule.$el.find('.rule-value-container input').each(function (i) {
                                     $(this).slider('setValue', value[i] || 0);
                                 });
                             };
 
-                            filter.valueGetter = function(rule) {
+                            filter.valueGetter = function (rule) {
                                 var value = [];
-                                rule.$el.find('.rule-value-container input').each(function() {
+                                rule.$el.find('.rule-value-container input').each(function () {
                                     value.push($(this).slider('getValue'));
                                 });
-                                return rule.operator.nb_inputs == 1 ? value[0] : value;
+                                return rule.operator.nb_inputs === 1 ? value[0] : value;
                             };
                         }
 
@@ -231,11 +231,11 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                  * @param itemId    ID of item to find
                  * @returns {*}     Found item, or null if not found
                  */
-                var findItem = function(items, itemId) {
+                var findItem = function (items, itemId) {
                     var foundItem = null;
 
-                    _.each(items, function(item) {
-                        if (item.id == itemId) {
+                    _.each(items, function (item) {
+                        if (item.id === itemId) {
                             foundItem = item;
                         }
                     });
@@ -249,11 +249,11 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                  * @param item      Item to add to the list
                  * @param level     Shows how many submenus in we currently are in. When you call this, give 0
                  */
-                var addItem = function(items, item, level) {
+                var addItem = function (items, item, level) {
                     var idTokens = item.id.split("|");
                     var labelTokens = item.label[scope.lang].split("|");
 
-                    if (idTokens.length == 1) {
+                    if (idTokens.length === 1) {
                         items.push({
                             id: item.id,
                             text: item.label[scope.lang]
@@ -261,21 +261,22 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                     } else {
                         // Create ID that the item should have if it's a submenu
                         var id = idTokens.slice().splice(0, level + 1).join("|");
-                        
+
                         // Check if the submenu exists
                         var insideItem = findItem(items, id);
 
                         if (_.isNull(insideItem)) {
+                            var newItem;
                             if (level < idTokens.length - 1) {
                                 // Item should be a submenu
-                                var newItem = {
+                                newItem = {
                                     id: id,
                                     text: labelTokens[level],
-                                    submenu: { items: [] }
+                                    submenu: {items: []}
                                 };
                             } else {
                                 // Item is not a submenu, it's a choice
-                                var newItem = {
+                                newItem = {
                                     id: item.id,
                                     text: labelTokens[level],
                                     wholeText: item.label[scope.lang]
@@ -298,10 +299,10 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                  * @param filters       Filters, formatted for query builder
                  * @returns {Array}     Filters, formatted for selectivity
                  */
-                var formatFiltersForSelectivity = function(filters) {
+                var formatFiltersForSelectivity = function (filters) {
                     var selectivityFilters = [];
 
-                    _.each(filters, function(filter) {
+                    _.each(filters, function (filter) {
                         addItem(selectivityFilters, filter, 0);
                     });
 
@@ -311,17 +312,17 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                 /**
                  * Recursive function that checks if a group has the specified rule, and sets its value
                  * If a rule is a group, it calls itself with that group as parameter
-                 * @param group		Group to search inside
-                 * @param ruleId	id of the rule to find
-                 * @param value		Value to give to the rule
+                 * @param group        Group to search inside
+                 * @param ruleId    id of the rule to find
+                 * @param value        Value to give to the rule
                  */
-                var setRule = function(group, ruleId, value) {
+                var setRule = function (group, ruleId, value) {
                     // For each rule, check if it has the desired id or if it's a group, check inside of it
-                    _.each(group.rules, function(rule) {
+                    _.each(group.rules, function (rule) {
                         if (_.has(rule, "rules")) {
                             setRule(rule, ruleId, value);
                         } else {
-                            if (rule.id == ruleId) {
+                            if (rule.id === ruleId) {
                                 rule.value = value;
                             }
                         }
@@ -334,7 +335,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                  * @param ruleId        id of the rule that changed
                  * @param selectedItem  item that was selected
                  */
-                scope.typeaheadSelectHandler = function(ruleId, selectedItem) {
+                scope.typeaheadSelectHandler = function (ruleId, selectedItem) {
                     // Get root model
                     var rootModel = $("#" + scope.builderId).queryBuilder('getModel');
 
@@ -347,7 +348,7 @@ angular.module('yds').directive('queryBuilder', ['$compile', '$ocLazyLoad', '$lo
                  * @param val       Input from the search bar
                  * @param filterId  ID of the filter
                  */
-                scope.getFilterSuggestions = function(val, filterId) {
+                scope.getFilterSuggestions = function (val, filterId) {
                     return Search.getSuggestions(val, scope.lang, scope.maxSuggestions, filterId);
                 };
 

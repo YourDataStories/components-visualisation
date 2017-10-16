@@ -1,5 +1,5 @@
-angular.module('yds').factory('Basket', ['YDS_CONSTANTS', '$q', '$http', '$uibModal',
-    function (YDS_CONSTANTS, $q, $http, $uibModal) {
+angular.module('yds').factory('Basket', ['YDS_CONSTANTS', 'Data', '$q', '$http', '$uibModal',
+    function (YDS_CONSTANTS, Data, $q, $http, $uibModal) {
         var basketCallbacks = [];
         var lastSavedItem = {};
         var modalInstance = {};
@@ -39,7 +39,7 @@ angular.module('yds').factory('Basket', ['YDS_CONSTANTS', '$q', '$http', '$uibMo
                 modalInstance = $uibModal.open({
                     animation: false,
                     controller: 'BasketModalCtrl',
-                    templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/basket-modal.html',
+                    templateUrl: Data.templatePath + 'templates/basket-modal.html',
                     size: 'md',
                     resolve: {
                         basketInput: function () {
@@ -63,7 +63,7 @@ angular.module('yds').factory('Basket', ['YDS_CONSTANTS', '$q', '$http', '$uibMo
 
                 modalInstance = $uibModal.open({
                     controller: "DashboardConfigModalCtrl",
-                    templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/dashboard-config-save-modal.html',
+                    templateUrl: Data.templatePath + 'templates/dashboard-config-save-modal.html',
                     size: "md",
                     resolve: {
                         basketInput: function () {

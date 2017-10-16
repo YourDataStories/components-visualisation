@@ -3,7 +3,7 @@ angular.module('yds').directive('ydsSearchPreview', ['Data' , '$compile', '$time
 		restrict: 'E',
 		scope: {},
 		replace: true,
-		templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/search-preview.html',
+		templateUrl: Data.templatePath + 'templates/search-preview.html',
 		link: function(scope, element) {
 			var prevElement = angular.element(element[0]);
 			var innerPrevElement = angular.element(element[0].querySelector('.yds-search-prev-inner'));

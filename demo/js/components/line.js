@@ -22,7 +22,7 @@ angular.module("yds").directive("ydsLine", ["Data", "Filters", function (Data, F
             enableRating: "@",      // Enable rating buttons for this component
             disableExplanation: "@" // Set to true to disable the explanation button
         },
-        templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/line.html",
+        templateUrl: Data.templatePath + "templates/line.html",
         link: function (scope, element, attrs) {
             var lineContainer = angular.element(element[0].querySelector(".line-container"));
 
@@ -80,7 +80,7 @@ angular.module("yds").directive("ydsLine", ["Data", "Filters", function (Data, F
                     options.exporting = {
                         buttons: {
                             contextButton: {
-                                symbol: "url(" + ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "img/fa-download-small.png)",
+                                symbol: "url(" + Data.templatePath + "img/fa-download-small.png)",
                                 symbolX: 19,
                                 symbolY: 19
                             }

@@ -1,28 +1,28 @@
-angular.module('yds').directive('ydsDashboardVisualization', ['DashboardService', '$ocLazyLoad', '$timeout',
-    function (DashboardService, $ocLazyLoad, $timeout) {
+angular.module("yds").directive("ydsDashboardVisualization", ["DashboardService", "Data", "$ocLazyLoad", "$timeout",
+    function (DashboardService, Data, $ocLazyLoad, $timeout) {
         return {
-            restrict: 'E',
+            restrict: "E",
             scope: {
-                projectId: '@',         // Project ID of chart
-                dashboardId: '@',       // ID used for getting selected year range from DashboardService
-                addToBasket: '@',       // If true, the save to basket button will appear in visualizations
-                disableColor: '@',      // If true, the component will ignore the color of the selected aggregate type
-                defaultChart: '@',      // Chart to show on initialization of the component. Default is "bar".
-                type: '@',              // View type of component. If not set, will get it from DashboardService
-                lang: '@',              // Language of charts
-                baseUrl: '@',           // Base URL to send to API
-                title: '@',             // Title of component
-                elementH: '@',          // Height of component
-                dynamicDashboard: '@',  // Set to true if you are using this in a Dashboard with dynamic filters
+                projectId: "@",         // Project ID of chart
+                dashboardId: "@",       // ID used for getting selected year range from DashboardService
+                addToBasket: "@",       // If true, the save to basket button will appear in visualizations
+                disableColor: "@",      // If true, the component will ignore the color of the selected aggregate type
+                defaultChart: "@",      // Chart to show on initialization of the component. Default is "bar".
+                type: "@",              // View type of component. If not set, will get it from DashboardService
+                lang: "@",              // Language of charts
+                baseUrl: "@",           // Base URL to send to API
+                title: "@",             // Title of component
+                elementH: "@",          // Height of component
+                dynamicDashboard: "@",  // Set to true if you are using this in a Dashboard with dynamic filters
 
-                numberOfItems: '@',     // Number of items that the charts are expected to show. If too big, will use paging
-                pagingThreshold: '@',   // Number of items that when exceeded, components with paging should be used
+                numberOfItems: "@",     // Number of items that the charts are expected to show. If too big, will use paging
+                pagingThreshold: "@",   // Number of items that when exceeded, components with paging should be used
 
-                disableAggregates: '@', // If true, will disable the extra filters for amount/count
+                disableAggregates: "@", // If true, will disable the extra filters for amount/count
 
-                enableRating: '@'       // Enable rating buttons for this component
+                enableRating: "@"       // Enable rating buttons for this component
             },
-            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/dashboard-visualization.html',
+            templateUrl: Data.templatePath + "templates/dashboard-visualization.html",
             link: function (scope) {
                 var dashboardId = scope.dashboardId;
                 var disableColor = scope.disableColor;

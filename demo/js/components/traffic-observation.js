@@ -1,22 +1,22 @@
-angular.module('yds').directive('ydsTrafficObservation', ['$timeout', 'Data',
+angular.module("yds").directive("ydsTrafficObservation", ["$timeout", "Data",
     function ($timeout, Data) {
         return {
-            restrict: 'E',
+            restrict: "E",
             scope: {
-                projectId: '@',         // ID of the project that the data belong
-                viewType: '@',          // Name of the array that contains the visualised data
-                lang: '@',              // Lang of the visualised data
+                projectId: "@",         // ID of the project that the data belong
+                viewType: "@",          // Name of the array that contains the visualised data
+                lang: "@",              // Lang of the visualised data
 
-                extraParams: '=',       // Extra attributes to pass to the API, if needed
-                baseUrl: '@',           // Base URL to send to API (optional)
+                extraParams: "=",       // Extra attributes to pass to the API, if needed
+                baseUrl: "@",           // Base URL to send to API (optional)
 
-                elementH: '@'           // Set the height of the component
+                elementH: "@"           // Set the height of the component
             },
-            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/traffic-observation.html',
+            templateUrl: Data.templatePath + "templates/traffic-observation.html",
             link: function (scope, element, attrs) {
                 //reference the dom elements in which the yds-traffic-observation is rendered
-                var trafficWrapper = angular.element(element[0].querySelector('.component-wrapper'));
-                var trafficContainer = angular.element(element[0].querySelector('.traffic-observation-container'));
+                var trafficWrapper = angular.element(element[0].querySelector(".component-wrapper"));
+                var trafficContainer = angular.element(element[0].querySelector(".traffic-observation-container"));
 
                 var elementId = "traffic" + Data.createRandomId();
 
@@ -49,7 +49,7 @@ angular.module('yds').directive('ydsTrafficObservation', ['$timeout', 'Data',
 
                 //set the id and the height of the grid component
                 trafficContainer[0].id = elementId;
-                trafficWrapper[0].style.height = elementH + 'px';
+                trafficWrapper[0].style.height = elementH + "px";
 
                 if (viewType === "contract.trafficobservation.per.weekday.over.year" ||
                     viewType === "contract.trafficobservation.per.year.over.vehicle.type") {
@@ -94,26 +94,26 @@ angular.module('yds').directive('ydsTrafficObservation', ['$timeout', 'Data',
                                 // Create a constructor for sparklines that takes some sensible defaults and merges in the individual
                                 // chart options. This function is also available from the jQuery plugin as $(element).highcharts('SparkLine').
                                 Highcharts.SparkLine = function (a, b, c) {
-                                    var hasRenderToArg = typeof a === 'string' || a.nodeName,
+                                    var hasRenderToArg = typeof a === "string" || a.nodeName,
                                         options = arguments[hasRenderToArg ? 1 : 0],
                                         defaultOptions = {
                                             chart: {
                                                 renderTo: (options.chart && options.chart.renderTo) || this,
                                                 backgroundColor: null,
                                                 borderWidth: 0,
-                                                type: 'area',
+                                                type: "area",
                                                 margin: [2, 0, 2, 0],
                                                 width: 120,
                                                 height: 20,
                                                 style: {
-                                                    overflow: 'visible'
+                                                    overflow: "visible"
                                                 },
 
                                                 // small optimalization, saves 1-2 ms each sparkline
                                                 skipClone: true
                                             },
                                             title: {
-                                                text: ''
+                                                text: ""
                                             },
                                             credits: {
                                                 enabled: false
@@ -176,8 +176,8 @@ angular.module('yds').directive('ydsTrafficObservation', ['$timeout', 'Data',
                                                     fillOpacity: 0.25
                                                 },
                                                 column: {
-                                                    negativeColor: '#910000',
-                                                    borderColor: 'silver'
+                                                    negativeColor: "#910000",
+                                                    borderColor: "silver"
                                                 }
                                             }
                                         };
@@ -221,8 +221,8 @@ angular.module('yds').directive('ydsTrafficObservation', ['$timeout', 'Data',
                                             borderWidth: 1,
                                             shadow: true,
                                             padding: 8,
-                                            headerFormat: '<span style="font-size: 10px">{point.x}:</span><br/>',
-                                            pointFormat: '<b>{point.y}</b>'
+                                            headerFormat: "<span style='font-size: 10px'>{point.x}:</span><br/>",
+                                            pointFormat: "<b>{point.y}</b>"
                                         },
                                         exporting: {
                                             enabled: false

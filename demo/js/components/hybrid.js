@@ -3,7 +3,7 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
         return {
             restrict: "E",
             scope: {},
-            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/hybrid.html",
+            templateUrl: Data.templatePath + "templates/hybrid.html",
             compile: function (tElem, tAttrs) {
                 return {
                     pre: function (scope, element, iAttrs) {

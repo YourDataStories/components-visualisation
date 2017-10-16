@@ -26,7 +26,7 @@ angular.module("yds").directive("ydsBubble", ["YDS_CONSTANTS", "Data", "$window"
             enableRating: "@",      // Enable rating buttons for this component
             disableExplanation: "@" // Set to true to disable the explanation button
         },
-        templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/bubble.html",
+        templateUrl: Data.templatePath + "templates/bubble.html",
         link: function (scope, element, attrs) {
             var bubbleContainer = angular.element(element[0].querySelector(".bubble-container"));
 
@@ -104,7 +104,7 @@ angular.module("yds").directive("ydsBubble", ["YDS_CONSTANTS", "Data", "$window"
                     options.exporting = {
                         buttons: {
                             contextButton: {
-                                symbol: "url(" + ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "img/fa-download-small.png)",
+                                symbol: "url(" + Data.templatePath + "img/fa-download-small.png)",
                                 symbolX: 19,
                                 symbolY: 19
                             }

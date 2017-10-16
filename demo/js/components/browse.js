@@ -5,7 +5,7 @@ angular.module('yds').directive('ydsBrowse', ['Data', '$q', '$window', '$locatio
         scope: {
             lang: '@'
         },
-        templateUrl: ((typeof Drupal != 'undefined')? Drupal.settings.basePath  + Drupal.settings.yds_project.modulePath  +'/' :'') + 'templates/browse.html',
+        templateUrl: Data.templatePath + 'templates/browse.html',
         link: function(scope, element) {
             var initialCall = true;
             scope.prefLang = scope.lang;

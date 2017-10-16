@@ -28,7 +28,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
 
                 enableRating: "@"           // Enable rating buttons (not supported for all components)
             },
-            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/dashboard-updater.html",
+            templateUrl: Data.templatePath + "templates/dashboard-updater.html",
             link: function (scope) {
                 var dashboardId = scope.dashboardId;
                 var baseUrl = scope.baseUrl;

@@ -8,10 +8,9 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                 elementH: "@",      // Set the height of the component
                 enableRating: "@"   // Enable rating buttons for this component
             },
-            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/graph.html",
+            templateUrl: Data.templatePath + "templates/graph.html",
             link: function (scope, element, attrs) {
-                var drupalPath = (typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "";
-                var iconPath = drupalPath + "img/Font-Awesome-SVG-PNG/"; // Path for the graph node icons
+                var iconPath = Data.templatePath + "img/Font-Awesome-SVG-PNG/"; // Path for the graph node icons
 
                 var graphContainer = _.first(angular.element(element[0].querySelector(".graph-container")));
 
@@ -385,11 +384,11 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                 if (typeof cytoscape === "undefined") {
                     $ocLazyLoad.load({
                         files: [
-                            drupalPath + "lib/cytoscape/cytoscape.min.js",
-                            drupalPath + "lib/cytoscape/dagre.min.js",
-                            drupalPath + "lib/cytoscape/cytoscape-dagre.js",
-                            drupalPath + "lib/cytoscape/cola.min.js",
-                            drupalPath + "lib/cytoscape/cytoscape-cola.js"
+                            Data.templatePath + "lib/cytoscape/cytoscape.min.js",
+                            Data.templatePath + "lib/cytoscape/dagre.min.js",
+                            Data.templatePath + "lib/cytoscape/cytoscape-dagre.js",
+                            Data.templatePath + "lib/cytoscape/cola.min.js",
+                            Data.templatePath + "lib/cytoscape/cytoscape-cola.js"
                         ],
                         cache: true,
                         serie: true
