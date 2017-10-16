@@ -8,10 +8,5 @@ angular.module("yds").controller("TrafficCountsController", ["$scope",
         scope.clickedTrafficPoint = {
             "point": null
         };
-
-        // Select example point
-        scope.clickedTrafficPoint.point = {
-            lat: 0, lng: 0, id: "http://linkedeconomy.org/ontology/traffic/resource/ObservationPoint/1850"
-        };
     }
 ]);

@@ -83,7 +83,7 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
     var dataService = {};
 
     // Set template path
-    dataService.templatePath = (typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "";
+    dataService.templatePath = (typeof Drupal !== "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "";
 
     /**
      * Convert date to timestamp
@@ -1402,7 +1402,7 @@ app.factory("Filters", [function () {
 
                 if (gridFilters.hasOwnProperty(property)) {
                     var tmpAttrs;
-                    if (property == "_ydsQuickFilter_") {		//quick filter applied on grid
+                    if (property === "_ydsQuickFilter_") {		// Quick filter applied on grid
                         tmpAttrs = {};
 
                         if (filterVal.length > 0) {
@@ -1413,7 +1413,7 @@ app.factory("Filters", [function () {
                                 attrs: tmpAttrs
                             });
                         }
-                    } else if (_.isArray(filterVal) && filterVal.length > 0) {	//string filter applied on grid
+                    } else if (_.isArray(filterVal) && filterVal.length > 0) {	// String filter applied on grid
                         var attrsArray = [];
 
                         for (var j = 0; j < filterVal.length; j++) {

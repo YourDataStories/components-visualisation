@@ -1,8 +1,8 @@
 /**
  * Directive for tree dropdown used for selection
  */
-angular.module("yds").directive("ydsTree", [
-    function () {
+angular.module("yds").directive("ydsTree", ["Data",
+    function (Data) {
         return {
             restrict: "E",
             scope: {
@@ -10,10 +10,10 @@ angular.module("yds").directive("ydsTree", [
                 selectedNode: "=",  // Selected node will be kept in this variable
                 placeholder: "@"    // Placeholder text for the dropdown
             },
-            templateUrl: ((typeof Drupal != "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "") + "templates/tree-dropdown.html",
+            templateUrl: Data.templatePath + "templates/tree-dropdown.html",
             link: function (scope) {
                 // If there is a problem with the placeholder, set default value
-                if (_.isUndefined(scope.placeholder) || scope.placeholder.trim().length == 0) {
+                if (_.isUndefined(scope.placeholder) || scope.placeholder.trim().length === 0) {
                     scope.placeholder = "Make a selection";
                 }
 

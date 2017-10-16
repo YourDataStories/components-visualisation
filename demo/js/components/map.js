@@ -25,11 +25,11 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
         },
         templateUrl: Data.templatePath + "templates/map.html",
         link: function (scope, element) {
-            var mapContainer = angular.element(element[0].querySelector(".map-container"));
+            var mapContainer = _.first(angular.element(element[0].querySelector(".map-container")));
 
             // Create a random id for the element that will render the chart
             var elementId = "map" + Data.createRandomId();
-            mapContainer[0].id = elementId;
+            mapContainer.id = elementId;
 
             var projectId = scope.projectId;
             var viewType = scope.viewType;
@@ -67,7 +67,7 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
                 elementH = 200;
 
             // Set the height of the chart
-            mapContainer[0].style.height = elementH + "px";
+            mapContainer.style.height = elementH + "px";
 
             var map = L.map(elementId, {
                 center: [37.9833333, 23.7333333],
@@ -125,9 +125,12 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
                             var route = Data.deepObjSearch(routeObj, routePath);
                             var routeTitle = Data.deepObjSearch(routeObj, routeTitlePath);
 
+                            // Get ID of route (if it exists...)
+                            var markerId = routeObj.id;
+
                             if (shouldCluster && route.length === 1) {
                                 // If we should cluster and route length is 1, add the single marker to the cluster group
-                                clusterGroup.addLayer(makeMarker(routeTitle, _.first(route), mapPins.start));
+                                clusterGroup.addLayer(makeMarker(routeTitle, _.first(route), mapPins.start, markerId));
                             } else {
                                 // Add the points of each route to the polyline layer
                                 _.each(route, function (routePoints) {
@@ -135,12 +138,12 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
                                 });
 
                                 // Create the start marker of the route and add it to the featureGroup layer
-                                var startMarker = makeMarker(routeTitle, _.first(route), mapPins.start);
+                                var startMarker = makeMarker(routeTitle, _.first(route), mapPins.start, markerId);
                                 projectLayer.addLayer(startMarker);
 
                                 // If the route has more than one point, create the end marker of the route and add it to the featureGroup layer
                                 if (route.length > 1) {
-                                    var endMarker = makeMarker(routeTitle, _.last(route), mapPins.end);
+                                    var endMarker = makeMarker(routeTitle, _.last(route), mapPins.end, markerId);
                                     projectLayer.addLayer(endMarker);
                                 }
 
@@ -173,14 +176,16 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
              * @param title Title to show on popup
              * @param point Point object
              * @param icon  Icon to use for new point
+             * @param id    (optional) An ID for the marker. Used when point selection is enabled.
              */
-            var makeMarker = function (title, point, icon) {
+            var makeMarker = function (title, point, icon, id) {
                 var newMarker = L.marker([parseFloat(point.lng), parseFloat(point.lat)], {icon: icon});
                 newMarker.bindPopup(title, {offset: new L.Point(0, -33)});
 
                 // If point selection is enabled, add click event
-                if (pointSelection) {
-                    newMarker.on("click", markerClickHandler);
+                if (pointSelection && !_.isUndefined(id)) {
+                    newMarker.on("click", markerClickHandler);  // Add click handler
+                    newMarker.data = {id: id};                  // Add ID
                 }
 
                 return newMarker;
@@ -192,7 +197,7 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
              */
             var markerClickHandler = function (e) {
                 $timeout(function () {
-                    scope.clickedPoint["point"] = e.target.getLatLng();
+                    scope.clickedPoint["point"] = e.target.data.id;
                 });
             };
         }
