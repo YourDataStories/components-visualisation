@@ -171,7 +171,7 @@ angular.module("yds").directive("queryBuilder", ["$compile", "$ocLazyLoad", "$lo
                         // localization
                         var description = obj["description"][scope.lang];
 
-                        if (_.isUndefined(description) || description.trim().length == 0) {
+                        if (_.isUndefined(description) || description.trim().length === 0) {
                             // If description does not exist for the prefered language, try the alternate one
                             var altLang = _.first(_.without(availLangs, scope.lang));
 
