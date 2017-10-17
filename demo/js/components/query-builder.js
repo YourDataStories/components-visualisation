@@ -68,10 +68,10 @@ angular.module("yds").directive("queryBuilder", ["$compile", "$ocLazyLoad", "$lo
 
                         Data.templatePath + "css/selectize.bootstrap3.css",                // Selectize Bootstrap 3 theme
                         Data.templatePath + "lib/selectize.min.js",                        // Selectize javaScript
-                        Data.templatePath + "lib/yds-country-selector.js",                 // Country selection jQuery plugin
-                        Data.templatePath + "lib/yds-currency-selector.js",                // Currency selection jQuery plugin
-                        Data.templatePath + "lib/yds-year-selector.js",                    // Year selection jQuery plugin
-                        Data.templatePath + "lib/yds-map-selector.js"                      // Map point selection jQuery plugin
+                        Data.templatePath + "lib/plugins/yds-country-selector.js",                 // Country selection jQuery plugin
+                        Data.templatePath + "lib/plugins/yds-currency-selector.js",                // Currency selection jQuery plugin
+                        Data.templatePath + "lib/plugins/yds-year-selector.js",                    // Year selection jQuery plugin
+                        Data.templatePath + "lib/plugins/yds-map-selector.js"                      // Map point selection jQuery plugin
                     ],
                     cache: true,
                     serie: true

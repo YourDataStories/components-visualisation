@@ -50,8 +50,8 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$compile', '
                     files: [
                         "css/highcharts-editor.min.css",
                         "lib/highcharts-editor.js",
-                        "lib/yds-chart-template-selector.js",
-                        "lib/yds-chart-editor.js"
+                        "lib/plugins/yds-chart-template-selector.js",
+                        "lib/plugins/yds-chart-editor.js"
                     ],
                     serie: true,
                     cache: true

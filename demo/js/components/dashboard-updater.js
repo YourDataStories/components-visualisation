@@ -197,7 +197,6 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                                     initialized = true;
                                 }
                             // Continue to re-render grid
-                            case "simple-grid":
                             default:
                                 // Re-render component
                                 rerenderComponent();
