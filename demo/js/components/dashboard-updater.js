@@ -93,6 +93,16 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                     "min-height": minHeight + "px"
                 };
 
+                // Create list of Dashboard IDs that contain grid selection
+                var gridDashboards = [
+                    "comparison",
+                    "comparison1",
+                    "comparison2",
+                    "comparison_details_1",
+                    "comparison_details_2",
+                    "public_project"
+                ];
+
                 var updateExtraParams = function () {
                     // Keep old parameters for comparison and get new parameters from DashboardService
                     var newParams;
@@ -132,7 +142,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                             case "selection-grid":
                             case "selection-paging-grid":
                             case "aggregate":
-                                // Aggregates and selection grid watch their extra params for changes, so do nothing
+                                // Aggregates and selection grids watch their extra params for changes, so do nothing
                                 break;
                             case "search":
                                 if (!initialized) {
@@ -192,9 +202,8 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                     DashboardService.subscribeSelectionChanges(scope, updateExtraParams);
                     DashboardService.subscribeYearChanges(scope, updateExtraParams);
 
-                    if (scope.type === "selection-grid" || dashboardId === "public_project" || dashboardId === "comparison"
-                        || dashboardId === "comparison1" || dashboardId === "comparison2"
-                        || dashboardId === "comparison_details_1" || dashboardId === "comparison_details_2") {
+                    // Check if we should also subscribe to the grid selection changes
+                    if (scope.type === "selection-grid" || _.contains(gridDashboards, dashboardId)) {
                         DashboardService.subscribeGridSelectionChanges(scope, updateExtraParams);
                     }
                 } else {

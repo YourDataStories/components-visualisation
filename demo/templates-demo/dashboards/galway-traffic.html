@@ -29,20 +29,23 @@
                     view-type="contract.trafficobservation.all"
                     enable-rating="true"
                     element-h="400"
-                    clicked-point="clickedTrafficPoint"
+                    clicked-point="selectedPoint"
                     lang="{{ lang }}">
             </yds-map>
         </div>
 
         <!--Related Contracts grid-->
         <div class="col-md-6">
-            <yds-grid
-                    ng-if="clickedTrafficPoint.point.length > 0"
-                    project-id="{{ clickedTrafficPoint.point }}"
+            <yds-dashboard-updater
+                    type="selection-grid"
+                    ng-if="selectedPoint.point.length > 0"
+                    project-id="{{ selectedPoint.point }}"
                     view-type="contract.for.trafficobservation"
-                    allow-selection="true"
+                    selection-type="single"
+                    selection-id="galway_contract"
+                    min-height="400"
                     lang="{{ lang }}">
-            </yds-grid>
+            </yds-dashboard-updater>
         </div>
     </div>
 
@@ -50,7 +53,7 @@
         <div class="col-md-6">
             <!--Temporary placeholder to show clicked point-->
             <div class="well well-sm" style="word-break: break-all">
-                Clicked point: <code>{{ clickedTrafficPoint.point || "none" }}</code>
+                Clicked point: <code>{{ selectedPoint.point || "none" }}</code>
             </div>
         </div>
     </div>
