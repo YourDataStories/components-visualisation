@@ -57,12 +57,12 @@
                     <!--Selection grid-->
                     <yds-dashboard-updater
                             type="selection-grid"
+                            ng-if="showGrid"
                             project-id="{{ selectedPoint.point }}"
                             view-type="contract.for.trafficobservation"
                             selection-type="single"
                             dashboard-id="galway_traffic"
                             selection-id="galway_contract"
-                            force-refresh="true"
                             min-height="300"
                             lang="{{ lang }}">
                     </yds-dashboard-updater>

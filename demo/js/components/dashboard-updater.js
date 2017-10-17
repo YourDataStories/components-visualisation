@@ -9,7 +9,6 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 lang: "@",                  // Language of component
                 dashboardId: "@",           // ID used for getting selected year range from DashboardService
                 dynamicDashboard: "@",      // Set to true if you are using this in a Dashboard with dynamic filters
-                forceRefresh: "@",          // If true, will force a refresh even for components that refresh themselves
 
                 aggregateSetOnInit: "@",    // If the component shown is an aggregate, this indicates if it"s the first
                 aggregateIconSize: "@",     // Aggregate icon size (used only if component shown is aggregate)
@@ -34,7 +33,6 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 var baseUrl = scope.baseUrl;
                 var minHeight = parseInt(scope.minHeight);
                 var originalType = scope.type;
-                var forceRefresh = scope.forceRefresh;
                 var filterSubscriptions = [];
                 scope.showInfo = false;
 
@@ -78,11 +76,6 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 // If dashboardId is undefined, set default value
                 if (_.isUndefined(dashboardId) || dashboardId.trim() === "") {
                     dashboardId = "default";
-                }
-
-                // If forceRefresh is undefined, set default value
-                if (_.isUndefined(forceRefresh) || (forceRefresh !== "true" && forceRefresh !== "false")) {
-                    forceRefresh = "false";
                 }
 
                 // If minHeight is undefined, set default value
@@ -161,12 +154,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                             case "selection-grid":
                             case "selection-paging-grid":
                             case "aggregate":
-                                // Aggregates and selection grids watch their extra params for changes, so do nothing...
-                                if (forceRefresh === "true") {
-                                    // ...except if explicitly specified in the attributes
-                                    rerenderComponent();
-                                }
-
+                                // Aggregates and selection grids watch their extra params for changes, so do nothing
                                 break;
                             case "search":
                                 if (!initialized) {
