@@ -6,8 +6,10 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 type: "@",                  // What type of component to show (grid, info etc.)
                 projectId: "@",             // Project ID
                 viewType: "@",              // Type to give to component
+                lang: "@",                  // Language of component
                 dashboardId: "@",           // ID used for getting selected year range from DashboardService
                 dynamicDashboard: "@",      // Set to true if you are using this in a Dashboard with dynamic filters
+                forceRefresh: "@",          // If true, will force a refresh even for components that refresh themselves
 
                 aggregateSetOnInit: "@",    // If the component shown is an aggregate, this indicates if it"s the first
                 aggregateIconSize: "@",     // Aggregate icon size (used only if component shown is aggregate)
@@ -22,10 +24,8 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 numberOfItems: "@",         // Number of items for the grid, if needed
                 baseUrl: "@",               // Base URL to send to API
                 aggregateType: "@",         // Type of aggregation that the displayed chart should make (count/amount)
-                lang: "@",                  // Language of component
 
                 minHeight: "@",             // Minimum height of this component's container
-
                 enableRating: "@"           // Enable rating buttons (not supported for all components)
             },
             templateUrl: Data.templatePath + "templates/dashboard-updater.html",
@@ -34,6 +34,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 var baseUrl = scope.baseUrl;
                 var minHeight = parseInt(scope.minHeight);
                 var originalType = scope.type;
+                var forceRefresh = scope.forceRefresh;
                 var filterSubscriptions = [];
                 scope.showInfo = false;
 
@@ -79,6 +80,11 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                     dashboardId = "default";
                 }
 
+                // If forceRefresh is undefined, set default value
+                if (_.isUndefined(forceRefresh) || (forceRefresh !== "true" && forceRefresh !== "false")) {
+                    forceRefresh = "false";
+                }
+
                 // If minHeight is undefined, set default value
                 if (_.isUndefined(minHeight) || _.isNaN(minHeight)) {
                     minHeight = 0;
@@ -103,13 +109,23 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                     "public_project"
                 ];
 
+                /**
+                 * Cause a refresh of the component by setting the type to an empty string and then back to the original
+                 */
+                var rerenderComponent = function () {
+                    scope.type = "";                // Make type empty to hide component
+
+                    $timeout(function () {
+                        scope.type = originalType;  // At end of digest show component again
+                    });
+                };
+
                 var updateExtraParams = function () {
                     // Keep old parameters for comparison and get new parameters from DashboardService
                     var newParams;
                     if (scope.dynamicDashboard === "true") {
                         // Get options for the enabled filters
                         newParams = DashboardService.getApiOptionsDynamic(dashboardId, "filter");
-                        // console.log(newParams);
                     } else {
                         newParams = DashboardService.getApiOptions(dashboardId);
                     }
@@ -142,7 +158,12 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                             case "selection-grid":
                             case "selection-paging-grid":
                             case "aggregate":
-                                // Aggregates and selection grids watch their extra params for changes, so do nothing
+                                // Aggregates and selection grids watch their extra params for changes, so do nothing...
+                                if (forceRefresh === "true") {
+                                    // ...except if explicitly specified in the attributes
+                                    rerenderComponent();
+                                }
+
                                 break;
                             case "search":
                                 if (!initialized) {
@@ -168,14 +189,6 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                                 }
 
                                 break;
-                            case "simple-grid":
-                                // Re-render component
-                                scope.type = "";        // Make type empty to hide component
-
-                                $timeout(function () {
-                                    scope.type = originalType;  // At end of digest show component again
-                                });
-                                break;
                             case "grid":
                                 if (!initialized) {
                                     // Get concept from DashboardService so "view" button will work correctly
@@ -184,15 +197,10 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                                     initialized = true;
                                 }
                             // Continue to re-render grid
+                            case "simple-grid":
                             default:
                                 // Re-render component
-                                scope.type = "";        // Make type empty to hide component
-
-                                $timeout(function () {
-                                    scope.type = originalType;  // At end of digest show component again
-                                });
-
-                                break;
+                                rerenderComponent();
                         }
                     }
                 };
