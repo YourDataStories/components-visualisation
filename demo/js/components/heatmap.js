@@ -60,7 +60,7 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                 // Check if project id or grid type are defined
                 if (angular.isUndefined(projectId) || projectId.trim() === "") {
                     scope.ydsAlert = "The YDS component is not properly initialized " +
-                        "because the projectId attribute isn't configured properly." +
+                        "because the projectId attribute isn't configured properly. " +
                         "Please check the corresponding documentation section";
                     return false;
                 }

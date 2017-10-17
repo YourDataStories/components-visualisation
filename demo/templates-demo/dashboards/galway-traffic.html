@@ -93,6 +93,13 @@
         </div>
     </div>
 
+    <!--Project Info-->
+    <div ng-if="showProjectInfo" class="row">
+        <div class="col-md-12">
+            <ng-include src="'templates-demo/view-aid.html'"></ng-include>
+        </div>
+    </div>
+
     <!--Basket-->
     <yds-basket-preview
             user-id="ydsUser">

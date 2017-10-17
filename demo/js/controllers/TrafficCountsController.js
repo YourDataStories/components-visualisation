@@ -5,6 +5,7 @@ angular.module("yds").controller("TrafficCountsController", ["$scope", "$timeout
         scope.galwayProjectId = "http://linkedeconomy.org/resource/Contract/AwardNotice/2013208591/5795646";
         scope.lang = "en";
         scope.showGrid = true;
+        scope.showProjectInfo = false;
 
         // Create the object for the clicked traffic point
         scope.selectedPoint = {
@@ -20,6 +21,14 @@ angular.module("yds").controller("TrafficCountsController", ["$scope", "$timeout
                 scope.showGrid = true;
                 DashboardService.setGridSelection("galway_traffic_point", newPoint);
             });
+        });
+
+        // Watch for changes in the selected contract, to show the Contract details page
+        DashboardService.subscribeGridSelectionChanges(scope, function () {
+            var selectedContract = _.first(DashboardService.getGridSelection("galway_contract"));
+
+            DashboardService.setSelectedProject(selectedContract, null);
+            scope.showProjectInfo = !_.isUndefined(selectedContract);
         });
     }
 ]);
