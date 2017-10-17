@@ -227,7 +227,8 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                     if (!_.isEmpty(selection)) {
                         scope.gridOptions.api.forEachNode(function (node) {
                             // Check if this node is in the selection
-                            var isSelected = _.contains(selection, node.data.id);
+                            var nodeId = _.has(node.data, "id_original") ? node.data["id_original"] : node.data.id;
+                            var isSelected = _.contains(selection, nodeId);
 
                             if (isSelected) {
                                 // If the node we will select is in a group, we also need to expand its parent
@@ -245,6 +246,20 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
 
                             preventUpdate = false;
                         });
+                    }
+                };
+
+                /**
+                 * Get the IDs of the selected items of the grid.
+                 * If there is an "id_original" attribute, use that, otherwise use the "id" attribute.
+                 * @param gridSelection Selection from ag-grid
+                 * @returns {*}         Array of IDs
+                 */
+                var getIdsFromSelection = function (gridSelection) {
+                    if (_.has(_.first(gridSelection), "id_original")) {
+                        return _.pluck(gridSelection, "id_original");
+                    } else {
+                        return _.pluck(gridSelection, "id");
                     }
                 };
 
@@ -287,7 +302,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
 
                             // If the grid exists already, get current selection and destroy the grid
                             if (_.has(scope.gridOptions, "api")) {
-                                selection = _.pluck(scope.gridOptions.api.getSelectedRows(), "id");
+                                selection = getIdsFromSelection(scope.gridOptions.api.getSelectedRows());
 
                                 scope.gridOptions.api.destroy();
                             }
@@ -352,7 +367,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                                     preventUpdate = !(!_.isEmpty(selection) && e.selectedRows.length < selection.length);
 
                                     // Get selected row IDs
-                                    var selRows = _.pluck(e.selectedRows, "id");
+                                    var selRows = getIdsFromSelection(e.selectedRows);
 
                                     // Set selected rows in DashboardService
                                     DashboardService.setGridSelection(selectionId, selRows);
