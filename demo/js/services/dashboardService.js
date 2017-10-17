@@ -636,6 +636,10 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             });
 
             switch (dashboardId) {
+                case "galway_traffic":
+                    if (!_.isEmpty(dashboard.getGridSelection("galway_contract")))
+                        apiOptions.contract = dashboard.getGridSelection("galway_contract").join(",");
+                    break;
                 case "public_project":
                     if (!_.isEmpty(dashboard.getGridSelection("sellers")))
                         apiOptions.sellers = dashboard.getGridSelection("sellers").join(",");

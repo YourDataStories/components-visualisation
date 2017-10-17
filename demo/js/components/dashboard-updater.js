@@ -131,8 +131,10 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                     }
 
                     // If something changed in the parameters, update component
-                    if (!_.isEqual(prevParams, newParams) ||
-                        (!_.isUndefined(scope.aggregateType) && !_.isEqual(prevAggregateType, scope.aggregateType))) {
+                    var differentAggregateType = !_.isUndefined(scope.aggregateType) && !_.isEqual(prevAggregateType, scope.aggregateType);
+                    var differentParams = !_.isEqual(prevParams, newParams);
+
+                    if (differentParams || differentAggregateType) {
                         prevParams = _.clone(newParams);    // Keep current parameters to check equality later
                         scope.extraParams = newParams;      // Add new parameters to scope
 
