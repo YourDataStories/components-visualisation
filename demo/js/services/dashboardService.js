@@ -638,17 +638,17 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             switch (dashboardId) {
                 case "public_project":
                     if (!_.isEmpty(dashboard.getGridSelection("sellers")))
-                        apiOptions.sellers = _.pluck(dashboard.getGridSelection("sellers"), "id").join(",");
+                        apiOptions.sellers = dashboard.getGridSelection("sellers").join(",");
 
                     if (!_.isEmpty(dashboard.getGridSelection("buyers")))
-                        apiOptions.buyers = _.pluck(dashboard.getGridSelection("buyers"), "id").join(",");
+                        apiOptions.buyers = dashboard.getGridSelection("buyers").join(",");
                     break;
                 case "comparison":
                     if (!_.isEmpty(dashboard.getGridSelection("cpv1")))
-                        apiOptions.cpv1 = _.pluck(dashboard.getGridSelection("cpv1"), "id").join(",");
+                        apiOptions.cpv1 = dashboard.getGridSelection("cpv1").join(",");
 
                     if (!_.isEmpty(dashboard.getGridSelection("cpv2")))
-                        apiOptions.cpv2 = _.pluck(dashboard.getGridSelection("cpv2"), "id").join(",");
+                        apiOptions.cpv2 = dashboard.getGridSelection("cpv2").join(",");
                     break;
                 case "comparison1":
                     // Add year from "comparison" dashboardId
@@ -661,7 +661,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 case "comparison_details_1":
                     // Add CPV 1
                     if (!_.isEmpty(dashboard.getGridSelection("cpv1")))
-                        apiOptions.cpv1 = _.pluck(dashboard.getGridSelection("cpv1"), "id").join(",");
+                        apiOptions.cpv1 = dashboard.getGridSelection("cpv1").join(",");
 
                     // Add year from "comparison" dashboardId
                     apiOptions.year = "[" + dashboard.getMinYear("comparison") + " TO " + dashboard.getMaxYear("comparison") + "]";
@@ -669,7 +669,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 case "comparison_details_2":
                     // Add CPV 2
                     if (!_.isEmpty(dashboard.getGridSelection("cpv2")))
-                        apiOptions.cpv2 = _.pluck(dashboard.getGridSelection("cpv2"), "id").join(",");
+                        apiOptions.cpv2 = dashboard.getGridSelection("cpv2").join(",");
 
                     // Add year from "comparison" dashboardId
                     apiOptions.year = "[" + dashboard.getMinYear("comparison") + " TO " + dashboard.getMaxYear("comparison") + "]";

@@ -133,11 +133,9 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                     if (!_.isEmpty(selection)) {
                         scope.gridOptions.api.forEachNode(function (node) {
                             // Check if this node is in the selection
-                            var result = _.findWhere(selection, {
-                                id: node.data.id
-                            });
+                            var isSelected = _.contains(selection, node.data.id);
 
-                            if (!_.isUndefined(result)) {
+                            if (isSelected) {
                                 // If the node we will select is in a group, we also need to expand its parent
                                 if (node.level > 0) {
                                     node.parent.expanded = true;
@@ -310,12 +308,15 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                                 // Prevent next grid update if nothing was deselected
                                 preventUpdate = !(!_.isEmpty(selection) && e.selectedRows.length < selection.length);
 
+                                // Get selected row IDs
+                                var selRows = _.pluck(e.selectedRows, "id");
+
                                 // Set selected rows in DashboardService
-                                DashboardService.setGridSelection(selectionId, e.selectedRows);
-                                selection = _.clone(e.selectedRows);
+                                DashboardService.setGridSelection(selectionId, selRows);
+                                selection = _.clone(selRows);
 
                                 // Save selection to cookies too
-                                DashboardService.setCookieObject(cookieKey, e.selectedRows);
+                                DashboardService.setCookieObject(cookieKey, selRows);
                             }
                         };
 
