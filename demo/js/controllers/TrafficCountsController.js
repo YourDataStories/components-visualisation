@@ -2,7 +2,7 @@ angular.module("yds").controller("TrafficCountsController", ["$scope", "Dashboar
     function ($scope, DashboardService) {
         var scope = $scope;
 
-        scope.projectId = "http://linkedeconomy.org/resource/Contract/AwardNotice/2013208591/5795646";
+        scope.galwayProjectId = "http://linkedeconomy.org/resource/Contract/AwardNotice/2013208591/5795646";
         scope.lang = "en";
 
         // Create the object for the clicked traffic point
