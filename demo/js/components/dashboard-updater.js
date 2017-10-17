@@ -43,7 +43,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 var searchParams = {};
 
                 // Keep previous parameter values, to check if the component needs to be re-rendered
-                var prevParams = {};
+                var prevParams = null;
                 var prevAggregateType = "amount";
 
                 // If type is undefined, set default value
@@ -159,14 +159,6 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
 
                                 break;
                             case "simple-grid":
-                                // Remove string values that contain null from the parameters
-                                scope.extraParams = _.omit(scope.extraParams, function (param) {
-                                    if (_.isString(param) && param.indexOf("null") !== -1)
-                                        return true;
-                                    else
-                                        return false;
-                                });
-
                                 // Re-render component
                                 scope.type = "";        // Make type empty to hide component
 

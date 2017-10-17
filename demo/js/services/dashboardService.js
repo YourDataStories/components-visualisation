@@ -676,6 +676,11 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     break;
             }
 
+            // Remove string values that contain "null" from the parameters
+            apiOptions = _.omit(apiOptions, function (param) {
+                return _.isString(param) && param.indexOf("null") !== -1;
+            });
+
             return apiOptions;
         };
 

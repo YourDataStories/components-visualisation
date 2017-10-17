@@ -115,14 +115,13 @@
             lang="{{ lang }}">
     </yds-grid>
 
-    <!--todo: make page size 1000-->
     <yds-grid-selection-paging
             ng-switch-when="selection-paging-grid"
             project-id="{{ projectId }}"
             view-type="{{ viewType }}"
             selection-type="{{ selectionType }}"
             extra-params="extraParams"
-            page-size="50"
+            page-size="1000"
             number-of-items="{{ numberOfItems }}"
             checkbox-in-new-col="true"
             base-url="{{ baseUrl }}"
