@@ -42,8 +42,8 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
             templateUrl: Data.templatePath + "templates/grid.html",
             link: function (scope, element, attrs) {
                 // Reference the dom elements in which the yds-grid is rendered
-                var gridWrapper = angular.element(element[0].querySelector(".component-wrapper"));
-                var gridContainer = angular.element(element[0].querySelector(".grid-container"));
+                var gridWrapper = _.first(angular.element(element[0].querySelector(".component-wrapper")));
+                var gridContainer = _.first(angular.element(element[0].querySelector(".grid-container")));
 
                 // Set the variables which will be used for the creation of the grid
                 scope.quickFilterValue = "";
@@ -143,13 +143,13 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 scope.loading = true;
 
                 // Set the id and the height of the grid component
-                gridContainer[0].id = grid.elementId;
+                gridContainer.id = grid.elementId;
 
                 if (grid.quickFiltering === "true") {
-                    gridWrapper[0].style.height = (grid.elementH) + "px";
-                    gridContainer[0].style.height = (grid.elementH - 35) + "px";
+                    gridWrapper.style.height = (grid.elementH) + "px";
+                    gridContainer.style.height = (grid.elementH - 35) + "px";
                 } else {
-                    gridWrapper[0].style.height = grid.elementH + "px";
+                    gridWrapper.style.height = grid.elementH + "px";
                 }
 
                 // If exporting is enabled, set position of export button
@@ -363,7 +363,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                                 }
                             }
 
-                            new agGrid.Grid(gridContainer[0], scope.gridOptions);
+                            new agGrid.Grid(gridContainer, scope.gridOptions);
 
                             // If filtering is enabled, register function to watch for filter updates
                             if (grid.filtering === "true" || grid.quickFiltering === "true") {
