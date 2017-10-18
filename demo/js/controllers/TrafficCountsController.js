@@ -12,10 +12,25 @@ angular.module("yds").controller("TrafficCountsController", ["$scope", "$timeout
             "point": null
         };
 
+        /**
+         * Get the selected contract from the DashboardService, and show or hide the Contract details
+         */
+        var gridSelectionHandler = function () {
+            var selectedContract = _.first(DashboardService.getGridSelection("galway_contract"));
+
+            DashboardService.setSelectedProject(selectedContract, null);
+            scope.showProjectInfo = false;
+
+            $timeout(function () {
+                scope.showProjectInfo = !_.isUndefined(selectedContract);
+            });
+        };
+
         // Watch changes in the selected point, and set it as selected in the DashboardService
         scope.$watch("selectedPoint.point", function (newPoint) {
             // Force a refresh of the related contracts grid
             scope.showGrid = false;
+            scope.showProjectInfo = false;
 
             $timeout(function () {
                 scope.showGrid = true;
@@ -24,11 +39,6 @@ angular.module("yds").controller("TrafficCountsController", ["$scope", "$timeout
         });
 
         // Watch for changes in the selected contract, to show the Contract details page
-        DashboardService.subscribeGridSelectionChanges(scope, function () {
-            var selectedContract = _.first(DashboardService.getGridSelection("galway_contract"));
-
-            DashboardService.setSelectedProject(selectedContract, null);
-            scope.showProjectInfo = !_.isUndefined(selectedContract);
-        });
+        DashboardService.subscribeGridSelectionChanges(scope, gridSelectionHandler);
     }
 ]);
