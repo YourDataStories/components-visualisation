@@ -82,15 +82,15 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
     $stateProvider
         .state("search", {
             url: "/search",
-            templateUrl: "templates-demo/search.html"
+            templateUrl: "templates-demo/search/search.html"
         })
         .state("search-el", {
             url: "/search-el",
-            templateUrl: "templates-demo/search-el.html"
+            templateUrl: "templates-demo/search/search-el.html"
         })
         .state("search-tabbed", {
             url: "/search-tabbed",
-            templateUrl: "templates-demo/search-tabbed.html"
+            templateUrl: "templates-demo/search/search-tabbed.html"
         })
         .state("dashboard-galway", {
             url: "/dashboard-galway",
@@ -162,12 +162,12 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
         })
         .state("project2", {
             url: "/project2",
-            templateUrl: "templates-demo/project2.html",
+            templateUrl: "templates-demo/pages/project2.html",
             controller: "ProjectDetailsController"
         })
         .state("projects", {
             url: "/projects",
-            templateUrl: "templates-demo/resource.html",
+            templateUrl: "templates-demo/pages/resource.html",
             controller: function ($scope) {
                 $scope.disqusConfig = {
                     disqus_shortname: "ydscommentstest",
@@ -178,15 +178,15 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
         })
         .state("projects-el", {
             url: "/projects-el",
-            templateUrl: "templates-demo/resource-el.html"
+            templateUrl: "templates-demo/pages/resource-el.html"
         })
         .state("trustworthiness", {
             url: "/trustworthiness",
-            templateUrl: "templates-demo/trustworthiness.html"
+            templateUrl: "templates-demo/pages/trustworthiness.html"
         })
         .state("country", {
             url: "/country",
-            templateUrl: "templates-demo/country.html",
+            templateUrl: "templates-demo/pages/country.html",
             controller: "ProjectDetailsController"
         })
         .state("contract-ted", {
@@ -196,7 +196,7 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
         })
         .state("graph", {
             url: "/graph",
-            templateUrl: "templates-demo/graph.html",
+            templateUrl: "templates-demo/pages/graph.html",
             controller: "ProjectDetailsController"
         })
         .state("contract-ted-n6", {
@@ -206,7 +206,7 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
         })
         .state("contract-notice", {
             url: "/contract-notice",
-            templateUrl: "templates-demo/contract-notice.html",
+            templateUrl: "templates-demo/pages/contract-notice.html",
             controller: "ProjectDetailsController"
         })
         .state("organisation-buyer", {
@@ -240,7 +240,7 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
         })
         .state("dcat-ap", {
             url: "/dcat-ap",
-            templateUrl: "templates-demo/dcat-ap.html",
+            templateUrl: "templates-demo/pages/dcat-ap.html",
             controller: "ProjectDetailsController"
         })
         .state("geo-editing", {
@@ -265,11 +265,11 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
         })
         .state("workbench", {
             url: "/workbench",
-            templateUrl: "templates-demo/workbench.html"
+            templateUrl: "templates-demo/workbench/workbench.html"
         })
         .state("workbench-new", {
             url: "/workbench-new",
-            templateUrl: "templates-demo/workbench-new.html"
+            templateUrl: "templates-demo/workbench/workbench-new.html"
         });
 });
 
