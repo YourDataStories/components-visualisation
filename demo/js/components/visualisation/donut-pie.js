@@ -12,11 +12,11 @@ angular.module("yds").directive("ydsDonutPie", ["Data", "DashboardService", func
             exporting: "@",     // Enable or disable the export of the chart
             elementH: "@"       // Set the height of the component
         },
-        templateUrl: Data.templatePath + "templates/donut-pie.html",
+        templateUrl: Data.templatePath + "templates/visualisation/donut-pie.html",
         link: function (scope, element) {
             var pieContainer = angular.element(element[0].querySelector(".pie-container"));
 
-            //create a random id for the element that will render the chart
+            // Create a random id for the element that will render the chart
             var elementId = "pie" + Data.createRandomId();
             pieContainer[0].id = elementId;
 
@@ -30,33 +30,33 @@ angular.module("yds").directive("ydsDonutPie", ["Data", "DashboardService", func
 
             var chart = null;
 
-            //check if the projectId and the viewType attr is defined, else stop the process
+            // Check if the projectId and the viewType attr is defined, else stop the process
             if (_.isUndefined(projectId) || projectId.trim() === "") {
                 scope.ydsAlert = "The YDS component is not properly configured. " +
                     "Please check the corresponding documentation section.";
                 return false;
             }
 
-            //check if view-type attribute is empty and assign the default value
+            // Check if view-type attribute is empty and assign the default value
             if (_.isUndefined(viewType) || viewType.trim() === "")
                 viewType = "default";
 
-            //check if the language attr is defined, else assign default value
+            // Check if the language attr is defined, else assign default value
             if (_.isUndefined(lang) || lang.trim() === "")
                 lang = "en";
 
-            //check if the exporting attr is defined, else assign default value
+            // Check if the exporting attr is defined, else assign default value
             if (_.isUndefined(exporting) || (exporting !== "true" && exporting !== "false"))
                 exporting = "false";
 
-            //check if the component's height attr is defined, else assign default value
+            // Check if the component's height attr is defined, else assign default value
             if (_.isUndefined(elementH) || _.isNaN(elementH))
                 elementH = 200;
 
             // Show loading animation
             scope.loading = true;
 
-            //set the height of the chart
+            // Set the height of the chart
             pieContainer[0].style.height = elementH + "px";
 
             // Get data and visualize bar
@@ -128,7 +128,7 @@ angular.module("yds").directive("ydsDonutPie", ["Data", "DashboardService", func
                     // Look in each series for the CPV with the ID to select
                     _.each(chart.series, function (series) {
                         _.each(series.points, function (point) {
-                            if (point.id == idToSelect) {
+                            if (point.id === idToSelect) {
                                 point.select(true, false);
                             }
                         });

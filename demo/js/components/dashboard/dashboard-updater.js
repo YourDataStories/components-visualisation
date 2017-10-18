@@ -27,7 +27,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 minHeight: "@",             // Minimum height of this component's container
                 enableRating: "@"           // Enable rating buttons (not supported for all components)
             },
-            templateUrl: Data.templatePath + "templates/dashboard-updater.html",
+            templateUrl: Data.templatePath + "templates/dashboard/dashboard-updater.html",
             link: function (scope) {
                 var dashboardId = scope.dashboardId;
                 var baseUrl = scope.baseUrl;

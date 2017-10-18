@@ -6,7 +6,7 @@ angular.module('yds').directive('ydsWorkbench', ['$ocLazyLoad', '$timeout', '$wi
 			lang: '@',
 			userId:'@'
 		},
-		templateUrl: Data.templatePath + 'templates/workbench.html',
+		templateUrl: Data.templatePath + 'templates/workbench/workbench.html',
 		link: function (scope, element) {
 			scope.ydsAlert = "";
 

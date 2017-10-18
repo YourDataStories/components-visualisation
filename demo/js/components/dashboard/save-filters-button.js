@@ -7,7 +7,7 @@ angular.module("yds").directive("ydsSaveFiltersButton", ["DashboardService", "Da
                 infoType: "@",      // Type to use for info component which will show filters to be saved
                 dashboardId: "@"    // Dashboard ID
             },
-            templateUrl: Data.templatePath + "templates/save-filters-button.html",
+            templateUrl: Data.templatePath + "templates/dashboard/save-filters-button.html",
             link: function (scope) {
                 // Set default language if it is undefined
                 if (_.isUndefined(scope.lang) || scope.lang.trim().length === 0) {

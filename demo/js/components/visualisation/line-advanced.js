@@ -15,7 +15,7 @@ angular.module('yds').directive('ydsLineAdvanced', ['$timeout', '$q', 'Data', 'F
             comboboxLabels: '@',	//set the labels that will be used for each combobox
             comboboxAttrs: '@'		//set the parameter each combobox will sent to the the server
         },
-        templateUrl: Data.templatePath + 'templates/line-advanced.html',
+        templateUrl: Data.templatePath + 'templates/visualisation/line-advanced.html',
         link: function (scope, element, attrs) {
             //reference the dom element in which the yds-line-advanced is rendered
             var lineContainer = angular.element(element[0].querySelector('.line-container'));

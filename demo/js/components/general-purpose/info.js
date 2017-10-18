@@ -9,7 +9,7 @@ angular.module("yds").directive("ydsInfo", ["Data", "Translations", "$sce", func
             vertical: "@",      // If true, the info component will have a vertical layout
             extraParams: "="    // Extra parameters to send with API call
         },
-        templateUrl: Data.templatePath + "templates/info.html",
+        templateUrl: Data.templatePath + "templates/general-purpose/info.html",
         link: function (scope) {
             var projectId = scope.projectId;
             var viewType = scope.viewType;

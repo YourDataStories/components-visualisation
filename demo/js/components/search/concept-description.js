@@ -6,7 +6,7 @@ angular.module("yds").directive("ydsConceptDescription", ["Search", "Data",
                 lang:"@",               // Language of the description
                 conceptId: "@"          // ID of concept for making requests to API
             },
-            templateUrl: Data.templatePath + "templates/concept-description.html",
+            templateUrl: Data.templatePath + "templates/search/concept-description.html",
             link: function (scope) {
                 Data.getConceptDescription(scope.conceptId, scope.lang).then(function(response) {
                     var prefLang = scope.lang;

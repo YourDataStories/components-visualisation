@@ -25,7 +25,7 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                 noBorder: "@",			// If true, the component will have no border
                 elementH: "@"		    // Set the height of the component
             },
-            templateUrl: Data.templatePath + "templates/heatmap.html",
+            templateUrl: Data.templatePath + "templates/visualisation/heatmap.html",
             link: function (scope, elem) {
                 var projectId = scope.projectId;
                 var viewType = scope.viewType;

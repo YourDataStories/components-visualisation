@@ -6,7 +6,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$compile', '
                 lang: '@',
                 userId: '@'
             },
-            templateUrl: Data.templatePath + 'templates/workbench-new.html',
+            templateUrl: Data.templatePath + 'templates/workbench/workbench-new.html',
             link: function (scope, element) {
                 scope.ydsAlert = "";
                 var editorContainer = angular.element(element[0].querySelector('.highcharts-editor-container'));

@@ -23,7 +23,7 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
             enableRating: "@",      // Enable rating buttons for this component
             disableExplanation: "@" // Set to true to disable the explanation button
         },
-        templateUrl: Data.templatePath + "templates/map.html",
+        templateUrl: Data.templatePath + "templates/visualisation/map.html",
         link: function (scope, element) {
             var mapContainer = _.first(angular.element(element[0].querySelector(".map-container")));
 

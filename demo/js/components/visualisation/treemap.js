@@ -24,7 +24,7 @@ angular.module("yds").directive("ydsTreeMap", ["Data", "Filters", function (Data
             enableRating: "@",      // Enable rating buttons for this component
             disableExplanation: "@" // Set to true to disable the explanation button
         },
-        templateUrl: Data.templatePath + "templates/treemap.html",
+        templateUrl: Data.templatePath + "templates/visualisation/treemap.html",
         link: function (scope, element, attrs) {
             var treemapContainer = angular.element(element[0].querySelector(".treemap-container"));
 

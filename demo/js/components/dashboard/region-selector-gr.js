@@ -8,7 +8,7 @@ angular.module("yds").directive("ydsRegionSelectorGr", ["Data", "DashboardServic
                 dashboardId: "@",       // Dashboard ID to use for getting parameters from DashboardService
                 elementH: "@"           // Height of the component in pixels
             },
-            templateUrl: Data.templatePath + "templates/region-selector-gr.html",
+            templateUrl: Data.templatePath + "templates/dashboard/region-selector-gr.html",
             link: function (scope, element) {
                 var regionType = scope.regionType;
                 var regionalUnitType = scope.regionalUnitType;

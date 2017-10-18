@@ -22,7 +22,7 @@ angular.module("yds").directive("ydsScatter", ["Data", function (Data) {
             enableRating: "@",      // Enable rating buttons for this component
             disableExplanation: "@" // Set to true to disable the explanation button
         },
-        templateUrl: Data.templatePath + "templates/scatter.html",
+        templateUrl: Data.templatePath + "templates/visualisation/scatter.html",
         link: function (scope, element, attrs) {
             var scatterContainer = angular.element(element[0].querySelector(".scatter-container"));
 

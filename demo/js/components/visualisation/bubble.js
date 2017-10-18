@@ -26,7 +26,7 @@ angular.module("yds").directive("ydsBubble", ["YDS_CONSTANTS", "Data", "$window"
             enableRating: "@",      // Enable rating buttons for this component
             disableExplanation: "@" // Set to true to disable the explanation button
         },
-        templateUrl: Data.templatePath + "templates/bubble.html",
+        templateUrl: Data.templatePath + "templates/visualisation/bubble.html",
         link: function (scope, element, attrs) {
             var bubbleContainer = angular.element(element[0].querySelector(".bubble-container"));
 

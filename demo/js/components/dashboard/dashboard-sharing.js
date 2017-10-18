@@ -6,7 +6,7 @@ angular.module("yds").directive("ydsDashboardSharing", ["DashboardService", "Dat
                 lang: "@",          // Language of component
                 dashboardId: "@"    // Dashboard ID
             },
-            templateUrl: Data.templatePath + "templates/dashboard-sharing.html",
+            templateUrl: Data.templatePath + "templates/dashboard/dashboard-sharing.html",
             link: function (scope) {
                 // Set default language if it is undefined
                 if (_.isUndefined(scope.lang) || scope.lang.trim().length === 0) {
@@ -15,7 +15,7 @@ angular.module("yds").directive("ydsDashboardSharing", ["DashboardService", "Dat
 
                 // Setup popover parameters
                 scope.popover = {
-                    template: Data.templatePath + "templates/dashboard-sharing-popover.html",
+                    template: Data.templatePath + "templates/dashboard/dashboard-sharing-popover.html",
                     title: "Dashboard Sharing URL",
                     url: ""
                 };

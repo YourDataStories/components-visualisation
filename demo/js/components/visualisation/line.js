@@ -22,7 +22,7 @@ angular.module("yds").directive("ydsLine", ["Data", "Filters", function (Data, F
             enableRating: "@",      // Enable rating buttons for this component
             disableExplanation: "@" // Set to true to disable the explanation button
         },
-        templateUrl: Data.templatePath + "templates/line.html",
+        templateUrl: Data.templatePath + "templates/visualisation/line.html",
         link: function (scope, element, attrs) {
             var lineContainer = angular.element(element[0].querySelector(".line-container"));
 

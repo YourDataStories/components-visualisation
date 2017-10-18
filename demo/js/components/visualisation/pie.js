@@ -24,7 +24,7 @@ angular.module("yds").directive("ydsPie", ["Data", "Filters", function (Data, Fi
             enableRating: "@",      // Enable rating buttons for this component
             disableExplanation: "@" // Set to true to disable the explanation button
         },
-        templateUrl: Data.templatePath + "templates/pie.html",
+        templateUrl: Data.templatePath + "templates/visualisation/pie.html",
         link: function (scope, element, attrs) {
             var pieContainer = angular.element(element[0].querySelector(".pie-container"));
 

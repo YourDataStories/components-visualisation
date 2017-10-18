@@ -12,7 +12,7 @@ angular.module("yds").directive("ydsSearchTabs", ["Data", "Search", "$location",
                 addToBasket: "@",       // If true, the grids will have an "add to basket" button
                 lang: "@"               // Language of component
             },
-            templateUrl: Data.templatePath + "templates/search-tabs.html",
+            templateUrl: Data.templatePath + "templates/search/search-tabs.html",
             link: function (scope) {
                 scope.initialized = false;	    // flag that indicated when the component is initialized
                 scope.tabs = {};                // Object with tab information

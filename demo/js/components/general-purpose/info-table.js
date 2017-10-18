@@ -9,7 +9,7 @@ angular.module("yds").directive("ydsInfoTable", ["Data", "Translations", "$sce",
             isEmptyObj: "=",    // Object that the component will set to true when there is no data to display
             extraParams: "="    // Extra parameters to send with API call
         },
-        templateUrl: Data.templatePath + "templates/info-table.html",
+        templateUrl: Data.templatePath + "templates/general-purpose/info-table.html",
         link: function (scope) {
             var projectId = scope.projectId;
             var viewType = scope.viewType;

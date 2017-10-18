@@ -11,7 +11,7 @@ angular.module("yds").directive("queryBuilder", ["$compile", "$ocLazyLoad", "$lo
                 watchRuleUrlParam: "@", // If the builder should watch URL parameter for rule changes and apply them
                 builderId: "="          // Builder ID. "=" so it binds to the parent scope & search component can see it
             },
-            templateUrl: Data.templatePath + "templates/query-builder.html",
+            templateUrl: Data.templatePath + "templates/general-purpose/query-builder.html",
             link: function (scope) {
                 scope.qbInputs = {};		// Keeps the QueryBuilder's typeahead ng models
                 scope.noFilters = false;    // If there are no filters, show it on the page
@@ -186,7 +186,7 @@ angular.module("yds").directive("queryBuilder", ["$compile", "$ocLazyLoad", "$lo
                                 // Return html of text input element with typeahead
                                 return $compile('<input type="text" class="form-control" name="typeahead"\
                                     placeholder="Type here..." ng-model="qbInputs.' + rule.id + '" \
-                                    typeahead-popup-template-url="' + Data.templatePath + 'templates/search-typeahead-popup-small.html"\
+                                    typeahead-popup-template-url="' + Data.templatePath + 'templates/search/search-typeahead-popup-small.html"\
                                     uib-typeahead="suggestion for suggestion in getFilterSuggestions($viewValue, \'' + filter.id + '\')" \
                                     typeahead-focus-first="false" autocomplete="off" \
                                     typeahead-on-select="typeaheadSelectHandler(\'' + rule.id + '\', $item)" \

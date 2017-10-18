@@ -13,7 +13,7 @@ angular.module("yds").directive("ydsSearch", ["$window", "$timeout", "$location"
                 concept: "@",           // Concept for adv. search, used by QB for restoring rules from url parameters
                 conceptId: "@"          // Concept id, used by advanced search for getting query builder rules
             },
-            templateUrl: Data.templatePath + "templates/search.html",
+            templateUrl: Data.templatePath + "templates/search/search.html",
             link: function (scope) {
                 scope.searchOptions = {
                     lang: scope.lang,

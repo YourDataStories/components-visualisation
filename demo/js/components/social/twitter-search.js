@@ -5,7 +5,7 @@ angular.module("yds").directive("ydsTwitterSearch", ["Data", "$timeout",
             scope: {
                 projectId: "@"     // ID of the project
             },
-            templateUrl: Data.templatePath + "templates/twitter-search.html",
+            templateUrl: Data.templatePath + "templates/social/twitter-search.html",
             link: function (scope) {
                 scope.showWidget = false;
 

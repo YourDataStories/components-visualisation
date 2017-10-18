@@ -39,7 +39,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 enableRating: "@",      // Enable rating buttons for this component
                 disableExplanation: "@" // Set to true to disable the explanation button
             },
-            templateUrl: Data.templatePath + "templates/grid.html",
+            templateUrl: Data.templatePath + "templates/visualisation/grid.html",
             link: function (scope, element, attrs) {
                 // Reference the dom elements in which the yds-grid is rendered
                 var gridWrapper = _.first(angular.element(element[0].querySelector(".component-wrapper")));

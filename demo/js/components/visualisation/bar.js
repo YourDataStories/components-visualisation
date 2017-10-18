@@ -27,7 +27,7 @@ angular.module("yds").directive("ydsBar", ["Data", "Filters", function (Data, Fi
             enableRating: "@",      // Enable rating buttons for this component
             disableExplanation: "@" // Set to true to disable the explanation button
         },
-        templateUrl: Data.templatePath + "templates/bar.html",
+        templateUrl: Data.templatePath + "templates/visualisation/bar.html",
         link: function (scope, element) {
             var barContainer = angular.element(element[0].querySelector(".bar-container"));
 

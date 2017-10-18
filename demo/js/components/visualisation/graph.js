@@ -8,7 +8,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                 elementH: "@",      // Set the height of the component
                 enableRating: "@"   // Enable rating buttons for this component
             },
-            templateUrl: Data.templatePath + "templates/graph.html",
+            templateUrl: Data.templatePath + "templates/visualisation/graph.html",
             link: function (scope, element, attrs) {
                 var iconPath = Data.templatePath + "img/Font-Awesome-SVG-PNG/"; // Path for the graph node icons
 

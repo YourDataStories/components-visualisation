@@ -6,7 +6,7 @@ angular.module("yds").directive("ydsFacets", ["Data", "Search", "$location", "$w
                 tabbed: "@",    // If true, will not go to normal search URL
                 lang: "@"       // Language of the facets
             },
-            templateUrl: Data.templatePath + "templates/facets.html",
+            templateUrl: Data.templatePath + "templates/search/facets.html",
             link: function (scope) {
                 scope.initialized = false;		// Flag that indicated when the component is initialized
                 scope.fieldFacets = [];			// Array which contains the field facets which are shown to the user

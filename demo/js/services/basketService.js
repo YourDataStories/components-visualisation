@@ -63,7 +63,7 @@ angular.module('yds').factory('Basket', ['YDS_CONSTANTS', 'Data', '$q', '$http',
 
                 modalInstance = $uibModal.open({
                     controller: "DashboardConfigModalCtrl",
-                    templateUrl: Data.templatePath + 'templates/dashboard-config-save-modal.html',
+                    templateUrl: Data.templatePath + 'templates/dashboard/dashboard-config-save-modal.html',
                     size: "md",
                     resolve: {
                         basketInput: function () {

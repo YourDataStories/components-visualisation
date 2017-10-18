@@ -1,16 +1,16 @@
-angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
-    function ($timeout, DashboardService) {
+angular.module("yds").directive("ydsYearRange", ["$timeout", "DashboardService", "Data",
+    function ($timeout, DashboardService, Data) {
         return {
-            restrict: 'E',
+            restrict: "E",
             scope: {
-                minYear: '@',       // Minimum year of the slider
-                maxYear: '@',       // Maximum year of the slider
-                dashboardId: '@',   // ID to use for saving year range in DashboardService
-                vertical: '@',      // If true the slider will be vertical (defaults to horizontal)
-                height: '@',        // Height of the slider (optional)
-                title: '@'          // Title to show above slider (optional)
+                minYear: "@",       // Minimum year of the slider
+                maxYear: "@",       // Maximum year of the slider
+                dashboardId: "@",   // ID to use for saving year range in DashboardService
+                vertical: "@",      // If true the slider will be vertical (defaults to horizontal)
+                height: "@",        // Height of the slider (optional)
+                title: "@"          // Title to show above slider (optional)
             },
-            templateUrl: ((typeof Drupal != 'undefined') ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + '/' : '') + 'templates/year-range-selector.html',
+            templateUrl: Data.templatePath + "templates/dashboard/year-range-selector.html",
             link: function (scope, element, attrs) {
                 scope.initialized = false;
 
@@ -29,11 +29,11 @@ angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
                     maxYear = 2050;
 
                 // Check if dashboardId attr is defined, else assign default value
-                if (_.isUndefined(dashboardId) || dashboardId.length == 0)
+                if (_.isUndefined(dashboardId) || dashboardId.length === 0)
                     dashboardId = "default";
 
                 // Check if vertical attr is defined, else assign default value
-                if (_.isUndefined(vertical) || (vertical != "true" && vertical != "false"))
+                if (_.isUndefined(vertical) || (vertical !== "true" && vertical !== "false"))
                     vertical = "false";
 
                 if (!_.isUndefined(height) && !_.isNaN(height)) {
@@ -69,7 +69,7 @@ angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
                         floor: minYear,
                         ceil: maxYear,
                         step: 1,
-                        vertical: (vertical == "true"),
+                        vertical: (vertical === "true"),
                         onEnd: updateYearRange
                     }
                 };
@@ -94,7 +94,7 @@ angular.module('yds').directive('ydsYearRange', ['$timeout', 'DashboardService',
 
                 // Make sure to show the pointers in the correct places
                 $timeout(function () {
-                    scope.$broadcast('reCalcViewDimensions');
+                    scope.$broadcast("reCalcViewDimensions");
                 }, 50);
             }
         };

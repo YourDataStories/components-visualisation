@@ -22,7 +22,7 @@ angular.module("yds").directive("ydsDashboardVisualization", ["DashboardService"
 
                 enableRating: "@"       // Enable rating buttons for this component
             },
-            templateUrl: Data.templatePath + "templates/dashboard-visualization.html",
+            templateUrl: Data.templatePath + "templates/dashboard/dashboard-visualization.html",
             link: function (scope) {
                 var dashboardId = scope.dashboardId;
                 var disableColor = scope.disableColor;

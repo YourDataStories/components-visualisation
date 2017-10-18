@@ -17,7 +17,7 @@ angular.module('yds').directive('ydsBarAdvanced', ['$timeout', '$q', 'Data', 'Fi
 			comboboxLabels: '@',	//set the labels that will be used for each combobox
 			comboboxAttrs: '@'		//set the parameter each combobox will sent to the the server
 		},
-		templateUrl: Data.templatePath + 'templates/bar-advanced.html',
+		templateUrl: Data.templatePath + 'templates/visualisation/bar-advanced.html',
 		link: function (scope, element, attrs) {
 			//reference the dom element in which the yds-bar-advanced is rendered
 			var barContainer = angular.element(element[0].querySelector('.bar-container'));

@@ -39,7 +39,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 enableRating: "@",      // Enable rating buttons for this component
                 disableExplanation: "@" // Set to true to disable the explanation button
             },
-            templateUrl: Data.templatePath + "templates/grid-results.html",
+            templateUrl: Data.templatePath + "templates/visualisation/grid-results.html",
             link: function (scope, element) {
                 // Reference the DOM elements of the grid
                 var gridWrapper = angular.element(element[0].querySelector(".component-wrapper"));
@@ -331,7 +331,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                         // Open the modal
                         var exportModal = $uibModal.open({
                             controller: "GridResultsExportModalCtrl",
-                            templateUrl: Data.templatePath + "templates/grid-results-export-modal.html",
+                            templateUrl: Data.templatePath + "templates/visualisation/grid-results-export-modal.html",
                             size: "md",
                             resolve: {
                                 modalInput: function () {

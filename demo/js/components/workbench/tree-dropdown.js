@@ -10,7 +10,7 @@ angular.module("yds").directive("ydsTree", ["Data",
                 selectedNode: "=",  // Selected node will be kept in this variable
                 placeholder: "@"    // Placeholder text for the dropdown
             },
-            templateUrl: Data.templatePath + "templates/tree-dropdown.html",
+            templateUrl: Data.templatePath + "templates/workbench/tree-dropdown.html",
             link: function (scope) {
                 // If there is a problem with the placeholder, set default value
                 if (_.isUndefined(scope.placeholder) || scope.placeholder.trim().length === 0) {

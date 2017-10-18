@@ -16,7 +16,7 @@ angular.module("yds").directive("ydsDashboardVisualizationGridBubble", ["Dashboa
 
                 enableRating: "@"   // Enable rating buttons for this component
             },
-            templateUrl: Data.templatePath + "templates/dashboard-visualisation-grid-bubble.html",
+            templateUrl: Data.templatePath + "templates/dashboard/dashboard-visualisation-grid-bubble.html",
             link: function (scope) {
                 var dashboardId = scope.dashboardId;
                 var disableColor = scope.disableColor;

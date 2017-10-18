@@ -1,7 +1,7 @@
 angular.module("yds").directive("ydsStatistics", ["Data", "$interval", function (Data, $interval) {
     return {
         restrict: "E",
-        templateUrl: Data.templatePath + "templates/statistics.html",
+        templateUrl: Data.templatePath + "templates/general-purpose/statistics.html",
         link: function (scope) {
             scope.statistics = {
                 initialized: false,

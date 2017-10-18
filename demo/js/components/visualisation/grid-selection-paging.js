@@ -26,7 +26,7 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
 
                 enableRating: "@"       // Enable rating buttons for this component
             },
-            templateUrl: Data.templatePath + "templates/grid.html",
+            templateUrl: Data.templatePath + "templates/visualisation/grid.html",
             link: function (scope, element) {
                 // Get the DOM elements that will contain the grid
                 var gridWrapper = _.first(angular.element(element[0].querySelector(".component-wrapper")));
