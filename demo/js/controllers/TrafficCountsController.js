@@ -34,6 +34,7 @@ angular.module("yds").controller("TrafficCountsController", ["$scope", "$timeout
 
             $timeout(function () {
                 scope.showGrid = true;
+                DashboardService.setGridSelection("galway_contract", undefined);
                 DashboardService.setGridSelection("galway_traffic_point", newPoint);
             });
         });
