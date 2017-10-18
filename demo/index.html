@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Disable caching of demo page -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
 
     <!--
     Merged file containing all the css files required by the external js libs used in the project.
@@ -44,84 +44,99 @@
     <script src="lib/angular-recursion.min.js"></script>    <!-- Angular Recursion (for Tree widget) -->
     <script src="lib/angular-tree-widget.js"></script>      <!-- Angular Tree Widget -->
     <script src="https://platform.twitter.com/widgets.js"></script> <!-- Twitter widget library -->
-    <script src="lib/dirDisqus.js"></script>                <!-- Disqus for Angular from https://github.com/michaelbromley/angularUtils/tree/master/src/directives/disqus -->
+    <!-- Disqus for Angular from https://github.com/michaelbromley/angularUtils/tree/master/src/directives/disqus -->
+    <script src="lib/dirDisqus.js"></script>
     <script src="lib/bootstrap-collapse.min.js"></script>   <!-- Collapse plugin of Bootstrap, used for Navbar -->
     <script src="js/app.js"></script>
     <script src="js/yds-lib.js"></script>
-
-    <script src="js/services/basketService.js"></script>
-    <script src="js/services/workbenchService.js"></script>
-    <script src="js/services/searchService.js"></script>
-    <script src="js/services/queryBuilderService.js"></script>
-    <script src="js/services/dashboardService.js"></script>
-    <script src="js/services/personalizationService.js"></script>
-    <script src="js/services/graphService.js"></script>
-    <script src="js/services/pValuesService.js"></script>
 
     <!-- library & directive to fix same origin iframe on IE & FF -->
     <script src="lib/dev/xdm/easyXDM.min.js"></script>
     <script src="lib/dev/xdm/xdm.js"></script>
 
-    <script src="js/translations.js"></script>
-    <script src="js/components/search.js"></script>
-    <script src="js/components/search-tabs.js"></script>
-    <script src="js/components/search-preview.js"></script>
+    <!--Services-->
+    <script src="js/services/basketService.js"></script>
+    <script src="js/services/dashboardService.js"></script>
+    <script src="js/services/graphService.js"></script>
+    <script src="js/services/personalizationService.js"></script>
+    <script src="js/services/pValuesService.js"></script>
+    <script src="js/services/queryBuilderService.js"></script>
+    <script src="js/services/searchService.js"></script>
+    <script src="js/services/workbenchService.js"></script>
+
+    <!--Other components-->
     <script src="js/components/basket-preview.js"></script>
-    <script src="js/components/facets.js"></script>
-    <script src="js/components/results.js"></script>
-    <script src="js/components/grid-results.js"></script>
-    <script src="js/components/query-builder.js"></script>
-    <script src="js/components/concept-description.js"></script>
-    <script src="js/components/dashboard-updater.js"></script>
-    <script src="js/components/cache-info.js"></script>
-    <script src="js/components/dashboard-visualization.js"></script>
-    <script src="js/components/dashboard-visualisation-grid-bubble.js"></script>
-    <script src="js/components/aggregate.js"></script>
-    <script src="js/components/year-range-selector.js"></script>
-    <script src="js/components/related-items.js"></script>
-    <script src="js/components/region-selector-gr.js"></script>
-    <script src="js/components/clear-filters-button.js"></script>
-    <script src="js/components/save-filters-button.js"></script>
-    <script src="js/components/dashboard-sharing.js"></script>
-    <script src="js/components/tree-dropdown.js"></script>
-    <script src="js/components/traffic-observation.js"></script>
-    <script src="js/components/twitter-search.js"></script>
-    <script src="js/components/dcat-ap-item.js"></script>
-    <script src="js/components/general-purpose/alternative-names.js"></script>
-
-    <script src="js/components/heatmap.js"></script>
-    <script src="js/components/statistics.js"></script>
-
-    <script src="js/components/info.js"></script>
-    <script src="js/components/info-table.js"></script>
-    <script src="js/components/map.js"></script>
-    <script src="js/components/grid.js"></script>
-    <script src="js/components/grid-advanced.js"></script>
-    <script src="js/components/grid-selection-paging.js"></script>
-    <script src="js/components/line.js"></script>
-    <script src="js/components/line-advanced.js"></script>
-    <script src="js/components/scatter.js"></script>
-    <script src="js/components/bubble.js"></script>
-    <script src="js/components/treemap.js"></script>
-    <script src="js/components/bar.js"></script>
-    <script src="js/components/bar-advanced.js"></script>
-    <script src="js/components/pie.js"></script>
-    <script src="js/components/donut-pie.js"></script>
-    <script src="js/components/pie-advanced.js"></script>
-    <script src="js/components/geo-editing.js"></script>
     <script src="js/components/browse.js"></script>
-    <script src="js/components/graph.js"></script>
-    <script src="js/components/workbench.js"></script>
-    <script src="js/components/workbench-new.js"></script>
-
-    <script src="js/components/embed-button.js"></script>
-    <script src="js/components/basket-button.js"></script>
-    <script src="js/components/rating-buttons.js"></script>
-    <script src="js/components/explanation-button.js"></script>
+    <script src="js/components/cache-info.js"></script>
+    <script src="js/components/dcat-ap-item.js"></script>
     <script src="js/components/explanation-query.js"></script>
+    <script src="js/components/geo-editing.js"></script>
     <script src="js/components/hybrid.js"></script>
     <script src="js/components/user-id.js"></script>
+    <script src="js/translations.js"></script>
 
+    <!--Button components-->
+    <script src="js/components/chart-buttons/basket-button.js"></script>
+    <script src="js/components/chart-buttons/embed-button.js"></script>
+    <script src="js/components/chart-buttons/explanation-button.js"></script>
+    <script src="js/components/chart-buttons/rating-buttons.js"></script>
+
+    <!--Dashboard-related components-->
+    <script src="js/components/dashboard/clear-filters-button.js"></script>
+    <script src="js/components/dashboard/dashboard-sharing.js"></script>
+    <script src="js/components/dashboard/dashboard-updater.js"></script>
+    <script src="js/components/dashboard/dashboard-visualisation-grid-bubble.js"></script>
+    <script src="js/components/dashboard/dashboard-visualization.js"></script>
+    <script src="js/components/dashboard/region-selector-gr.js"></script>
+    <script src="js/components/dashboard/save-filters-button.js"></script>
+    <script src="js/components/dashboard/year-range-selector.js"></script>
+
+    <!--General purpose components-->
+    <script src="js/components/general-purpose/aggregate.js"></script>
+    <script src="js/components/general-purpose/alternative-names.js"></script>
+    <script src="js/components/general-purpose/info-table.js"></script>
+    <script src="js/components/general-purpose/info.js"></script>
+    <script src="js/components/general-purpose/query-builder.js"></script>
+    <script src="js/components/general-purpose/results.js"></script>
+    <script src="js/components/general-purpose/statistics.js"></script>
+
+    <!--Search-related components-->
+    <script src="js/components/search/concept-description.js"></script>
+    <script src="js/components/search/facets.js"></script>
+    <script src="js/components/search/search-preview.js"></script>
+    <script src="js/components/search/search-tabs.js"></script>
+    <script src="js/components/search/search.js"></script>
+
+    <!--Social components-->
+    <script src="js/components/social/related-items.js"></script>
+    <script src="js/components/social/twitter-search.js"></script>
+
+    <!--Visualisation components-->
+    <script src="js/components/visualisation/bar-advanced.js"></script>
+    <script src="js/components/visualisation/bar.js"></script>
+    <script src="js/components/visualisation/bubble.js"></script>
+    <script src="js/components/visualisation/donut-pie.js"></script>
+    <script src="js/components/visualisation/graph.js"></script>
+    <script src="js/components/visualisation/grid-advanced.js"></script>
+    <script src="js/components/visualisation/grid-results.js"></script>
+    <script src="js/components/visualisation/grid-selection-paging.js"></script>
+    <script src="js/components/visualisation/grid.js"></script>
+    <script src="js/components/visualisation/heatmap.js"></script>
+    <script src="js/components/visualisation/line-advanced.js"></script>
+    <script src="js/components/visualisation/line.js"></script>
+    <script src="js/components/visualisation/map.js"></script>
+    <script src="js/components/visualisation/pie-advanced.js"></script>
+    <script src="js/components/visualisation/pie.js"></script>
+    <script src="js/components/visualisation/scatter.js"></script>
+    <script src="js/components/visualisation/traffic-observation.js"></script>
+    <script src="js/components/visualisation/treemap.js"></script>
+
+    <!--Workbench-related components-->
+    <script src="js/components/workbench/tree-dropdown.js"></script>
+    <script src="js/components/workbench/workbench-new.js"></script>
+    <script src="js/components/workbench/workbench.js"></script>
+
+    <!--Controllers-->
     <script src="js/controllers/dashboard.js"></script>
     <script src="js/controllers/dashboard2.js"></script>
     <script src="js/controllers/dashboard-p1.js"></script>
