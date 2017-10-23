@@ -22,6 +22,7 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
 
             enableRating: "@",      // Enable rating buttons for this component
             disableClustering: "@", // Set to true to disable the point clustering
+            maxClusterRadius: "@",  // Maximum radius that a cluster will cover from the central marker in pixels.
             disableExplanation: "@" // Set to true to disable the explanation button
         },
         templateUrl: Data.templatePath + "templates/visualisation/map.html",
@@ -37,6 +38,7 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
             var lang = scope.lang;
             var zoomControl = scope.zoomControl;
             var disableClustering = scope.disableClustering;
+            var maxClusterRadius = parseInt(scope.maxClusterRadius);
             var elementH = scope.elementH;
 
             // When the points are more than the number here, clustering will be used
@@ -71,6 +73,10 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
             // Check if the component's height attribute is defined, else assign default value
             if (_.isUndefined(elementH) || _.isNaN(elementH))
                 elementH = 200;
+
+            // Check if the component's maxClusterRadius attribute is defined, else assign default value
+            if (_.isUndefined(maxClusterRadius) || _.isNaN(maxClusterRadius))
+                maxClusterRadius = 80;
 
             // Set the height of the chart
             mapContainer.style.height = elementH + "px";
@@ -119,7 +125,9 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
 
                         // Check if we should cluster the markers (if # of routes exceeds the threshold)
                         var shouldCluster = disableClustering !== "true" && (routes.length > clusterThreshold);
-                        var clusterGroup = L.markerClusterGroup();
+                        var clusterGroup = L.markerClusterGroup({
+                            maxClusterRadius: maxClusterRadius
+                        });
 
                         // Iterate through the different routes and visualize them on the map
                         _.each(routes, function (routeObj) {
