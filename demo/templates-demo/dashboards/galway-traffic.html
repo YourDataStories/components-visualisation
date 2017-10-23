@@ -25,12 +25,12 @@
             </div>
 
             <!--Related Contracts list row-->
-            <div ng-if="selectedPoint.point.length > 0" class="row">
+            <div ng-if="selectedPoint.point.id.length > 0" class="row">
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 style="margin-top: 0; margin-bottom: 0">Related projects for
-                                <small>{{ selectedPoint.point }}</small>
+                                <small>{{ selectedPoint.point.title }}</small>
                             </h4>
                         </div>
                         <div class="panel-body">
@@ -41,7 +41,7 @@
                             <yds-dashboard-updater
                                     type="selection-grid"
                                     ng-if="showGrid"
-                                    project-id="{{ selectedPoint.point }}"
+                                    project-id="{{ selectedPoint.point.id }}"
                                     view-type="contract.for.trafficobservation"
                                     selection-type="single"
                                     dashboard-id="galway_traffic"
@@ -56,12 +56,12 @@
         </div>
 
         <!--Traffic counts & graph column-->
-        <div ng-if="selectedPoint.point.length > 0" class="col-md-5">
+        <div ng-if="selectedPoint.point.id.length > 0" class="col-md-5">
             <div class="row">
                 <div class="col-md-12">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            <h4 style="margin-top: 0; margin-bottom: 0">{{ selectedPoint.point }}</h4>
+                            <h4 style="margin-top: 0; margin-bottom: 0">{{ selectedPoint.point.title }}</h4>
                         </div>
                         <div class="panel-body">
                             <div class="row">
@@ -77,8 +77,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <p>
-                                        Cordon count data for the
-                                        <code style="word-break: break-all">{{ selectedPoint.point}}</code> base week
+                                        Cordon count data for the {{ selectedPoint.point.title }} base week
                                         counts by year. Select Day or Totals to define the input for the graph.
                                     </p>
                                 </div>
