@@ -30,21 +30,28 @@
                     </h4>
                 </div>
                 <div class="panel-body">
-                    <!--Description-->
-                    <p>Select a related project from the list to display more information.</p>
-
-                    <!--Selection grid-->
-                    <yds-dashboard-updater
-                            type="selection-grid"
-                            ng-if="showGrid"
-                            project-id="{{ selectedPoint.point.id }}"
-                            view-type="contract.for.trafficobservation"
-                            selection-type="single"
-                            dashboard-id="galway_traffic"
-                            selection-id="galway_contract"
-                            min-height="400"
-                            lang="{{ lang }}">
-                    </yds-dashboard-updater>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!--Description-->
+                            <p>Select a related project from the list to display more information.</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" style="padding-right: 5px; padding-left: 5px; margin-bottom: 15px">
+                            <!--Selection grid-->
+                            <yds-dashboard-updater
+                                    type="selection-grid"
+                                    ng-if="showGrid"
+                                    project-id="{{ selectedPoint.point.id }}"
+                                    view-type="contract.for.trafficobservation"
+                                    selection-type="single"
+                                    dashboard-id="galway_traffic"
+                                    selection-id="galway_contract"
+                                    min-height="400"
+                                    lang="{{ lang }}">
+                            </yds-dashboard-updater>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -52,7 +59,7 @@
 
     <!--Related Contracts list row-->
     <div ng-if="selectedPoint.point.id.length > 0" class="row">
-        <div class="col-md-offset-2 col-md-8">
+        <div class="col-md-12">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4 style="margin-top: 0; margin-bottom: 0">{{ selectedPoint.point.title }}</h4>
