@@ -21,6 +21,7 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
             popoverPos: "@",        // The side of the embed button from which the embed information window will appear
 
             enableRating: "@",      // Enable rating buttons for this component
+            disableClustering: "@", // Set to true to disable the point clustering
             disableExplanation: "@" // Set to true to disable the explanation button
         },
         templateUrl: Data.templatePath + "templates/visualisation/map.html",
@@ -35,6 +36,7 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
             var viewType = scope.viewType;
             var lang = scope.lang;
             var zoomControl = scope.zoomControl;
+            var disableClustering = scope.disableClustering;
             var elementH = scope.elementH;
 
             // When the points are more than the number here, clustering will be used
@@ -54,15 +56,19 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
             if (_.isUndefined(viewType) || viewType.trim() === "")
                 viewType = "default";
 
-            // Check if the language attr is defined, else assign default value
+            // Check if the language attribute is defined, else assign default value
             if (_.isUndefined(lang))
                 lang = "en";
 
-            // Check if the zoom-control attr is defined, else assign default value
+            // Check if the zoom-control attribute is defined, else assign default value
             if (_.isUndefined(zoomControl) || (zoomControl !== "true" && zoomControl !== "false"))
                 zoomControl = "true";
 
-            // Check if the component's height attr is defined, else assign default value
+            // Check if the disableClustering attribute is defined, else assign default value
+            if (_.isUndefined(disableClustering) || (disableClustering !== "true" && disableClustering !== "false"))
+                disableClustering = "false";
+
+            // Check if the component's height attribute is defined, else assign default value
             if (_.isUndefined(elementH) || _.isNaN(elementH))
                 elementH = 200;
 
@@ -112,7 +118,7 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
                         var routes = response.data.routes;
 
                         // Check if we should cluster the markers (if # of routes exceeds the threshold)
-                        var shouldCluster = routes.length > clusterThreshold;
+                        var shouldCluster = disableClustering !== "true" && (routes.length > clusterThreshold);
                         var clusterGroup = L.markerClusterGroup();
 
                         // Iterate through the different routes and visualize them on the map
