@@ -236,4 +236,12 @@
             lang="{{ lang }}"
             extra-params="extraParams">
     </yds-aggregate>
+
+    <yds-traffic-observation
+            ng-switch-when="traffic-observation"
+            project-id="{{ projectId }}"
+            view-type="{{ viewType }}"
+            element-h="{{ minHeight }}"
+            lang="{{ lang }}">
+    </yds-traffic-observation>
 </div>

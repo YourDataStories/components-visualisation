@@ -66,12 +66,15 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-md-12" style="padding-right: 0; padding-left: 0">
-                                    <yds-traffic-observation
-                                            project-id="{{ galwayProjectId }}"
+                                    <yds-dashboard-updater
+                                            type="traffic-observation"
+                                            ng-if="showGrid"
+                                            project-id="{{ selectedPoint.point.id }}"
                                             view-type="contract.trafficobservation.per.weekday.over.year"
-                                            element-h="350"
+                                            dashboard-id="galway_traffic"
+                                            min-height="350"
                                             lang="{{ lang }}">
-                                    </yds-traffic-observation>
+                                    </yds-dashboard-updater>
                                 </div>
                             </div>
                             <div class="row">
