@@ -18,11 +18,20 @@
             </tr>
 
             <!--Table rows-->
-            <tr ng-repeat="row in rowData">
+            <tr ng-repeat="row in rowData track by $index" ng-init="rowIndex = $index">
                 <!--Columns-->
-                <td ng-repeat="column in columnDefs"
-                    ng-class="{'table-cell-center': !$first}">
-                    {{ row[column.field] }}
+                <td ng-repeat="column in columnDefs track by $index" ng-class="{'table-cell-center': !$first}">
+                    <!--Field name in a button, for selection-->
+                    <span ng-if="allowSelection === 'true' && $index === 0">
+                        <button ng-click="selectRow(rowIndex, row)" class="btn btn-xs btn-default" type="button">
+                            {{ row[column.field] }}
+                        </button>
+                    </span>
+
+                    <!--Raw field name-->
+                    <span ng-if="allowSelection !== 'true' || $index > 0">
+                        {{ row[column.field] }}
+                    </span>
                 </td>
 
                 <!--Sparkline column-->

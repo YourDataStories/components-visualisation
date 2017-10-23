@@ -6,17 +6,18 @@ angular.module("yds").directive("ydsTrafficObservation", ["$timeout", "Data",
                 projectId: "@",         // ID of the project that the data belong
                 viewType: "@",          // Name of the array that contains the visualised data
                 lang: "@",              // Lang of the visualised data
-
                 extraParams: "=",       // Extra attributes to pass to the API, if needed
                 baseUrl: "@",           // Base URL to send to API (optional)
+
+                allowSelection: "@",    // Set to true to enable selection of items in the 1st column
 
                 elementH: "@"           // Set the height of the component
             },
             templateUrl: Data.templatePath + "templates/traffic-observation.html",
-            link: function (scope, element, attrs) {
-                //reference the dom elements in which the yds-traffic-observation is rendered
-                var trafficWrapper = angular.element(element[0].querySelector(".component-wrapper"));
-                var trafficContainer = angular.element(element[0].querySelector(".traffic-observation-container"));
+            link: function (scope, element) {
+                // Reference the DOM elements in which the yds-traffic-observation is rendered
+                var trafficWrapper = _.first(angular.element(element[0].querySelector(".component-wrapper")));
+                var trafficContainer = _.first(angular.element(element[0].querySelector(".traffic-observation-container")));
 
                 var elementId = "traffic" + Data.createRandomId();
 
@@ -27,7 +28,7 @@ angular.module("yds").directive("ydsTrafficObservation", ["$timeout", "Data",
 
                 var baseUrl = scope.baseUrl;
 
-                //check if project id or grid type are defined
+                // Check if project id or grid type are defined
                 if (_.isUndefined(projectId) || projectId.trim() === "") {
                     scope.ydsAlert = "The YDS component is not properly initialized " +
                         "because the projectId or the viewType attribute aren't configured properly. " +
@@ -35,21 +36,25 @@ angular.module("yds").directive("ydsTrafficObservation", ["$timeout", "Data",
                     return false;
                 }
 
-                //check if view-type attribute is empty and assign the default value
+                // Check if view-type attribute is empty and assign the default value
                 if (_.isUndefined(viewType) || viewType.trim() === "")
                     viewType = "default";
 
-                //check if the language attr is defined, else assign default value
+                // Check if the language attr is defined, else assign default value
                 if (_.isUndefined(lang) || lang.trim() === "")
                     lang = "en";
 
-                //check if the component's height attr is defined, else assign default value
+                // If allowSelection is undefined, set default value
+                if (_.isUndefined(scope.allowSelection) || (scope.allowSelection !== "true" && scope.allowSelection !== "false"))
+                    scope.allowSelection = "false";
+
+                // Check if the component's height attr is defined, else assign default value
                 if (_.isUndefined(elementH) || _.isNaN(elementH))
                     elementH = 200;
 
-                //set the id and the height of the grid component
-                trafficContainer[0].id = elementId;
-                trafficWrapper[0].style.height = elementH + "px";
+                // Set the id and the height of the grid component
+                trafficContainer.id = elementId;
+                trafficWrapper.style.height = elementH + "px";
 
                 if (viewType === "contract.trafficobservation.per.weekday.over.year" ||
                     viewType === "contract.trafficobservation.per.year.over.vehicle.type") {
@@ -256,6 +261,15 @@ angular.module("yds").directive("ydsTrafficObservation", ["$timeout", "Data",
                             else
                                 scope.ydsAlert = error.message;
                         });
+                };
+
+                /**
+                 * Select a row
+                 * @param rowIndex  Index of row to select
+                 * @param row       Data of row to select
+                 */
+                scope.selectRow = function (rowIndex, row) {
+                    console.log("Selecting row:", rowIndex, row);
                 };
 
                 createGrid();
