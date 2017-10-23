@@ -2,89 +2,81 @@
     <div class="row">
         <!--Map & related contracts column-->
         <div class="col-md-7">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 style="margin-top: 0; margin-bottom: 0">Galway Traffic Counts</h3>
-                        </div>
-                        <div class="panel-body">
-                            <!--Map-->
-                            <p>Click on a traffic count node to display the traffic count data.</p>
-                            <yds-map
-                                    project-id="{{ galwayProjectId }}"
-                                    view-type="contract.trafficobservation.all"
-                                    enable-rating="true"
-                                    element-h="400"
-                                    clicked-point="selectedPoint"
-                                    lang="{{ lang }}">
-                            </yds-map>
-                        </div>
-                    </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 style="margin-top: 0; margin-bottom: 0">Galway Traffic Counts</h3>
                 </div>
-            </div>
-
-            <!--Related Contracts list row-->
-            <div ng-if="selectedPoint.point.id.length > 0" class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 style="margin-top: 0; margin-bottom: 0">Related projects for
-                                <small>{{ selectedPoint.point.title }}</small>
-                            </h4>
-                        </div>
-                        <div class="panel-body">
-                            <!--Description-->
-                            <p>Select a related project from the list to display more information.</p>
-
-                            <!--Selection grid-->
-                            <yds-dashboard-updater
-                                    type="selection-grid"
-                                    ng-if="showGrid"
-                                    project-id="{{ selectedPoint.point.id }}"
-                                    view-type="contract.for.trafficobservation"
-                                    selection-type="single"
-                                    dashboard-id="galway_traffic"
-                                    selection-id="galway_contract"
-                                    min-height="300"
-                                    lang="{{ lang }}">
-                            </yds-dashboard-updater>
-                        </div>
-                    </div>
+                <div class="panel-body">
+                    <!--Map-->
+                    <p>Click on a traffic count node to display the traffic count data.</p>
+                    <yds-map
+                            project-id="{{ galwayProjectId }}"
+                            view-type="contract.trafficobservation.all"
+                            enable-rating="true"
+                            element-h="400"
+                            clicked-point="selectedPoint"
+                            lang="{{ lang }}">
+                    </yds-map>
                 </div>
             </div>
         </div>
 
         <!--Traffic counts & graph column-->
         <div ng-if="selectedPoint.point.id.length > 0" class="col-md-5">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h4 style="margin-top: 0; margin-bottom: 0">{{ selectedPoint.point.title }}</h4>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 style="margin-top: 0; margin-bottom: 0">Related projects for
+                        <small>{{ selectedPoint.point.title }}</small>
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <!--Description-->
+                    <p>Select a related project from the list to display more information.</p>
+
+                    <!--Selection grid-->
+                    <yds-dashboard-updater
+                            type="selection-grid"
+                            ng-if="showGrid"
+                            project-id="{{ selectedPoint.point.id }}"
+                            view-type="contract.for.trafficobservation"
+                            selection-type="single"
+                            dashboard-id="galway_traffic"
+                            selection-id="galway_contract"
+                            min-height="400"
+                            lang="{{ lang }}">
+                    </yds-dashboard-updater>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Related Contracts list row-->
+    <div ng-if="selectedPoint.point.id.length > 0" class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 style="margin-top: 0; margin-bottom: 0">{{ selectedPoint.point.title }}</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12" style="padding-right: 0; padding-left: 0">
+                            <yds-dashboard-updater
+                                    type="traffic-observation"
+                                    ng-if="showGrid"
+                                    project-id="{{ selectedPoint.point.id }}"
+                                    view-type="contract.trafficobservation.per.weekday.over.year"
+                                    dashboard-id="galway_traffic"
+                                    min-height="320"
+                                    lang="{{ lang }}">
+                            </yds-dashboard-updater>
                         </div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-md-12" style="padding-right: 0; padding-left: 0">
-                                    <yds-dashboard-updater
-                                            type="traffic-observation"
-                                            ng-if="showGrid"
-                                            project-id="{{ selectedPoint.point.id }}"
-                                            view-type="contract.trafficobservation.per.weekday.over.year"
-                                            dashboard-id="galway_traffic"
-                                            min-height="350"
-                                            lang="{{ lang }}">
-                                    </yds-dashboard-updater>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <p>
-                                        Cordon count data for the {{ selectedPoint.point.title }} base week
-                                        counts by year. Select Day or Totals to define the input for the graph.
-                                    </p>
-                                </div>
-                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                Cordon count data for the {{ selectedPoint.point.title }} base week
+                                counts by year. Select Day or Totals to define the input for the graph.
+                            </p>
                         </div>
                     </div>
                 </div>
