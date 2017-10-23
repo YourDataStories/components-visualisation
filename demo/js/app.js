@@ -44,6 +44,11 @@ ydsDemo.controller("ProjectDetailsController", ["$scope", "$location", "YDS_CONS
 
                 projectId = "http://linkedeconomy.org/resource/Contract/AwardNotice/2013208591/5795646";
                 break;
+            case "/contract-ted-qb":
+                $scope.lang = "en";
+
+                projectId = "http://linkedeconomy.org/ontology/traffic/resource/ObservationPoint/1";
+                break;
             case "/contract-ted":
                 $scope.lang = "en";
 
@@ -201,6 +206,11 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
         })
         .state("contract-ted-n6", {
             url: "/contract-ted-n6",
+            templateUrl: "templates-demo/pages/contract-ted.html",
+            controller: "ProjectDetailsController"
+        })
+        .state("contract-ted-qb", {
+            url: "/contract-ted-qb",
             templateUrl: "templates-demo/pages/contract-ted.html",
             controller: "ProjectDetailsController"
         })
