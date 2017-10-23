@@ -7,7 +7,7 @@
                     ng-class="{'table-cell-center': !$first}">
                     {{ heading.headerName }}
                 </th>
-                <th class="table-cell-center">Chart</th>
+                <th class="table-cell-center" ng-if="showChart">Chart</th>
             </tr>
 
             <!--Table rows-->
@@ -28,7 +28,7 @@
                 </td>
 
                 <!--Sparkline column-->
-                <td style="padding: 3px">
+                <td ng-if="showChart" style="padding: 3px">
                     <div ng-attr-id="{{ row.id }}"></div>
                 </td>
             </tr>
