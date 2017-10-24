@@ -57,7 +57,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                     sorting: scope.sorting,
                     quickFiltering: scope.quickFiltering,
                     colResize: scope.colResize,
-                    pageSize: scope.pageSize,
+                    pageSize: parseInt(scope.pageSize),
                     exporting: scope.exporting,
                     exportBtnX: parseInt(scope.exportBtnX),
                     exportBtnY: parseInt(scope.exportBtnY),
@@ -131,7 +131,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
 
                 // Check if the page size attr is defined, else assign default value
                 if (_.isUndefined(grid.pageSize) || _.isNaN(grid.pageSize))
-                    grid.pageSize = "100";
+                    grid.pageSize = 100;
 
                 // Check if the exporting attr is defined, else assign default value
                 if (_.isUndefined(grid.exporting) || (grid.exporting !== "true" && grid.exporting !== "false"))
@@ -416,8 +416,8 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                     var dataSource = {
                         rowCount: null, // behave as infinite scroll
                         maxPagesInCache: 10,
-                        overflowSize: parseInt(grid.pageSize),
-                        pageSize: parseInt(grid.pageSize),
+                        overflowSize: grid.pageSize,
+                        pageSize: grid.pageSize,
                         getRows: function (params) {
                             // Function to be called when grid results are retrieved successfully
                             var gridResultDataSuccess = function (response) {
@@ -453,6 +453,12 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
 
                                     // Get number of results
                                     scope.resultsNum = parseInt(scope.numberOfItems);
+
+                                    // In grid processing, if the numberOfItems is not defined, but the response has
+                                    // less items than the page size, we can assume that we got all the items.
+                                    if (_.isNaN(scope.resultsNum) && responseData.length < grid.pageSize) {
+                                        scope.resultsNum = responseData.length;
+                                    }
 
                                     // Get view object
                                     responseView = response.view;
