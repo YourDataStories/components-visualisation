@@ -442,7 +442,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                     scope.resultsNum = response.data.response.numFound;
 
                                     // Create array with possible view names (view type of tab should always be preferred)
-                                    var resultTypes = _.first(responseData).type;
+                                    var resultTypes = _.isEmpty(responseData) ? [] : _.first(responseData).type;
                                     var possibleViewNames = _.union([grid.viewType], resultTypes);
 
                                     // Find correct view for these results and their number
@@ -482,12 +482,16 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
 
                                 // If there are no results, show empty grid
                                 if (_.isEmpty(responseData)) {
+                                    scope.gridOptions.api.showNoRowsOverlay();
                                     params.successCallback(responseData, 0);
                                     return;
+                                } else {
+                                    // Hide any "no rows" overlay that may be shown
+                                    scope.gridOptions.api.hideOverlay();
                                 }
 
                                 if (!hasColDefs) {
-                                    // Format the column definitions returned from the API and add 2 extra columns to them
+                                    // Format the column definitions returned from the API
                                     var columnDefs = Data.prepareGridColumns(responseView);
 
                                     if (enableViewButton === "true") {
