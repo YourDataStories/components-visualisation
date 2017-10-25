@@ -347,6 +347,38 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
         return deferred.promise;
     };
 
+    /**
+     * Get options for the combobox-selector component
+     * @param facet_field
+     */
+    dataService.getComboboxFacetItems = function (facet_field) {
+        var deferred = $q.defer();
+
+        $http({
+            method: "GET",
+            url: "http://" + YDS_CONSTANTS.API_SEARCH,
+            params: {
+                "q": "*",
+                "start": 0,
+                "fq": "{!tag=TYPE}type:(TrafficObservation)",
+                "rows": 0,
+                "facet": "true",
+                "facet.field": facet_field
+            },
+            headers: {"Content-Type": "application/json"}
+        }).then(function (response) {
+            var list = response.data.data["facet_counts"]["facet_fields"][facet_field];
+            list = _.reject(list, function (item) {
+                return _.isNumber(item);
+            });
+            deferred.resolve(list);
+        }, function (error) {
+            deferred.reject(error.data);
+        });
+
+        return deferred.promise;
+    };
+
     dataService.createRandomId = function () {
         return "_" + Math.random().toString(36).substr(2, 9);
     };

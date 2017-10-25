@@ -1,0 +1,11 @@
+<div class="component-wrapper">
+    <!--Title-->
+    <b>{{ title }}</b>
+
+    <!--Select-->
+    <select class="form-control"
+            ng-options="item for item in options"
+            ng-model="selection"
+            ng-change="selectionChanged(selection)">
+    </select>
+</div>
