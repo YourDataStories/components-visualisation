@@ -5,6 +5,20 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-md-7">
+            <yds-map
+                    project-id="{{ galwayProjectId }}"
+                    view-type="contract.trafficobservation.all"
+                    enable-rating="true"
+                    element-h="400"
+                    max-cluster-radius="1"
+                    clicked-point="selectedPoint"
+                    lang="{{ lang }}">
+            </yds-map>
+        </div>
+    </div>
+
     <!--Basket-->
     <yds-basket-preview
             user-id="ydsUser">
