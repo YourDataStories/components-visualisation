@@ -85,15 +85,17 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-5">
+    <!--Comboboxes for vehicle type & traffic direction-->
+    <div class="row" style="margin-top: 5px">
+        <div class="col-md-offset-2 col-md-4">
             <yds-combobox-selector
                     title="Mode"
                     type="vehicleType.label.en"
                     selection-type="trafficobservation.vehicle_type"
                     dashboard-id="traffic_observation">
             </yds-combobox-selector>
-
+        </div>
+        <div class="col-md-4">
             <yds-combobox-selector
                     title="Direction"
                     type="directed.label.en"
@@ -101,16 +103,18 @@
                     dashboard-id="traffic_observation">
             </yds-combobox-selector>
         </div>
+    </div>
 
-        <!--TEST COMPONENT-->
-        <div class="col-md-7">
+    <!--Traffic observations grid-->
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 5px">
             <yds-dashboard-updater
-                    type="info"
-                    project-id="none"
-                    view-type="trafficobservation.test"
+                    type="grid-paging"
+                    view-type="trafficobservation.listitems.for.filters"
                     dashboard-id="traffic_observation"
+                    add-to-basket="false"
                     base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
-                    min-height="225"
+                    min-height="400"
                     lang="{{ lang }}">
             </yds-dashboard-updater>
         </div>

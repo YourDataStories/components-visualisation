@@ -157,6 +157,9 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 concept: "PublicProject",
                 urlParamPrefix: "pw-",
                 requestType: "publicproject.listitems.for.countries.and.period"
+            },
+            traffic_observation: {
+                concept: "TrafficObservation"
             }
         };
 
