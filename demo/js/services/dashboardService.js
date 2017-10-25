@@ -681,6 +681,9 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 case "traffic_observation":
                     // Add slider & combobox values
                     var extraValues = {
+                        // Map points
+                        "trafficobservation.on_points": dashboard.getObject("trafficobservation.on_points"),
+
                         // Sliders
                         "trafficobservation.start_year": dashboard.getObject("trafficobservation.start_year"),
                         "trafficobservation.end_year": dashboard.getObject("trafficobservation.end_year"),
