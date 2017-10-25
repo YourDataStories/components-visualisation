@@ -6,6 +6,7 @@
     </div>
 
     <div class="row">
+        <!--Map for point selection-->
         <div class="col-md-7">
             <yds-map
                     project-id="{{ galwayProjectId }}"
@@ -16,6 +17,62 @@
                     clicked-point="selectedPoint"
                     lang="{{ lang }}">
             </yds-map>
+        </div>
+
+        <!--Year/day/time sliders-->
+        <div class="col-md-5">
+            <div class="panel panel-default">
+                <div class="panel-heading">Ranges</div>
+                <div class="panel-body">
+                    <!--Start year-->
+                    <yds-time-slider
+                            type="year"
+                            dashboard-id="traffic_observation"
+                            selection-type="trafficobservation.start_year"
+                            lang="{{ lang }}">
+                    </yds-time-slider>
+
+                    <!--End year-->
+                    <yds-time-slider
+                            type="year"
+                            dashboard-id="traffic_observation"
+                            selection-type="trafficobservation.end_year"
+                            lang="{{ lang }}">
+                    </yds-time-slider>
+
+                    <!--Start day-->
+                    <yds-time-slider
+                            type="day"
+                            dashboard-id="traffic_observation"
+                            selection-type="trafficobservation.start_day"
+                            lang="{{ lang }}">
+                    </yds-time-slider>
+
+                    <!--End day-->
+                    <yds-time-slider
+                            type="day"
+                            dashboard-id="traffic_observation"
+                            selection-type="trafficobservation.end_day"
+                            lang="{{ lang }}">
+                    </yds-time-slider>
+
+                    <!--Start time-->
+                    <yds-time-slider
+                            type="time"
+                            dashboard-id="traffic_observation"
+                            selection-type="trafficobservation.start_time"
+                            lang="{{ lang }}">
+                    </yds-time-slider>
+
+                    <!--End time-->
+                    <yds-time-slider
+                            type="time"
+                            dashboard-id="traffic_observation"
+                            selection-type="trafficobservation.end_time"
+                            lang="{{ lang }}">
+                    </yds-time-slider>
+                </div>
+            </div>
         </div>
     </div>
 
