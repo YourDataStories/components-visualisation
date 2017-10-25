@@ -117,6 +117,10 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
             url: "/public-works",
             templateUrl: "templates-demo/dashboards/public-works.html"
         })
+        .state("traffic-observations", {
+            url: "/traffic-observations",
+            templateUrl: "templates-demo/dashboards/traffic-observations.html"
+        })
         .state("country-comparison", {
             url: "/country-comparison",
             templateUrl: "templates-demo/dashboards/country-comparison.html"
