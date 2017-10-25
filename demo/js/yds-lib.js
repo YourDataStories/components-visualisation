@@ -575,6 +575,21 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
         }
     };
 
+    /**
+     * Get an ISO-8601 timestamp, and keep the time part
+     * @param timestamp
+     * @returns {*}
+     */
+    var formatTime = function (timestamp) {
+        return timestamp.substr(0, timestamp.length - 4).split("T")[1];
+    };
+
+    //todo: do something about this
+    var changeTimeAttr = false;
+    dataService.shouldChangeTimeAttr = function () {
+        return changeTimeAttr;
+    };
+
     dataService.prepareGridData = function (newData, newView) {
         for (var i = 0; i < newData.length; i++) {
             _.each(newView, function (viewVal) {
@@ -594,7 +609,17 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
                 // If the column type is year, date or amount of money, format it accordingly
                 if (viewVal.type === "year") {
                     attrValue = new Date(attrValue).getFullYear();
+                } else if (viewVal.type === "time") {
+                    // If this timestamp was formatted as a date, try to find the unmodified one
+                    if (attrValue.indexOf("/") !== -1 && _.has(newData[i], viewVal.attribute + "_original")) {
+                        attrValue = newData[i][viewVal.attribute + "_original"];
+                        changeTimeAttr = true;
+                    }
+                    attrValue = formatTime(attrValue);
                 } else if (viewVal.type === "date" && !_.isUndefined(attrValue) && attrValue.indexOf("/") === -1) {
+                    // Keep date before modification
+                    newData[i][viewVal.attribute + "_original"] = attrValue;
+
                     // Format date to DD/MM/YYYY format (if it contains "/" it was already formatted)
                     attrValue = formatDateToDDMMYYYY(attrValue);
                 } else if (viewVal.type === "format_to_amount" && !_.isUndefined(attrValue)) {
@@ -660,6 +685,10 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
                         // Make attribute link to the url
                         attrValue = "<a href=\"" + url + "\" target=\"_blank\">" + attrValue + "</a>";
                     }
+                }
+
+                if (viewVal.type === "time" && changeTimeAttr) {
+                    attributeTokens = (viewVal.attribute + "___time").split(".");
                 }
 
                 // Add the new attribute to the data so ag grid can find it
