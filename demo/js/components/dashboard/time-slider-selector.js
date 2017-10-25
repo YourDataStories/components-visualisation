@@ -40,6 +40,18 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                 if (_.isUndefined(dashboardId) || dashboardId.length === 0)
                     dashboardId = "default";
 
+                /**
+                 * Transform the number of minutes that has passed since midnight to a string of the form HH:MM
+                 * @param value     Number of minutes since midnight
+                 * @returns {string}
+                 */
+                var minutesToTime = function (value) {
+                    // Transform the minutes into a time format
+                    var hours = Math.floor(value / 60);
+                    var minutes = value % 60;
+                    return (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes;
+                };
+
                 // Set names for the days of the week
                 var weekDays = [
                     "Monday",
@@ -54,7 +66,21 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                 // Set common options for all sliders
                 var options = {
                     onEnd: function () {
-                        DashboardService.saveObject(selectionType, scope.slider.value);
+                        var finalValue;
+
+                        // Apply modification to the value depending on the type
+                        switch (type) {
+                            case "day":
+                                finalValue = weekDays[scope.slider.value];
+                                break;
+                            case "time":
+                                finalValue = minutesToTime(scope.slider.value);
+                                break;
+                            default:
+                                finalValue = scope.slider.value;
+                        }
+
+                        DashboardService.saveObject(selectionType, finalValue);
                     }
                 };
 
@@ -81,12 +107,7 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                             floor: 0,
                             step: 5,
                             ceil: 1439, // There are 1440 minutes in a day
-                            translate: function (value) {
-                                // Transform the minutes into a time format
-                                var hours = Math.floor(value / 60);
-                                var minutes = value % 60;
-                                return (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes;
-                            }
+                            translate: minutesToTime
                         };
 
                         defaultValue = defaultValue || 0;
