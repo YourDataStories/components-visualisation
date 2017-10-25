@@ -690,7 +690,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                         "trafficobservation.end_day": dashboard.getObject("trafficobservation.end_day"),
 
                         // Comboboxes
-                        "trafficobservation.mode": dashboard.getObject("trafficobservation.mode"),
+                        "trafficobservation.vehicle_type": dashboard.getObject("trafficobservation.vehicle_type"),
                         "trafficobservation.direction": dashboard.getObject("trafficobservation.direction")
                     };
 
