@@ -8,7 +8,6 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                 maxYear: "@",       // Maximum year of the slider (for year selection)
                 dashboardId: "@",   // ID to use for saving the value in DashboardService
                 selectionType: "@", // Selection type for DashboardService
-                height: "@",        // Height of the slider (optional)
                 title: "@"          // Title to show above slider (optional)
             },
             templateUrl: Data.templatePath + "templates/dashboard/time-slider-selector.html",
@@ -18,7 +17,6 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                 var type = scope.type;
                 var minYear = parseInt(scope.minYear);
                 var maxYear = parseInt(scope.maxYear);
-                var height = parseInt(scope.height);
                 var dashboardId = scope.dashboardId;
 
                 // Check if type attribute is set correctly
@@ -38,12 +36,6 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                 // Check if dashboardId attribute is defined, else assign default value
                 if (_.isUndefined(dashboardId) || dashboardId.length === 0)
                     dashboardId = "default";
-
-                if (!_.isUndefined(height) && !_.isNaN(height)) {
-                    scope.containerStyle = {
-                        height: height + "px"
-                    }
-                }
 
                 // Set names for the days of the week
                 var weekDays = [

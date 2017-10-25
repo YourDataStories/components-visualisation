@@ -1,11 +1,12 @@
-<div style="width: 100%">
-    <div ng-if="title.length > 0">
-        <h4 class="text-center">{{ title }}</h4>
+<div class="time-slider-container">
+    <div ng-if="title.length > 0" class="time-slider-title">
+        {{ title }}
     </div>
 
-    <div ng-if="initialized" ng-style="containerStyle">
+    <div ng-if="initialized" style="flex-grow: 100">
         <rzslider
                 rz-slider-options="yearSlider.options"
-                rz-slider-model="yearSlider.value"></rzslider>
+                rz-slider-model="yearSlider.value">
+        </rzslider>
     </div>
 </div>

@@ -1535,4 +1535,17 @@ div.dcat-value {
     padding: 6px 12px 6px 12px;
 }
 
+/* Time slider container */
+.time-slider-container {
+    width: 100%;
+    display: flex;
+    float: left;
+}
 
+/* Time slider title vertical centering and font weight */
+.time-slider-title {
+    display: flex;
+    align-items: center;
+    min-width: 80px;
+    font-weight: bold;
+}
