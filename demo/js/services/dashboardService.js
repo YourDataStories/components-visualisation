@@ -337,7 +337,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param object
          */
         dashboard.saveObject = function (key, object) {
-            if (!_.has(objectStore, "key") || !_.isEqual(objectStore[key], object)) {
+            if (!_.has(objectStore, key) || !_.isEqual(objectStore[key], object)) {
                 objectStore[key] = object;
 
                 notifyObjectChange();

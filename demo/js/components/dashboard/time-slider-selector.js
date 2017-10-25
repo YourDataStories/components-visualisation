@@ -18,6 +18,7 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                 var minYear = parseInt(scope.minYear);
                 var maxYear = parseInt(scope.maxYear);
                 var dashboardId = scope.dashboardId;
+                var selectionType = scope.selectionType;
 
                 // Check if type attribute is set correctly
                 if (_.isUndefined(type) || (type !== "year" && type !== "day" && type !== "time")) {
@@ -49,7 +50,11 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                 ];
 
                 // Set common options for all sliders
-                var options = {};
+                var options = {
+                    onEnd: function () {
+                        DashboardService.saveObject(selectionType, scope.slider.value);
+                    }
+                };
                 var defaultValue = null;
 
                 // Set options that depend on the slider's type
@@ -86,7 +91,7 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                 }
 
                 // Set slider options
-                scope.yearSlider = {
+                scope.slider = {
                     value: defaultValue,
                     options: _.extend(options, specificOptions)
                 };
