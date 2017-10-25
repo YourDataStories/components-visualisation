@@ -204,6 +204,11 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                     if (scope.type === "selection-grid" || _.contains(gridDashboards, dashboardId)) {
                         DashboardService.subscribeGridSelectionChanges(scope, updateExtraParams);
                     }
+
+                    // Check if we should subscribe to object changes
+                    if (dashboardId === "traffic_observation") {
+                        DashboardService.subscribeObjectChanges(scope, updateExtraParams);
+                    }
                 } else {
                     // Subscribe to changes in filters (when filters change, will subscribe only to the required filter
                     // types to watch for changes)

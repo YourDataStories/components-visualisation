@@ -678,6 +678,25 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     // Add year from "comparison" dashboardId
                     apiOptions.year = "[" + dashboard.getMinYear("comparison") + " TO " + dashboard.getMaxYear("comparison") + "]";
                     break;
+                case "traffic_observation":
+                    // Add slider & combobox values
+                    var extraValues = {
+                        // Sliders
+                        "trafficobservation.start_year": dashboard.getObject("trafficobservation.start_year"),
+                        "trafficobservation.end_year": dashboard.getObject("trafficobservation.end_year"),
+                        "trafficobservation.start_time": dashboard.getObject("trafficobservation.start_time"),
+                        "trafficobservation.end_time": dashboard.getObject("trafficobservation.end_time"),
+                        "trafficobservation.start_day": dashboard.getObject("trafficobservation.start_day"),
+                        "trafficobservation.end_day": dashboard.getObject("trafficobservation.end_day"),
+
+                        // Comboboxes
+                        "trafficobservation.mode": dashboard.getObject("trafficobservation.mode"),
+                        "trafficobservation.direction": dashboard.getObject("trafficobservation.direction")
+                    };
+
+                    // Remove undefined values from the above object, and add the remaining ones to the apiOptions
+                    apiOptions = _.extend(apiOptions, _.omit(extraValues, _.isUndefined));
+                    break;
             }
 
             // Remove string values that contain "null" from the parameters

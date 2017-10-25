@@ -65,7 +65,7 @@
                     <!--Start time-->
                     <yds-time-slider
                             type="time"
-                            title="Start Hour"
+                            title="Start Time"
                             dashboard-id="traffic_observation"
                             selection-type="trafficobservation.start_time"
                             lang="{{ lang }}">
@@ -74,7 +74,7 @@
                     <!--End time-->
                     <yds-time-slider
                             type="time"
-                            title="End Hour"
+                            title="End Time"
                             dashboard-id="traffic_observation"
                             selection-type="trafficobservation.end_time"
                             default-value="1439"
@@ -100,6 +100,19 @@
                     selection-type="trafficobservation.direction"
                     dashboard-id="traffic_observation">
             </yds-combobox-selector>
+        </div>
+
+        <!--TEST COMPONENT-->
+        <div class="col-md-7">
+            <yds-dashboard-updater
+                    type="info"
+                    project-id="none"
+                    view-type="trafficobservation.test"
+                    dashboard-id="traffic_observation"
+                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                    min-height="225"
+                    lang="{{ lang }}">
+            </yds-dashboard-updater>
         </div>
     </div>
 
