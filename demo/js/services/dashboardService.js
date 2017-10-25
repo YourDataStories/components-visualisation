@@ -682,6 +682,16 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     apiOptions.year = "[" + dashboard.getMinYear("comparison") + " TO " + dashboard.getMaxYear("comparison") + "]";
                     break;
                 case "traffic_observation":
+                    var vehicleTypes = dashboard.getObject("trafficobservation.vehicle_type");
+                    var directions = dashboard.getObject("trafficobservation.direction");
+
+                    if (!_.isUndefined(vehicleTypes) && !_.isNull(vehicleTypes)) {
+                        vehicleTypes = vehicleTypes.split(",");
+                    }
+                    if (!_.isUndefined(directions) && !_.isNull(directions)) {
+                        directions = directions.split(",");
+                    }
+
                     // Add slider & combobox values
                     var extraValues = {
                         // Map points
@@ -696,8 +706,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                         "trafficobservation.end_day": dashboard.getObject("trafficobservation.end_day"),
 
                         // Comboboxes
-                        "trafficobservation.vehicle_type": dashboard.getObject("trafficobservation.vehicle_type"),
-                        "trafficobservation.direction": dashboard.getObject("trafficobservation.direction")
+                        "trafficobservation.vehicle_type": vehicleTypes,
+                        "trafficobservation.direction": directions
                     };
 
                     // Remove undefined values from the above object, and add the remaining ones to the apiOptions

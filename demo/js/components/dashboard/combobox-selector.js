@@ -10,6 +10,8 @@ angular.module("yds").directive("ydsComboboxSelector", ["$timeout", "DashboardSe
             },
             templateUrl: Data.templatePath + "templates/dashboard/combobox-selector.html",
             link: function (scope, element, attrs) {
+                var selectivityContainer = _.first(angular.element(element[0].querySelector(".selectivity-container")));
+
                 var type = scope.type;
                 var dashboardId = scope.dashboardId;
                 var selectionType = scope.selectionType;
@@ -23,7 +25,21 @@ angular.module("yds").directive("ydsComboboxSelector", ["$timeout", "DashboardSe
                 Data.getComboboxFacetItems(type)
                     .then(function (response) {
                         scope.selection = _.first(response);
-                        scope.options = response;
+
+                        var selectivity = $(selectivityContainer).selectivity({
+                            items: response,
+                            multiple: true,
+                            placeholder: "Select " + scope.title
+                        });
+
+                        $(selectivity).on("change", function (e) {
+                            var newValue = null;
+                            if (e.value.length > 0) {
+                                newValue = e.value.join(",");
+                            }
+
+                            scope.selectionChanged(newValue);
+                        });
                     });
 
                 /**
