@@ -109,9 +109,25 @@
         </div>
     </div>
 
-    <!--Traffic observations grid-->
-    <div class="row">
-        <div class="col-md-12" style="margin-top: 5px">
+    <!--Traffic observations per direction & time grid-->
+    <div class="row" style="margin-top: 5px">
+        <div class="col-md-12">
+            <yds-dashboard-updater
+                    type="simple-grid"
+                    project-id="none"
+                    view-type="trafficobservation.per.direction.time.vehicle.type"
+                    dashboard-id="traffic_observation"
+                    add-to-basket="false"
+                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                    min-height="400"
+                    lang="{{ lang }}">
+            </yds-dashboard-updater>
+        </div>
+    </div>
+
+    <!--Traffic observations list grid-->
+    <div class="row" style="margin-top: 5px">
+        <div class="col-md-12">
             <yds-dashboard-updater
                     type="grid-paging"
                     view-type="trafficobservation.listitems.for.filters"
