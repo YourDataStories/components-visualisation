@@ -490,25 +490,9 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                     scope.gridOptions.api.hideOverlay();
                                 }
 
-                                // Format the data returned from the API and add them to the grid
-                                var rowsThisPage = Data.prepareGridData(responseData, responseView);
-
                                 if (!hasColDefs) {
                                     // Format the column definitions returned from the API
                                     var columnDefs = Data.prepareGridColumns(responseView);
-
-                                    if (Data.shouldChangeTimeAttr()) {
-                                        _.each(columnDefs, function (definition) {
-                                            // Find type
-                                            var originalView = _.findWhere(responseView, {
-                                                header: definition.headerName
-                                            });
-
-                                            if (!_.isUndefined(originalView) && originalView.type === "time") {
-                                                definition.field += "___time";
-                                            }
-                                        });
-                                    }
 
                                     if (enableViewButton === "true") {
                                         // Make the 1st column have links to more details
@@ -517,6 +501,9 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
 
                                     scope.gridOptions.api.setColumnDefs(columnDefs);
                                 }
+
+                                // Format the data returned from the API and add them to the grid
+                                var rowsThisPage = Data.prepareGridData(responseData, responseView);
 
                                 // Check if any rows have no value for some attribute
                                 _.each(rowsThisPage, function (row) {
