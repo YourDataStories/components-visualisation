@@ -160,6 +160,9 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             },
             traffic_observation: {
                 concept: "TrafficObservation"
+            },
+            traffic_observation_contracts: {
+                concept: "Contract"
             }
         };
 
@@ -682,6 +685,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     apiOptions.year = "[" + dashboard.getMinYear("comparison") + " TO " + dashboard.getMaxYear("comparison") + "]";
                     break;
                 case "traffic_observation":
+                case "traffic_observation_contracts":
                     var vehicleTypes = dashboard.getObject("trafficobservation.vehicle_type");
                     var directions = dashboard.getObject("trafficobservation.direction");
 
