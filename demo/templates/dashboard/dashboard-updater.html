@@ -241,7 +241,8 @@
             ng-switch-when="traffic-observation"
             project-id="{{ projectId }}"
             view-type="{{ viewType }}"
-            allow-selection="true"
+            allow-selection="{{ enableSelection }}"
+            extra-params="extraParams"
             element-h="{{ minHeight }}"
             lang="{{ lang }}">
     </yds-traffic-observation>

@@ -24,6 +24,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 baseUrl: "@",               // Base URL to send to API
                 aggregateType: "@",         // Type of aggregation that the displayed chart should make (count/amount)
 
+                enableSelection: "@",       // Enable or disable day selection in traffic-observation component
                 minHeight: "@",             // Minimum height of this component's container
                 enableRating: "@"           // Enable rating buttons (not supported for all components)
             },
@@ -72,6 +73,10 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 // If dynamicDashboard is undefined, set default value
                 if (_.isUndefined(scope.dynamicDashboard) || (scope.dynamicDashboard !== "true" && scope.dynamicDashboard !== "false"))
                     scope.dynamicDashboard = "false";
+
+                // If enableSelection is undefined, set default value
+                if (_.isUndefined(scope.enableSelection) || (scope.enableSelection !== "true" && scope.enableSelection !== "false"))
+                    scope.enableSelection = "true";
 
                 // If dashboardId is undefined, set default value
                 if (_.isUndefined(dashboardId) || dashboardId.trim() === "") {
