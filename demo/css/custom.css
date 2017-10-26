@@ -1549,3 +1549,11 @@ div.dcat-value {
     min-width: 80px;
     font-weight: bold;
 }
+
+/* Button that clears selected points in the Map component */
+.leaflet-clear-points-btn {
+    padding: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: white;
+}

@@ -87,14 +87,56 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
             // Set the height of the chart
             mapContainer.style.height = elementH + "px";
 
-            // If selection is enabled and the mode is multiple selection, initialize the array for selected points
+            // Initialize the array for (multiple) selected points
             var selectedPoints = [];
 
+            /**
+             * Clear all selected points
+             */
+            var clearSelection = function () {
+                // Hide the button
+                clearBtnElement.style.display = "none";
+
+                // Clear selection
+                selectedPoints = [];
+                $timeout(function () {
+                    scope.clickedPoint["point"] = null;
+                });
+            };
+
+            // Create map
             var map = L.map(elementId, {
                 center: [37.9833333, 23.7333333],
                 zoom: 5,
                 zoomControl: (zoomControl === "true")
             });
+
+            // Add clear points button if multiple point selection is enabled
+            var clearBtnElement = null;
+            if (pointSelection && selectionMode === "multiple") {
+                // Add button for clearing all selected buttons
+                var ClearPointsBtn = L.Control.extend({
+                    options: {
+                        position: "topright"
+                    },
+                    onAdd: function (map) {
+                        var container = L.DomUtil.create("div", "leaflet-bar leaflet-control leaflet-clear-points-btn");
+
+                        container.innerHTML = "Clear selected points";
+                        container.onclick = clearSelection;
+
+                        return container;
+                    }
+                });
+
+                // Add a new clear points button to the map
+                var clearBtn = new ClearPointsBtn();
+                map.addControl(clearBtn);
+
+                // Get the clear button element
+                clearBtnElement = clearBtn.getContainer();
+                clearBtnElement.style.display = "none";
+            }
 
             // Create the default map pins for the start and the end of route, and selected points
             var mapPins = {
@@ -247,6 +289,11 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
                     }
 
                     selectionData = selectedPoints.join(",");
+
+                    if (selectedPoints.length > 0) {
+                        // Show the clear points button
+                        clearBtnElement.style.display = "block";
+                    }
                 }
 
                 // Add the data to the scope in a timeout so Angular will see it
