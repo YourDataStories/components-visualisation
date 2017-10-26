@@ -7,6 +7,7 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
             lang: "@",              // Lang of the visualised data
 
             clickedPoint: "=",      // Set this to an existing object, to make the map add the clicked point's ID to it
+            selectionMode: "@",     // Selection mode. Can be "single" or "multiple".
 
             zoomControl: "@",       // Enable or disable map's zoom control
             elementH: "@",          // Set the height of the component
@@ -36,6 +37,7 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
             var projectId = scope.projectId;
             var viewType = scope.viewType;
             var lang = scope.lang;
+            var selectionMode = scope.selectionMode;
             var zoomControl = scope.zoomControl;
             var disableClustering = scope.disableClustering;
             var maxClusterRadius = parseInt(scope.maxClusterRadius);
@@ -62,6 +64,10 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
             if (_.isUndefined(lang))
                 lang = "en";
 
+            // Check if the selectionMode attribute is defined, else assign default value
+            if (_.isUndefined(selectionMode) || (selectionMode !== "single" && selectionMode !== "multiple"))
+                selectionMode = "single";
+
             // Check if the zoom-control attribute is defined, else assign default value
             if (_.isUndefined(zoomControl) || (zoomControl !== "true" && zoomControl !== "false"))
                 zoomControl = "true";
@@ -81,13 +87,16 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
             // Set the height of the chart
             mapContainer.style.height = elementH + "px";
 
+            // If selection is enabled and the mode is multiple selection, initialize the array for selected points
+            var selectedPoints = [];
+
             var map = L.map(elementId, {
                 center: [37.9833333, 23.7333333],
                 zoom: 5,
                 zoomControl: (zoomControl === "true")
             });
 
-            // Create the default map pins for the start and the end of route
+            // Create the default map pins for the start and the end of route, and selected points
             var mapPins = {
                 start: L.icon({
                     iconUrl: Data.templatePath + "lib/images/marker-icon-start.png",
@@ -96,6 +105,11 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
                 }),
                 end: L.icon({
                     iconUrl: Data.templatePath + "lib/images/marker-icon-end.png",
+                    iconSize: [26, 41],
+                    iconAnchor: [13, 41]
+                }),
+                selected: L.icon({
+                    iconUrl: Data.templatePath + "lib/images/marker-icon-via.png",
                     iconSize: [26, 41],
                     iconAnchor: [13, 41]
                 })
@@ -213,9 +227,32 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
              * @param e Leaflet (click) event
              */
             var markerClickHandler = function (e) {
+                var selectionData = null;
+
+                if (selectionMode === "single") {
+                    // Single selection mode, just add the point
+                    selectionData = e.target.data;
+                } else {
+                    // Multiple selection. Check if the clicked point is already in the selected points array
+                    if (_.contains(selectedPoints, e.target.data.id)) {
+                        // The point was selected already, we need to deselect it
+                        selectedPoints = _.without(selectedPoints, e.target.data.id);    // Remove from the array
+
+                        e.target.setIcon(mapPins.start);
+                    } else {
+                        // The point should be selected
+                        selectedPoints.push(e.target.data.id);
+
+                        e.target.setIcon(mapPins.selected);
+                    }
+
+                    selectionData = selectedPoints.join(",");
+                }
+
+                // Add the data to the scope in a timeout so Angular will see it
                 $timeout(function () {
-                    scope.clickedPoint["point"] = e.target.data;
-                });
+                    scope.clickedPoint["point"] = selectionData;
+                })
             };
         }
     };
