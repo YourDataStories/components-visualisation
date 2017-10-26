@@ -11,11 +11,8 @@ angular.module("yds").controller("TrafficObservationsController", ["$scope", "Da
 
         // Watch changes in the selected point, and set it as selected in the DashboardService
         scope.$watch("selectedPoints.point", function (points) {
-            if (_.isString(points) && points.length > 0) {
-                DashboardService.saveObject("trafficobservation.on_points", points);
-            } else {
-                DashboardService.saveObject("trafficobservation.on_points", null);
-            }
+            var selValue = _.isString(points) && points.length > 0 ? points : null;   // Prevent saving an empty string
+            DashboardService.saveObject("trafficobservation.on_points", selValue);
         });
     }
 ]);

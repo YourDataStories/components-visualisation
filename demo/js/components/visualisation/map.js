@@ -89,6 +89,26 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
 
             // Initialize the array for (multiple) selected points
             var selectedPoints = [];
+            var previouslySelectedMarkers = [];        // Array with all generated markers of the map
+
+            // Create the default map pins for the start and the end of route, and selected points
+            var mapPins = {
+                start: L.icon({
+                    iconUrl: Data.templatePath + "lib/images/marker-icon-start.png",
+                    iconSize: [26, 41],
+                    iconAnchor: [13, 41]
+                }),
+                end: L.icon({
+                    iconUrl: Data.templatePath + "lib/images/marker-icon-end.png",
+                    iconSize: [26, 41],
+                    iconAnchor: [13, 41]
+                }),
+                selected: L.icon({
+                    iconUrl: Data.templatePath + "lib/images/marker-icon-via.png",
+                    iconSize: [26, 41],
+                    iconAnchor: [13, 41]
+                })
+            };
 
             /**
              * Clear all selected points
@@ -102,6 +122,13 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
                 $timeout(function () {
                     scope.clickedPoint["point"] = null;
                 });
+
+                // Make all markers green again
+                _.each(previouslySelectedMarkers, function (marker) {
+                    marker.setIcon(mapPins.start);
+                });
+
+                previouslySelectedMarkers = [];
             };
 
             // Create map
@@ -137,25 +164,6 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
                 clearBtnElement = clearBtn.getContainer();
                 clearBtnElement.style.display = "none";
             }
-
-            // Create the default map pins for the start and the end of route, and selected points
-            var mapPins = {
-                start: L.icon({
-                    iconUrl: Data.templatePath + "lib/images/marker-icon-start.png",
-                    iconSize: [26, 41],
-                    iconAnchor: [13, 41]
-                }),
-                end: L.icon({
-                    iconUrl: Data.templatePath + "lib/images/marker-icon-end.png",
-                    iconSize: [26, 41],
-                    iconAnchor: [13, 41]
-                }),
-                selected: L.icon({
-                    iconUrl: Data.templatePath + "lib/images/marker-icon-via.png",
-                    iconSize: [26, 41],
-                    iconAnchor: [13, 41]
-                })
-            };
 
             // Add OpenStreetMap tile layer
             L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -286,6 +294,9 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
                         selectedPoints.push(e.target.data.id);
 
                         e.target.setIcon(mapPins.selected);
+
+                        // Save the marker object to be able to reset its icon later
+                        previouslySelectedMarkers.push(e.target);
                     }
 
                     selectionData = selectedPoints.join(",");
