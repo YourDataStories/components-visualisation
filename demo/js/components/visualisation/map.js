@@ -1,4 +1,4 @@
-angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $timeout) {
+angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService", function (Data, $timeout, DashboardService) {
     return {
         restrict: "E",
         scope: {
@@ -21,6 +21,8 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
             embedBtnY: "@",         // Y-axis position of the embed button
             popoverPos: "@",        // The side of the embed button from which the embed information window will appear
 
+            dashboardId: "@",       // Dashboard ID to listen for changes and refresh map
+            selectionId: "@",       // Selection ID (only used to remove own filter for now)
             enableRating: "@",      // Enable rating buttons for this component
             disableClustering: "@", // Set to true to disable the point clustering
             maxClusterRadius: "@",  // Maximum radius that a cluster will cover from the central marker in pixels.
@@ -42,6 +44,8 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
             var disableClustering = scope.disableClustering;
             var maxClusterRadius = parseInt(scope.maxClusterRadius);
             var elementH = scope.elementH;
+            var dashboardId = scope.dashboardId;
+            var selectionId = scope.selectionId;
 
             // When the points are more than the number here, clustering will be used
             var clusterThreshold = 100;
@@ -89,7 +93,8 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
 
             // Initialize the array for (multiple) selected points
             var selectedPoints = [];
-            var previouslySelectedMarkers = [];        // Array with all generated markers of the map
+            var markersDict = {};               // Dictionary with mapping from marker ID -> leaflet marker object
+            var previouslySelectedMarkers = []; // Array with all generated markers of the map
 
             // Create the default map pins for the start and the end of route, and selected points
             var mapPins = {
@@ -124,11 +129,13 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
                 });
 
                 // Make all markers green again
+                //todo: Can we use the markersDict here to change their icons more easily?
                 _.each(previouslySelectedMarkers, function (marker) {
                     marker.setIcon(mapPins.start);
                 });
 
                 previouslySelectedMarkers = [];
+                markersDict = {};
             };
 
             // Create map
@@ -173,83 +180,97 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
 
             // Create a general Feature Group to add each project layer
             var allFeatureGroup = L.featureGroup([]);
+            allFeatureGroup.addTo(map);
 
-            Data.getProjectVis("map", projectId, viewType, lang)
-                .then(function (response) {
-                    // Extract the required objects from the view
-                    var routePointsView = _.findWhere(response.view, {type: "geo-route"});
-                    var routeTitleView = _.findWhere(response.view, {type: "string-i18n"});
+            /**
+             * Get map data and add points and routes to the map
+             * @param extraParams   (optional) Extra parameters to send to the API
+             */
+            var createMap = function (extraParams) {
+                Data.getProjectVis("map", projectId, viewType, lang, extraParams)
+                    .then(function (response) {
+                        // Extract the required objects from the view
+                        var routePointsView = _.findWhere(response.view, {type: "geo-route"});
+                        var routeTitleView = _.findWhere(response.view, {type: "string-i18n"});
 
-                    if (!_.isUndefined(routePointsView)) {
-                        // Create a separate leaflet featureGroup for each route
-                        var routePath = _.rest(routePointsView.attribute.split("."), 1).join(".");
-                        var routeTitlePath = _.rest(routeTitleView.attribute.split("."), 1).join(".");
+                        if (!_.isUndefined(routePointsView)) {
+                            // Create a separate leaflet featureGroup for each route
+                            var routePath = _.rest(routePointsView.attribute.split("."), 1).join(".");
+                            var routeTitlePath = _.rest(routeTitleView.attribute.split("."), 1).join(".");
 
-                        var routes = response.data.routes;
+                            var routes = response.data.routes;
 
-                        // Check if we should cluster the markers (if # of routes exceeds the threshold)
-                        var shouldCluster = disableClustering !== "true" && (routes.length > clusterThreshold);
-                        var clusterGroup = L.markerClusterGroup({
-                            maxClusterRadius: maxClusterRadius
-                        });
+                            // Check if we should cluster the markers (if # of routes exceeds the threshold)
+                            var shouldCluster = disableClustering !== "true" && (routes.length > clusterThreshold);
+                            var clusterGroup = L.markerClusterGroup({
+                                maxClusterRadius: maxClusterRadius
+                            });
 
-                        // Iterate through the different routes and visualize them on the map
-                        _.each(routes, function (routeObj) {
-                            // Create a polyline layer which will contain the points of each route
-                            var polyline = L.polyline([]);
-                            // Create a featureGroup layer which will contain the polyline and the markers of the route
-                            var projectLayer = L.featureGroup([]);
-                            // Find the title and the points of each route based on the provided view
-                            var route = Data.deepObjSearch(routeObj, routePath);
-                            var routeTitle = Data.deepObjSearch(routeObj, routeTitlePath);
+                            // Iterate through the different routes and visualize them on the map
+                            _.each(routes, function (routeObj) {
+                                // Create a polyline layer which will contain the points of each route
+                                var polyline = L.polyline([]);
 
-                            // Get ID & title of route (if it exists...)
-                            var markerData = {
-                                id: routeObj.id,
-                                title: routeObj["title_txt"]
-                            };
+                                // Create a featureGroup layer which will contain the polyline and the markers of the route
+                                var projectLayer = L.featureGroup([]);
 
-                            if (shouldCluster && route.length === 1) {
-                                // If we should cluster & route length is 1, add the single marker to the cluster group
-                                clusterGroup.addLayer(makeMarker(routeTitle, _.first(route), mapPins.start, markerData));
-                            } else {
-                                // Add the points of each route to the polyline layer
-                                _.each(route, function (routePoints) {
-                                    polyline.addLatLng([parseFloat(routePoints.lng), parseFloat(routePoints.lat)]);
-                                });
+                                // Find the title and the points of each route based on the provided view
+                                var route = Data.deepObjSearch(routeObj, routePath);
+                                var routeTitle = Data.deepObjSearch(routeObj, routeTitlePath);
 
-                                // Create the start marker of the route and add it to the featureGroup layer
-                                var startMarker = makeMarker(routeTitle, _.first(route), mapPins.start, markerData);
-                                projectLayer.addLayer(startMarker);
+                                // Get ID & title of route (if it exists...)
+                                var markerData = {
+                                    id: routeObj.id,
+                                    title: routeObj["title_txt"]
+                                };
 
-                                // If the route has more than one point, create the end marker of the route and add it to the featureGroup layer
-                                if (route.length > 1) {
-                                    var endMarker = makeMarker(routeTitle, _.last(route), mapPins.end, markerData);
-                                    projectLayer.addLayer(endMarker);
+                                if (shouldCluster && route.length === 1) {
+                                    // If we should cluster & route length is 1, add the single marker to the cluster group
+                                    clusterGroup.addLayer(makeMarker(routeTitle, _.first(route), mapPins.start, markerData));
+                                } else {
+                                    // Add the points of each route to the polyline layer
+                                    _.each(route, function (routePoints) {
+                                        polyline.addLatLng([parseFloat(routePoints.lng), parseFloat(routePoints.lat)]);
+                                    });
+
+                                    // Create the start marker of the route and add it to the featureGroup layer
+                                    var startMarker = makeMarker(routeTitle, _.first(route), mapPins.start, markerData);
+                                    projectLayer.addLayer(startMarker);
+
+                                    // If the route has more than one point, create the end marker of the route and add it to the featureGroup layer
+                                    if (route.length > 1) {
+                                        var endMarker = makeMarker(routeTitle, _.last(route), mapPins.end, markerData);
+                                        projectLayer.addLayer(endMarker);
+                                    }
+
+                                    projectLayer.addLayer(polyline);
+                                    allFeatureGroup.addLayer(projectLayer);
                                 }
+                            });
 
-                                projectLayer.addLayer(polyline);
-                                allFeatureGroup.addLayer(projectLayer);
+                            if (shouldCluster) {
+                                allFeatureGroup.addLayer(clusterGroup);
                             }
-                        });
 
-                        if (shouldCluster) {
-                            allFeatureGroup.addLayer(clusterGroup);
+                            // Zoom the map to the layerGroup
+                            map.fitBounds(allFeatureGroup.getBounds(), {
+                                padding: new L.Point(21, 21)
+                            });
                         }
 
-                        allFeatureGroup.addTo(map);
-
-                        // Zoom the map to the layerGroup
-                        map.fitBounds(allFeatureGroup.getBounds(), {
-                            padding: new L.Point(21, 21)
-                        });
-                    }
-                }, function (error) {
-                    if (_.isNull(error) || _.isUndefined(error) || _.isUndefined(error.message))
-                        scope.ydsAlert = "An error has occurred, please check the configuration of the component.";
-                    else
-                        scope.ydsAlert = error.message;
-                });
+                        // In multiple selection mode, refresh the selected items in the scope in case any of them
+                        // do not exist anymore with the new filters
+                        if (pointSelection && selectionMode === "multiple") {
+                            selectedPoints = _.keys(markersDict);
+                            scope.clickedPoint["point"] = selectedPoints.join(",");
+                        }
+                    }, function (error) {
+                        if (_.isNull(error) || _.isUndefined(error) || _.isUndefined(error.message))
+                            scope.ydsAlert = "An error has occurred, please check the configuration of the component.";
+                        else
+                            scope.ydsAlert = error.message;
+                    });
+            };
 
             /**
              * Create a marker with a specific icon, which shows a popup with the specified
@@ -267,6 +288,17 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
                 if (pointSelection && !_.isUndefined(markerData)) {
                     newMarker.on("click", markerClickHandler);  // Add click handler
                     newMarker.data = markerData;                // Add ID
+                }
+
+                // Since we are creating a marker, if another marker with the same ID exists in the markers object,
+                // we must update the reference with the new one (because it was selected) and also change its icon
+                // if (_.has(markersDict, markerData.id)) {
+                if (_.contains(selectedPoints, markerData.id)) {
+                    markersDict[markerData.id] = newMarker;
+                    previouslySelectedMarkers.push(newMarker);
+                    // selectedPoints.push(markerData.id);
+
+                    newMarker.setIcon(mapPins.selected);
                 }
 
                 return newMarker;
@@ -287,11 +319,13 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
                     if (_.contains(selectedPoints, e.target.data.id)) {
                         // The point was selected already, we need to deselect it
                         selectedPoints = _.without(selectedPoints, e.target.data.id);    // Remove from the array
+                        markersDict = _.omit(markersDict, e.target.data.id);
 
                         e.target.setIcon(mapPins.start);
                     } else {
                         // The point should be selected
                         selectedPoints.push(e.target.data.id);
+                        markersDict[e.target.data.id] = e.target;
 
                         e.target.setIcon(mapPins.selected);
 
@@ -310,8 +344,29 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", function (Data, $
                 // Add the data to the scope in a timeout so Angular will see it
                 $timeout(function () {
                     scope.clickedPoint["point"] = selectionData;
-                })
+                });
             };
+
+            // Create the map
+            createMap();
+
+            // Listen for changes to the filters and refresh points if needed
+            var oldFilters = {};
+            if (!_.isUndefined(dashboardId) && dashboardId.trim().length > 0) {
+                DashboardService.subscribeObjectChanges(scope, function () {
+                    var newFilters = _.omit(DashboardService.getApiOptions(dashboardId), selectionId);
+
+                    if (!_.isEqual(oldFilters, newFilters)) {
+                        allFeatureGroup.clearLayers();
+                        // selectedPoints = [];
+                        markersDict = {};
+                        previouslySelectedMarkers = [];
+
+                        createMap(newFilters);
+                        oldFilters = newFilters;
+                    }
+                });
+            }
         }
     };
 }]);
