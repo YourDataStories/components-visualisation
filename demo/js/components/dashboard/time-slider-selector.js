@@ -3,7 +3,7 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
         return {
             restrict: "E",
             scope: {
-                type: "@",          // One of year, day, time, for selecting a year, a day of the week, or specific time
+                type: "@",          // One of {year, day, time, minutes}, for selecting a year, a day of the week, or specific time
                 minYear: "@",       // Minimum year of the slider (for year selection)
                 maxYear: "@",       // Maximum year of the slider (for year selection)
                 defaultValue: "@",  // Default value
@@ -23,17 +23,17 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                 var selectionType = scope.selectionType;
 
                 // Check if type attribute is set correctly
-                if (_.isUndefined(type) || (type !== "year" && type !== "day" && type !== "time")) {
+                if (_.isUndefined(type) || (type !== "year" && type !== "day" && type !== "time" && type !== "minutes")) {
                     console.error("Type is wrong or undefined! Using 'year' as a default.");
                     type = "year";
                 }
 
                 // Check if minYear attribute is defined, else assign default value
-                if (_.isUndefined(minYear) || _.isNaN(minYear))
+                if (type === "year" && (_.isUndefined(minYear) || _.isNaN(minYear)))
                     minYear = 1970;
 
                 // Check if maxYear attribute is defined, else assign default value
-                if (_.isUndefined(maxYear) || _.isNaN(maxYear))
+                if (type === "year" && (_.isUndefined(maxYear) || _.isNaN(maxYear)))
                     maxYear = 2050;
 
                 // Check if dashboardId attribute is defined, else assign default value
@@ -74,6 +74,7 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                                 finalValue = weekDays[scope.slider.value];
                                 break;
                             case "time":
+                            case "minutes":
                                 finalValue = minutesToTime(scope.slider.value);
                                 break;
                             default:
@@ -112,6 +113,17 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
 
                         defaultValue = defaultValue || 0;
                         break;
+                    case "minutes":
+                        specificOptions = {
+                            floor: _.isNaN(minYear) ? 0 : minYear,
+                            step: 5,
+                            ceil: _.isNaN(maxYear) ? 60 : maxYear,
+                            translate: function (value) {
+                                return value + "'";
+                            }
+                        };
+
+                        defaultValue = defaultValue || 0;
                 }
 
                 // Set slider options

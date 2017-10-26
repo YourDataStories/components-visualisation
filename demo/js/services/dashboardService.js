@@ -704,6 +704,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                         "trafficobservation.end_time": dashboard.getObject("trafficobservation.end_time"),
                         "trafficobservation.start_day": dashboard.getObject("trafficobservation.start_day"),
                         "trafficobservation.end_day": dashboard.getObject("trafficobservation.end_day"),
+                        "trafficobservation.gap": dashboard.getObject("trafficobservation.gap"),
 
                         // Comboboxes
                         "trafficobservation.vehicle_type": vehicleTypes,
