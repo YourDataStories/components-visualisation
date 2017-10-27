@@ -717,6 +717,37 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
                     // Remove undefined values from the above object, and add the remaining ones to the apiOptions
                     apiOptions = _.extend(apiOptions, _.omit(extraValues, _.isUndefined));
+
+                    // Check that start year/day/time is smaller than end year/day/time, otherwise swap them
+                    if (_.has(apiOptions, "trafficobservation.start_year") && _.has(apiOptions, "trafficobservation.end_year")) {
+                        var years = [
+                            apiOptions["trafficobservation.start_year"],
+                            apiOptions["trafficobservation.end_year"]
+                        ];
+                        apiOptions["trafficobservation.start_year"] = _.min(years);
+                        apiOptions["trafficobservation.end_year"] = _.max(years);
+                    }
+
+                    if (_.has(apiOptions, "trafficobservation.start_time") && _.has(apiOptions, "trafficobservation.end_time")) {
+                        var times = [
+                            apiOptions["trafficobservation.start_time"],
+                            apiOptions["trafficobservation.end_time"]
+                        ];
+
+                        apiOptions["trafficobservation.start_time"] = _.min(times, timeToNum);
+                        apiOptions["trafficobservation.end_time"] = _.max(times, timeToNum);
+                    }
+
+                    if (_.has(apiOptions, "trafficobservation.start_day") && _.has(apiOptions, "trafficobservation.end_day")) {
+                        var days = [
+                            apiOptions["trafficobservation.start_day"],
+                            apiOptions["trafficobservation.end_day"]
+                        ];
+
+                        apiOptions["trafficobservation.start_day"] = _.min(days, weekDayToNum);
+                        apiOptions["trafficobservation.end_day"] = _.max(days, weekDayToNum);
+                    }
+
                     break;
             }
 
@@ -726,6 +757,24 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             });
 
             return apiOptions;
+        };
+
+        /**
+         * Get a name of a day of the week (in English) and get its number, starting from Monday as 0
+         * @param weekday
+         * @returns {number}
+         */
+        var weekDayToNum = function (weekday) {
+            return ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].indexOf(weekday);
+        };
+
+        /**
+         * Get a time string of the form HH:MM and transform it into the number of minutes that passed since 00:00
+         * @param timeStr
+         */
+        var timeToNum = function (timeStr) {
+            var timePiecies = timeStr.split(":");
+            return (parseInt(timePiecies[0]) * 60) + parseInt(timePiecies[1]);
         };
 
         dashboard.subscribeSelectionChanges = function (scope, callback) {
