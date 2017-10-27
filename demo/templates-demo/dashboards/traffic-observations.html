@@ -1,7 +1,9 @@
 <div class="container" ng-controller="TrafficObservationsController">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <h2>Traffic Observations</h2>
+            <p>Select points on the map, year and time ranges, vehicle types and traffic directions to
+                filter the traffic observations and display details about them in the visualisations below.</p>
         </div>
     </div>
 
@@ -191,7 +193,12 @@
     </div>
 
     <!--Traffic observations component-->
-    <div class="row" style="margin-top: 35px">
+    <div class="row" style="margin-top: 25px">
+        <div class="col-md-12">
+            <h3>Traffic per day of the week, across years</h3>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
                 <yds-dashboard-updater
