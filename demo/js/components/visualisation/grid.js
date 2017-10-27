@@ -271,15 +271,16 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                  */
                 var getRowStyle = function (params) {
                     // If "Time" column says "1 Hour" or is blank, add appropriate color
-                    if (_.has(params.data, "time") && params.data.time === "<b>1 Hour</b>") {
-                        return {
-                            "background-color": "#97C7C9"
-                        };
-                    } else if (_.has(params.data, "time") && params.data.time.trim() === "") {
-                        return {
-                            "background-color": "#4C6194",
-                            "color": "#FFFFFF"
-                        };
+                    if (_.has(params.data, "time")) {
+                        var time = params.data.time.trim();
+                        switch (time) {
+                            case "<b>1 Hour</b>":
+                                return {"background-color": "#DDF6D5"};
+                                break;
+                            case "":
+                                return {"background-color": "#CAE9E3"};
+                                break;
+                        }
                     }
 
                     return null;
