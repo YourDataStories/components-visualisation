@@ -210,6 +210,11 @@
     <!--Traffic observations list grid-->
     <div class="row">
         <div class="col-md-12">
+            <h3>Traffic Observations</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
             <yds-dashboard-updater
                     type="grid-paging"
                     view-type="trafficobservation.listitems.for.filters"
@@ -225,16 +230,23 @@
     <!--Related contracts grid-->
     <div class="row" style="margin-top: 35px">
         <div class="col-md-offset-2 col-md-8">
-            <yds-dashboard-updater
-                    type="grid-paging"
-                    project-id="none"
-                    view-type="contract.for.trafficobservation"
-                    dashboard-id="traffic_observation"
-                    add-to-basket="false"
-                    enable-grid-view-btn="true"
-                    min-height="300"
-                    lang="{{ lang }}">
-            </yds-dashboard-updater>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Contracts related to selected Observation Points
+                </div>
+                <div class="panel-body" style="padding-bottom: 30px;">
+                    <yds-dashboard-updater
+                            type="grid-paging"
+                            project-id="none"
+                            view-type="contract.for.trafficobservation"
+                            dashboard-id="traffic_observation"
+                            add-to-basket="false"
+                            enable-grid-view-btn="true"
+                            min-height="300"
+                            lang="{{ lang }}">
+                    </yds-dashboard-updater>
+                </div>
+            </div>
         </div>
     </div>
 
