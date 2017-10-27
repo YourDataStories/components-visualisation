@@ -24,6 +24,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 baseUrl: "@",               // Base URL to send to API
                 aggregateType: "@",         // Type of aggregation that the displayed chart should make (count/amount)
 
+                enableGridViewBtn: "@",     // Enable or disable the view button in grid-paging
                 enableSelection: "@",       // Enable or disable day selection in traffic-observation component
                 minHeight: "@",             // Minimum height of this component's container
                 enableRating: "@"           // Enable rating buttons (not supported for all components)
@@ -73,6 +74,10 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 // If dynamicDashboard is undefined, set default value
                 if (_.isUndefined(scope.dynamicDashboard) || (scope.dynamicDashboard !== "true" && scope.dynamicDashboard !== "false"))
                     scope.dynamicDashboard = "false";
+
+                // If enableGridViewBtn is undefined, set default value
+                if (_.isUndefined(scope.enableGridViewBtn) || (scope.enableGridViewBtn !== "true" && scope.enableGridViewBtn !== "false"))
+                    scope.enableGridViewBtn = "false";
 
                 // If enableSelection is undefined, set default value
                 if (_.isUndefined(scope.enableSelection) || (scope.enableSelection !== "true" && scope.enableSelection !== "false"))
@@ -186,6 +191,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
 
                                 break;
                             case "grid":
+                            case "grid-paging":
                                 if (!initialized) {
                                     // Get concept from DashboardService so "view" button will work correctly
                                     scope.concept = DashboardService.getSearchParams(dashboardId).concept;
