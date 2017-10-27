@@ -264,6 +264,28 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 };
 
                 /**
+                 * Return appropriate row style for the grid, depending on the "time" attribute in the row data.
+                 * Only used for "trafficobservation.per.direction.time.vehicle.type" grid view type.
+                 * @param params
+                 * @returns {*}
+                 */
+                var getRowStyle = function (params) {
+                    // If "Time" column says "1 Hour" or is blank, add appropriate color
+                    if (_.has(params.data, "time") && params.data.time === "<b>1 Hour</b>") {
+                        return {
+                            "background-color": "#97C7C9"
+                        };
+                    } else if (_.has(params.data, "time") && params.data.time.trim() === "") {
+                        return {
+                            "background-color": "#4C6194",
+                            "color": "#FFFFFF"
+                        };
+                    }
+
+                    return null;
+                };
+
+                /**
                  * Create the grid
                  */
                 var createGrid = function () {
@@ -351,6 +373,11 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                                     groupContracted: "<i class='fa fa-plus-square-o'/>"
                                 }
                             };
+
+                            // Only for the traffic observations view type, add row style function
+                            if (scope.viewType === "trafficobservation.per.direction.time.vehicle.type") {
+                                scope.gridOptions.getRowStyle = getRowStyle;
+                            }
 
                             // If selection is enabled, add extra options for it in the gridOptions
                             if (allowSelection === "true") {
