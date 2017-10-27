@@ -719,35 +719,9 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     apiOptions = _.extend(apiOptions, _.omit(extraValues, _.isUndefined));
 
                     // Check that start year/day/time is smaller than end year/day/time, otherwise swap them
-                    if (_.has(apiOptions, "trafficobservation.start_year") && _.has(apiOptions, "trafficobservation.end_year")) {
-                        var years = [
-                            apiOptions["trafficobservation.start_year"],
-                            apiOptions["trafficobservation.end_year"]
-                        ];
-                        apiOptions["trafficobservation.start_year"] = _.min(years);
-                        apiOptions["trafficobservation.end_year"] = _.max(years);
-                    }
-
-                    if (_.has(apiOptions, "trafficobservation.start_time") && _.has(apiOptions, "trafficobservation.end_time")) {
-                        var times = [
-                            apiOptions["trafficobservation.start_time"],
-                            apiOptions["trafficobservation.end_time"]
-                        ];
-
-                        apiOptions["trafficobservation.start_time"] = _.min(times, timeToNum);
-                        apiOptions["trafficobservation.end_time"] = _.max(times, timeToNum);
-                    }
-
-                    if (_.has(apiOptions, "trafficobservation.start_day") && _.has(apiOptions, "trafficobservation.end_day")) {
-                        var days = [
-                            apiOptions["trafficobservation.start_day"],
-                            apiOptions["trafficobservation.end_day"]
-                        ];
-
-                        apiOptions["trafficobservation.start_day"] = _.min(days, weekDayToNum);
-                        apiOptions["trafficobservation.end_day"] = _.max(days, weekDayToNum);
-                    }
-
+                    ensureValueIntegrity(apiOptions, "trafficobservation.start_year", "trafficobservation.end_year");
+                    ensureValueIntegrity(apiOptions, "trafficobservation.start_time", "trafficobservation.end_time", timeToNum);
+                    ensureValueIntegrity(apiOptions, "trafficobservation.start_day", "trafficobservation.end_day", weekDayToNum);
                     break;
             }
 
@@ -757,6 +731,24 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             });
 
             return apiOptions;
+        };
+
+        /**
+         * Given an object and two attributes, ensure that the minAttr has the smaller value between the two attributes,
+         * and the maxAttr has the largest one, by swapping them if needed.
+         * @param obj       Object with values
+         * @param minAttr   Attribute which should have the minimum value
+         * @param maxAttr   Attribute which should have the maximum value
+         * @param mapper    (optional) Function that will translate the attribute's values to numbers, so the min/max
+         *                  can be found
+         */
+        var ensureValueIntegrity = function (obj, minAttr, maxAttr, mapper) {
+            if (_.has(obj, minAttr) && _.has(obj, maxAttr)) {
+                var vals = [obj[minAttr], obj[maxAttr]];
+
+                obj[minAttr] = _.min(vals, mapper);
+                obj[maxAttr] = _.max(vals, mapper);
+            }
         };
 
         /**
