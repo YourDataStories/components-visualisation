@@ -124,38 +124,38 @@
         </div>
     </div>
 
-    <!--Traffic observations per direction & time grid-->
-    <div class="row" style="margin-top: 5px">
-        <div class="col-md-12">
+    <!--Bar charts & selected filters-->
+    <div class="row" style="margin-top: 15px">
+        <!--Bar chart 1-->
+        <div class="col-md-5">
             <yds-dashboard-updater
-                    type="simple-grid"
+                    type="bar"
                     project-id="none"
-                    view-type="trafficobservation.per.direction.time.vehicle.type"
+                    view-type="trafficobservation.per.weekday.over.year"
                     dashboard-id="traffic_observation"
-                    add-to-basket="false"
+                    min-height="300"
                     base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
-                    min-height="400"
+                    enable-rating="{{ enableRating }}"
                     lang="{{ lang }}">
             </yds-dashboard-updater>
         </div>
-    </div>
 
-    <div class="row" style="margin-top: 35px">
-        <!--Related contracts grid-->
-        <div class="col-md-7">
+        <!--Bar chart 2-->
+        <div class="col-md-5">
             <yds-dashboard-updater
-                    type="grid-paging"
+                    type="bar"
                     project-id="none"
-                    view-type="contract.for.trafficobservation"
+                    view-type="trafficobservation.per.year.over.vehicle.type"
                     dashboard-id="traffic_observation"
-                    add-to-basket="false"
                     min-height="300"
+                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                    enable-rating="{{ enableRating }}"
                     lang="{{ lang }}">
             </yds-dashboard-updater>
         </div>
 
         <!--Selected filters-->
-        <div class="col-md-5">
+        <div class="col-md-2">
             <div class="panel panel-default">
                 <div class="panel-heading dashboard-info-panel-heading">
                     <h3 class="panel-title">Your selected filters</h3>
@@ -171,6 +171,22 @@
                     </yds-dashboard-updater>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!--Traffic observations per direction & time grid-->
+    <div class="row" style="margin-top: 5px">
+        <div class="col-md-12">
+            <yds-dashboard-updater
+                    type="simple-grid"
+                    project-id="none"
+                    view-type="trafficobservation.per.direction.time.vehicle.type"
+                    dashboard-id="traffic_observation"
+                    add-to-basket="false"
+                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                    min-height="400"
+                    lang="{{ lang }}">
+            </yds-dashboard-updater>
         </div>
     </div>
 
@@ -201,6 +217,21 @@
                     add-to-basket="false"
                     base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
                     min-height="400"
+                    lang="{{ lang }}">
+            </yds-dashboard-updater>
+        </div>
+    </div>
+
+    <!--Related contracts grid-->
+    <div class="row" style="margin-top: 35px">
+        <div class="col-md-offset-2 col-md-8">
+            <yds-dashboard-updater
+                    type="grid-paging"
+                    project-id="none"
+                    view-type="contract.for.trafficobservation"
+                    dashboard-id="traffic_observation"
+                    add-to-basket="false"
+                    min-height="300"
                     lang="{{ lang }}">
             </yds-dashboard-updater>
         </div>
