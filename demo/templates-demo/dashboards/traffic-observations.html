@@ -141,8 +141,8 @@
     </div>
 
     <div class="row" style="margin-top: 35px">
-        <div class="col-md-6">
-            <!--Related contracts grid-->
+        <!--Related contracts grid-->
+        <div class="col-md-7">
             <yds-dashboard-updater
                     type="grid-paging"
                     project-id="none"
@@ -153,21 +153,46 @@
                     lang="{{ lang }}">
             </yds-dashboard-updater>
         </div>
-        <div class="col-md-6">
-            <yds-dashboard-updater
-                    type="traffic-observation"
-                    project-id="none"
-                    view-type="trafficobservation.per.weekday.over.year"
-                    dashboard-id="traffic_observation"
-                    min-height="300"
-                    enable-selection="false"
-                    lang="{{ lang }}">
-            </yds-dashboard-updater>
+
+        <!--Selected filters-->
+        <div class="col-md-5">
+            <div class="panel panel-default">
+                <div class="panel-heading dashboard-info-panel-heading">
+                    <h3 class="panel-title">Your selected filters</h3>
+                </div>
+
+                <div class="panel-body dashboard-info-container-default">
+                    <yds-dashboard-updater
+                            type="info-vertical"
+                            view-type="trafficobservation.filters.selected"
+                            dashboard-id="traffic_observation"
+                            min-height="260"
+                            lang="{{ lang }}">
+                    </yds-dashboard-updater>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Traffic observations component-->
+    <div class="row" style="margin-top: 35px">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <yds-dashboard-updater
+                        type="traffic-observation"
+                        project-id="none"
+                        view-type="trafficobservation.per.weekday.over.year"
+                        dashboard-id="traffic_observation"
+                        min-height="320"
+                        enable-selection="false"
+                        lang="{{ lang }}">
+                </yds-dashboard-updater>
+            </div>
         </div>
     </div>
 
     <!--Traffic observations list grid-->
-    <div class="row" style="margin-top: 35px">
+    <div class="row">
         <div class="col-md-12">
             <yds-dashboard-updater
                     type="grid-paging"
