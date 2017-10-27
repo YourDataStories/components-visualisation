@@ -351,18 +351,19 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
      * Get options for the combobox-selector component
      * @param facet_field
      */
-    dataService.getComboboxFacetItems = function (facet_field) {
+    dataService.getComboboxFacetItems = function (query, facet_field) {
         var deferred = $q.defer();
 
         $http({
             method: "GET",
             url: "http://" + YDS_CONSTANTS.API_SEARCH,
             params: {
-                "q": "*",
+                "q": query,
                 "start": 0,
                 "fq": "{!tag=TYPE}type:(TrafficObservation)",
                 "rows": 0,
                 "facet": "true",
+                "facet.mincount": 1,
                 "facet.field": facet_field
             },
             headers: {"Content-Type": "application/json"}
