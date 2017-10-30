@@ -1,0 +1,7 @@
+demo/* linguist-documentation=false
+src/* linguist-vendored
+demo/lib/* linguist-vendored
+demo/lib/plugins/* linguist-vendored=false
+demo/lib/merged-libs.min.js linguist-generated=true
+demo/css/* linguist-vendored
+demo/css/custom.css linguist-vendored=false
