@@ -22,16 +22,7 @@ angular.module("yds").directive("ydsComboboxSelector", ["$timeout", "DashboardSe
 
                 scope.selection = "";
 
-                // Set query depending on selection type
-                var query = "*";
-                if (selectionType === "trafficobservation.vehicle_type") {
-                    query = "type:TrafficObservation AND -vehicleType.label.en:Total AND -vehicleType.label.en:MC " +
-                        "AND -vehicleType.label.en:\"LGV/PSV 2Axle\" AND -vehicleType.label.en:\"M'Cycle \& P'Cycle\"" +
-                        " AND -vehicleType.label.en:\"OGV1/PSV 3Axle\" AND -vehicleType.label.en:PC " +
-                        "AND -vehicleType.label.en:OGV1 AND -vehicleType.label.en:OGV2 AND -vehicleType.label.en:PSV";
-                }
-
-                Data.getComboboxFacetItems(query, type)
+                Data.getComboboxFacetItems("*", type)
                     .then(function (response) {
                         scope.selection = _.first(response);
 
