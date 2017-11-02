@@ -12,10 +12,15 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
                             // Create Virtuoso query URL
                             query.executeQueryUrl = query.url + "?query=" + encodeURIComponent(query.data)
                                 + "+LIMIT+100&format=text%2Fhtml";
-                        } else if (query.repository === "Solr" && query.method === "post") {
-                            // Create Solr POST query URL
-                            query.executeQueryUrl = "http://143.233.226.60/solr/#/yds/query?q="
-                                + encodeURIComponent(query.data);
+                        } else if (query.repository === "Solr") {
+                            if (query.method === "post") {
+                                // Solr + POST
+                                query.executeQueryUrl = "http://143.233.226.60/solr/#/yds/query?q="
+                                    + encodeURIComponent(query.data);
+                            } else {
+                                // Solr + GET
+                                query.executeQueryUrl = query.url.replace("yds/select", "#/yds/query");
+                            }
                         }
 
                         return query;
