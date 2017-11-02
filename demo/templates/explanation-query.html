@@ -32,12 +32,21 @@
 
             <!--Play query button-->
             <td>
+                <!--Button with link-->
                 <a ng-href="{{ query.executeQueryUrl }}"
+                   ng-if="!query.gridBtn"
                    ng-disabled="!query.executeQueryUrl.length > 0"
                    target="_blank"
                    class="btn btn-success">
                     <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
                 </a>
+
+                <!--Button that shows modifies URL parameters-->
+                <button ng-click="showGrid(query.data)"
+                        ng-if="query.gridBtn"
+                        class="btn btn-success">
+                    <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                </button>
             </td>
         </tr>
         </tbody>

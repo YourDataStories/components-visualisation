@@ -8,6 +8,8 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
                 var responseSuccess = function (response) {
                     // Calculate links for executing query
                     scope.queries = _.map(response.data, function (query) {
+                        query.gridBtn = false;
+
                         if (query.repository === "Virtuoso") {
                             // Create Virtuoso query URL
                             query.executeQueryUrl = query.url + "?query=" + encodeURIComponent(query.data)
@@ -18,26 +20,32 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
                                 query.executeQueryUrl = "http://143.233.226.60/solr/#/yds/query?q="
                                     + encodeURIComponent(query.data);
                             } else {
-                                // Solr + GET
-                                query.executeQueryUrl = query.url.replace("yds/select", "#/yds/query");
+                                // Solr + GET (just show the button that calls scope.showGrid)
+                                query.gridBtn = true;
                             }
                         }
 
                         return query;
                     });
-
-                    // Add query to the URL parameters
-                    var gridQuery = _.last(scope.queries).data;
-                    if (gridQuery.substring(0, 2) === "q=") {
-                        gridQuery = gridQuery.substring(2);
-                    }
-
-                    $location.search("q", gridQuery);
-                    $location.search("tab", "none");
                 };
 
                 var responseError = function (error) {
                     console.error("Error while getting explanation for component!", error);
+                };
+
+                /**
+                 * Set the parameters required to show the grid
+                 * @param gridQuery
+                 */
+                scope.showGrid = function (gridQuery) {
+                    // Remove "q=" from start of query
+                    if (gridQuery.substring(0, 2) === "q=") {
+                        gridQuery = gridQuery.substring(2);
+                    }
+
+                    // Add query to the URL parameters
+                    $location.search("q", gridQuery);
+                    $location.search("tab", "none");
                 };
 
                 // Get parameters
