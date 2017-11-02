@@ -195,6 +195,18 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 "publicproject_filter_sellers_all_public_project",
                 "publicproject_regions_all_publicproject_regional_units_all",
                 "year_public_project"
+            ],
+            traffic_observation: [
+                "trafficobservation_direction",
+                "trafficobservation_end_day",
+                "trafficobservation_end_time",
+                "trafficobservation_end_year",
+                "trafficobservation_gap",
+                "trafficobservation_on_points",
+                "trafficobservation_start_day",
+                "trafficobservation_start_time",
+                "trafficobservation_start_year",
+                "trafficobservation_vehicle_type"
             ]
         };
 
@@ -345,6 +357,9 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
         dashboard.saveObject = function (key, object) {
             if (!_.has(objectStore, key) || !_.isEqual(objectStore[key], object)) {
                 objectStore[key] = object;
+
+                // Save to cookie as well, in case it is needed
+                dashboard.setCookieObject(key, object);
 
                 notifyObjectChange();
             }

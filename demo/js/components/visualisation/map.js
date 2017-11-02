@@ -299,6 +299,9 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
                     // selectedPoints.push(markerData.id);
 
                     newMarker.setIcon(mapPins.selected);
+
+                    // Make clear button visible
+                    clearBtnElement.style.display = "block";
                 }
 
                 return newMarker;
@@ -346,6 +349,12 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
                     scope.clickedPoint["point"] = selectionData;
                 });
             };
+
+            // Before creating the map, get cookie data from Dashboard. If it exists, restore saved points
+            var cookieData = DashboardService.getCookieObject(selectionId);
+            if (!_.isNull(cookieData) && _.isString(cookieData)) {
+                selectedPoints = cookieData.split(",");
+            }
 
             // Create the map
             createMap();
