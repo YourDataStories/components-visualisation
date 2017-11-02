@@ -6,7 +6,20 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
             templateUrl: Data.templatePath + "templates/explanation-query.html",
             link: function (scope) {
                 var responseSuccess = function (response) {
-                    scope.queries = response.data;
+                    // Calculate links for executing query
+                    scope.queries = _.map(response.data, function (query) {
+                        if (query.repository === "Virtuoso") {
+                            // Create Virtuoso query URL
+                            query.executeQueryUrl = query.url + "?query=" + encodeURIComponent(query.data)
+                                + "+LIMIT+100&format=text%2Fhtml";
+                        } else if (query.repository === "Solr" && query.method === "post") {
+                            // Create Solr POST query URL
+                            query.executeQueryUrl = "http://143.233.226.60/solr/#/yds/query?q="
+                                + encodeURIComponent(query.data);
+                        }
+
+                        return query;
+                    });
                 };
 
                 var responseError = function (error) {

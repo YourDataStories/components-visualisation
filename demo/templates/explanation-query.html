@@ -8,20 +8,37 @@
         </thead>
         <tbody>
         <tr ng-repeat="query in queries">
+            <!--Repository-->
             <td class="explanation-query-method">
                 <span class="label label-primary">
                     {{ query.repository }}
                 </span>
             </td>
+
+            <!--Method (GET/POST)-->
             <td class="explanation-query-method">
                 <span class="label label-info">
                     {{ query.method }}
                 </span>
             </td>
+
+            <!--Query URL-->
             <td class="explanation-query-url">
                 <a ng-href="{{ query.url }}" target="_blank">{{ query.url }}</a>
             </td>
+
+            <!--Query Data-->
             <td>{{ query.data || "-" }}</td>
+
+            <!--Play query button-->
+            <td>
+                <a ng-href="{{ query.executeQueryUrl }}"
+                   ng-disabled="!query.executeQueryUrl.length > 0"
+                   target="_blank"
+                   class="btn btn-success">
+                    <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                </a>
+            </td>
         </tr>
         </tbody>
     </table>
