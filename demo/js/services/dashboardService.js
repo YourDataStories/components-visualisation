@@ -735,8 +735,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
                     // Check that start year/day/time is smaller than end year/day/time, otherwise swap them
                     ensureValueIntegrity(apiOptions, "trafficobservation.start_year", "trafficobservation.end_year");
-                    ensureValueIntegrity(apiOptions, "trafficobservation.start_time", "trafficobservation.end_time", timeToNum);
-                    ensureValueIntegrity(apiOptions, "trafficobservation.start_day", "trafficobservation.end_day", weekDayToNum);
+                    ensureValueIntegrity(apiOptions, "trafficobservation.start_time", "trafficobservation.end_time", dashboard.timeToNum);
+                    ensureValueIntegrity(apiOptions, "trafficobservation.start_day", "trafficobservation.end_day", dashboard.weekDayToNum);
                     break;
             }
 
@@ -771,7 +771,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param weekday
          * @returns {number}
          */
-        var weekDayToNum = function (weekday) {
+        dashboard.weekDayToNum = function (weekday) {
             return ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].indexOf(weekday);
         };
 
@@ -779,7 +779,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * Get a time string of the form HH:MM and transform it into the number of minutes that passed since 00:00
          * @param timeStr
          */
-        var timeToNum = function (timeStr) {
+        dashboard.timeToNum = function (timeStr) {
             var timePiecies = timeStr.split(":");
             return (parseInt(timePiecies[0]) * 60) + parseInt(timePiecies[1]);
         };

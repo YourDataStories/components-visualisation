@@ -40,6 +40,23 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                 if (_.isUndefined(dashboardId) || dashboardId.length === 0)
                     dashboardId = "default";
 
+                // Check if there is a saved selection in the cookies, and use that as default
+                var cookieValue = DashboardService.getCookieObject(selectionType);
+                if (!_.isUndefined(cookieValue) && !_.isNull(cookieValue)) {
+                    switch (type) {
+                        case "year":
+                            defaultValue = cookieValue;
+                            break;
+                        case "day":
+                            defaultValue = DashboardService.weekDayToNum(cookieValue);
+                            break;
+                        case "time":
+                        case "minutes":
+                            defaultValue = DashboardService.timeToNum(cookieValue);
+                            break;
+                    }
+                }
+
                 /**
                  * Transform the number of minutes that has passed since midnight to a string of the form HH:MM
                  * @param value     Number of minutes since midnight
