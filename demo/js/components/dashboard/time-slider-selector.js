@@ -40,6 +40,40 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                 if (_.isUndefined(dashboardId) || dashboardId.length === 0)
                     dashboardId = "default";
 
+                /**
+                 * Save the current value of the slider to the DashboardService using the specified selection type.
+                 */
+                var saveValueToDashboardService = function () {
+                    var finalValue;
+
+                    // Apply modification to the value depending on the type
+                    switch (type) {
+                        case "day":
+                            finalValue = weekDays[scope.slider.value];
+                            break;
+                        case "time":
+                        case "minutes":
+                            finalValue = minutesToTime(scope.slider.value);
+                            break;
+                        default:
+                            finalValue = scope.slider.value;
+                    }
+
+                    DashboardService.saveObject(selectionType, finalValue);
+                };
+
+                /**
+                 * Transform the number of minutes that has passed since midnight to a string of the form HH:MM
+                 * @param value     Number of minutes since midnight
+                 * @returns {string}
+                 */
+                var minutesToTime = function (value) {
+                    // Transform the minutes into a time format
+                    var hours = Math.floor(value / 60);
+                    var minutes = value % 60;
+                    return (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes;
+                };
+
                 // Check if there is a saved selection in the cookies, and use that as default
                 var cookieValue = DashboardService.getCookieObject(selectionType);
                 if (!_.isUndefined(cookieValue) && !_.isNull(cookieValue)) {
@@ -57,18 +91,6 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                     }
                 }
 
-                /**
-                 * Transform the number of minutes that has passed since midnight to a string of the form HH:MM
-                 * @param value     Number of minutes since midnight
-                 * @returns {string}
-                 */
-                var minutesToTime = function (value) {
-                    // Transform the minutes into a time format
-                    var hours = Math.floor(value / 60);
-                    var minutes = value % 60;
-                    return (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes;
-                };
-
                 // Set names for the days of the week
                 var weekDays = [
                     "Monday",
@@ -82,24 +104,7 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
 
                 // Set common options for all sliders
                 var options = {
-                    onEnd: function () {
-                        var finalValue;
-
-                        // Apply modification to the value depending on the type
-                        switch (type) {
-                            case "day":
-                                finalValue = weekDays[scope.slider.value];
-                                break;
-                            case "time":
-                            case "minutes":
-                                finalValue = minutesToTime(scope.slider.value);
-                                break;
-                            default:
-                                finalValue = scope.slider.value;
-                        }
-
-                        DashboardService.saveObject(selectionType, finalValue);
-                    }
+                    onEnd: saveValueToDashboardService
                 };
 
                 // Set options that depend on the slider's type
@@ -148,6 +153,9 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                     value: defaultValue,
                     options: _.extend(options, specificOptions)
                 };
+
+                // Save initial slider value to DashboardService
+                saveValueToDashboardService();
 
                 // Show angular slider after options are set
                 scope.initialized = true;
