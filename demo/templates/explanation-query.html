@@ -1,12 +1,18 @@
 <div>
     <table class="table table-striped">
         <thead>
+        <th>Repository</th>
         <th>Method</th>
         <th>URL</th>
         <th>Data</th>
         </thead>
         <tbody>
         <tr ng-repeat="query in queries">
+            <td class="explanation-query-method">
+                <span class="label label-primary">
+                    {{ query.repository }}
+                </span>
+            </td>
             <td class="explanation-query-method">
                 <span class="label label-info">
                     {{ query.method }}

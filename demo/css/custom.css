@@ -1491,6 +1491,7 @@ div.dcat-value {
 /* Style for URLs in explanation query component */
 .explanation-query-url {
     font-family: monospace;
+    word-break: break-all;
 }
 
 /* Alternative Names component list styles */
