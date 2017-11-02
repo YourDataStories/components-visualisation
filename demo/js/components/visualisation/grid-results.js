@@ -673,7 +673,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 if (_.isUndefined(extraParams) && useGridApi === "false") {
                     // If any URL parameters change act accordingly
                     scope.$watch(function () {
-                        return JSON.stringify($location.search()) + getSearchQuery();
+                        return JSON.stringify($location.search());
                     }, function () {
                         var urlParams = $location.search();
 

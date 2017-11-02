@@ -25,6 +25,15 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
 
                         return query;
                     });
+
+                    // Add query to the URL parameters
+                    var gridQuery = _.last(scope.queries).data;
+                    if (gridQuery.substring(0, 2) === "q=") {
+                        gridQuery = gridQuery.substring(2);
+                    }
+
+                    $location.search("q", gridQuery);
+                    $location.search("tab", "none");
                 };
 
                 var responseError = function (error) {

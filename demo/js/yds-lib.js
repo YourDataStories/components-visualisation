@@ -843,8 +843,10 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
             }
         }
 
-        // Add facets to the parameters of the request
-        params.fq = facets;
+        // Add facets to the parameters of the request (while removing facets that contain "none")
+        params.fq = _.reject(facets, function (facet) {
+            return facet.indexOf("none") !== -1;
+        });
 
         // Add any extra parameters to the request
         if (!_.isUndefined(extraParams)) {
