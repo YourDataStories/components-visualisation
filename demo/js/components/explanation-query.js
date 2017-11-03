@@ -18,10 +18,14 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
                             query.executeQueryUrl = query.url + "?query=" + encodeURIComponent(query.data)
                                 + "+LIMIT+100&format=text%2Fhtml";
                         } else if (query.repository === "Solr") {
-                            if (query.method === "post") {
+                            if (query.method === "POST") {
                                 // Solr + POST
+                                var gridQuery = query.data;
+                                if (gridQuery.substring(0, 2) === "q=") {
+                                    gridQuery = gridQuery.substring(2);
+                                }
                                 query.executeQueryUrl = "http://143.233.226.60/solr/#/yds/query?q="
-                                    + encodeURIComponent(query.data);
+                                    + encodeURIComponent(gridQuery);
                             } else {
                                 // Solr + GET (just show the button that calls scope.showGrid)
                                 query.executeQueryUrl = query.url.replace("yds/select", "#/yds/query");
