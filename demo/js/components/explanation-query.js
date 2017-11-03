@@ -35,9 +35,11 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
 
                 /**
                  * Set the parameters required to show the grid
-                 * @param gridQuery
+                 * @param query
                  */
-                scope.showGrid = function (gridQuery) {
+                scope.showGrid = function (query) {
+                    var gridQuery = query.data;
+
                     // Remove "q=" from start of query
                     if (gridQuery.substring(0, 2) === "q=") {
                         gridQuery = gridQuery.substring(2);
@@ -46,6 +48,10 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
                     // Add query to the URL parameters
                     $location.search("q", gridQuery);
                     $location.search("tab", "none");
+
+                    // Add grid type to URL parameters if there is any, or remove it
+                    var gridType = query.type;
+                    $location.search("gridType", gridType.length > 0 ? gridType : null);
                 };
 
                 // Get parameters

@@ -373,7 +373,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 };
 
                 /**
-                 * Adds 2 columns to the column definitions of a grid in which
+                 * Add 2 columns to the column definitions of a grid in which
                  * the "view" and "add to basket" buttons will be
                  * @param columnDefs    Column definitions array as returned by Data.prepareGridColumns()
                  * @returns {Array.<*>} New column definitions
@@ -409,7 +409,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 };
 
                 /**
-                 * Function to render the grid
+                 * Render the grid
                  */
                 var visualizeGrid = function (quickFilter) {
                     // Create grid data source

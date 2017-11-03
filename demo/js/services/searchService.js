@@ -8,7 +8,7 @@ app.factory("Search", ["$http", "$q", "$location", "YDS_CONSTANTS", "Data",
         var rangeFacets = [];
 
         /**
-         * Triggers the callbacks of observers
+         * Trigger the callbacks of observers
          */
         var notifyObservers = function (observerStack) {
             angular.forEach(observerStack, function (callback) {
@@ -39,7 +39,7 @@ app.factory("Search", ["$http", "$q", "$location", "YDS_CONSTANTS", "Data",
         };
 
         /**
-         * Formats the search results returned from the search API
+         * Format the search results returned from the search API
          */
         var formatResults = function (results, resultsView, resultsViewNames, prefLang) {
             var formattedResults = [];
@@ -102,7 +102,7 @@ app.factory("Search", ["$http", "$q", "$location", "YDS_CONSTANTS", "Data",
         };
 
         /**
-         * Formats the field facets returned from the search API.
+         * Format the field facets returned from the search API.
          * @param {Array} newFacets, the field facets as returned from Solr
          * @param {Array} facetsView, the view of the facets as returned from the search API
          */
@@ -156,7 +156,7 @@ app.factory("Search", ["$http", "$q", "$location", "YDS_CONSTANTS", "Data",
         };
 
         /**
-         * Formats the range facets returned from the search API.
+         * Format the range facets returned from the search API.
          * @param {Array} newFacets, the field facets as returned from Solr
          * @param {Array} facetsView, the view of the facets as returned from the search API
          **/
@@ -234,6 +234,7 @@ app.factory("Search", ["$http", "$q", "$location", "YDS_CONSTANTS", "Data",
          * @param pageNumber    The page number of the results
          */
         var performSearch = function (newKeyword, prefLang, pageLimit, pageNumber) {
+            //todo: newKeyword is not used here?
             var deferred = $q.defer();
 
             // Define an object with the standard params required for the search query
@@ -263,7 +264,7 @@ app.factory("Search", ["$http", "$q", "$location", "YDS_CONSTANTS", "Data",
         };
 
         /**
-         * Formats the suggestions as returned from the suggestion API to be an array for bootstrap typeahead.
+         * Format the suggestions as returned from the suggestion API to be an array for bootstrap typeahead.
          * @param val                The value for which the suggestions are for
          * @param rawSuggestions    Response from the suggestion API
          * @param maxSuggestions    Maximum number of suggestions to return
@@ -301,7 +302,7 @@ app.factory("Search", ["$http", "$q", "$location", "YDS_CONSTANTS", "Data",
         };
 
         /**
-         * Gets search/input suggestions for search, or an Advanced Search filter if filterId is defined
+         * Get search/input suggestions for search, or an Advanced Search filter if filterId is defined
          * @param val                Input from the search bar
          * @param lang                Language of the suggestions
          * @param maxSuggestions    Maximum number of suggestions to return
@@ -337,7 +338,7 @@ app.factory("Search", ["$http", "$q", "$location", "YDS_CONSTANTS", "Data",
         };
 
         /**
-         * Returns the tabs that should be shown in Tabbed Search from the API
+         * Return the tabs that should be shown in Tabbed Search from the API
          * @param lang        language of tabs
          * @returns {d|s|a}    tabs
          */
@@ -361,7 +362,7 @@ app.factory("Search", ["$http", "$q", "$location", "YDS_CONSTANTS", "Data",
         };
 
         /**
-         * Gets info from the server's response about how many results are in each tab of tabbed search
+         * Get info from the server's response about how many results are in each tab of tabbed search
          * and adds them into an object that the search tabs component uses
          * @param response            The server's response (from search API)
          * @returns {{}}
@@ -383,7 +384,7 @@ app.factory("Search", ["$http", "$q", "$location", "YDS_CONSTANTS", "Data",
         };
 
         /**
-         * Gets the available tabs for the current (tabbed) search query and returns
+         * Get the available tabs for the current (tabbed) search query and returns
          * their result counts so the number can be shown on the page for each tab
          * @param lastQuery Query of search that will be performed (used for sanity check)
          * @param rules     Rules for the search
@@ -459,7 +460,7 @@ app.factory("Search", ["$http", "$q", "$location", "YDS_CONSTANTS", "Data",
         };
 
         /**
-         * Gets the filters for the query builder, for a specific concept.
+         * Get the filters for the query builder, for a specific concept.
          * @param id        ID of concept
          * @returns {*}
          */
