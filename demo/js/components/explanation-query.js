@@ -32,7 +32,9 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
                     });
 
                     // Make last query selected
-                    scope.showGrid(_.last(scope.queries));
+                    if (!_.isEmpty(scope.queries)) {
+                        scope.showGrid(_.last(scope.queries));
+                    }
                 };
 
                 var responseError = function (error) {
