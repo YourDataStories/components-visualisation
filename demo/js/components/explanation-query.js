@@ -8,8 +8,6 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
                 var responseSuccess = function (response) {
                     // Calculate links for executing query
                     scope.queries = _.map(response.data, function (query) {
-                        query.gridBtn = false;
-
                         if (query.repository === "Virtuoso") {
                             // Create Virtuoso query URL
                             query.executeQueryUrl = query.url + "?query=" + encodeURIComponent(query.data)
@@ -21,7 +19,7 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
                                     + encodeURIComponent(query.data);
                             } else {
                                 // Solr + GET (just show the button that calls scope.showGrid)
-                                query.gridBtn = true;
+                                query.executeQueryUrl = query.url.replace("yds/select", "#/yds/query");
                             }
                         }
 
