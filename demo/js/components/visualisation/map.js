@@ -351,9 +351,11 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
             };
 
             // Before creating the map, get cookie data from Dashboard. If it exists, restore saved points
-            var cookieData = DashboardService.getCookieObject(selectionId);
-            if (!_.isNull(cookieData) && _.isString(cookieData)) {
-                selectedPoints = cookieData.split(",");
+            if (pointSelection && !_.isUndefined(selectionId) && selectionId.length > 0) {
+                var cookieData = DashboardService.getCookieObject(selectionId);
+                if (!_.isNull(cookieData) && _.isString(cookieData)) {
+                    selectedPoints = cookieData.split(",");
+                }
             }
 
             // Create the map
