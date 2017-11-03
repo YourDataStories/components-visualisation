@@ -77,10 +77,6 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
                                     scope.projectDetailsType = viewType;
                                 }
                             }
-
-                            // console.log("Scope values", _.omit(scope, function (val, key) {
-                            //     return key.substring(0, 1) === "$";
-                            // }));
                         };
 
                         // Create the chart
@@ -129,7 +125,7 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
                                 });
                         } else {
                             // Get chart parameters from URL
-                            var params = $location.search();
+                            var params = _.clone($location.search());
 
                             // If params.lang is an array, keep the 1st one
                             if (_.has(params, "lang") && _.isArray(params.lang)) {
@@ -137,10 +133,7 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
                                 params.lang = _.first(params.lang);
                             }
 
-                            // console.log("URL params", params);
-
                             var chart = params.chart;
-
                             var filters = _.omit(params, Data.omittedChartParams);
 
                             // For bar charts, add the "numberOfItems" and "enablePaging" parameters to the scope
