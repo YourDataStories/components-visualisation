@@ -12,7 +12,7 @@ angular.module("yds").controller("TrustworthinessController", ["$scope", "$locat
             var params = $location.search();
 
             // Check if the grid's view project buttons should be enabled
-            if (_.has(params, "gridType")) {
+            if (_.has(params, "gridDetailsType")) {
                 // Enable view button in the grid
                 scope.enableViewBtn = true;
                 scope.projDetailsType = params.gridType;

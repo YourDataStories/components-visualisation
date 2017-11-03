@@ -73,7 +73,7 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
 
                     // Add grid type to URL parameters if there is any, or remove it
                     var gridType = query.type;
-                    $location.search("gridType", gridType.length > 0 ? gridType : null);
+                    $location.search("gridDetailsType", gridType.length > 0 ? gridType : null);
                 };
 
                 // Get parameters
