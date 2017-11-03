@@ -8,7 +8,10 @@
         <th>Execute</th>
         </thead>
         <tbody>
-        <tr ng-repeat="query in queries">
+        <tr ng-repeat="query in queries"
+            ng-click="showGrid(query)"
+            ng-class="{ 'explanation-query-row': query.repository === 'Solr',
+                        'explanation-query-row-selected': query.selected }">
             <!--Repository-->
             <td class="explanation-query-method">
                 <span class="label label-primary">

@@ -5,9 +5,14 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
             scope: {},
             templateUrl: Data.templatePath + "templates/explanation-query.html",
             link: function (scope) {
+                // Last selected query object will be kept here (to be able to make it unselected)
+                var lastSelQuery = null;
+
                 var responseSuccess = function (response) {
                     // Calculate links for executing query
                     scope.queries = _.map(response.data, function (query) {
+                        query.selected = false;
+
                         if (query.repository === "Virtuoso") {
                             // Create Virtuoso query URL
                             query.executeQueryUrl = query.url + "?query=" + encodeURIComponent(query.data)
@@ -25,6 +30,9 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
 
                         return query;
                     });
+
+                    // Make last query selected
+                    scope.showGrid(_.last(scope.queries));
                 };
 
                 var responseError = function (error) {
@@ -36,6 +44,20 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
                  * @param query
                  */
                 scope.showGrid = function (query) {
+                    if (query.repository !== "Solr") {
+                        // Can only show grid for Solr...
+                        return;
+                    }
+
+                    // Make last query unselected
+                    if (!_.isNull(lastSelQuery)) {
+                        lastSelQuery.selected = false;
+                    }
+
+                    // Make new query selected and save it as the last selected query
+                    query.selected = true;
+                    lastSelQuery = query;
+
                     var gridQuery = query.data;
 
                     // Remove "q=" from start of query

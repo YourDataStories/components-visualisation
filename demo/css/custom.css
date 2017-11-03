@@ -1494,6 +1494,16 @@ div.dcat-value {
     word-break: break-all;
 }
 
+/* Make Solr query rows have cursor */
+.explanation-query-row {
+    cursor: pointer;
+}
+
+/* Make selected query rows stand out (background color) */
+.table-striped > tbody > tr.explanation-query-row.explanation-query-row-selected {
+    background: #9cff80;
+}
+
 /* Alternative Names component list styles */
 .alternative-names-list {
     display: inline-block;
