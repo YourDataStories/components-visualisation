@@ -2,60 +2,26 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
     function (Data, DashboardService, $http, $stateParams, $location) {
         return {
             restrict: "E",
-            scope: {},
+            scope: {
+                maxHeight: "@",     // Set the max height of the component. If undefined, will use all available height.
+                useUrlParams: "@"   // Set to true to get chart parameters from the URL instead of embed code.
+            },
             templateUrl: Data.templatePath + "templates/hybrid.html",
             compile: function (tElem, tAttrs) {
                 return {
                     pre: function (scope, element, iAttrs) {
                         scope.ydsAlert = "";
-                        var embedCode = $stateParams.embedCode;
+                        var maxHeight = parseInt(scope.maxHeight);
 
+                        var embedCode = $stateParams.embedCode;
                         var hybridContainer = _.first(angular.element(element[0].querySelector(".hybrid-container")));
 
                         // Create a random id for the element that will render the chart
-                        var elementId = "hybrid" + Data.createRandomId();
-                        hybridContainer.id = elementId;
+                        hybridContainer.id = "hybrid" + Data.createRandomId();
 
-                        // Recover saved object from embed code and visualise it
-                        Data.recoverEmbedCode(embedCode)
-                            .then(function (response) {
-                                // Get filters for this visualisation if there are any
-                                var filters = [];
-                                var facets = response.embedding.facets;
-                                if (!_.isEmpty(facets)) {
-                                    var facetValues = _.first(facets).facet_values;
-                                    if (!_.isEmpty(facetValues)) {
-                                        var facetValue = _.first(facetValues);
-                                        if (_.isString(facetValue)) {
-                                            facetValue = JSON.parse(facetValue);
-                                        }
-
-                                        filters = facetValue;
-                                    }
-                                }
-
-                                // If the filters contain an "extraParams" object, merge it with the other parameters
-                                if (_.has(filters, "extraParams")) {
-                                    filters = _.extend(_.omit(filters, "extraParams"), filters.extraParams);
-                                }
-
-                                // If there are "pagingGrid" = true, and numberOfItems attributes, we should use grid-results
-                                // in order to take advantage of paging.
-                                if (_.has(filters, "pagingGrid") && _.has(filters, "numberOfItems")
-                                    && filters.pagingGrid === true && !_.isNaN(filters.numberOfItems)) {
-                                    // Force the grid-paging visualization type
-                                    response.embedding.type = "grid-paging";
-
-                                    // Add number of items to scope (needed by grid-results component in this case)
-                                    scope.numberOfItems = filters.numberOfItems;
-                                }
-
-                                // Visualise project with filters
-                                visualiseProject(response.embedding.project_id, response.embedding.type, filters,
-                                    response.embedding.view_type, response.embedding.lang);
-                            }, function (error) {
-                                scope.ydsAlert = error.message;
-                            });
+                        if (_.isUndefined(scope.useUrlParams) || (scope.useUrlParams !== "true" && scope.useUrlParams !== "false")) {
+                            scope.useUrlParams = "false";
+                        }
 
                         /**
                          * Get visualization parameters and add them to the scope so the correct
@@ -84,6 +50,13 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
 
                             // Get the current height of the container and set the chart to that height
                             var currH = hybridContainer.offsetHeight;
+
+                            // If there is a max height defined, use it
+                            if (!_.isNaN(maxHeight)) {
+                                currH = Math.min(maxHeight, currH);
+                            }
+
+                            // If a height could not be found, use default of 300px
                             if (_.isNaN(currH) || _.isUndefined(currH) || currH < 300) {
                                 currH = 300;
                             }
@@ -106,6 +79,69 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
                                 }
                             }
                         };
+
+                        // Create the chart
+                        if (scope.useUrlParams !== "true") {
+                            // Recover saved object from embed code and visualise it
+                            Data.recoverEmbedCode(embedCode)
+                                .then(function (response) {
+                                    // Get filters for this visualisation if there are any
+                                    var filters = [];
+                                    var facets = response.embedding.facets;
+                                    if (!_.isEmpty(facets)) {
+                                        var facetValues = _.first(facets).facet_values;
+                                        if (!_.isEmpty(facetValues)) {
+                                            var facetValue = _.first(facetValues);
+                                            if (_.isString(facetValue)) {
+                                                facetValue = JSON.parse(facetValue);
+                                            }
+
+                                            filters = facetValue;
+                                        }
+                                    }
+
+                                    // If the filters contain an "extraParams" object, merge it with the other parameters
+                                    if (_.has(filters, "extraParams")) {
+                                        filters = _.extend(_.omit(filters, "extraParams"), filters.extraParams);
+                                    }
+
+                                    // If there are "pagingGrid" = true, and numberOfItems attributes, we should use grid-results
+                                    // in order to take advantage of paging.
+                                    if (_.has(filters, "pagingGrid") && _.has(filters, "numberOfItems")
+                                        && filters.pagingGrid === true && !_.isNaN(filters.numberOfItems)) {
+                                        // Force the grid-paging visualization type
+                                        response.embedding.type = "grid-paging";
+
+                                        // Add number of items to scope (needed by grid-results component in this case)
+                                        scope.numberOfItems = filters.numberOfItems;
+                                    }
+
+                                    // Visualise project with filters
+                                    visualiseProject(response.embedding.project_id, response.embedding.type, filters,
+                                        response.embedding.view_type, response.embedding.lang);
+                                }, function (error) {
+                                    scope.ydsAlert = error.message;
+                                });
+                        } else {
+                            // Get chart parameters from URL
+                            var params = $location.search();
+                            // console.log("params", params);
+
+                            var chart = params.chart;
+
+                            var filters = _.omit(params, "chart", "id", "viewType", "lang", "gridapi", "gridtype");
+
+                            //todo: Fix grid & paging bar
+                            if (chart === "grid" || chart === "bar") {
+                                return;
+                            }
+
+                            if (chart === "grid" && _.has(params, "gridtype")) {
+                                filters.q = params.query;
+                            }
+
+                            visualiseProject(params.id, params.chart, filters, params.viewType, params.lang);
+                        }
                     }
                 }
             }
