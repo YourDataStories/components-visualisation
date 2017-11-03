@@ -13,10 +13,8 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
                         scope.ydsAlert = "";
                         var maxHeight = parseInt(scope.maxHeight);
 
-                        var embedCode = $stateParams.embedCode;
+                        // Create a random ID for the component container
                         var hybridContainer = _.first(angular.element(element[0].querySelector(".hybrid-container")));
-
-                        // Create a random id for the element that will render the chart
                         hybridContainer.id = "hybrid" + Data.createRandomId();
 
                         if (_.isUndefined(scope.useUrlParams) || (scope.useUrlParams !== "true" && scope.useUrlParams !== "false")) {
@@ -65,8 +63,9 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
                             // Set visualization type so the ng-switch shows the component
                             scope.vizType = vizType.toLowerCase();
 
-                            // If there is a q parameter and the visualisation type is grid, the use grid-results
-                            if (_.has(scope.extraParams, "q") && scope.vizType === "grid") {
+                            // If there is a q parameter and the visualisation type is grid, then use grid-results.
+                            // (when we are using URL parameters, the grid type is set beforehand)
+                            if (scope.useUrlParams !== "true" && _.has(scope.extraParams, "q") && scope.vizType === "grid") {
                                 scope.vizType = "grid-results";
 
                                 // Find concept type and add it as the project details type for grid-results
@@ -86,6 +85,9 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
 
                         // Create the chart
                         if (scope.useUrlParams !== "true") {
+                            // Get embed code
+                            var embedCode = $stateParams.embedCode;
+
                             // Recover saved object from embed code and visualise it
                             Data.recoverEmbedCode(embedCode)
                                 .then(function (response) {
@@ -111,8 +113,7 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
 
                                     // If there are "pagingGrid" = true, and numberOfItems attributes, we should use grid-results
                                     // in order to take advantage of paging.
-                                    if (_.has(filters, "pagingGrid") && _.has(filters, "numberOfItems")
-                                        && filters.pagingGrid === true && !_.isNaN(filters.numberOfItems)) {
+                                    if (_.has(filters, "pagingGrid") && filters.pagingGrid === true) {
                                         // Force the grid-paging visualization type
                                         response.embedding.type = "grid-paging";
 
@@ -129,16 +130,18 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
                         } else {
                             // Get chart parameters from URL
                             var params = $location.search();
+
+                            // If params.lang is an array, keep the 1st one
+                            if (_.has(params, "lang") && _.isArray(params.lang)) {
+                                //todo: Find when this happens
+                                params.lang = _.first(params.lang);
+                            }
+
                             // console.log("URL params", params);
 
                             var chart = params.chart;
 
                             var filters = _.omit(params, Data.omittedChartParams);
-
-                            //todo: Fix grid
-                            if (chart === "grid") {
-                                return;
-                            }
 
                             // For bar charts, add the "numberOfItems" and "enablePaging" parameters to the scope
                             if (chart === "bar" && _.has(params, "numberOfItems") && _.has(params, "enablePaging")) {
@@ -147,7 +150,17 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
                             }
 
                             if (chart === "grid" && _.has(params, "gridtype")) {
-                                filters.q = params.query;
+                                if (_.has(params, "query")) {
+                                    filters.q = params.query;
+                                }
+
+                                // Make the chart be the grid type
+                                params.chart = params.gridtype;
+
+                                // If the grid is grid-results, and we need to use grid API, switch to "paging-grid"
+                                if (params.gridtype === "grid-results" && params.gridapi === "true") {
+                                    params.chart = "grid-paging";
+                                }
                             }
 
                             visualiseProject(params.id, params.chart, filters, params.viewType, params.lang);

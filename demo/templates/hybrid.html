@@ -79,6 +79,16 @@
                 element-h="{{ elementH }}">
         </yds-map>
 
+        <yds-grid
+                ng-switch-when="grid"
+                project-id="{{ projectId }}"
+                view-type="{{ viewType }}"
+                extra-params="extraParams"
+                lang="{{ lang }}"
+                disable-explanation="true"
+                element-h="{{ elementH }}">
+        </yds-grid>
+
         <yds-grid-results
                 ng-switch-when="grid-results"
                 project-id="{{ projectId }}"
@@ -95,16 +105,6 @@
                 disable-explanation="true"
                 lang="{{ lang }}">
         </yds-grid-results>
-
-        <yds-grid
-                ng-switch-when="grid"
-                project-id="{{ projectId }}"
-                view-type="{{ viewType }}"
-                extra-params="extraParams"
-                lang="{{ lang }}"
-                disable-explanation="true"
-                element-h="{{ elementH }}">
-        </yds-grid>
 
         <yds-grid-results
                 ng-switch-when="grid-paging"
