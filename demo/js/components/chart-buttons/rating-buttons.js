@@ -56,7 +56,7 @@ angular.module('yds').directive('ydsRating', ['$templateRequest', '$compile', '$
                 }
 
                 // Add rating buttons to the chart
-                $templateRequest("templates/chart-buttons/rating-buttons.html").then(function (html) {
+                $templateRequest(Data.templatePath + "templates/chart-buttons/rating-buttons.html").then(function (html) {
                     var template = angular.element(html);
 
                     // Compile the element

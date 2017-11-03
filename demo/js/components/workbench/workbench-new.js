@@ -48,10 +48,10 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$compile', '
                 // Load the required CSS & JS files for the Editor
                 $ocLazyLoad.load({
                     files: [
-                        "css/highcharts-editor.min.css",
-                        "lib/highcharts-editor.js",
-                        "lib/plugins/yds-chart-template-selector.js",
-                        "lib/plugins/yds-chart-editor.js"
+                        Data.templatePath + "css/highcharts-editor.min.css",
+                        Data.templatePath + "lib/highcharts-editor.js",
+                        Data.templatePath + "lib/yds-chart-template-selector.js",
+                        Data.templatePath + "lib/yds-chart-editor.js"
                     ],
                     serie: true,
                     cache: true
@@ -105,7 +105,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$compile', '
                     angular.element(parent).addClass("view-selector-step-body");
 
                     // Add content to the parent
-                    $templateRequest("templates/workbench/view-selector.html").then(function (html) {
+                    $templateRequest(Data.templatePath + "templates/workbench/view-selector.html").then(function (html) {
                         var template = angular.element(html);
 
                         // Add element as a child to the parent
@@ -134,7 +134,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$compile', '
                             });
 
                             // Get the template which will show all the items, compile and add it ot the page
-                            $templateRequest("templates/workbench/library-list-template.html").then(function (html) {
+                            $templateRequest(Data.templatePath + "templates/workbench/library-list-template.html").then(function (html) {
                                 var template = angular.element(html);
 
                                 $(parent).append(template);

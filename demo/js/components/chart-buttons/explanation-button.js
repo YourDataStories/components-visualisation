@@ -1,5 +1,5 @@
-angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile", "$window", "$location", "YDS_CONSTANTS", "Filters",
-    function ($templateRequest, $compile, $window, $location, YDS_CONSTANTS, Filters) {
+angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile", "$window", "$location", "YDS_CONSTANTS", "Filters","Data",
+    function ($templateRequest, $compile, $window, $location, YDS_CONSTANTS, Filters, Data) {
         return {
             restrict: "A",
             link: function (scope, element, attrs) {
@@ -38,7 +38,7 @@ angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile
                 }
 
                 // Add rating buttons to the chart
-                $templateRequest("templates/chart-buttons/explanation-button.html").then(function (html) {
+                $templateRequest(Data.templatePath + "templates/chart-buttons/explanation-button.html").then(function (html) {
                     var template = angular.element(html);
 
                     // Compile the element
