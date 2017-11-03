@@ -85,6 +85,9 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
     // Set template path
     dataService.templatePath = (typeof Drupal !== "undefined") ? Drupal.settings.basePath + Drupal.settings.yds_project.modulePath + "/" : "";
 
+    // Values that should be excluded from extra chart parameters (used in Trustworthiness & chart embedding)
+    dataService.omittedChartParams = ["chart", "id", "viewType", "lang", "gridapi", "gridtype", "enablePaging", "numberOfItems", "tab"];
+
     /**
      * Convert date to timestamp
      * @param date

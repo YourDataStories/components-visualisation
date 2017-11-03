@@ -72,6 +72,12 @@ angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile
                         attributes.lang = "en";
                     }
 
+                    // For bar charts, because they can have paging, also add the enablePaging & numberOfItems values
+                    if (visualisationType === "bar") {
+                        attributes.enablePaging = scope.enablePaging;
+                        attributes.numberOfItems = scope.numberOfItems;
+                    }
+
                     // Generate the URL for the data analysis page
                     var dataAnalysisUrl = YDS_CONSTANTS.DATA_ANALYSIS_URL
                         + "?chart=" + visualisationType;

@@ -89,7 +89,7 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
                 var gridType = params.gridtype;
 
                 // All other parameters are put in the extra parameters object
-                var extraParams = _.omit(params, "chart", "id", "viewType", "lang", "gridapi", "gridtype");
+                var extraParams = _.omit(params, Data.omittedChartParams);
 
                 // Add explain_calls parameter so the server will explain the query
                 extraParams.explain_calls = 1;
