@@ -1501,7 +1501,7 @@ div.dcat-value {
 
 /* Make selected query rows stand out (background color) */
 .table-striped > tbody > tr.explanation-query-row-selected {
-    background: #9cff80;
+    background: #FFE0B2;
 }
 
 /* Alternative Names component list styles */
