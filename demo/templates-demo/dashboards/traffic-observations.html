@@ -197,6 +197,56 @@
         </div>
     </div>
 
+    <!--Line charts with traffic per direction-->
+    <div class="row" style="margin-top: 30px">
+        <!--Direction combobox 1-->
+        <div class="col-md-6">
+            <yds-combobox-selector
+                    title="Directions (1)"
+                    type="directed.label.en"
+                    selection-type="trafficobservation.direction1"
+                    dashboard-id="traffic_observation">
+            </yds-combobox-selector>
+        </div>
+        <!--Direction combobox 2-->
+        <div class="col-md-6">
+            <yds-combobox-selector
+                    title="Directions (2)"
+                    type="directed.label.en"
+                    selection-type="trafficobservation.direction2"
+                    dashboard-id="traffic_observation">
+            </yds-combobox-selector>
+        </div>
+    </div>
+    <div class="row">
+        <!--Line chart 1-->
+        <div class="col-md-6">
+            <yds-dashboard-updater
+                    type="line"
+                    project-id="none"
+                    view-type="trafficobservation.per.direction.time.vehicle.type"
+                    dashboard-id="traffic_observation_line1"
+                    add-to-basket="false"
+                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                    min-height="400"
+                    lang="{{ lang }}">
+            </yds-dashboard-updater>
+        </div>
+        <!--Line chart 2-->
+        <div class="col-md-6">
+            <yds-dashboard-updater
+                    type="line"
+                    project-id="none"
+                    view-type="trafficobservation.per.direction.time.vehicle.type"
+                    dashboard-id="traffic_observation_line2"
+                    add-to-basket="false"
+                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                    min-height="400"
+                    lang="{{ lang }}">
+            </yds-dashboard-updater>
+        </div>
+    </div>
+
     <!--Traffic observations per direction & time grid-->
     <div class="row">
         <div class="col-md-12">

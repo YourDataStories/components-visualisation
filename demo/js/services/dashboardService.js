@@ -700,44 +700,27 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     // Add year from "comparison" dashboardId
                     apiOptions.year = "[" + dashboard.getMinYear("comparison") + " TO " + dashboard.getMaxYear("comparison") + "]";
                     break;
+                case "traffic_observation_line1":
+                    addTrafficObservationParams(apiOptions);
+
+                    // Add parameter for direction combobox #1
+                    var directions1 = dashboard.getObject("trafficobservation.direction1");
+                    if (!_.isUndefined(directions1)) {
+                        apiOptions["trafficobservation.directions_aggregate"] = directions1;
+                    }
+                    break;
+                case "traffic_observation_line2":
+                    addTrafficObservationParams(apiOptions);
+
+                    // Add parameter for direction combobox #2
+                    var directions2 = dashboard.getObject("trafficobservation.direction2");
+                    if (!_.isUndefined(directions2)) {
+                        apiOptions["trafficobservation.directions_aggregate"] = directions2;
+                    }
+                    break;
                 case "traffic_observation":
                 case "traffic_observation_contracts":
-                    var vehicleTypes = dashboard.getObject("trafficobservation.vehicle_type");
-                    var directions = dashboard.getObject("trafficobservation.direction");
-
-                    if (!_.isUndefined(vehicleTypes) && !_.isNull(vehicleTypes)) {
-                        vehicleTypes = vehicleTypes.split(",");
-                    }
-                    if (!_.isUndefined(directions) && !_.isNull(directions)) {
-                        directions = directions.split(",");
-                    }
-
-                    // Add slider & combobox values
-                    var extraValues = {
-                        // Map points
-                        "trafficobservation.on_points": dashboard.getObject("trafficobservation.on_points"),
-
-                        // Sliders
-                        "trafficobservation.start_year": dashboard.getObject("trafficobservation.start_year"),
-                        "trafficobservation.end_year": dashboard.getObject("trafficobservation.end_year"),
-                        "trafficobservation.start_time": dashboard.getObject("trafficobservation.start_time"),
-                        "trafficobservation.end_time": dashboard.getObject("trafficobservation.end_time"),
-                        "trafficobservation.start_day": dashboard.getObject("trafficobservation.start_day"),
-                        "trafficobservation.end_day": dashboard.getObject("trafficobservation.end_day"),
-                        "trafficobservation.gap": dashboard.getObject("trafficobservation.gap"),
-
-                        // Comboboxes
-                        "trafficobservation.vehicle_type": vehicleTypes,
-                        "trafficobservation.direction": directions
-                    };
-
-                    // Remove undefined values from the above object, and add the remaining ones to the apiOptions
-                    apiOptions = _.extend(apiOptions, _.omit(extraValues, _.isUndefined));
-
-                    // Check that start year/day/time is smaller than end year/day/time, otherwise swap them
-                    ensureValueIntegrity(apiOptions, "trafficobservation.start_year", "trafficobservation.end_year");
-                    ensureValueIntegrity(apiOptions, "trafficobservation.start_time", "trafficobservation.end_time", dashboard.timeToNum);
-                    ensureValueIntegrity(apiOptions, "trafficobservation.start_day", "trafficobservation.end_day", dashboard.weekDayToNum);
+                    addTrafficObservationParams(apiOptions);
                     break;
             }
 
@@ -747,6 +730,49 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             });
 
             return apiOptions;
+        };
+
+        /**
+         * Add traffic observation parameters to an apiOptions object.
+         * @param apiOptions    Object to add parameters to
+         */
+        var addTrafficObservationParams = function (apiOptions) {
+            var vehicleTypes = dashboard.getObject("trafficobservation.vehicle_type");
+            var directions = dashboard.getObject("trafficobservation.direction");
+
+            if (!_.isUndefined(vehicleTypes) && !_.isNull(vehicleTypes)) {
+                vehicleTypes = vehicleTypes.split(",");
+            }
+            if (!_.isUndefined(directions) && !_.isNull(directions)) {
+                directions = directions.split(",");
+            }
+
+            // Add slider & combobox values
+            var extraValues = {
+                // Map points
+                "trafficobservation.on_points": dashboard.getObject("trafficobservation.on_points"),
+
+                // Sliders
+                "trafficobservation.start_year": dashboard.getObject("trafficobservation.start_year"),
+                "trafficobservation.end_year": dashboard.getObject("trafficobservation.end_year"),
+                "trafficobservation.start_time": dashboard.getObject("trafficobservation.start_time"),
+                "trafficobservation.end_time": dashboard.getObject("trafficobservation.end_time"),
+                "trafficobservation.start_day": dashboard.getObject("trafficobservation.start_day"),
+                "trafficobservation.end_day": dashboard.getObject("trafficobservation.end_day"),
+                "trafficobservation.gap": dashboard.getObject("trafficobservation.gap"),
+
+                // Comboboxes
+                "trafficobservation.vehicle_type": vehicleTypes,
+                "trafficobservation.direction": directions
+            };
+
+            // Remove undefined values from the above object, and add the remaining ones to the apiOptions
+            _.extend(apiOptions, _.omit(extraValues, _.isUndefined));
+
+            // Check that start year/day/time is smaller than end year/day/time, otherwise swap them
+            ensureValueIntegrity(apiOptions, "trafficobservation.start_year", "trafficobservation.end_year");
+            ensureValueIntegrity(apiOptions, "trafficobservation.start_time", "trafficobservation.end_time", dashboard.timeToNum);
+            ensureValueIntegrity(apiOptions, "trafficobservation.start_day", "trafficobservation.end_day", dashboard.weekDayToNum);
         };
 
         /**

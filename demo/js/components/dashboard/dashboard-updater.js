@@ -217,7 +217,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                     }
 
                     // Check if we should subscribe to object changes
-                    if (dashboardId === "traffic_observation") {
+                    if (dashboardId === "traffic_observation" || dashboardId.indexOf("traffic_observation_line") !== -1) {
                         DashboardService.subscribeObjectChanges(scope, updateExtraParams);
                     }
                 } else {

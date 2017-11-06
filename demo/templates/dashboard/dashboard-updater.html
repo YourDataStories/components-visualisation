@@ -28,6 +28,15 @@
             lang="{{ lang }}">
     </yds-donut-pie>
 
+    <yds-line
+            ng-switch-when="line"
+            project-id="none"
+            view-type="{{ viewType }}"
+            element-h="{{ minHeight }}"
+            extra-params="extraParams"
+            lang="{{ lang }}">
+    </yds-line>
+
     <yds-grid-results
             ng-switch-when="grid"
             project-id="none"
