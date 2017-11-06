@@ -209,6 +209,28 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
                                 maxClusterRadius: maxClusterRadius
                             });
 
+                            // If mouse over popups are enabled, show cluster popups with their marker titles
+                            if (mouseOverMarkers === "true" && shouldCluster) {
+                                clusterGroup.on("clustermouseover", function (a) {
+                                    var popupMarker = null;
+                                    var markerContents = _.map(a.layer.getAllChildMarkers(), function (marker) {
+                                        // Keep a marker to put the popup on
+                                        if (_.isNull(popupMarker)) {
+                                            popupMarker = marker;
+                                        }
+
+                                        return marker.data.title;
+                                    });
+
+                                    var content = "<li>" + markerContents.join("<br><li>");
+                                    var cluster = a.target.getVisibleParent(popupMarker);
+                                    if (!_.has(cluster, "data")) {
+                                        // Only add popup if the cluster is NOT a marker
+                                        cluster.bindPopup(content, {offset: new L.Point(0, -15)}).openPopup();
+                                    }
+                                });
+                            }
+
                             // Iterate through the different routes and visualize them on the map
                             _.each(routes, function (routeObj) {
                                 // Create a polyline layer which will contain the points of each route
@@ -289,13 +311,13 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
 
                 if (mouseOverMarkers === "true") {
                     // Add mouse over events that show the popup
-                    newMarker.on('mouseover', function (e) {
+                    newMarker.on("mouseover", function () {
                         this.openPopup();
                     });
-                    newMarker.on('mouseout', function (e) {
+
+                    newMarker.on("mouseout", function () {
                         this.closePopup();
                     });
-
                 }
 
                 // If point selection is enabled, add click event
