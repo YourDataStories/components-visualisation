@@ -41,7 +41,7 @@ angular.module("yds").directive("ydsTrafficObservation", ["$timeout", "Data",
                 if (_.isUndefined(viewType) || viewType.trim() === "")
                     viewType = "default";
 
-                // Check if the language attr is defined, else assign default value
+                // Check if the language attribute is defined, else assign default value
                 if (_.isUndefined(lang) || lang.trim() === "")
                     lang = "en";
 
@@ -49,7 +49,7 @@ angular.module("yds").directive("ydsTrafficObservation", ["$timeout", "Data",
                 if (_.isUndefined(scope.allowSelection) || (scope.allowSelection !== "true" && scope.allowSelection !== "false"))
                     scope.allowSelection = "false";
 
-                // Check if the component's height attr is defined, else assign default value
+                // Check if the component's height attribute is defined, else assign default value
                 if (_.isUndefined(elementH) || _.isNaN(elementH))
                     elementH = 200;
 
@@ -136,6 +136,10 @@ angular.module("yds").directive("ydsTrafficObservation", ["$timeout", "Data",
                                 // Create sparklines after a timeout (so that IDs will have been applied to the DOM)
                                 $timeout(function () {
                                     _.each(scope.rowData, function (row) {
+                                        // Only continue if the container for the sparkline of the row still exists
+                                        if ($("#" + row.id).length === 0)
+                                            return;
+
                                         // Transform data for Highcharts
                                         var data = _.map(_.rest(originalColDefs), function (column) {
                                             return [
