@@ -94,7 +94,6 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
             // Initialize the array for (multiple) selected points
             var selectedPoints = [];
             var markersDict = {};               // Dictionary with mapping from marker ID -> leaflet marker object
-            var previouslySelectedMarkers = []; // Array with all generated markers of the map
 
             // Create the default map pins for the start and the end of route, and selected points
             var mapPins = {
@@ -129,12 +128,10 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
                 });
 
                 // Make all markers green again
-                //todo: Can we use the markersDict here to change their icons more easily?
-                _.each(previouslySelectedMarkers, function (marker) {
+                _.each(markersDict, function (marker) {
                     marker.setIcon(mapPins.start);
                 });
 
-                previouslySelectedMarkers = [];
                 markersDict = {};
             };
 
@@ -295,8 +292,6 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
                 // if (_.has(markersDict, markerData.id)) {
                 if (_.contains(selectedPoints, markerData.id)) {
                     markersDict[markerData.id] = newMarker;
-                    previouslySelectedMarkers.push(newMarker);
-                    // selectedPoints.push(markerData.id);
 
                     newMarker.setIcon(mapPins.selected);
 
@@ -331,9 +326,6 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
                         markersDict[e.target.data.id] = e.target;
 
                         e.target.setIcon(mapPins.selected);
-
-                        // Save the marker object to be able to reset its icon later
-                        previouslySelectedMarkers.push(e.target);
                     }
 
                     selectionData = selectedPoints.join(",");
@@ -369,9 +361,7 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
 
                     if (!_.isEqual(oldFilters, newFilters)) {
                         allFeatureGroup.clearLayers();
-                        // selectedPoints = [];
                         markersDict = {};
-                        previouslySelectedMarkers = [];
 
                         createMap(newFilters);
                         oldFilters = newFilters;

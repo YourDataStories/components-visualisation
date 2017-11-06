@@ -1,4 +1,4 @@
-angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile", "$window", "$location", "YDS_CONSTANTS", "Filters","Data",
+angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile", "$window", "$location", "YDS_CONSTANTS", "Filters", "Data",
     function ($templateRequest, $compile, $window, $location, YDS_CONSTANTS, Filters, Data) {
         return {
             restrict: "A",
