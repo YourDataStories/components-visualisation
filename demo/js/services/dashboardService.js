@@ -219,7 +219,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             tradeactivity: "dashboard2",
             contract: "dashboardp1",
             comparison: "country-comparison",
-            public_project: "public-works"
+            public_project: "public-works",
+            traffic_observation: "traffic-observations"
         };
 
         // Configuration for available filters for each Dashboard (test)

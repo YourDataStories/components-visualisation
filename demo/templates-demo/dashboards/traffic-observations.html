@@ -1,7 +1,26 @@
 <div class="container" ng-controller="TrafficObservationsController">
     <div class="row">
-        <div class="col-md-12">
+        <!--Title-->
+        <div class="col-md-8">
             <h2>Traffic Observations</h2>
+        </div>
+        <!--Dashboard filter buttons-->
+        <div class="col-md-4">
+            <yds-clear-filters-button
+                    dashboard-id="traffic_observation"
+                    lang="en">
+            </yds-clear-filters-button>
+
+            <yds-dashboard-sharing
+                    dashboard-id="traffic_observation"
+                    lang="en">
+            </yds-dashboard-sharing>
+        </div>
+    </div>
+
+    <!--Description-->
+    <div class="row">
+        <div class="col-md-12">
             <p>Select points on the map, year and time ranges, vehicle types and traffic directions to
                 filter the traffic observations and display details about them in the visualisations below.</p>
         </div>
