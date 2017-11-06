@@ -5,6 +5,7 @@ angular.module("yds").directive("ydsLine", ["Data", "Filters", function (Data, F
             projectId: "@",         // Id of the project that the data belong
             viewType: "@",          // Name of the array that contains the visualised data
             lang: "@",              // Lang of the visualised data
+            extraParams: "=",       // Optional object with extra parameters to send to the API
 
             exporting: "@",         // Enable or disable the export of the chart
             elementH: "@",          // Set the height of the component
@@ -24,20 +25,21 @@ angular.module("yds").directive("ydsLine", ["Data", "Filters", function (Data, F
         },
         templateUrl: Data.templatePath + "templates/visualisation/line.html",
         link: function (scope, element, attrs) {
-            var lineContainer = angular.element(element[0].querySelector(".line-container"));
+            var lineContainer = _.first(angular.element(element[0].querySelector(".line-container")));
 
             // Create a random id for the element that will render the chart
             var elementId = "line" + Data.createRandomId();
-            lineContainer[0].id = elementId;
+            lineContainer.id = elementId;
 
             var projectId = scope.projectId;
             var viewType = scope.viewType;
             var lang = scope.lang;
             var exporting = scope.exporting;
             var elementH = scope.elementH;
-            var titleSize = scope.titleSize;
+            var titleSize = parseInt(scope.titleSize);
+            var extraParams = scope.extraParams;
 
-            // Check if the projectId and the viewType attr is defined, else stop the process
+            // Check if the projectId and the viewType attribute is defined, else stop the process
             if (_.isUndefined(projectId) || projectId.trim() === "") {
                 scope.ydsAlert = "The YDS component is not properly configured." +
                     "Please check the corresponding documentation section";
@@ -48,26 +50,26 @@ angular.module("yds").directive("ydsLine", ["Data", "Filters", function (Data, F
             if (_.isUndefined(viewType) || viewType.trim() === "")
                 viewType = "default";
 
-            // Check if the language attr is defined, else assign default value
+            // Check if the language attribute is defined, else assign default value
             if (_.isUndefined(lang) || lang.trim() === "")
                 lang = "en";
 
-            // Check if the exporting attr is defined, else assign default value
+            // Check if the exporting attribute is defined, else assign default value
             if (_.isUndefined(exporting) || (exporting !== "true" && exporting !== "false"))
                 exporting = "true";
 
-            // Check if the component's height attr is defined, else assign default value
+            // Check if the component's height attribute is defined, else assign default value
             if (_.isUndefined(elementH) || _.isNaN(elementH))
                 elementH = 200;
 
-            // Check if the component's title size attr is defined, else assign default value
-            if (_.isUndefined(titleSize) || titleSize.length === 0 || _.isNaN(titleSize))
+            // Check if the component's title size attribute is defined, else assign default value
+            if (_.isUndefined(titleSize) || _.isNaN(titleSize))
                 titleSize = 18;
 
             // Set the height of the chart
-            lineContainer[0].style.height = elementH + "px";
+            lineContainer.style.height = elementH + "px";
 
-            Data.getProjectVis("line", projectId, viewType, lang)
+            Data.getProjectVis("line", projectId, viewType, lang, extraParams)
                 .then(function (response) {
                     var options = response.data;
 
