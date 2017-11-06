@@ -8,9 +8,12 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
 
             clickedPoint: "=",      // Set this to an existing object, to make the map add the clicked point's ID to it
             selectionMode: "@",     // Selection mode. Can be "single" or "multiple".
+            dashboardId: "@",       // Dashboard ID to listen for changes and refresh map
+            selectionId: "@",       // Selection ID (only used to remove own filter for now)
 
-            zoomControl: "@",       // Enable or disable map's zoom control
-            elementH: "@",          // Set the height of the component
+            disableClustering: "@", // Set to true to disable the point clustering
+            maxClusterRadius: "@",  // Maximum radius that a cluster will cover from the central marker in pixels.
+            mouseOverMarkers: "@",  // Set to true to make markers for points appear on mouse over instead of click.
 
             addToBasket: "@",       // Enable or disable "add to basket" functionality, values: true, false
             basketBtnX: "@",        // X-axis position of the basket button
@@ -21,11 +24,9 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
             embedBtnY: "@",         // Y-axis position of the embed button
             popoverPos: "@",        // The side of the embed button from which the embed information window will appear
 
-            dashboardId: "@",       // Dashboard ID to listen for changes and refresh map
-            selectionId: "@",       // Selection ID (only used to remove own filter for now)
+            zoomControl: "@",       // Enable or disable map's zoom control
+            elementH: "@",          // Set the height of the component
             enableRating: "@",      // Enable rating buttons for this component
-            disableClustering: "@", // Set to true to disable the point clustering
-            maxClusterRadius: "@",  // Maximum radius that a cluster will cover from the central marker in pixels.
             disableExplanation: "@" // Set to true to disable the explanation button
         },
         templateUrl: Data.templatePath + "templates/visualisation/map.html",
@@ -46,6 +47,7 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
             var elementH = scope.elementH;
             var dashboardId = scope.dashboardId;
             var selectionId = scope.selectionId;
+            var mouseOverMarkers = scope.mouseOverMarkers;
 
             // When the points are more than the number here, clustering will be used
             var clusterThreshold = 100;
@@ -79,6 +81,10 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
             // Check if the disableClustering attribute is defined, else assign default value
             if (_.isUndefined(disableClustering) || (disableClustering !== "true" && disableClustering !== "false"))
                 disableClustering = "false";
+
+            // Check if the mouseOverMarkers attribute is defined, else assign default value
+            if (_.isUndefined(mouseOverMarkers) || (mouseOverMarkers !== "true" && mouseOverMarkers !== "false"))
+                mouseOverMarkers = "false";
 
             // Check if the component's height attribute is defined, else assign default value
             if (_.isUndefined(elementH) || _.isNaN(elementH))
@@ -281,6 +287,17 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
                 var newMarker = L.marker([parseFloat(point.lng), parseFloat(point.lat)], {icon: icon});
                 newMarker.bindPopup(title, {offset: new L.Point(0, -33)});
 
+                if (mouseOverMarkers === "true") {
+                    // Add mouse over events that show the popup
+                    newMarker.on('mouseover', function (e) {
+                        this.openPopup();
+                    });
+                    newMarker.on('mouseout', function (e) {
+                        this.closePopup();
+                    });
+
+                }
+
                 // If point selection is enabled, add click event
                 if (pointSelection && !_.isUndefined(markerData)) {
                     newMarker.on("click", markerClickHandler);  // Add click handler
@@ -289,7 +306,6 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
 
                 // Since we are creating a marker, if another marker with the same ID exists in the markers object,
                 // we must update the reference with the new one (because it was selected) and also change its icon
-                // if (_.has(markersDict, markerData.id)) {
                 if (_.contains(selectedPoints, markerData.id)) {
                     markersDict[markerData.id] = newMarker;
 
