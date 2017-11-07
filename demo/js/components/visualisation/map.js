@@ -24,6 +24,7 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
             embedBtnY: "@",         // Y-axis position of the embed button
             popoverPos: "@",        // The side of the embed button from which the embed information window will appear
 
+            extraParams: "=?",      // Optional object with extra parameters to send to the API
             zoomControl: "@",       // Enable or disable map's zoom control
             elementH: "@",          // Set the height of the component
             enableRating: "@",      // Enable rating buttons for this component
@@ -187,10 +188,9 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
 
             /**
              * Get map data and add points and routes to the map
-             * @param extraParams   (optional) Extra parameters to send to the API
              */
-            var createMap = function (extraParams) {
-                Data.getProjectVis("map", projectId, viewType, lang, extraParams)
+            var createMap = function () {
+                Data.getProjectVis("map", projectId, viewType, lang, scope.extraParams)
                     .then(function (response) {
                         // Extract the required objects from the view
                         var routePointsView = _.findWhere(response.view, {type: "geo-route"});
@@ -401,7 +401,10 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
                         allFeatureGroup.clearLayers();
                         markersDict = {};
 
-                        createMap(newFilters);
+                        // Save the new filters to the extraParams scope variable
+                        scope.extraParams = _.extend(scope.extraParams || {}, newFilters);
+
+                        createMap();
                         oldFilters = newFilters;
                     }
                 });
