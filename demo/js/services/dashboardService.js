@@ -447,7 +447,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             _.each(cookiesToSave, function (cookieKey) {
                 var value = $cookies.getObject(cookieKey);
 
-                if (!_.isUndefined(value) && !_.isEmpty(value)) {
+                // Only keep defined values that are either numbers, or non-empty arrays/objects
+                if (!_.isUndefined(value) && (!_.isEmpty(value) || _.isNumber(value))) {
                     cookies[cookieKey] = filterCookieObject(value);
                 }
             });
@@ -1165,6 +1166,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          */
         dashboard.getSharingUrl = function (dashboardId) {
             var cookies = dashboard.getDashboardCookies(dashboardId);
+            console.log("cookies", cookies);
 
             return dashboardUrlPrefix + dashboardPaths[dashboardId]
                 + "?dashboard=" + dashboardId
