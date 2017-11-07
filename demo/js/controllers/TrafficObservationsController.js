@@ -1,6 +1,7 @@
 angular.module("yds").controller("TrafficObservationsController", ["$scope", "DashboardService",
     function ($scope, DashboardService) {
         var scope = $scope;
+        scope.enableRating = false;
         scope.galwayProjectId = "http://linkedeconomy.org/resource/Contract/AwardNotice/2013208591/5795646";
         scope.lang = "en";
 

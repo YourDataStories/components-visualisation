@@ -147,8 +147,24 @@
         </div>
     </div>
 
-    <!--Bar charts & selected filters-->
+    <!--Selected map points grid-->
     <div class="row" style="margin-top: 15px">
+        <div class="col-md-12">
+            <yds-dashboard-updater
+                    type="simple-grid"
+                    project-id="none"
+                    view-type="trafficobservation.selected_points"
+                    dashboard-id="traffic_observation"
+                    min-height="250"
+                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                    enable-rating="{{ enableRating }}"
+                    lang="{{ lang }}">
+            </yds-dashboard-updater>
+        </div>
+    </div>
+
+    <!--Bar charts & selected filters-->
+    <div class="row" style="margin-top: 30px">
         <!--Bar chart 1-->
         <div class="col-md-5">
             <yds-dashboard-updater

@@ -137,7 +137,7 @@ angular.module("yds").directive("ydsTrafficObservation", ["$timeout", "Data",
                                 $timeout(function () {
                                     _.each(scope.rowData, function (row) {
                                         // Only continue if the container for the sparkline of the row still exists
-                                        if ($("#" + row.id).length === 0)
+                                        if (_.isNull(document.getElementById(row.id)))
                                             return;
 
                                         // Transform data for Highcharts
