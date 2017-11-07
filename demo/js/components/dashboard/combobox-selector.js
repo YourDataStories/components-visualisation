@@ -21,10 +21,12 @@ angular.module("yds").directive("ydsComboboxSelector", ["$timeout", "DashboardSe
                         var defaultSelection = null;
                         var cookieValue = DashboardService.getCookieObject(selectionType);
                         if (!_.isUndefined(cookieValue)) {
+                            // Add IDs list for Selectivity default value, and save to DashboardService
                             defaultSelection = cookieValue.split(",");
+                            DashboardService.saveObject(selectionType, cookieValue);
                         }
 
-                        // Create selectivity menu
+                        // Create Selectivity menu
                         var selectivity = $(selectivityContainer).selectivity({
                             items: response,
                             multiple: true,
@@ -32,7 +34,7 @@ angular.module("yds").directive("ydsComboboxSelector", ["$timeout", "DashboardSe
                             placeholder: "Select " + scope.title
                         });
 
-                        // Listen for selectivity selection change events
+                        // Listen for Selectivity selection change events
                         $(selectivity).on("change", function (e) {
                             var newValue = null;
                             if (e.value.length > 0) {
