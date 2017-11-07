@@ -71,6 +71,10 @@ angular.module("yds").directive("ydsLine", ["Data", "Filters", function (Data, F
 
             Data.getProjectVis("line", projectId, viewType, lang, extraParams)
                 .then(function (response) {
+                    // Check that the component has not been destroyed
+                    if (scope.$$destroyed)
+                        return;
+
                     var options = response.data;
 
                     // Set title size
