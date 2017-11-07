@@ -198,6 +198,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             ],
             traffic_observation: [
                 "trafficobservation_direction",
+                "trafficobservation_direction1",
+                "trafficobservation_direction2",
                 "trafficobservation_end_day",
                 "trafficobservation_end_time",
                 "trafficobservation_end_year",
@@ -1166,7 +1168,6 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          */
         dashboard.getSharingUrl = function (dashboardId) {
             var cookies = dashboard.getDashboardCookies(dashboardId);
-            console.log("cookies", cookies);
 
             return dashboardUrlPrefix + dashboardPaths[dashboardId]
                 + "?dashboard=" + dashboardId

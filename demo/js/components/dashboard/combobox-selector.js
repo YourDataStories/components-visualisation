@@ -5,7 +5,6 @@ angular.module("yds").directive("ydsComboboxSelector", ["$timeout", "DashboardSe
             scope: {
                 title: "@",         // Title
                 type: "@",          // Field facet
-                dashboardId: "@",   // ID to use for saving the value in DashboardService
                 selectionType: "@"  // Selection type for DashboardService
             },
             templateUrl: Data.templatePath + "templates/dashboard/combobox-selector.html",
@@ -13,25 +12,27 @@ angular.module("yds").directive("ydsComboboxSelector", ["$timeout", "DashboardSe
                 var selectivityContainer = _.first(angular.element(element[0].querySelector(".selectivity-container")));
 
                 var type = scope.type;
-                var dashboardId = scope.dashboardId;
                 var selectionType = scope.selectionType;
 
-                // Check if dashboardId attribute is defined, else assign default value
-                if (_.isUndefined(dashboardId) || dashboardId.length === 0)
-                    dashboardId = "default";
-
-                scope.selection = "";
 
                 Data.getComboboxFacetItems("*", type)
                     .then(function (response) {
-                        scope.selection = _.first(response);
+                        // Check if there is a saved selection in the cookies, and use that as default
+                        var defaultSelection = null;
+                        var cookieValue = DashboardService.getCookieObject(selectionType);
+                        if (!_.isUndefined(cookieValue)) {
+                            defaultSelection = cookieValue.split(",");
+                        }
 
+                        // Create selectivity menu
                         var selectivity = $(selectivityContainer).selectivity({
                             items: response,
                             multiple: true,
+                            value: defaultSelection,
                             placeholder: "Select " + scope.title
                         });
 
+                        // Listen for selectivity selection change events
                         $(selectivity).on("change", function (e) {
                             var newValue = null;
                             if (e.value.length > 0) {
