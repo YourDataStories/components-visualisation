@@ -146,7 +146,26 @@
 
     <!--Selected map points grid-->
     <div class="row" style="margin-top: 15px">
-        <div class="col-md-12">
+        <!--Selected filters-->
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading dashboard-info-panel-heading">
+                    <h3 class="panel-title">Your selected filters</h3>
+                </div>
+
+                <div class="panel-body dashboard-info-container-default">
+                    <yds-dashboard-updater
+                            type="info-vertical"
+                            view-type="trafficobservation.filters.selected"
+                            dashboard-id="traffic_observation"
+                            min-height="260"
+                            lang="{{ lang }}">
+                    </yds-dashboard-updater>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
             <yds-dashboard-updater
                     type="simple-grid"
                     project-id="none"
@@ -163,7 +182,7 @@
     <!--Bar charts & selected filters-->
     <div class="row" style="margin-top: 30px">
         <!--Bar chart 1-->
-        <div class="col-md-5">
+        <div class="col-md-6">
             <yds-dashboard-updater
                     type="bar"
                     project-id="none"
@@ -177,7 +196,7 @@
         </div>
 
         <!--Bar chart 2-->
-        <div class="col-md-5">
+        <div class="col-md-6">
             <yds-dashboard-updater
                     type="bar"
                     project-id="none"
@@ -188,25 +207,6 @@
                     enable-rating="{{ enableRating }}"
                     lang="{{ lang }}">
             </yds-dashboard-updater>
-        </div>
-
-        <!--Selected filters-->
-        <div class="col-md-2">
-            <div class="panel panel-default">
-                <div class="panel-heading dashboard-info-panel-heading">
-                    <h3 class="panel-title">Your selected filters</h3>
-                </div>
-
-                <div class="panel-body dashboard-info-container-default">
-                    <yds-dashboard-updater
-                            type="info-vertical"
-                            view-type="trafficobservation.filters.selected"
-                            dashboard-id="traffic_observation"
-                            min-height="260"
-                            lang="{{ lang }}">
-                    </yds-dashboard-updater>
-                </div>
-            </div>
         </div>
     </div>
 
