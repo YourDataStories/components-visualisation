@@ -157,7 +157,7 @@
                             type="info-vertical"
                             view-type="trafficobservation.filters.selected"
                             dashboard-id="traffic_observation"
-                            min-height="260"
+                            min-height="250"
                             lang="{{ lang }}">
                     </yds-dashboard-updater>
                 </div>
@@ -166,15 +166,23 @@
 
         <!--Selected map points grid-->
         <div class="col-md-8">
-            <yds-dashboard-updater
-                    type="info-vertical"
-                    project-id="none"
-                    view-type="trafficobservation.points.selected"
-                    dashboard-id="traffic_observation"
-                    min-height="260"
-                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
-                    lang="{{ lang }}">
-            </yds-dashboard-updater>
+            <div class="panel panel-default">
+                <div class="panel-heading dashboard-info-panel-heading">
+                    <h3 class="panel-title">Selected Traffic Observation Points</h3>
+                </div>
+
+                <div class="panel-body dashboard-info-container-default">
+                    <yds-dashboard-updater
+                            type="info-vertical"
+                            project-id="none"
+                            view-type="trafficobservation.points.selected"
+                            dashboard-id="traffic_observation"
+                            min-height="250"
+                            base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                            lang="{{ lang }}">
+                    </yds-dashboard-updater>
+                </div>
+            </div>
         </div>
     </div>
 
