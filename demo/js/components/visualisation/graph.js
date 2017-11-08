@@ -250,25 +250,22 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                                     .map(function (data) {
                                         // Keep name, id and icon
                                         return {
-                                            name: getNodeName(data),
                                             id: data.id,
+                                            name: getNodeName(data),
                                             icon: data.icon
                                         };
                                     })
                                     .value();
                             });
                         }
+
+                        // Refresh info component
+                        scope.showNodeInfoComponent = false;
+                        $timeout(function () {
+                            scope.showNodeInfoComponent = true;
+                        });
                     });
                 };
-
-                // Refresh the info component
-                //todo: possibly improve this??
-                scope.$watch("clickedNode", function () {
-                    scope.showNodeInfoComponent = false;
-                    $timeout(function () {
-                        scope.showNodeInfoComponent = true;
-                    })
-                });
 
                 /**
                  * Create the graph
