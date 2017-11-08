@@ -144,7 +144,6 @@
         </div>
     </div>
 
-    <!--Selected map points grid-->
     <div class="row" style="margin-top: 15px">
         <!--Selected filters-->
         <div class="col-md-4">
@@ -165,13 +164,14 @@
             </div>
         </div>
 
+        <!--Selected map points grid-->
         <div class="col-md-8">
             <yds-dashboard-updater
                     type="simple-grid"
                     project-id="none"
                     view-type="trafficobservation.selected_points"
                     dashboard-id="traffic_observation"
-                    min-height="250"
+                    min-height="280"
                     base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
                     enable-rating="{{ enableRating }}"
                     lang="{{ lang }}">
