@@ -58,6 +58,12 @@ angular.module("yds").directive("ydsInfo", ["Data", "Translations", "$sce", func
                 showLess: Translations.get(lang, "showLess")
             };
 
+            // View types that contain code/value pairs with HTML code
+            var htmlLists = [
+                "country_code_name_array",
+                "point_name_array"
+            ];
+
             Data.getProjectVis("info", projectId, viewType, lang, extraParams)
                 .then(function (response) {
                     _.each(response.view, function (infoValue) {
@@ -66,20 +72,20 @@ angular.module("yds").directive("ydsInfo", ["Data", "Translations", "$sce", func
                                 value: $sce.trustAsHtml(Data.deepObjSearch(response.data, infoValue.attribute)),
                                 type: infoValue.type
                             };
-                        } else if (infoValue.type === "country_code_name_array") {
-                            var countries = Data.deepObjSearch(response.data, infoValue.attribute);
+                        } else if (_.contains(htmlLists, infoValue.type)) {
+                            var items = Data.deepObjSearch(response.data, infoValue.attribute);
 
                             // Create string with all countries and their flag htmls
-                            var countriesStr = "";
-                            _.each(countries, function (country) {
-                                countriesStr += country.code + " " + country.name + ", ";
+                            var listHtmlStr = "";
+                            _.each(items, function (item) {
+                                listHtmlStr += item.code + " " + item.name + ", ";
                             });
 
-                            countriesStr = countriesStr.slice(0, -2);
+                            listHtmlStr = listHtmlStr.slice(0, -2);
 
                             scope.info[infoValue.header] = {
-                                value: $sce.trustAsHtml(countriesStr),
-                                type: infoValue.type
+                                value: $sce.trustAsHtml(listHtmlStr),
+                                type: "html_list"
                             };
                         } else {
                             scope.info[infoValue.header] = {
