@@ -87,7 +87,7 @@
                     <div ng-if="clickedNode.numberOfItems > childrenListThreshold" class="row">
                         <!--Number of children number-->
                         <div class="col-sm-12">
-                            <p>Node children (click to open):</p>
+                            <h5>Node children (click to open):</h5>
 
                             <!--Loading text-->
                             <p ng-if="!clickedNode.childrenData.length > 0">
@@ -95,7 +95,7 @@
                             </p>
 
                             <!--Child nodes list-->
-                            <ul class="list-group">
+                            <ul class="list-group" style="max-height: 500px; overflow-y: auto">
                                 <a ng-repeat="childNode in clickedNode.childrenData"
                                    ng-click="openChildNode(childNode)"
                                    class="list-group-item">
