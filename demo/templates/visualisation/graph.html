@@ -88,6 +88,13 @@
                         <!--Number of children number-->
                         <div class="col-sm-12">
                             <p>Node children (click to open):</p>
+
+                            <!--Loading text-->
+                            <p ng-if="!clickedNode.childrenData.length > 0">
+                                <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i> Loading...
+                            </p>
+
+                            <!--Child nodes list-->
                             <ul class="list-group">
                                 <a ng-repeat="childNode in clickedNode.childrenData"
                                    ng-click="openChildNode(childNode)"
