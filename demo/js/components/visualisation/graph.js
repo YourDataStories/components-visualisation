@@ -97,7 +97,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                  * @param data  Data for the graph. Expected to be an object with "nodes" and "edges" properties.
                  */
                 var addDataToGraph = function (data) {
-                    if (data.nodes.length < 50) {
+                    if (data.nodes.length < 3) {
                         // Add the new nodes and their edges to the graph
                         var elements = cy.add(_.union(data.nodes, data.edges));
 
