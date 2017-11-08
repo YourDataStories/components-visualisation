@@ -79,7 +79,8 @@ angular.module("yds").factory("Graph", ["YDS_CONSTANTS", "$http", "$q",
             return [
                 {
                     name: "concentric",
-                    nodeDimensionsIncludeLabels: true
+                    nodeDimensionsIncludeLabels: true,
+                    spacingFactor: 0.75
                 }, {
                     name: "cola",
                     animate: true,
