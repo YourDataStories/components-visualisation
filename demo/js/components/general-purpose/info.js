@@ -77,8 +77,11 @@ angular.module("yds").directive("ydsInfo", ["Data", "Translations", "$sce", func
 
                             // Create string with all countries and their flag htmls
                             var listHtmlStr = "";
+
+                            // For "point_name_array", add new line instead of comma
+                            var delimiterStr = infoValue.type === "point_name_array" ? "<br />" : ", ";
                             _.each(items, function (item) {
-                                listHtmlStr += item.code + " " + item.name + ", ";
+                                listHtmlStr += item.code + " " + item.name + delimiterStr;
                             });
 
                             listHtmlStr = listHtmlStr.slice(0, -2);
