@@ -249,11 +249,8 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                                     .pluck("data")
                                     .map(function (data) {
                                         // Keep name, id and icon
-                                        return {
-                                            id: data.id,
-                                            name: getNodeName(data),
-                                            icon: data.icon
-                                        };
+                                        data.full_label = getNodeName(data);
+                                        return data;
                                     })
                                     .value();
                             });
@@ -273,8 +270,29 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                  * @param nodeData  Data for a node
                  */
                 scope.openChildNode = function (nodeData) {
-                    console.log(nodeData);
-                    //todo: implement
+                    // Add node to the graph
+                    var elementsToAdd = {
+                        // The single node to add
+                        nodes: [{
+                            group: "nodes",
+                            data: _.omit(nodeData, "$$hashKey", "full_label")
+                        }],
+                        // Single edge from the above node to its parent (the currently clicked node...)
+                        edges: [{
+                            //todo: add function to make edges from parent to target nodes and use it in graph service
+                            data: {
+                                source: scope.clickedNode.id,
+                                target: nodeData.id,
+                                bgcolor: nodeData.bgcolor,
+                                id: "edge_" + nodeData.id,
+                                label: nodeData.edgeLabel
+                            }
+                        }]
+                    };
+                    addDataToGraph(elementsToAdd);
+
+                    //todo: "Open" the node
+                    // loadNodeChildren(node);
                 };
 
                 /**
