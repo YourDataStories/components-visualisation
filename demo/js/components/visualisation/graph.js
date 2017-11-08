@@ -35,7 +35,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                 scope.showNodeInfo = false;
                 scope.showNodeInfoComponent = false;
                 scope.maxDepth = 1;
-                scope.childrenListThreshold = 3;
+                scope.childrenListThreshold = 50;
 
                 // The Cytoscape instance for this graph component
                 var cy = null;
