@@ -268,6 +268,16 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                 };
 
                 /**
+                 * Add the given children node to the graph, and load its children.
+                 * (called when a node's child is clicked from the info panel list)
+                 * @param nodeData  Data for a node
+                 */
+                scope.openChildNode = function (nodeData) {
+                    console.log(nodeData);
+                    //todo: implement
+                };
+
+                /**
                  * Create the graph
                  */
                 var createGraph = function () {

@@ -89,10 +89,11 @@
                         <div class="col-sm-12">
                             <p>Node children (click to open):</p>
                             <ul class="list-group">
-                                <li ng-repeat="childNode in clickedNode.childrenData"
-                                    class="list-group-item">
+                                <a ng-repeat="childNode in clickedNode.childrenData"
+                                   ng-click="openChildNode(childNode)"
+                                   class="list-group-item">
                                     {{ childNode.name }}
-                                </li>
+                                </a>
                             </ul>
                         </div>
                     </div>
