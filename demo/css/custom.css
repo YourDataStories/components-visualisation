@@ -1568,3 +1568,8 @@ div.dcat-value {
     cursor: pointer;
     background-color: white;
 }
+
+/* Make map marker Font Awesome icons green */
+.map-marker-green {
+    color: #40B665;
+}
