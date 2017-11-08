@@ -278,26 +278,17 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                  * @param nodeData  Data for a node
                  */
                 scope.openChildNode = function (nodeData) {
-                    // Add node to the graph
-                    var elementsToAdd = {
-                        // The single node to add
-                        nodes: [{
-                            group: "nodes",
-                            data: _.omit(nodeData, "$$hashKey", "full_label")
-                        }],
-                        // Single edge from the above node to its parent (the currently clicked node...)
-                        edges: [{
-                            //todo: add function to make edges from parent to target nodes and use it in graph service
-                            data: {
-                                source: scope.clickedNode.id,
-                                target: nodeData.id,
-                                bgcolor: nodeData.bgcolor,
-                                id: "edge_" + nodeData.id,
-                                label: nodeData.edgeLabel
-                            }
-                        }]
+                    // The single node to add
+                    var node = {
+                        group: "nodes",
+                        data: _.omit(nodeData, "$$hashKey", "full_label")
                     };
-                    addDataToGraph(elementsToAdd);
+
+                    // Add node & edge from the node to its parent (the currently clicked node) to the graph
+                    addDataToGraph({
+                        nodes: [node],
+                        edges: [Graph.createEdge(scope.clickedNode.id, node)]
+                    });
 
                     // "Open" the node
                     loadNodeChildren(cy.getElementById(nodeData.id));

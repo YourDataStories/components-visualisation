@@ -24,21 +24,7 @@ angular.module("yds").factory("Graph", ["YDS_CONSTANTS", "$http", "$q",
                 var edges = [];
                 _.each(nodes, function (item) {
                     if (id !== item.data.id) {  // Prevent creating edge from the main node to itself
-                        var edge = {
-                            data: {
-                                id: "edge_" + item.data.id,
-                                source: id,
-                                target: item.data.id,
-                                bgcolor: item.data.bgcolor
-                            }
-                        };
-
-                        // Add edge label if the parent node has one
-                        if (_.has(item.data, "edgeLabel")) {
-                            edge.data.label = item.data.edgeLabel;
-                        }
-
-                        edges.push(edge);
+                        edges.push(createEdge(id, item));
                     }
                 });
 
@@ -59,6 +45,30 @@ angular.module("yds").factory("Graph", ["YDS_CONSTANTS", "$http", "$q",
             });
 
             return deferred.promise;
+        };
+
+        /**
+         * Create an edge from the parent node (using its ID) to the target node.
+         * @param parentId      Parent ID (source of edge)
+         * @param targetNode    Target node (target of edge)
+         * @returns {{data: {id: string, source: *, target, bgcolor: *}}}
+         */
+        var createEdge = function (parentId, targetNode) {
+            var edge = {
+                data: {
+                    id: "edge_" + targetNode.data.id,
+                    source: parentId,
+                    target: targetNode.data.id,
+                    bgcolor: targetNode.data.bgcolor
+                }
+            };
+
+            // Add edge label if the target node has one
+            if (_.has(targetNode.data, "edgeLabel")) {
+                edge.data.label = targetNode.data.edgeLabel;
+            }
+
+            return edge;
         };
 
         /**
@@ -93,7 +103,8 @@ angular.module("yds").factory("Graph", ["YDS_CONSTANTS", "$http", "$q",
 
         return {
             getData: getData,
-            getLayouts: getLayouts
+            getLayouts: getLayouts,
+            createEdge: createEdge
         };
     }
 ]);
