@@ -41,8 +41,20 @@
                         {{ clickedNode.name || "-" }}
                     </span>
                 </div>
-                <div class="panel-body">
-                    <div ng-if="showNodeInfo" class="row">
+
+                <!--Select node prompt text-->
+                <div ng-if="!showNodeInfo" class="panel-body">
+                    <div ng-if="!showNodeInfo" class="row">
+                        <div class="col-sm-12">
+                            <p>Select a node to display more information about it.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Node info panel-->
+                <div ng-if="showNodeInfo" class="panel-body">
+                    <!--Node icon & name-->
+                    <div class="row">
                         <div class="col-sm-3">
                             <div class="graph-info-panel-icon" ng-style="clickedNode.iconStyle">
                                 <img ng-src="{{ clickedNode.icon }}" width="100%">
@@ -58,6 +70,8 @@
                                 </span>
                             </strong>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-12">
                             <yds-info
                                     ng-if="showNodeInfoComponent"
@@ -69,29 +83,17 @@
                         </div>
                     </div>
 
-                    <!--Info panel-->
-                    <div class="graph-info-panel"
-                         ng-if="showInfoPanel">
-                        <!--Content-->
-                        <div class="info-panel-content">
-                            <table class="table table-striped table-condensed table-responsive info-panel-table">
-                                <thead>
-                                <tr>
-                                    <th ng-repeat="val in infoPanelView">{{ val }}</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="node in infoPanelContent track by $index">
-                                    <td ng-repeat="val in node">{{ val }}</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div ng-if="!showNodeInfo" class="row">
+                    <!--List of node children (if children number exceeds threshold)-->
+                    <div ng-if="clickedNode.numberOfItems > childrenListThreshold" class="row">
+                        <!--Number of children number-->
                         <div class="col-sm-12">
-                            <p>Select a node to display more information about it.</p>
+                            <p>Node children (click to open):</p>
+                            <ul class="list-group">
+                                <li ng-repeat="childNode in clickedNode.childrenData"
+                                    class="list-group-item">
+                                    {{ childNode.name }}
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>

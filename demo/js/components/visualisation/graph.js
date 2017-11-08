@@ -13,9 +13,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                 var iconPath = Data.templatePath + "img/Font-Awesome-SVG-PNG/"; // Path for the graph node icons
 
                 var graphContainer = _.first(angular.element(element[0].querySelector(".graph-container")));
-
-                var elementId = "graph" + Data.createRandomId();
-                graphContainer.id = elementId;
+                graphContainer.id = "graph" + Data.createRandomId();
 
                 var projectId = scope.projectId;
                 var lang = scope.lang;
@@ -37,6 +35,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                 scope.showNodeInfo = false;
                 scope.showNodeInfoComponent = false;
                 scope.maxDepth = 1;
+                scope.childrenListThreshold = 3;
 
                 // The Cytoscape instance for this graph component
                 var cy = null;
@@ -92,34 +91,19 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                 };
 
                 /**
-                 * Callback for adding data from the Graph service to the graph, or showing it in the info panel if the
-                 * returned nodes are too many.
+                 * Callback for adding data from the Graph service to the graph
                  * @param data  Data for the graph. Expected to be an object with "nodes" and "edges" properties.
                  */
                 var addDataToGraph = function (data) {
-                    if (data.nodes.length < 3) {
-                        // Add the new nodes and their edges to the graph
-                        var elements = cy.add(_.union(data.nodes, data.edges));
+                    // Add the new nodes and their edges to the graph
+                    var elements = cy.add(_.union(data.nodes, data.edges));
 
-                        reloadLayout();
+                    reloadLayout();
 
-                        // Add double tap event to all nodes (after removing them (?))
-                        elements.nodes().on("doubleTap", function (event) {
-                            loadNodeChildren(event.target);
-                        });
-                    } else {
-                        // Too many nodes, show them in the info panel
-                        var nodeIds = _.pluck(_.pluck(data.nodes, "data"), "id");
-
-                        Graph.getDataMultiple(nodeIds, lang)
-                            .then(function (response) {
-                                scope.showInfoPanel = true;
-                                scope.infoPanelContent = response.data;
-                                scope.infoPanelView = response.view;
-                            }, function (error) {
-                                console.error("Error while getting data for multiple nodes: ", error);
-                            });
-                    }
+                    // Add double tap event to all nodes (after removing them (?))
+                    elements.nodes().on("doubleTap", function (event) {
+                        loadNodeChildren(event.target);
+                    });
                 };
 
                 /**
@@ -148,7 +132,8 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                 var loadNodeChildren = function (node) {
                     var targetNodeData = node.data();
 
-                    if (_.has(targetNodeData, "numberOfItems")) {
+                    // Only load children if the target node has children, and they are less than the threshold
+                    if (_.has(targetNodeData, "numberOfItems") && targetNodeData.numberOfItems < scope.childrenListThreshold) {
                         // Get nodes & edges coming OUT from the clicked node
                         var outgoers = node.outgoers("node");
 
@@ -221,6 +206,15 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                 };
 
                 /**
+                 * Get the data of a node and return its label
+                 * @param nodeData      Data of a node (from the API)
+                 * @returns {string}    Node name
+                 */
+                var getNodeName = function (nodeData) {
+                    return (nodeData.label.length > 0) ? (nodeData.label + ": " + nodeData.value) : nodeData.value;
+                };
+
+                /**
                  * Show a node's info in the Info Panel
                  * @param event
                  */
@@ -228,7 +222,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                     // Run in $timeout so the scope changes with be reflected
                     $timeout(function () {
                         var data = event.target.data();
-                        var newName = (data.label.length > 0) ? (data.label + ": " + data.value) : data.value;
+                        var newName = getNodeName(data);
 
                         // Check if we should hide the node children table
                         if (!_.isUndefined(scope.clickedNode) && scope.clickedNode.name !== newName) {
@@ -240,12 +234,30 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                             id: event.target.id(),
                             name: newName,
                             icon: iconPath + data.icon,
+                            numberOfItems: data.numberOfItems,
                             iconStyle: {
                                 "background-color": data.bgcolor
                             }
                         };
 
                         scope.showNodeInfo = true;
+
+                        // If the node contains more children than the threshold, load their names & IDs
+                        if (data.numberOfItems > scope.childrenListThreshold) {
+                            Graph.getData(event.target.id(), lang).then(function (response) {
+                                scope.clickedNode.childrenData = _.chain(response.nodes)
+                                    .pluck("data")
+                                    .map(function (data) {
+                                        // Keep name, id and icon
+                                        return {
+                                            name: getNodeName(data),
+                                            id: data.id,
+                                            icon: data.icon
+                                        };
+                                    })
+                                    .value();
+                            });
+                        }
                     });
                 };
 

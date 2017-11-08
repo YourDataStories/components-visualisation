@@ -62,37 +62,6 @@ angular.module("yds").factory("Graph", ["YDS_CONSTANTS", "$http", "$q",
         };
 
         /**
-         * Get data for multiple node IDs, and turn them into a grid format
-         * @param idArray   Array with node IDs to get data for
-         * @param lang      Language of data
-         */
-        var getDataMultiple = function (idArray, lang) {
-            var deferred = $q.defer();
-
-            // Gather the data for every given ID
-            var promises = idArray.map(function (id) {
-                return getData(id, lang);
-            });
-
-            $q.all(promises).then(function (response) {
-                var data = response.map(function (item) {
-                    return _.pluck(_.pluck(item.nodes, "data"), "value");
-                });
-
-                // Gather the table headers, assuming that all nodes have the same values in them
-                var sampleNodes = response[_.first(idArray)];
-                var labels = _.pluck(_.pluck(sampleNodes, "data"), "label");
-
-                deferred.resolve({
-                    data: data,
-                    view: labels
-                });
-            });
-
-            return deferred.promise;
-        };
-
-        /**
          * Get a list of the available graph layouts and their configurations
          * @returns {[*,*,*,*,*,*,*,*]} Layouts
          */
@@ -124,7 +93,6 @@ angular.module("yds").factory("Graph", ["YDS_CONSTANTS", "$http", "$q",
 
         return {
             getData: getData,
-            getDataMultiple: getDataMultiple,
             getLayouts: getLayouts
         };
     }
