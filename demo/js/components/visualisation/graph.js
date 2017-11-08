@@ -129,8 +129,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                  * the correct amount of children "close" it and navigate to the upper graph level.
                  * @param node  Node to load children for
                  */
-                var loadNodeChildren = function (node, force) {
-                    //todo: remove force parameter
+                var loadNodeChildren = function (node) {
                     var targetNodeData = node.data();
 
                     // Only load children if the target node has children, and they are less than the threshold
@@ -203,7 +202,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                             // Reload the graph layout
                             reloadLayout();
                         }
-                    } else if (force && _.has(targetNodeData, "numberOfItems")) {
+                    } else if (_.has(targetNodeData, "numberOfItems")) {
                         // Unselect previously clicked node
                         cy.getElementById(scope.clickedNode.id).unselect();
 
@@ -301,8 +300,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                     addDataToGraph(elementsToAdd);
 
                     // "Open" the node
-                    //todo: remove force parameter
-                    loadNodeChildren(cy.getElementById(nodeData.id), true);
+                    loadNodeChildren(cy.getElementById(nodeData.id));
                 };
 
                 /**
