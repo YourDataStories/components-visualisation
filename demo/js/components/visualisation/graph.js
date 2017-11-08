@@ -134,7 +134,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                     var targetNodeData = node.data();
 
                     // Only load children if the target node has children, and they are less than the threshold
-                    if (force || _.has(targetNodeData, "numberOfItems") && targetNodeData.numberOfItems < scope.childrenListThreshold) {
+                    if (_.has(targetNodeData, "numberOfItems") && targetNodeData.numberOfItems < scope.childrenListThreshold) {
                         // Get nodes & edges coming OUT from the clicked node
                         var outgoers = node.outgoers("node");
 
@@ -203,6 +203,14 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                             // Reload the graph layout
                             reloadLayout();
                         }
+                    } else if (force && _.has(targetNodeData, "numberOfItems")) {
+                        // Unselect previously clicked node
+                        cy.getElementById(scope.clickedNode.id).unselect();
+
+                        // Select new node
+                        nodeClickHandler({
+                            target: node
+                        });
                     }
                 };
 
