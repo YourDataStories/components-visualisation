@@ -20,7 +20,9 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                 var elementH = parseInt(scope.elementH);
 
                 var mainNodeId = projectId;
+                var maxLabelLength = 50;
 
+                // Initialize scope variables
                 scope.translations = {
                     showMore: Translations.get(lang, "showMore"),
                     showLess: Translations.get(lang, "showLess")
@@ -311,6 +313,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                                 selector: "node",
                                 style: {
                                     "text-wrap": "wrap",
+                                    "text-max-width": "200px",
                                     "label": function (ele) {
                                         var data = ele.data();
                                         var value;
@@ -322,9 +325,9 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                                             value = data.value;
                                         }
 
-                                        // If the label is longer than 40 characters, trim it
-                                        if (value.length > 40) {
-                                            return value.substring(0, 40) + "…";
+                                        // If the label is longer than the maxLabelLength, trim it
+                                        if (value.length > maxLabelLength) {
+                                            return value.substring(0, maxLabelLength) + "…";
                                         } else {
                                             return value;
                                         }
@@ -333,12 +336,12 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                                     "width": "40",
                                     "height": "40",
                                     "padding": "10",
-                                    "text-margin-x": "3",
+                                    "text-margin-y": "3",
                                     "text-outline-color": "white",
                                     "text-outline-width": "2",
                                     "font-family": "Sans-Serif",
-                                    "text-valign": "center",
-                                    "text-halign": "right",
+                                    "text-halign": "center",
+                                    "text-valign": "bottom",
                                     "background-image": function (ele) {
                                         // Return the icon path with the icon in the end
                                         return iconPath + ele.data().icon;

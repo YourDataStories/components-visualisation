@@ -78,9 +78,7 @@ angular.module("yds").factory("Graph", ["YDS_CONSTANTS", "$http", "$q",
         var getLayouts = function () {
             return [
                 {
-                    name: "concentric",
-                    nodeDimensionsIncludeLabels: true,
-                    spacingFactor: 0.75
+                    name: "concentric"
                 }, {
                     name: "cola",
                     animate: true,
