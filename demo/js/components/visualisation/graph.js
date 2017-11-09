@@ -93,9 +93,10 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
 
                 /**
                  * Callback for adding data from the Graph service to the graph
-                 * @param data  Data for the graph. Expected to be an object with "nodes" and "edges" properties.
+                 * @param data          Data for the graph. Expected to be an object with "nodes" and "edges" properties.
+                 * @param fitViewport   If true, will fit the viewport to the nodes after adding them to the graph
                  */
-                var addDataToGraph = function (data) {
+                var addDataToGraph = function (data, fitViewport) {
                     // Add the new nodes and their edges to the graph
                     var elements = cy.add(_.union(data.nodes, data.edges));
 
@@ -105,6 +106,13 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                     elements.nodes().on("doubleTap", function (event) {
                         loadNodeChildren(event.target);
                     });
+
+                    if (fitViewport) {
+                        // Fit the viewport to the initial nodes after 0.5 sec.
+                        setTimeout(function () {
+                            cy.fit(cy.nodes(), 30);
+                        }, 500);
+                    }
                 };
 
                 /**
@@ -142,7 +150,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                             // The node does not have children loaded, so load them
                             Graph.getData(node.id(), lang)
                                 .then(function (data) {
-                                    addDataToGraph(data);
+                                    addDataToGraph(data, false);
 
                                     // Get each node's depth
                                     var nodeDepths = getNodeDepths();
@@ -289,7 +297,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                     addDataToGraph({
                         nodes: [node],
                         edges: [Graph.createEdge(scope.clickedNode.id, node)]
-                    });
+                    }, false);
 
                     // "Open" the node
                     loadNodeChildren(cy.getElementById(nodeData.id));
@@ -401,19 +409,10 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                     cy.on("tap", "node", nodeClickHandler);
 
                     // Add initial data
-                    Graph.getData(projectId, lang)
+                    Graph.setMainNodeId(mainNodeId);
+                    Graph.getData(mainNodeId, lang)
                         .then(function (data) {
-                            cy.add(data);
-                            reloadLayout(true);
-
-                            cy.nodes().on("doubleTap", function (event) {
-                                loadNodeChildren(event.target);
-                            });
-
-                            // Fit the viewport to the initial nodes after 0.5 sec.
-                            setTimeout(function () {
-                                cy.fit(cy.nodes(), 30);
-                            }, 500);
+                            addDataToGraph(data, true);
                         });
                 };
 

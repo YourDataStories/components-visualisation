@@ -1,19 +1,21 @@
 angular.module("yds").factory("Graph", ["YDS_CONSTANTS", "$http", "$q",
     function (YDS_CONSTANTS, $http, $q) {
+        var mainNodeId = null;
+
         /**
          * Get the nodes & edges for a specific node ID.
-         * @param id                            Parent node ID
-         * @param lang                          Language of the graph
+         * @param parentId  Parent node ID
+         * @param lang      Language of the graph
          * @returns {*|promise|o.promise|d|i|t} Nodes & edges for adding to the graph
          */
-        var getData = function (id, lang) {
+        var getData = function (parentId, lang) {
             var deferred = $q.defer();
 
             $http({
                 method: "GET",
                 url: "http://" + YDS_CONSTANTS.API_GRAPH_NODE,
                 params: {
-                    id: id,
+                    id: parentId,
                     lang: lang
                 },
                 headers: {"Content-Type": "application/json"}
@@ -23,8 +25,9 @@ angular.module("yds").factory("Graph", ["YDS_CONSTANTS", "$http", "$q",
                 // Create edges from the given node to each new one
                 var edges = [];
                 _.each(nodes, function (item) {
-                    if (id !== item.data.id) {  // Prevent creating edge from the main node to itself
-                        edges.push(createEdge(id, item));
+                    // Prevent creating edge from the parent node to itself and from a node to the initial graph node
+                    if (item.data.id !== parentId && item.data.id !== mainNodeId) {
+                        edges.push(createEdge(parentId, item));
                     }
                 });
 
@@ -105,7 +108,10 @@ angular.module("yds").factory("Graph", ["YDS_CONSTANTS", "$http", "$q",
         return {
             getData: getData,
             getLayouts: getLayouts,
-            createEdge: createEdge
+            createEdge: createEdge,
+            setMainNodeId: function (id) {
+                mainNodeId = id;
+            }
         };
     }
 ]);
