@@ -137,8 +137,8 @@ angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile
                         }
                     }
 
-                    // Redirect to the URL
-                    $window.location.href = dataAnalysisUrl;
+                    // Open data analysis page in new tab
+                    $window.open(dataAnalysisUrl, "_blank");
                 }
             }
         }
