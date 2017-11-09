@@ -408,6 +408,9 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                     // Add node click handler (to show the clicked node's information in the info panel)
                     cy.on("tap", "node", nodeClickHandler);
 
+                    // Set max zoom
+                    cy.maxZoom(1.25);
+
                     // Add initial data
                     Graph.setMainNodeId(mainNodeId);
                     Graph.getData(mainNodeId, lang)
