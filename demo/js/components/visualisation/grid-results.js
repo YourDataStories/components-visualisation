@@ -69,6 +69,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 var hasColDefs = false;     // Indicates if the column definitions have been loaded for the grid
                 var dataView = null;        // The view of the grid will be kept here, to use for exporting
                 var dataSampleObj = null;   // A sample object from the grid's results, for use in exporting
+                var advancedSearch = false; // Will become true to know that we're using advanced search
 
                 var paramPrefix = scope.urlParamPrefix;
                 var projectDetailsType = scope.projectDetailsType;
@@ -431,7 +432,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                 // If grid processing is not enabled, Solr results are expected.
                                 if (!useGridProcessing) {
                                     // Sanity check: confirm that the response's query is the same as the last one
-                                    if (useGridApi === "false" && query !== response.data.responseHeader.params.q) {
+                                    if (!advancedSearch && useGridApi === "false" && query !== response.data.responseHeader.params.q) {
                                         return;
                                     }
 
@@ -617,6 +618,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                             .then(gridResultDataSuccess, gridResultDataError);
                                     } else {
                                         // Rules were found, do an advanced search
+                                        advancedSearch = true;
                                         Data.getGridResultDataAdvanced(query, facets, rules, grid.viewType, params.startRow, grid.pageSize, grid.lang, params.sortModel)
                                             .then(gridResultDataSuccess, gridResultDataError);
                                     }
