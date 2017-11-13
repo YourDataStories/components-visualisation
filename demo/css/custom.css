@@ -1573,3 +1573,10 @@ div.dcat-value {
 .map-marker-green {
     color: #40B665;
 }
+
+/* Style for the container above the iframes in the Indexes tab of Country pages */
+.index-tab-controls-container {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

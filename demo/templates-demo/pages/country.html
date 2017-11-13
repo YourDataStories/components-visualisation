@@ -1,7 +1,61 @@
-<div class="container">
+<div class="container flex">
     <div class="row">
         <div class="col-md-12">
-            <h2>Country <small>{{ projectId }}</small></h2>
+            <h2>
+                <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                     class="flag-lg flag-lg-GR" alt="Greece">
+                Greece
+                <small>{{ projectId }}</small>
+            </h2>
+        </div>
+    </div>
+
+    <!--Tabs for Europam & Integrity Index-->
+    <div class="row flex">
+        <div class="col-md-12 flex">
+            <uib-tabset justified="true" class="flex">
+                <uib-tab heading="Not indexes">
+                </uib-tab>
+                <uib-tab class="flex">
+                    <uib-tab-heading><span class="glyphicon glyphicon-stats"></span> Indexes</uib-tab-heading>
+                    <uib-tabset type="pills" class="flex">
+                        <uib-tab heading="Index of Public Integrity" class="flex">
+                            <div class="row">
+                                <div class="col-md-12 index-tab-controls-container">
+                                    <a href="http://integrity-index.org/country-profile/?id=GRC&yr=2017" target="_blank"
+                                       class="btn btn-primary btn-lg">
+                                        <span class="glyphicon glyphicon-share"></span> Open in new tab
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row flex">
+                                <div class="col-md-12 flex">
+                                    <iframe src="http://integrity-index.org/country-profile/?id=GRC&yr=2017"
+                                            frameborder="0"
+                                            class="flex"></iframe>
+                                </div>
+                            </div>
+                        </uib-tab>
+                        <uib-tab heading="Index of Public Accountability" class="flex">
+                            <div class="row">
+                                <div class="col-md-12 index-tab-controls-container">
+                                    <a href="http://europam.eu/index.php?module=country-profile&country=Greece" target="_blank"
+                                       class="btn btn-primary btn-lg">
+                                        <span class="glyphicon glyphicon-share"></span> Open in new tab
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row flex">
+                                <div class="col-md-12 flex">
+                                    <iframe src="http://europam.eu/index.php?module=country-profile&country=Greece"
+                                            frameborder="0"
+                                            class="flex"></iframe>
+                                </div>
+                            </div>
+                        </uib-tab>
+                    </uib-tabset>
+                </uib-tab>
+            </uib-tabset>
         </div>
     </div>
 </div>
