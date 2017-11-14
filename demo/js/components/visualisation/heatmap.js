@@ -438,6 +438,7 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                                 });
 
                                 pointToZoom.zoomTo();
+                                scope.heatmap.mapZoom(1.5);
                             }
                         }
                     } else {
