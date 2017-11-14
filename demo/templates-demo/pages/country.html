@@ -24,7 +24,7 @@
     <!--Heatmap & info-->
     <div class="row">
         <!--Heatmap-->
-        <div class="col-md-6">
+        <div class="col-md-5">
             <yds-heatmap
                     project-id="{{ projectId }}"
                     view-type="country.show"
@@ -37,9 +37,10 @@
         </div>
 
         <!--Info-->
-        <div class="col-md-6">
+        <div class="col-md-7">
             <yds-info
                     project-id="{{ projectId }}"
+                    label-col-width="3"
                     view-type="country.default"
                     lang="en">
             </yds-info>
