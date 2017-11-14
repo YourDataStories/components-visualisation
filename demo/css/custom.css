@@ -1580,3 +1580,8 @@ div.dcat-value {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+.country-project-link {
+    font-size: 20px;
+    line-height: 50px;
+}

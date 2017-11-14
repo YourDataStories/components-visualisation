@@ -1,20 +1,23 @@
 <div class="container flex" ng-controller="CountryController">
     <!--Header row-->
     <div class="row">
-        <div class="col-md-12">
+        <!--Country flag + name-->
+        <div class="col-md-6">
             <h1 style="font-size: 38px">
                 <img ng-src="{{ flagUrl }}"
                      style="height: 50px"
                      title="Flag of {{ countryName }}">
                 {{ countryName }}
-
-                <!--Country link-->
-                <small style="font-size: 20px">
-                    <a ng-href="{{ projectId }}" target="_blank">
-                        {{ projectId }} <span class="glyphicon glyphicon-link"></span>
-                    </a>
-                </small>
             </h1>
+        </div>
+
+        <!--Country link-->
+        <div class="col-md-6">
+            <h3 class="pull-right country-project-link">
+                <a ng-href="{{ projectId }}" target="_blank">
+                    {{ projectId }} <span class="glyphicon glyphicon-link"></span>
+                </a>
+            </h3>
         </div>
     </div>
 
