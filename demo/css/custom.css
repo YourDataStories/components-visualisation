@@ -934,14 +934,12 @@ a.accordion-toggle:focus, a.accordion-toggle:active {
 }
 
 /* Rule to make Dashboard info component's labels cyan color */
-.dashboard-info-container > yds-dashboard-updater > .dashboard-updater-container > yds-info > .yds-info-wrapper > .row > .col-md-2 > .label,
-.vertical-info-compact > yds-info > .yds-info-wrapper > .row > .col-md-2 > .label {
+.dashboard-info-container > yds-dashboard-updater > .dashboard-updater-container > yds-info > .yds-info-wrapper > .row > .col-md-2 > .label {
     background-color: #5bc0de;
 }
 
 /* Labels in Dashboard info */
-.dashboard-info-container-default > yds-dashboard-updater > .dashboard-updater-container > yds-info > .yds-info-wrapper > .row > div[class*="col-md-"] > .label,
-.vertical-info-compact > yds-info > .yds-info-wrapper > .row > div[class*="col-md-"] > .label {
+.dashboard-info-container-default > yds-dashboard-updater > .dashboard-updater-container > yds-info > .yds-info-wrapper > .row > div[class*="col-md-"] > .label {
     padding: .2em 10px .3em;
     display: block;
     color: #333;
@@ -957,15 +955,13 @@ a.accordion-toggle:focus, a.accordion-toggle:active {
 }
 
 /* Label row */
-.dashboard-info-container-default > yds-dashboard-updater > .dashboard-updater-container > yds-info > .yds-info-wrapper > div.row > .col-md-12:nth-child(odd),
-.vertical-info-compact > yds-info > .yds-info-wrapper > div.row > .col-md-12:nth-child(odd) {
+.dashboard-info-container-default > yds-dashboard-updater > .dashboard-updater-container > yds-info > .yds-info-wrapper > div.row > .col-md-12:nth-child(odd) {
     padding-left: 0;
     padding-right: 0;
 }
 
 /* Info rows */
-.dashboard-info-container-default > yds-dashboard-updater > .dashboard-updater-container > yds-info > .yds-info-wrapper > div.row > .col-md-12:nth-child(even),
-.vertical-info-compact > yds-info > .yds-info-wrapper > div.row > .col-md-12:nth-child(even) {
+.dashboard-info-container-default > yds-dashboard-updater > .dashboard-updater-container > yds-info > .yds-info-wrapper > div.row > .col-md-12:nth-child(even) {
     padding: .2em 10px .3em;
     line-height: 1.2em;
 }
