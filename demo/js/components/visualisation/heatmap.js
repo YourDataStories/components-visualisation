@@ -20,6 +20,7 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                 dynamicDashboard: "@",  // Set to true if you are using this in a Dashboard with dynamic filters
                 countrySelection: "@",  // Allow selecting countries on the map
                 europeOnly: "@",		// If true, the heatmap will show a map of Europe instead of the entire world
+                zoomToCountry: "@",     // If true and there's only 1 point, zoom to it (works only with selection off)
 
                 exporting: "@",         // Enable or disable the export of the chart
                 noBorder: "@",			// If true, the component will have no border
@@ -43,12 +44,13 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                 var exporting = scope.exporting;
                 var elementH = scope.elementH;
                 var europeOnly = scope.europeOnly;
+                var zoomToCountry = scope.zoomToCountry;
 
-                var heatmapContainer = angular.element(elem[0].querySelector(".heatmap-container"));
+                var heatmapContainer = _.first(angular.element(elem[0].querySelector(".heatmap-container")));
 
                 // Create a random id for the element that will render the chart
                 var elementId = "heatmap" + Data.createRandomId();
-                heatmapContainer[0].id = elementId;
+                heatmapContainer.id = elementId;
 
                 // Any extra parameters will be saved to check if something changed before refreshing the heatmap
                 var extraParams = {};
@@ -57,7 +59,7 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                 var selectivity = null;
                 var colorAxisParams = null;
 
-                // Check if project id or grid type are defined
+                // Check if the project id is defined
                 if (angular.isUndefined(projectId) || projectId.trim() === "") {
                     scope.ydsAlert = "The YDS component is not properly initialized " +
                         "because the projectId attribute isn't configured properly. " +
@@ -65,7 +67,7 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                     return false;
                 }
 
-                // Check if view-type attribute is empty and assign the default value
+                // Check if view-type attribute is defined, else assign default value
                 if (_.isUndefined(viewType) || viewType.trim() === "")
                     viewType = "default";
 
@@ -120,6 +122,10 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                 // Check if the europeOnly attribute is defined, else assign default value
                 if (_.isUndefined(europeOnly) || (europeOnly !== "true" && europeOnly !== "false"))
                     europeOnly = "false";
+
+                // Check if the zoomToCountry attribute is defined, else assign default value
+                if (_.isUndefined(zoomToCountry) || (zoomToCountry !== "true" && zoomToCountry !== "false"))
+                    zoomToCountry = "false";
 
                 // Check if the dynamicDashboard attribute is defined, else assign default value
                 if (_.isUndefined(scope.dynamicDashboard) || (scope.dynamicDashboard !== "true" && scope.dynamicDashboard !== "false"))
@@ -190,7 +196,7 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                 }
 
                 // Set the height of the chart
-                heatmapContainer[0].style.height = elementH + "px";
+                heatmapContainer.style.height = elementH + "px";
 
                 // Load map data from highcharts and create the heatmap
                 $ocLazyLoad.load({
@@ -332,6 +338,10 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                         }
                     }
 
+                    // Save the number of points (Highcharts modifies the object later, and the count is needed to
+                    // check if we should zoom in)
+                    var pointsNum = response.data.length;
+
                     if (_.isEmpty(scope.heatmap.series)) {
                         var mapData = Highcharts.maps["custom/world"];
                         if (europeOnly === "true") {
@@ -417,6 +427,18 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                         } else {
                             // Add new series to the heatmap
                             scope.heatmap.addSeries(newSeries);
+
+                            // Check if we should zoom in to a country
+                            if (zoomToCountry === "true" && pointsNum === 1) {
+                                var countryCode = _.first(response.data).code;
+
+                                // Find the point by its code and zoom to it
+                                var pointToZoom = _.findWhere(scope.heatmap.series[0].points, {
+                                    code: countryCode
+                                });
+
+                                pointToZoom.zoomTo();
+                            }
                         }
                     } else {
                         // Heatmap already has a series, update it with new data
