@@ -21,6 +21,27 @@
         </div>
     </div>
 
+    <!--Heatmap & info-->
+    <div class="row">
+        <!--Heatmap-->
+        <div class="col-md-6">
+            <yds-heatmap
+                    project-id="{{ projectId }}"
+                    view-type="heatmap.country.show"
+                    element-h="300"
+                    lang="en">
+            </yds-heatmap>
+        </div>
+
+        <!--Info-->
+        <div class="col-md-6">
+            <yds-info
+                    project-id="{{ projectId }}"
+                    lang="en">
+            </yds-info>
+        </div>
+    </div>
+
     <!--Tabs for Europam & Integrity Index-->
     <div class="row flex">
         <div class="col-md-12 flex">
