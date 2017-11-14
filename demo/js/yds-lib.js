@@ -1289,16 +1289,23 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
      * Get item description for DCAT-AP pages
      * @param itemUri   ID of item to describe
      * @param baseUrl
+     * @param compact   Compact parameter for describe API. Default: 1
+     * @param context   Context parameter for describe API. Default: undefined
      * @returns {promise|*|s|d|t|i}
      */
-    dataService.getItemDescription = function (itemUri, baseUrl) {
+    dataService.getItemDescription = function (itemUri, baseUrl, compact, context) {
         var deferred = $q.defer();
 
         var params = {
-            compact: 1,
-            // context: 0,
+            compact: compact,
+            context: context,
             id: itemUri
         };
+
+        // Set compact to 1 if undefined
+        if (_.isUndefined(compact)) {
+            params.compact = 1;
+        }
 
         $http({
             method: "GET",

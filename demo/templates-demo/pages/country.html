@@ -2,21 +2,20 @@
     <!--Header row-->
     <div class="row">
         <div class="col-md-12">
-            <h2>
-                <img ng-if="flagClass.length > 0"
-                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                     class="flag-lg"
-                     ng-class="flagClass"
+            <h1 style="font-size: 38px">
+                <img ng-src="{{ flagUrl }}"
+                     style="height: 50px"
+                     title="Flag of {{ countryName }}"
                      alt="{{ countryName }}">
                 {{ countryName }}
 
                 <!--Country link-->
-                <small>
+                <small style="font-size: 20px">
                     <a ng-href="{{ projectId }}" target="_blank">
                         {{ projectId }} <span class="glyphicon glyphicon-link"></span>
                     </a>
                 </small>
-            </h2>
+            </h1>
         </div>
     </div>
 
