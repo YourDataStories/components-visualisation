@@ -28,6 +28,8 @@
             <yds-heatmap
                     project-id="{{ projectId }}"
                     view-type="country.show"
+                    legend="false"
+                    exporting="false"
                     element-h="300"
                     lang="en">
             </yds-heatmap>
@@ -43,7 +45,7 @@
     </div>
 
     <!--Tabs for Europam & Integrity Index-->
-    <div class="row flex">
+    <div class="row flex" style="margin-top: 15px">
         <div class="col-md-12 flex">
             <uib-tabset justified="true" class="flex">
                 <uib-tab heading="Not indexes">

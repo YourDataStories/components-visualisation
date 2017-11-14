@@ -157,6 +157,9 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                         },
                         enabled: (exporting === "true")
                     },
+                    legend: {
+                        enabled: false
+                    },
                     series: []
                 };
 
