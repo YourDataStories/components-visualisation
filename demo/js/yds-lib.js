@@ -1451,12 +1451,13 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
 
 app.factory("Filters", [function () {
     var filters = [];
+    var chartFilters;
 
     var updateFilters = function (newFilter, newCompId, allFilters) {
-        //search if the specific component has already an active filter
+        // Search if the specific component has already an active filter
         var componentFilter = _.findWhere(allFilters, {componentId: newCompId});
 
-        //if the component exists in the filters array-update it, else push a new array item
+        // If the component exists in the filters array-update it, else push a new array item
         if (!angular.isUndefined(componentFilter))
             componentFilter.filters = angular.copy(newFilter);
         else {
@@ -1472,7 +1473,7 @@ app.factory("Filters", [function () {
             chartFilters = [];
             var lineExtremes = lineChart.xAxis[0].getExtremes();
 
-            //define which axis has range ? is needed ?
+            // Define which axis has range ? is needed ?
             chartFilters.push({
                 applied_to: "x",
                 attrs: {
@@ -1498,6 +1499,15 @@ app.factory("Filters", [function () {
 
             updateFilters(newFilters, compId, filters);
         },
+        addAdvancedGridFilter: function (compId, comboboxInfo) {
+            // Create array with params as filters
+            var newFilters = [{
+                applied_to: "adv_grid",
+                attrs: _.clone(comboboxInfo)
+            }];
+
+            updateFilters(newFilters, compId, filters);
+        },
         addGridResultsFilter: function (compId, gridFilters) {
             var newFilters = [{
                 applied_to: "search",
@@ -1507,9 +1517,9 @@ app.factory("Filters", [function () {
             updateFilters(newFilters, compId, filters);
         },
         addGridFilter: function (compId, gridFilters) {
-            var chartFilters = [];
+            chartFilters = [];
 
-            for (property in gridFilters) {
+            for (var property in gridFilters) {
                 var filterVal = gridFilters[property];
 
                 if (gridFilters.hasOwnProperty(property)) {
@@ -1538,7 +1548,8 @@ app.factory("Filters", [function () {
                             applied_to: property,
                             attrs: tmpAttr
                         });
-                    } else if (filterVal.hasOwnProperty("filter") && filterVal.hasOwnProperty("type")) { //numeric filter applied on grid
+                    } else if (filterVal.hasOwnProperty("filter") && filterVal.hasOwnProperty("type")) { // Numeric filter applied on grid
+                        //todo: Check if these are ever used...
                         tmpAttrs = {};
 
                         switch (filterVal["type"]) {
@@ -1566,7 +1577,7 @@ app.factory("Filters", [function () {
         get: function (compId) {
             var filterFound = _.findWhere(filters, {componentId: compId});
 
-            if (!angular.isUndefined(filterFound))
+            if (!_.isUndefined(filterFound))
                 return filterFound.filters;
             else
                 return [];

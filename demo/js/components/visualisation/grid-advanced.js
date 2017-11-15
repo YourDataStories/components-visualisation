@@ -51,7 +51,7 @@ angular.module("yds").directive("ydsGridAdvanced", ["Data", "Filters", "$timeout
                 scope.quickFiltering = "true";
 
                 // Check if project id attr is defined
-                if (angular.isUndefined(grid.projectId) || grid.projectId.trim() === "") {
+                if (_.isUndefined(grid.projectId) || grid.projectId.trim() === "") {
                     scope.ydsAlert = "The YDS component is not properly initialized " +
                         "because the projectId or the viewType attribute aren't configured properly." +
                         "Please check the corresponding documentation section";
@@ -245,6 +245,9 @@ angular.module("yds").directive("ydsGridAdvanced", ["Data", "Filters", "$timeout
                         // If all the filters is selected update the grid
                         visualizeGrid(appliedFilters);
                     }
+
+                    // Save new filters to filters service
+                    Filters.addAdvancedGridFilter(grid.elementId, appliedFilters);
                 };
 
 
