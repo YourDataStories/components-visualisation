@@ -42,8 +42,8 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
             templateUrl: Data.templatePath + "templates/visualisation/grid-results.html",
             link: function (scope, element) {
                 // Reference the DOM elements of the grid
-                var gridWrapper = angular.element(element[0].querySelector(".component-wrapper"));
-                var gridContainer = angular.element(element[0].querySelector(".grid-container"));
+                var gridWrapper = _.first(angular.element(element[0].querySelector(".component-wrapper")));
+                var gridContainer = _.first(angular.element(element[0].querySelector(".grid-container")));
 
                 var prevTab = "";     // Keeps the previous tab to check if the tab has changed
 
@@ -86,15 +86,15 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                     return false;
                 }
 
-                // Check if the projectDetailsType attr is defined, else assign default value
+                // Check if the projectDetailsType attribute is defined, else assign default value
                 if (_.isUndefined(projectDetailsType) || projectDetailsType.trim() === "")
                     projectDetailsType = grid.viewType;
 
-                // Check if the language attr is defined, else assign default value
+                // Check if the language attribute is defined, else assign default value
                 if (_.isUndefined(grid.projectId) || grid.projectId.trim() === "")
                     grid.projectId = "none";
 
-                // Check if the language attr is defined, else assign default value
+                // Check if the language attribute is defined, else assign default value
                 if (_.isUndefined(grid.lang) || grid.lang.trim() === "")
                     grid.lang = "en";
 
@@ -102,65 +102,65 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 if (_.isUndefined(paramPrefix) || (paramPrefix.trim() === "" && paramPrefix.length > 0))
                     paramPrefix = "";
 
-                // Check if the sorting attr is defined, else assign the default value
+                // Check if the sorting attribute is defined, else assign the default value
                 if (_.isUndefined(grid.sorting) || (grid.sorting !== "true" && grid.sorting !== "false"))
                     grid.sorting = "true";
 
-                // Check if the useGridApi attr is defined, else assign the default value
+                // Check if the useGridApi attribute is defined, else assign the default value
                 if (_.isUndefined(useGridApi) || (useGridApi !== "true" && useGridApi !== "false"))
                     useGridApi = "false";
 
-                // Check if the enableViewButton attr is defined, else assign the default value
+                // Check if the enableViewButton attribute is defined, else assign the default value
                 if (_.isUndefined(enableViewButton) || (enableViewButton !== "true" && enableViewButton !== "false"))
                     enableViewButton = "true";
 
-                // Check if the viewInDashboard attr is defined, else assign the default value
+                // Check if the viewInDashboard attribute is defined, else assign the default value
                 if (_.isUndefined(viewInDashboard) || (viewInDashboard !== "true" && viewInDashboard !== "false"))
                     viewInDashboard = "false";
 
-                // Check if the showResultsNum attr is defined, else assign the default value
+                // Check if the showResultsNum attribute is defined, else assign the default value
                 if (_.isUndefined(scope.showResultsNum) || (scope.showResultsNum !== "true" && scope.showResultsNum !== "false"))
                     scope.showResultsNum = "false";
 
-                // Check if the quick filtering attr is defined, else assign the default value
+                // Check if the quick filtering attribute is defined, else assign the default value
                 if (_.isUndefined(grid.quickFiltering) || (grid.quickFiltering !== "true" && grid.quickFiltering !== "false"))
                     grid.quickFiltering = "false";
 
-                // Check if the colResize attr is defined, else assign default value
+                // Check if the colResize attribute is defined, else assign default value
                 if (_.isUndefined(grid.colResize) || (grid.colResize !== "true" && grid.colResize !== "false"))
                     grid.colResize = "false";
 
-                // Check if the page size attr is defined, else assign default value
+                // Check if the page size attribute is defined, else assign default value
                 if (_.isUndefined(grid.pageSize) || _.isNaN(grid.pageSize))
                     grid.pageSize = 100;
 
-                // Check if the exporting attr is defined, else assign default value
+                // Check if the exporting attribute is defined, else assign default value
                 if (_.isUndefined(grid.exporting) || (grid.exporting !== "true" && grid.exporting !== "false"))
                     grid.exporting = "false";
 
-                // Check if the exportBtnX attr is defined, else assign default value
+                // Check if the exportBtnX attribute is defined, else assign default value
                 if (_.isUndefined(grid.exportBtnX) || _.isNaN(grid.exportBtnX))
                     grid.exportBtnX = 0;
 
-                // Check if the exportBtnY attr is defined, else assign default value
+                // Check if the exportBtnY attribute is defined, else assign default value
                 if (_.isUndefined(grid.exportBtnY) || _.isNaN(grid.exportBtnY))
                     grid.exportBtnY = 0;
 
-                // Check if the component's height attr is defined, else assign default value
+                // Check if the component's height attribute is defined, else assign default value
                 if (_.isUndefined(grid.elementH) || _.isNaN(grid.elementH))
                     grid.elementH = 200;
 
                 // Set the id and the height of the grid
-                gridContainer[0].id = grid.elementId;
+                gridContainer.id = grid.elementId;
 
                 if (grid.quickFiltering === "true") {
-                    gridWrapper[0].style.height = (grid.elementH) + "px";
-                    gridContainer[0].style.height = (grid.elementH - 35) + "px";
-                    gridContainer[0].style.minHeight = (grid.elementH - 35) + "px";
+                    gridWrapper.style.height = (grid.elementH) + "px";
+                    gridContainer.style.height = (grid.elementH - 35) + "px";
+                    gridContainer.style.minHeight = (grid.elementH - 35) + "px";
                 } else {
-                    gridWrapper[0].style.height = grid.elementH + "px";
-                    gridContainer[0].style.height = grid.elementH + "px";
-                    gridContainer[0].style.minHeight = grid.elementH + "px";
+                    gridWrapper.style.height = grid.elementH + "px";
+                    gridContainer.style.height = grid.elementH + "px";
+                    gridContainer.style.minHeight = grid.elementH + "px";
                 }
 
                 // If exporting is enabled, set position of export button
@@ -172,12 +172,12 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 }
 
                 /**
-                 * When a filter is updated, update the filter object of the component by using the Filters service
+                 * Update the filter object of the component by using the Filters service when a filter is updated
                  */
                 var filterModifiedListener = function () {
                     var gridFilters = {};
 
-                    //if quick filtering is enabled and has length>0, get its value and create an extra filter
+                    // If quick filtering is enabled and has length > 0, get its value and create an extra filter
                     if (grid.quickFiltering === "true")
                         gridFilters["_ydsQuickFilter_"] = scope.quickFilterValue;
 
@@ -188,7 +188,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                  * Remove filters when the component is destroyed
                  */
                 scope.$on("$destroy", function () {
-                    //if the grid filtering is enabled remove the filter event listener
+                    // If the grid filtering is enabled remove the filter event listener
                     if (grid.quickFiltering === "true") {
                         if (!_.isUndefined(scope.gridOptions) && _.has(scope.gridOptions, "api")) {
                             scope.gridOptions.api.removeEventListener("afterFilterChanged", filterModifiedListener);
@@ -665,7 +665,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                             datasource: dataSource
                         };
 
-                        new agGrid.Grid(gridContainer[0], scope.gridOptions);
+                        new agGrid.Grid(gridContainer, scope.gridOptions);
                     } else {
                         // Add new data source to the grid
                         scope.gridOptions.api.setDatasource(dataSource);
