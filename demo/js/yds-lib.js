@@ -828,9 +828,8 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
             var allValues = [];
 
             _.each(data, function (row) {
-                var val = row[attribute];
+                var val = dataService.deepObjSearch(row, attribute);
 
-                //todo: Find some values that are not found this way (i18n strings)...
                 // if (_.isUndefined(val)) {
                 //     console.warn(attribute, "undefined for row", row);
                 // }
