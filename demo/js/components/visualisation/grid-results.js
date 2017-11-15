@@ -499,12 +499,19 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                     // Format the column definitions returned from the API
                                     var columnDefs = Data.prepareGridColumns(responseView);
 
+                                    // Disable filters for columns that are not of the supported types
+                                    var allowedFilterTypes = ["string-i18n", "string", "integer", "float", "year"];
+                                    _.each(responseView, function (viewItem, index) {
+                                        if (!_.contains(allowedFilterTypes, viewItem.type)) {
+                                            // Disable filters on the corresponding column definition
+                                            columnDefs[index].suppressMenu = true;
+                                        }
+                                    });
+
                                     if (enableViewButton === "true") {
                                         // Make the 1st column have links to more details
                                         columnDefs = addLinkRendererToColumnDefs(columnDefs);
                                     }
-
-                                    //todo: Add filters to column
 
                                     scope.gridOptions.api.setColumnDefs(columnDefs);
                                 }

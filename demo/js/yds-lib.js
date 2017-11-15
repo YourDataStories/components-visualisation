@@ -829,10 +829,8 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
 
             _.each(data, function (row) {
                 var val = dataService.deepObjSearch(row, attribute);
+                // if (_.isUndefined(val)) console.warn(attribute, "undefined for row", row);
 
-                // if (_.isUndefined(val)) {
-                //     console.warn(attribute, "undefined for row", row);
-                // }
                 if (_.isArray(val)) {
                     val = val.join(", ");
                 }
