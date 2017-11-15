@@ -633,8 +633,12 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                             // console.log("Deselected:", deselected);
 
                                             if (!_.isEmpty(deselected)) {
-                                                var filterKey = "filter_" + key + "_deselected";
-                                                filterExtraParams[filterKey] = deselected;
+                                                // If everything was deselected, add *
+                                                if (deselected.length >= originalFilterValues.length) {
+                                                    deselected = "*";
+                                                }
+
+                                                filterExtraParams["-" + key] = deselected;
                                             }
                                         });
                                     }

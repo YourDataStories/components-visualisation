@@ -505,34 +505,34 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
 
 
     /**
-     * Function to find a value in the data even if the attribute name in the view doesn't match exactly
-     * @param result        The result
-     * @param attribute        The name of the attribute to find (from the view)
-     * @param langs         Available languages
-     * @param prefLang        Preferred language
-     * @returns {*}            The value, if found
+     * Φινδ a value in the data even if the attribute name in the view doesn't match exactly
+     * @param result    The result
+     * @param attribute The name of the attribute to find (from the view)
+     * @param langs     Available languages
+     * @param prefLang  Preferred language
+     * @returns {*}     The value, if found
      */
     dataService.findValueInResult = function (result, attribute, langs, prefLang) {
         var value = result[attribute];
 
-        //if the value of a result doesn't exist
+        // If the value of a result doesn't exist
         if (_.isUndefined(value) || String(value).trim().length === 0) {
-            //extract the last 3 characters of the specific attribute of the result
+            // Extract the last 3 characters of the specific attribute of the result
             var last3chars = attribute.substr(attribute.length - 3);
 
-            //if it is internationalized
+            // If it is internationalized
             if (last3chars === ("." + prefLang)) {
-                //split the attribute in tokens
+                // Split the attribute in tokens
                 var attributeTokens = attribute.split(".");
-                //extract the attribute without the i18n tokens
+                // Extract the attribute without the i18n tokens
                 var nonInternationalizedAttr = _.first(attributeTokens, attributeTokens.length - 1).join(".");
-                //find the opposite language of the component
+                // Find the opposite language of the component
                 var alternativeLang = _.first(_.without(langs, prefLang));
 
-                //assign the value of the opposite language
+                // Assign the value of the opposite language
                 value = result [nonInternationalizedAttr + "." + alternativeLang];
 
-                //if no value was acquired from the i18n attributes, try with non-internationalized attribute
+                // If no value was acquired from the i18n attributes, try with non-internationalized attribute
                 if (_.isUndefined(value) || String(value).trim().length === 0)
                     value = result [nonInternationalizedAttr];
             }
