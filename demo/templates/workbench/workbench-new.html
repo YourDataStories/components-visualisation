@@ -1,10 +1,15 @@
 <div class="component-wrapper ">
-    <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length>0">
-        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-        <span class="sr-only">Error:</span>
-        {{ydsAlert}}
-    </div>
     <div class="row">
         <div class="col-md-12 highcharts-editor-container"></div>
+    </div>
+
+    <div class="row" ng-if="ydsAlert.length>0" style="margin-top: 15px">
+        <div class="col-md-12">
+            <div uib-alert close="clearAlert()" class="alert alert-danger">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                {{ ydsAlert }}
+            </div>
+        </div>
     </div>
 </div>

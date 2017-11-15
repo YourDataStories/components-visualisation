@@ -97,6 +97,13 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
                 };
 
                 /**
+                 * Clear the currently displayed alert.
+                 */
+                scope.clearAlert = function () {
+                    scope.ydsAlert = "";
+                };
+
+                /**
                  * Create the view selector inside a parent element, using the template
                  * @param parent    Parent element to put view selector inside of
                  */
@@ -351,6 +358,9 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
                  * @param item  Clicked item
                  */
                 scope.selectItem = function (item) {
+                    // Reset error that was possibly shown before
+                    scope.ydsAlert = "";
+
                     if (item.selected === true) {
                         // Remove item from selected items
                         scope.selectedItems = _.without(scope.selectedItems, item);
@@ -375,7 +385,7 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
                         scope.viewsLoaded = true;
                         scope.plotOptionsLoading = false;
                     }, function (error) {
-                        console.error(error.message);
+                        scope.ydsAlert = error.data.message;
                         scope.viewsLoaded = false;
                         scope.plotOptionsLoading = false;
                     });
