@@ -594,7 +594,13 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
         return timestamp.substr(0, timestamp.length - 4).split("T")[1];
     };
 
-    dataService.prepareGridData = function (newData, newView) {
+    dataService.prepareGridData = function (newData, newView, prefLang) {
+        // Set default value for preferred language
+        //todo: Get preferred language from grids
+        if (_.isUndefined(prefLang)) {
+            prefLang = "en";
+        }
+
         for (var i = 0; i < newData.length; i++) {
             _.each(newView, function (viewVal) {
                 // Find value of attribute
@@ -685,6 +691,23 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
 
                 // Add the new attribute to the data so ag grid can find it
                 dataService.createNestedObject(newData[i], attributeTokens, attrValue);
+
+                // Do some further processing
+                if (_.isUndefined(newData[i][viewVal.attribute])) {
+                    attrValue = dataService.findValueInResult(newData[i], viewVal.attribute, ["en", "el"], prefLang);
+
+                    if (_.isUndefined(attrValue)) {
+                        attrValue = "";
+                    } else if (_.isArray(attrValue)) {
+                        attrValue = attrValue.join(", ");
+                    }
+
+                    // If the new value is an object, prevent nested object creation
+                    // (the grid will display "[object Object]" if we create it)
+                    if (!_.isObject(attrValue)) {
+                        dataService.createNestedObject(newData[i], viewVal.attribute.split("."), attrValue);
+                    }
+                }
             });
         }
 
@@ -809,7 +832,7 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
 
                 //todo: Find some values that are not found this way (i18n strings)...
                 // if (_.isUndefined(val)) {
-                //     console.log(attribute, "undefined for row", row);
+                //     console.warn(attribute, "undefined for row", row);
                 // }
                 if (_.isArray(val)) {
                     val = val.join(", ");
