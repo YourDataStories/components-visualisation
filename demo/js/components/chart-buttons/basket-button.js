@@ -11,13 +11,13 @@ angular.module("yds").directive("ydsBasketBtn", ["$compile", "Data", "Basket", "
                 var visualisationType = "";
                 var defaultVisTypes = ["pie", "line", "scatter", "bubble", "bar", "tree", "map", "grid", "result"];
 
-                // If projectId or viewType attr is undefined, stop the execution of the directive
+                // If projectId or viewType attribute is undefined, stop the execution of the directive
                 if (_.isUndefined(projectId) || _.isUndefined(viewType)) {
                     scope.addToBasket = false;
                     return false;
                 }
 
-                // Check if the language attr is defined, else assign default value
+                // Check if the language attribute is defined, else assign default value
                 if (_.isUndefined(lang))
                     lang = "en";
 

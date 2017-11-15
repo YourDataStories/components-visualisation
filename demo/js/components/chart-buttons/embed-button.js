@@ -33,7 +33,7 @@ angular.module("yds").directive("ydsEmbed", ["$compile", "Data", "Filters", func
                 return false;
             }
 
-            // If projectId or viewType attr is undefined, stop the execution of the directive
+            // If projectId or viewType attribute is undefined, stop the execution of the directive
             if (_.isUndefined(projectId) || (_.isUndefined(viewType) && visualisationType !== "map")) {
                 scope.embeddable = false;
                 return false;
@@ -70,15 +70,15 @@ angular.module("yds").directive("ydsEmbed", ["$compile", "Data", "Filters", func
 
                     var embedBtnTemplate = "<button type='button' " +
                         "class='btn btn-default btn-xs embed-btn' " +
-                        "ng-click = 'requestEmbed(this)' " +
-                        "popover-trigger = 'none' " +
+                        "ng-click='requestEmbed(this)' " +
+                        "popover-trigger='none' " +
                         "popover-is-open='popoverOpen' " +
                         "popover-placement='" + popoverPos + "' " +
                         "uib-popover-template='popover.templateUrl'>" +
                         "<span class='glyphicon glyphicon-log-in' aria-hidden='true'></span>" +
                         "</button>";
 
-                    //compile the embed button and append it to the element's container
+                    // Compile the embed button and append it to the element's container
                     var compiledTemplate = $compile(embedBtnTemplate)(scope);
                     compiledTemplate.css("position", "absolute");
                     compiledTemplate.css("top", embedBtnY + "px");
@@ -108,9 +108,9 @@ angular.module("yds").directive("ydsEmbed", ["$compile", "Data", "Filters", func
                     Data.requestEmbedCode(projectId, facets, visualisationType, viewType, lang)
                         .then(function (response) {
                             embedCode = response.generated_hash;
-                            scope.popover.content = "<iframe src='" +
+                            scope.popover.content = "<iframe src=\"" +
                                 "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/embed/" + embedCode +
-                                "' style='width:600px; height:300px'>" +
+                                "\" style=\"width: 600px; height: 300px\">" +
                                 "<p>Your browser does not support iframes.</p>" +
                                 "</iframe>";
                             scope.popoverOpen = true;
