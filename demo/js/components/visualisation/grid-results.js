@@ -34,7 +34,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 embeddable: "@",        // Enable or disable the embedding of the component
                 embedBtnX: "@",         // X-axis position of the embed button
                 embedBtnY: "@",         // Y-axis position of the embed button
-                popoverPos: "@",        // The side of the embed button from which the embed  window will appear
+                popoverPos: "@",        // The side of the embed button from which the embed window will appear
 
                 enableRating: "@",      // Enable rating buttons for this component
                 disableExplanation: "@" // Set to true to disable the explanation button

@@ -3,19 +3,28 @@ angular.module("yds").directive("ydsGridAdvanced", ["Data", "Filters", "$timeout
         return {
             restrict: "E",
             scope: {
-                projectId: "@",         // Id of the project that the data belong
-                viewType: "@",         	// Name of the array that contains the visualised data
+                projectId: "@",         // ID of the project that the data belong
+                viewType: "@",          // Name of the array that contains the visualised data
                 lang: "@",              // Lang of the visualised data
                 elementH: "@",          // Set the height of the component
-                pageSize: "@",			// Set the number of results rendered on each grid page
+                pageSize: "@",          // Set the number of results rendered on each grid page
 
-                combobox: "@",			// Set the types of the combobox filters (year, country)
-                comboboxLabels: "@",	// Set the labels that will be used for each combobox
-                comboboxAttrs: "@"		// Set the parameter each combobox will sent to the the server
+                combobox: "@",          // Set the types of the combobox filters (year, country)
+                comboboxLabels: "@",    // Set the labels that will be used for each combobox
+                comboboxAttrs: "@",     // Set the parameter each combobox will sent to the the server
+
+                addToBasket: "@",       // Enable or disable "add to basket" functionality, values: true, false
+                basketBtnX: "@",        // X-axis position of the basket button
+                basketBtnY: "@",        // Y-axis position of the basket button
+
+                embeddable: "@",        // Enable or disable the embedding of the component
+                embedBtnX: "@",         // X-axis position of the embed button
+                embedBtnY: "@",         // Y-axis position of the embed button
+                popoverPos: "@"         // The side of the embed button from which the embed window will appear
             },
             templateUrl: Data.templatePath + "templates/visualisation/grid-advanced.html",
             link: function (scope, element, attrs) {
-                // Reference the dom elements in which the yds-grid-advanced is rendered
+                // Reference the DOM elements in which the component is rendered
                 var gridWrapper = _.first(angular.element(element[0].querySelector(".component-wrapper")));
                 var gridContainer = _.first(angular.element(element[0].querySelector(".grid-container")));
 
