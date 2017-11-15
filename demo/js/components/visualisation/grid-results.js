@@ -555,7 +555,9 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                 }
 
                                 // Get all filter values, to know which was deselected later
-                                allFilterValues = Data.getFilterValuesFromData(responseView, rowsThisPage);
+                                if (_.isNull(allFilterValues)) {
+                                    allFilterValues = Data.getFilterValuesFromData(responseView, rowsThisPage);
+                                }
 
                                 // Notify the grid with the new rows
                                 params.successCallback(rowsThisPage, lastRow);
@@ -641,7 +643,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                                 if (deselected.length >= originalFilterValues.length) {
                                                     // If everything was deselected, add *
                                                     itemsToSend = "*";
-                                                } else if (deselected.length > originalFilterValues.length / 2) {
+                                                } else if (deselected.length > allowedItems.length) {
                                                     // More items are deselected than selected, send the selected ones
                                                     prefix = "+";
                                                     itemsToSend = allowedItems;
