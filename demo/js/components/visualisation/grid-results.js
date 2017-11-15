@@ -78,6 +78,8 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 var viewInDashboard = scope.viewInDashboard;
                 var enableViewButton = scope.enableViewButton;
 
+                var allFilterValues = null;
+
                 // If viewType is undefined we can't show the grid
                 if (_.isUndefined(grid.viewType) || grid.viewType.trim() === "") {
                     scope.ydsAlert = "The YDS component is not properly initialized " +
@@ -420,6 +422,8 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                         overflowSize: grid.pageSize,
                         pageSize: grid.pageSize,
                         getRows: function (params) {
+                            // console.log("Data source called with params", params);
+
                             // Function to be called when grid results are retrieved successfully
                             var gridResultDataSuccess = function (response) {
                                 // Extract needed variables from server response
@@ -500,6 +504,8 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                         columnDefs = addLinkRendererToColumnDefs(columnDefs);
                                     }
 
+                                    //todo: Add filters to column
+
                                     scope.gridOptions.api.setColumnDefs(columnDefs);
                                 }
 
@@ -547,6 +553,9 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                     // Save a sample object
                                     dataSampleObj = _.first(responseData);
                                 }
+
+                                // Get all filter values, to know which was deselected later
+                                allFilterValues = Data.getFilterValuesFromData(responseView, rowsThisPage);
 
                                 // Notify the grid with the new rows
                                 params.successCallback(rowsThisPage, lastRow);
@@ -612,14 +621,32 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                         rules: rules
                                     });
 
+                                    // Get filter parameters, if any
+                                    var filterExtraParams = {};
+
+                                    if (!_.isNull(allFilterValues) && _.has(params, "filterModel") && !_.isEmpty(params.filterModel)) {
+                                        // console.log("Filter model", params.filterModel);
+                                        // Find which items were removed from each filter, and add them to be sent
+                                        _.each(params.filterModel, function (allowedItems, key) {
+                                            var originalFilterValues = allFilterValues[key];
+                                            var deselected = _.difference(originalFilterValues, allowedItems);
+                                            // console.log("Deselected:", deselected);
+
+                                            if (!_.isEmpty(deselected)) {
+                                                var filterKey = "filter_" + key + "_deselected";
+                                                filterExtraParams[filterKey] = deselected;
+                                            }
+                                        });
+                                    }
+
                                     if (_.isUndefined(rules)) {
                                         // Perform normal search
-                                        Data.getGridResultData(query, facets, grid.viewType, params.startRow, grid.pageSize, grid.lang, params.sortModel)
+                                        Data.getGridResultData(query, facets, grid.viewType, params.startRow, grid.pageSize, grid.lang, params.sortModel, filterExtraParams)
                                             .then(gridResultDataSuccess, gridResultDataError);
                                     } else {
                                         // Rules were found, do an advanced search
                                         advancedSearch = true;
-                                        Data.getGridResultDataAdvanced(query, facets, rules, grid.viewType, params.startRow, grid.pageSize, grid.lang, params.sortModel)
+                                        Data.getGridResultDataAdvanced(query, facets, rules, grid.viewType, params.startRow, grid.pageSize, grid.lang, params.sortModel, filterExtraParams)
                                             .then(gridResultDataSuccess, gridResultDataError);
                                     }
                                 });
@@ -661,6 +688,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                             columnDefs: [],
                             enableColResize: (grid.colResize === "true"),
                             enableServerSideSorting: (grid.sorting === "true"),
+                            enableServerSideFilter: true,
                             virtualPaging: true,
                             datasource: dataSource
                         };

@@ -126,8 +126,13 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
         return calcMD5(str);
     };
 
+    /**
+     * Get the value of an object property, by defining its path
+     * @param obj
+     * @param path
+     * @returns {*}
+     */
     dataService.deepObjSearch = function (obj, path) {
-        //function to get the value of an object property, by defining its path
         for (var i = 0, path = path.split("."), len = path.length; i < len; i++) {
             if (_.isUndefined(obj)) {
                 obj = "";
@@ -778,6 +783,45 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
         });
 
         return deferred.promise;
+    };
+
+    /**
+     * Get the possible values for each grid column's filter. Aims to get the same items that ag-grid shows in the
+     * filter when we don't give it the available filter items.
+     * @param view  Grid view
+     * @param data  Grid data
+     * @returns {{}}
+     */
+    dataService.getFilterValuesFromData = function (view, data) {
+        var allFilterValues = {};
+        _.each(view, function (viewVal) {
+            if (viewVal.type !== "string-i18n" && viewVal.type !== "string") {
+                return;
+            }
+
+            var attribute = viewVal.attribute;
+
+            // Find values for this field
+            var allValues = [];
+
+            _.each(data, function (row) {
+                var val = row[attribute];
+
+                //todo: Find some values that are not found this way (i18n strings)...
+                // if (_.isUndefined(val)) {
+                //     console.log(attribute, "undefined for row", row);
+                // }
+                if (_.isArray(val)) {
+                    val = val.join(", ");
+                }
+                allValues.push(val);
+            });
+
+            // Keep only unique values
+            allFilterValues[attribute] = _.uniq(allValues);
+        });
+
+        return allFilterValues;
     };
 
     /**
