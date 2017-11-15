@@ -1,15 +1,15 @@
-angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$compile', '$templateRequest', 'Data', 'Basket', 'Workbench', 'Personalization',
+angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "$templateRequest", "Data", "Basket", "Workbench", "Personalization",
     function ($ocLazyLoad, $compile, $templateRequest, Data, Basket, Workbench, Personalization) {
         return {
-            restrict: 'E',
+            restrict: "E",
             scope: {
-                lang: '@',
-                userId: '@'
+                lang: "@",
+                userId: "@"
             },
-            templateUrl: Data.templatePath + 'templates/workbench/workbench-new.html',
+            templateUrl: Data.templatePath + "templates/workbench/workbench-new.html",
             link: function (scope, element) {
                 scope.ydsAlert = "";
-                var editorContainer = angular.element(element[0].querySelector('.highcharts-editor-container'));
+                var editorContainer = angular.element(element[0].querySelector(".highcharts-editor-container"));
 
                 //if userId is undefined or empty, stop the execution of the directive
                 if (_.isUndefined(scope.userId) || scope.userId.trim().length === 0) {
@@ -206,6 +206,33 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$compile', '
                 };
 
                 /**
+                 * Transform axes to the required format, and add them to the scope.
+                 * @param axes      Axes from Workbench view
+                 * @param suggested (Optional) suggestions from Personalization service
+                 */
+                var addAxesToScope = function (axes, suggested) {
+                    // Set suggested property on all axes, based on Personalisation API (random for now)
+                    _.each(axes, function (axis, key) {
+                        _.each(axis, function (item) {
+                            item.name = item.label; // Add name, same as label (needed for angular-tree-widget)
+
+                            // Make it suggested if the array of suggested axis items contains its ID
+                            if (!_.isNull(suggested)) {
+                                item.suggested = (suggested[key].indexOf(item.field_id) !== -1);
+                            }
+                        });
+                    });
+
+                    // Initialize/reset selected Y axes
+                    scope.selection.y = [{
+                        selected: "",
+                        options: axes.y
+                    }];
+
+                    scope.axes = axes;
+                };
+
+                /**
                  * Update the scope object which holds the selected view, when a view is selected from the drop down
                  * @param viewName  Name of view that was selected
                  */
@@ -228,23 +255,9 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$compile', '
                         // Get suggested axes for this concept for the Personalization API
                         Personalization.getSuggestedAxes(scope.chartConfig.selectedView, scopeAxes)
                             .then(function (data) {
-                                // Set suggested property on all axes, based on Personalisation API (random for now)
-                                _.each(scopeAxes, function (axis, key) {
-                                    _.each(axis, function (item) {
-                                        item.name = item.label; // Add name, same as label (needed for angular-tree-widget)
-
-                                        // Make it suggested if the array of suggested axis items contains its ID
-                                        item.suggested = (data[key].indexOf(item.field_id) !== -1);
-                                    });
-                                });
-
-                                // Initialize/reset selected Y axes
-                                scope.selection.y = [{
-                                    selected: "",
-                                    options: scopeAxes.y
-                                }];
-
-                                scope.axes = scopeAxes;
+                                addAxesToScope(scopeAxes, data);
+                            }, function (error) {
+                                addAxesToScope(scopeAxes, null);
                             });
                     } else {
                         scope.axes = undefined;
@@ -278,7 +291,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$compile', '
                     // If there is an empty combobox or the number of comboboxes is equal with the number
                     // of line axes, stop the execution of the function
                     if (nonSelectedCombo.length > 0 || scope.selection.y.length > 5 ||
-                        scope.selection.y.length == scope.axes.y.length) {
+                        scope.selection.y.length === scope.axes.y.length) {
                         return false;
                     } else {
                         // Create a new combobox with default values and append it to the combobox array
@@ -314,13 +327,13 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$compile', '
                         var axisYConfig = _.clone(chartAxisY);
 
                         // If the filtered attribute is already selected, return it
-                        if (axisYConfig[index].selected != null && axisYConfig[index].selected.attribute == item.attribute)
+                        if (!_.isNull(axisYConfig[index].selected) && axisYConfig[index].selected.attribute === item.attribute)
                             return item;
 
                         // Else search if the attribute is selected in one of the other compoboxes
                         axisYConfig.splice(index, 1);
                         if (axisYConfig.length > 0) {
-                            var existingCombos = _.where(_.pluck(axisYConfig, 'selected'), {attribute: item.attribute});
+                            var existingCombos = _.where(_.pluck(axisYConfig, "selected"), {attribute: item.attribute});
 
                             if (existingCombos.length > 0)
                                 attrSelected = true;
@@ -338,7 +351,7 @@ angular.module('yds').directive('ydsWorkbenchNew', ['$ocLazyLoad', '$compile', '
                  * @param item  Clicked item
                  */
                 scope.selectItem = function (item) {
-                    if (item.selected == true) {
+                    if (item.selected === true) {
                         // Remove item from selected items
                         scope.selectedItems = _.without(scope.selectedItems, item);
                     } else {
