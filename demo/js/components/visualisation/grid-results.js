@@ -611,27 +611,34 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                     if (!_.isNull(allFilterValues) && _.has(params, "filterModel") && !_.isEmpty(params.filterModel)) {
                                         // console.log("Filter model", params.filterModel);
                                         // Find which items were removed from each filter, and add them to be sent
-                                        _.each(params.filterModel, function (allowedItems, key) {
-                                            var originalFilterValues = allFilterValues[key];
+                                        _.each(params.filterModel, function (filterValue, key) {
+                                            if (_.has(allFilterValues, key)) {
+                                                // String type filter
+                                                var allowedItems = filterValue;
+                                                var originalFilterValues = allFilterValues[key];
 
-                                            // Start by getting the list of deselected items...
-                                            var deselected = _.difference(originalFilterValues, allowedItems);
-                                            // console.log("Deselected:", deselected);
+                                                // Start by getting the list of deselected items...
+                                                var deselected = _.difference(originalFilterValues, allowedItems);
+                                                // console.log("Deselected:", deselected);
 
-                                            if (!_.isEmpty(deselected)) {
-                                                var prefix = "-";   // By default, remove items
-                                                var itemsToSend = deselected;
+                                                if (!_.isEmpty(deselected)) {
+                                                    var prefix = "-";   // By default, remove items
+                                                    var itemsToSend = deselected;
 
-                                                if (deselected.length >= originalFilterValues.length) {
-                                                    // If everything was deselected, add *
-                                                    itemsToSend = "*";
-                                                } else if (deselected.length > allowedItems.length) {
-                                                    // More items are deselected than selected, send the selected ones
-                                                    prefix = "+";
-                                                    itemsToSend = allowedItems;
+                                                    if (deselected.length >= originalFilterValues.length) {
+                                                        // If everything was deselected, add *
+                                                        itemsToSend = "*";
+                                                    } else if (deselected.length > allowedItems.length) {
+                                                        // More items are deselected than selected, send the selected ones
+                                                        prefix = "+";
+                                                        itemsToSend = allowedItems;
+                                                    }
+
+                                                    filterExtraParams[prefix + key] = itemsToSend;
                                                 }
-
-                                                filterExtraParams[prefix + key] = itemsToSend;
+                                            } else {
+                                                // Send numeric filter
+                                                filterExtraParams["-" + key] = filterValue.type + " " + filterValue.filter;
                                             }
                                         });
                                     }
