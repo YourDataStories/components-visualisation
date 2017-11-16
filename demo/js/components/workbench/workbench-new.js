@@ -70,7 +70,7 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
                         // Add click event to the Editor's download buttons, to update the Personalization service
                         $("button.highed-imp-button > a:contains('Download')").parent().click(function () {
                             // Feed the Personalization service with a weight of 2
-                            Personalization.feed(scope.userId, scope.lang, lastTemplate, scope.chartConfig.selectedView, 2);
+                            Personalization.feed(scope.userId, scope.lang, lastTemplate, scope.chartConfig.selectedView.type, 2);
 
                             // Feed the axis selection to the Personalization service with weight of 2
                             feedAxisToPersonalization(2);
@@ -88,7 +88,7 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
                     // Save the template's ID to remember it in case the chart is exported
                     lastTemplate = templateId;
 
-                    var concept = scope.chartConfig.selectedView;
+                    var concept = scope.chartConfig.selectedView.type;
 
                     // Send parameters to personalisation server
                     if (!_.isUndefined(concept)) {
@@ -179,7 +179,7 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
 
                     // Feed the axis objects with the specified weight
                     _.each(axisIds, function (axisId) {
-                        Personalization.feed(undefined, scope.lang, axisId, scope.chartConfig.selectedView, weight);
+                        Personalization.feed(undefined, scope.lang, axisId, scope.chartConfig.selectedView.type, weight);
                     });
                 };
 
@@ -197,7 +197,7 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
                     };
 
                     // Get chart data
-                    Workbench.getLineBarVis("generic", scope.chartConfig.selectedView, selection.x, selection.y,
+                    Workbench.getLineBarVis("generic", scope.chartConfig.selectedView.type, selection.x, selection.y,
                         _.pluck(scope.selectedItems, "basket_item_id"), scope.lang, false).then(function (response) {
                         // Reset the chart preview
                         editor.chart.new();
@@ -241,11 +241,11 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
 
                 /**
                  * Update the scope object which holds the selected view, when a view is selected from the drop down
-                 * @param viewName  Name of view that was selected
+                 * @param viewType  Name of view that was selected
                  */
-                scope.selectView = function (viewName) {
+                scope.selectView = function (viewType) {
                     // Get the view object
-                    var view = _.findWhere(allViews, {type: viewName});
+                    var view = _.findWhere(allViews, {type: viewType});
 
                     // Get axes from the generic view object
                     var axes = _.findWhere(view.values, {
@@ -260,7 +260,7 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
                         };
 
                         // Get suggested axes for this concept for the Personalization API
-                        Personalization.getSuggestedAxes(scope.chartConfig.selectedView, scopeAxes)
+                        Personalization.getSuggestedAxes(scope.chartConfig.selectedView.type, scopeAxes)
                             .then(function (data) {
                                 addAxesToScope(scopeAxes, data);
                             }, function (error) {
@@ -271,7 +271,7 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
                     }
 
                     // Get suggested templates from the Personalization API
-                    Personalization.getSuggestedTemplates(scope.userId, scope.chartConfig.selectedView)
+                    Personalization.getSuggestedTemplates(scope.userId, scope.chartConfig.selectedView.type)
                         .then(function (data) {
                             // Add the suggested templates in the object
                             suggestedTemplates.templates = _.map(data, Personalization.getTemplateById);
@@ -381,7 +381,12 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
                         allViews = response.data;
 
                         // Add available views to the scope
-                        scope.availableViews = _.pluck(response.data, "type");
+                        scope.availableViews = _.map(response.data, function (viewItem) {
+                            return {
+                                label: (viewItem.label || viewItem.type),
+                                type: viewItem.type
+                            };
+                        });
                         scope.viewsLoaded = true;
                         scope.plotOptionsLoading = false;
                     }, function (error) {
