@@ -18,6 +18,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 addToBasket: "@",           // If true, will show basket button in the components that support it
                 selectionId: "@",           // ID for saving the selection for the specified dashboardId (used for grid)
                 selectionType: "@",         // Selection type for grid (single or multiple)
+                ignoreOwnSelection: "@",    // Ignore own selection (for some grids)
                 enableAdvSearch: "@",       // Enable/disable advanced search in Search Tabs component (default: true)
                 groupedData: "@",           // Used for grid, set to true if the data from the API will be grouped
                 numberOfItems: "@",         // Number of items for the grid, if needed

@@ -20,6 +20,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 selectionType: "@",     // Selection type ("single" or "multiple")
                 dashboardId: "@",       // Used for setting/getting parameters to/from DashboardService
                 selectionId: "@",       // ID for saving the selection for the specified dashboardId
+                ignoreOwnSelection: "@",// Set to true to ignore the grid's own selections (to prevent refreshing)
 
                 groupedData: "@",       // Set to true if the response from the API for your view type is grouped data
 
@@ -69,6 +70,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 var dashboardId = scope.dashboardId;
                 var selectionId = scope.selectionId;
                 var groupedData = scope.groupedData;
+                var ignoreOwnSelection = scope.ignoreOwnSelection;
 
                 // If selection is enabled, this will be used to reselect rows after refreshing the grid data
                 var selection = [];
@@ -134,6 +136,10 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 // Check if the groupedData attribute is defined, else assign default value
                 if (_.isUndefined(groupedData) || (groupedData !== "true" && groupedData !== "false"))
                     groupedData = "false";
+
+                // Check if the ignoreOwnSelection attribute is defined, else assign default value
+                if (_.isUndefined(ignoreOwnSelection) || (ignoreOwnSelection !== "true" && ignoreOwnSelection !== "false"))
+                    ignoreOwnSelection = "false";
 
                 // Check if the selectionType attribute is defined, else assign default value
                 if (_.isUndefined(selectionType) || (selectionType !== "single" && selectionType !== "multiple"))
@@ -448,6 +454,12 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 if (allowSelection === "true") {
                     // Watch for changes in extra parameters and update the grid
                     scope.$watch("extraParams", function (newValue, oldValue) {
+                        if (ignoreOwnSelection === "true") {
+                            // Remove own selection from the extra params, to not cause a refresh...
+                            newValue = _.omit(newValue, selectionId);
+                            oldValue = _.omit(oldValue, selectionId);
+                        }
+
                         // Check if the grid should update (ignoring the grid's own selections)
                         if (!_.isEqual(newValue, oldValue) && !preventUpdate) {
                             // Show loading animation and hide any errors
