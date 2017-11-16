@@ -693,8 +693,9 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
                 dataService.createNestedObject(newData[i], attributeTokens, attrValue);
 
                 // Do some further processing
-                //todo: Makes some advanced grids not work...
                 if (_.isUndefined(newData[i][viewVal.attribute])) {
+                    // Save old value and find new one
+                    var previouslyFoundValue = attrValue;
                     attrValue = dataService.findValueInResult(newData[i], viewVal.attribute, ["en", "el"], prefLang);
 
                     if (_.isUndefined(attrValue)) {
@@ -703,9 +704,12 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
                         attrValue = attrValue.join(", ");
                     }
 
-                    // If the new value is an object, prevent nested object creation
-                    // (the grid will display "[object Object]" if we create it)
-                    if (!_.isObject(attrValue)) {
+                    // Create nested object only if the new value isn't an object, and the old value was empty/not found
+                    // (the grid will display "[object Object]" if we create nested object with an object value)
+                    var prevValueNotFound = (_.isUndefined(previouslyFoundValue) ||
+                        (_.isString(previouslyFoundValue) && previouslyFoundValue.trim().length === 0));
+
+                    if (!_.isObject(attrValue) && prevValueNotFound) {
                         dataService.createNestedObject(newData[i], viewVal.attribute.split("."), attrValue);
                     }
                 }
