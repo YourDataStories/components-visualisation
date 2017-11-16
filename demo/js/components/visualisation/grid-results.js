@@ -78,7 +78,9 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 var viewInDashboard = scope.viewInDashboard;
                 var enableViewButton = scope.enableViewButton;
 
+                // Set variables for ag-grid filtering
                 var allFilterValues = null;
+                var filterOperators = ["=", "<", ">"];
 
                 // If viewType is undefined we can't show the grid
                 if (_.isUndefined(grid.viewType) || grid.viewType.trim() === "") {
@@ -638,7 +640,8 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                                 }
                                             } else {
                                                 // Send numeric filter
-                                                filterExtraParams["-" + key] = filterValue.type + " " + filterValue.filter;
+                                                filterExtraParams["+" + key] =
+                                                    filterOperators[filterValue.type - 1] + " " + filterValue.filter;
                                             }
                                         });
                                     }

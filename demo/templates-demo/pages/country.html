@@ -60,16 +60,46 @@
                     <uib-tab-heading>
                         <i class="fa fa-exchange" aria-hidden="true"></i> Trade Activities
                     </uib-tab-heading>
+
+                    <div class="row">
+                        <div class="col-md-12" style="text-align: center">
+                            <h4>Open Trade Activities Dashboard with {{ countryName }} as:</h4>
+                            <a ng-href="{{ tradeActivityBuyerUrl }}" target="_blank"
+                               class="btn btn-primary btn-lg">Buyer</a>
+                            <a ng-href="{{ tradeActivitySellerUrl }}" target="_blank"
+                               class="btn btn-primary btn-lg">Seller</a>
+                        </div>
+                    </div>
                 </uib-tab>
 
                 <!--Aid Activities-->
                 <uib-tab>
                     <uib-tab-heading><i class="fa fa-medkit" aria-hidden="true"></i> Aid Activities</uib-tab-heading>
+
+                    <div class="row">
+                        <div class="col-md-12" style="text-align: center">
+                            <h4>Open Aid Activities Dashboard with {{ countryName }} as:</h4>
+                            <a ng-href="{{ aidActivityBenefactorUrl }}" target="_blank"
+                               class="btn btn-primary btn-lg">Benefactor</a>
+                            <a ng-href="{{ aidActivityBeneficiaryUrl }}" target="_blank"
+                               class="btn btn-primary btn-lg">Beneficiary</a>
+                        </div>
+                    </div>
                 </uib-tab>
 
                 <!--Contracts-->
                 <uib-tab>
                     <uib-tab-heading><i class="fa fa-pencil" aria-hidden="true"></i> Contracts</uib-tab-heading>
+
+                    <div class="row">
+                        <div class="col-md-12" style="text-align: center">
+                            <h4>Open Contracts Dashboard with {{ countryName }} as:</h4>
+                            <a ng-href="{{ contractBuyerUrl }}" target="_blank"
+                               class="btn btn-primary btn-lg">Buyer</a>
+                            <a ng-href="{{ contractSellerUrl }}" target="_blank"
+                               class="btn btn-primary btn-lg">Seller</a>
+                        </div>
+                    </div>
                 </uib-tab>
 
                 <!--Indexes-->

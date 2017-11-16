@@ -10,13 +10,13 @@
                         ng-model="chartConfig.selectedView"
                         theme="bootstrap"
                         search-enabled="false"
-                        on-select="selectView(chartConfig.selectedView)"
+                        on-select="selectView(chartConfig.selectedView.type)"
                         title="Please select a view">
                     <ui-select-match placeholder="Please select a view">
-                        <span ng-bind="chartConfig.selectedView"></span>
+                        <span ng-bind="chartConfig.selectedView.label"></span>
                     </ui-select-match>
                     <ui-select-choices repeat="item in availableViews track by $index">
-                        <span ng-bind="item"></span>
+                        <span ng-bind="item.label"></span>
                     </ui-select-choices>
                 </ui-select>
             </div>
