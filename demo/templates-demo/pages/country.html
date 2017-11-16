@@ -53,6 +53,22 @@
                 <!--Datasets-->
                 <uib-tab>
                     <uib-tab-heading><i class="fa fa-database" aria-hidden="true"></i> Datasets</uib-tab-heading>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <yds-grid
+                                    project-id="{{ projectId }}"
+                                    view-type="country.datasets"
+                                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
+                                    sorting="true"
+                                    filtering="true"
+                                    element-h="300"
+                                    col-resize="true"
+                                    add-to-basket="false"
+                                    enable-rating="true">
+                            </yds-grid>
+                        </div>
+                    </div>
                 </uib-tab>
 
                 <!--Trade Activities-->
