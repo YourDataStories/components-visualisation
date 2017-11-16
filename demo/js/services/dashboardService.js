@@ -307,9 +307,10 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     }
                 }, {
                     name: "Sectors",
-                    type: "grid",
+                    type: "grid-grouped",
+                    checked: true,
                     params: {
-                        viewType: "aidactivity.sectors.for.countries.and.period",
+                        viewType: "aidactivity.sectors.for.countries.and.period.tree",
                         selectionId: "sectors"
                     }
                 }, {

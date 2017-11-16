@@ -1,7 +1,7 @@
 angular.module("yds").controller("DashboardDynamicController", ["$scope", "$timeout", "$location", "$anchorScroll", "$window", "$filter", "DashboardService",
     function ($scope, $timeout, $location, $anchorScroll, $window, $filter, DashboardService) {
         var scope = $scope;
-        var defaultDashboard = "tradeactivity";
+        var defaultDashboard = "aidactivity";
 
         scope.dashboardsConfig = {
             types: DashboardService.getDashboardTypes(),
