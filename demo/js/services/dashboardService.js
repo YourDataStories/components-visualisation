@@ -249,9 +249,9 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     checked: true,
                     params: {
                         viewType: "contract.buyers.all",
-                        // viewType: "publicproject.filter.buyers.all",
-                        // selectionId: "buyers"
                         selectionId: "buyer_organizations"
+                        // viewType: "publicproject.filter.buyers.all",
+                        // selectionId: "buyer_organizations"
                     }
                 }, {
                     name: "Sellers",
@@ -612,22 +612,11 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 apiOptions[dashboard.getYearParamName(dashboardId)] = "[" + minYear + " TO " + maxYear + "]";
             }
 
-            // Gather data for any grid filters
-            filters = _.where(enabledFilters, {type: "grid"});
-
-            _.each(filters, function (gridFilter) {
-                var selectionId = gridFilter.params.selectionId;
-                var selection = dashboard.getGridSelection(selectionId);
-
-                // Check that the selection is not undefined, and at least the 1st item has an "id" property
-                if (!_.isUndefined(selection) && _.has(_.first(selection), "id")) {
-                    selection = _.pluck(selection, "id");
-                    apiOptions[selectionId] = selection;
-                }
-            });
-
-            // Gather data for grid-grouped filters (they don't save whole objects, only IDs list
-            filters = _.where(enabledFilters, {type: "grid-grouped"});
+            // Gather data for any grid & grid-grouped filters
+            filters = _.union(
+                _.where(enabledFilters, {type: "grid"}),
+                _.where(enabledFilters, {type: "grid-grouped"})
+            );
 
             _.each(filters, function (gridFilter) {
                 var selectionId = gridFilter.params.selectionId;

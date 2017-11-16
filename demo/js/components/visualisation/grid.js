@@ -91,51 +91,51 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 if (_.isUndefined(grid.viewType) || grid.viewType.trim() === "")
                     grid.viewType = "default";
 
-                // Check if the language attr is defined, else assign default value
+                // Check if the language attribute is defined, else assign default value
                 if (_.isUndefined(grid.lang) || grid.lang.trim() === "")
                     grid.lang = "en";
 
-                // Check if the sorting attr is defined, else assign the default value
+                // Check if the sorting attribute is defined, else assign the default value
                 if (_.isUndefined(grid.sorting) || (grid.sorting !== "true" && grid.sorting !== "false"))
                     grid.sorting = "true";
 
-                // Check if the filtering attr is defined, else assign the default value
+                // Check if the filtering attribute is defined, else assign the default value
                 if (_.isUndefined(grid.filtering) || (grid.filtering !== "true" && grid.filtering !== "false"))
                     grid.filtering = "false";
 
-                // Check if the quick filtering attr is defined, else assign the default value
+                // Check if the quick filtering attribute is defined, else assign the default value
                 if (_.isUndefined(grid.quickFiltering) || (grid.quickFiltering !== "true" && grid.quickFiltering !== "false"))
                     grid.quickFiltering = "false";
 
-                // Check if the colResize attr is defined, else assign default value
+                // Check if the colResize attribute is defined, else assign default value
                 if (_.isUndefined(grid.colResize) || (grid.colResize !== "true" && grid.colResize !== "false"))
                     grid.colResize = "false";
 
-                // Check if the exporting attr is defined, else assign default value
+                // Check if the exporting attribute is defined, else assign default value
                 if (_.isUndefined(grid.exporting) || (grid.exporting !== "true" && grid.exporting !== "false"))
                     grid.exporting = "false";
 
-                // Check if the exportBtnX attr is defined, else assign default value
+                // Check if the exportBtnX attribute is defined, else assign default value
                 if (_.isUndefined(grid.exportBtnX) || _.isNaN(grid.exportBtnX))
                     grid.exportBtnX = 0;
 
-                // Check if the exportBtnY attr is defined, else assign default value
+                // Check if the exportBtnY attribute is defined, else assign default value
                 if (_.isUndefined(grid.exportBtnY) || _.isNaN(grid.exportBtnY))
                     grid.exportBtnY = 0;
 
-                // Check if the component's height attr is defined, else assign default value
+                // Check if the component's height attribute is defined, else assign default value
                 if (_.isUndefined(grid.elementH) || _.isNaN(grid.elementH))
                     grid.elementH = 200;
 
-                // Check if the allowSelection attr is defined, else assign default value
+                // Check if the allowSelection attribute is defined, else assign default value
                 if (_.isUndefined(allowSelection) || (allowSelection !== "true" && allowSelection !== "false"))
                     allowSelection = "false";
 
-                // Check if the groupedData attr is defined, else assign default value
+                // Check if the groupedData attribute is defined, else assign default value
                 if (_.isUndefined(groupedData) || (groupedData !== "true" && groupedData !== "false"))
                     groupedData = "false";
 
-                // Check if the selectionType attr is defined, else assign default value
+                // Check if the selectionType attribute is defined, else assign default value
                 if (_.isUndefined(selectionType) || (selectionType !== "single" && selectionType !== "multiple"))
                     selectionType = "multiple";
 
