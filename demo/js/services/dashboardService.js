@@ -260,7 +260,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     }
                 }, {
                     name: "CPVs",
-                    type: "grid",
+                    type: "grid-grouped",
+                    checked: true,
                     params: {
                         viewType: "contract.CPVs.for.countries.and.period",
                         selectionId: "cpvs"
@@ -620,6 +621,19 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 // Check that the selection is not undefined, and at least the 1st item has an "id" property
                 if (!_.isUndefined(selection) && _.has(_.first(selection), "id")) {
                     selection = _.pluck(selection, "id");
+                    apiOptions[selectionId] = selection;
+                }
+            });
+
+            // Gather data for grid-grouped filters (they don't save whole objects, only IDs list
+            filters = _.where(enabledFilters, {type: "grid-grouped"});
+
+            _.each(filters, function (gridFilter) {
+                var selectionId = gridFilter.params.selectionId;
+                var selection = dashboard.getGridSelection(selectionId);
+
+                // Check that the selection is not undefined, and at least the 1st item has an "id" property
+                if (!_.isUndefined(selection) && !_.isEmpty(selection)) {
                     apiOptions[selectionId] = selection;
                 }
             });
@@ -1147,6 +1161,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                             dashboard.subscribeSelectionChanges(scope, changeHandler));
                         break;
                     case "grid":
+                    case "grid-grouped":
                         subscriptions.push(
                             dashboard.subscribeGridSelectionChanges(scope, changeHandler));
                         break;

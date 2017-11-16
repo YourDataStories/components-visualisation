@@ -275,6 +275,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                         var time = params.data.time.trim();
                         switch (time) {
                             case "<b>1 Hour</b>":
+                                //todo: Check if this is still used in Traffic Observation dashboard and remove it...
                                 return {"background-color": "#DDF6D5"};
                                 break;
                             case "":

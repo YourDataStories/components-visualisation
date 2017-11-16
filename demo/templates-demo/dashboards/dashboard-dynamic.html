@@ -94,6 +94,22 @@
                             lang="{{ filter.params.lang || 'en' }}">
                     </yds-dashboard-updater>
 
+                    <!--Grid Grouped filter (e.g. for CPVs)-->
+                    <yds-dashboard-updater
+                            ng-switch-when="grid-grouped"
+                            type="selection-grid"
+                            grouped-data="true"
+                            project-id="none"
+                            view-type="{{ filter.params.viewType }}"
+                            dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
+                            selection-id="{{ filter.params.selectionId }}"
+                            dynamic-dashboard="true"
+                            number-of-items="{{ aggregateValues[filter.params.viewType] }}"
+                            base-url="http://platform.yourdatastories.eu/project-details"
+                            min-height="225"
+                            lang="{{ filter.params.lang || 'en' }}">
+                    </yds-dashboard-updater>
+
                     <div ng-switch-default><span style="color: red; font-weight: bold">
                         Filter not implemented. Configuration:</span> {{ filter }}
                     </div>
