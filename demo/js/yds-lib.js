@@ -693,6 +693,7 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
                 dataService.createNestedObject(newData[i], attributeTokens, attrValue);
 
                 // Do some further processing
+                //todo: Makes some advanced grids not work...
                 if (_.isUndefined(newData[i][viewVal.attribute])) {
                     attrValue = dataService.findValueInResult(newData[i], viewVal.attribute, ["en", "el"], prefLang);
 

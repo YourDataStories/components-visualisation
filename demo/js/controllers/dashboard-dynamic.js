@@ -1,10 +1,11 @@
 angular.module("yds").controller("DashboardDynamicController", ["$scope", "$timeout", "$location", "$anchorScroll", "$window", "$filter", "DashboardService",
     function ($scope, $timeout, $location, $anchorScroll, $window, $filter, DashboardService) {
         var scope = $scope;
+        var defaultDashboard = "tradeactivity";
 
         scope.dashboardsConfig = {
             types: DashboardService.getDashboardTypes(),
-            selectedDashboard: "contract",
+            selectedDashboard: defaultDashboard,
             filters: [],
             selectedFilters: []
         };
@@ -74,7 +75,7 @@ angular.module("yds").controller("DashboardDynamicController", ["$scope", "$time
                 case "grid":
                     return "col-md-6";
                 case "grid-grouped":
-                    return "col-md-7";
+                    return "col-md-12";
                 case "heatmap":
                     return "col-md-6";
                 case "year":
@@ -88,8 +89,8 @@ angular.module("yds").controller("DashboardDynamicController", ["$scope", "$time
             scope.aggregateToShow = tabIndex;
         };
 
-        // Select the contract Dashboard type as a default
-        scope.changeDashboardType("contract");
+        // Select the default Dashboard type
+        scope.changeDashboardType(defaultDashboard);
 
         // Subscribe to be notified of selected project changes
         DashboardService.subscribeProjectChanges(scope, function () {
