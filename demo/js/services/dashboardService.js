@@ -340,7 +340,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     name: "Sectors",
                     type: "grid-grouped",
                     params: {
-                        viewType: "tradeactivity.sectors.for.countries.and.period",
+                        viewType: "tradeactivity.sectors.for.countries.and.period.tree",
                         selectionId: "sectors"
                     }
                 }, {
