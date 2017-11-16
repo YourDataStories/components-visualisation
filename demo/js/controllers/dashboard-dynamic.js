@@ -74,7 +74,7 @@ angular.module("yds").controller("DashboardDynamicController", ["$scope", "$time
                 case "grid":
                     return "col-md-6";
                 case "grid-grouped":
-                    return "col-md-6";
+                    return "col-md-7";
                 case "heatmap":
                     return "col-md-6";
                 case "year":
