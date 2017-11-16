@@ -55,11 +55,6 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                 var dataView = null;
                 var preventUpdate = false;
 
-                // If extra params exist, add them to Filters
-                // if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
-                //     Filters.addExtraParamsFilter(grid.elementId, extraParams);
-                // }
-
                 // Check if project id or grid type are defined
                 if (_.isUndefined(grid.projectId) || grid.projectId.trim() === "") {
                     scope.ydsAlert = "The YDS component is not properly initialized " +
@@ -136,21 +131,26 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                             var isSelected = _.contains(selection, node.data.id);
 
                             if (isSelected) {
-                                // If the node we will select is in a group, we also need to expand its parent
-                                if (node.level > 0) {
-                                    node.parent.expanded = true;
-
-                                    // Call this so the grid will render the expanded group
-                                    scope.gridOptions.api.onGroupExpandedOrCollapsed();
-                                }
-
                                 // The node was selected before, so select it again
                                 scope.gridOptions.api.selectNode(node, true);
-                                scope.gridOptions.api.ensureNodeVisible(node);
                             }
 
                             preventUpdate = false;
                         });
+                    }
+                };
+
+                /**
+                 * Get the IDs of the selected items of the grid.
+                 * If there is an "id_original" attribute, use that, otherwise use the "id" attribute.
+                 * @param gridSelection Selection from ag-grid
+                 * @returns {*}         Array of IDs
+                 */
+                var getIdsFromSelection = function (gridSelection) {
+                    if (_.has(_.first(gridSelection), "id_original")) {
+                        return _.pluck(gridSelection, "id_original");
+                    } else {
+                        return _.pluck(gridSelection, "id");
                     }
                 };
 
@@ -178,16 +178,6 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                                     dataView = responseView;
                                 }
 
-                                // // Set number of loaded rows
-                                // //todo: check if this is needed here
-                                // if (params.endRow > scope.loadedRows) {
-                                //     scope.loadedRows = params.endRow;
-                                //
-                                //     if (scope.loadedRows > scope.resultsNum) {
-                                //         scope.loadedRows = scope.resultsNum;
-                                //     }
-                                // }
-
                                 // If there are no results, show empty grid
                                 if (_.isEmpty(responseData)) {
                                     params.successCallback(responseData, 0);
@@ -214,31 +204,6 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
 
                                 // Format the data returned from the API and add them to the grid
                                 var rowsThisPage = Data.prepareGridData(responseData, responseView);
-
-                                // Check if any rows have no value for some attribute
-                                _.each(rowsThisPage, function (row) {
-                                    // For each column of the table
-                                    _.each(responseView, function (column) {
-                                        var attr = column.attribute;
-
-                                        // If it's undefined, try to find it with similar attribute name
-                                        if (_.isUndefined(row[attr])) {
-                                            var newValue = Data.findValueInResult(row, attr, Search.geti18nLangs(), grid.lang);
-
-                                            if (_.isUndefined(newValue)) {
-                                                newValue = "";
-                                            } else if (_.isArray(newValue)) {
-                                                newValue = newValue.join(", ");
-                                            }
-
-                                            // If the new value is an object, prevent nested object creation
-                                            // (the grid will display "[object Object]" if we create it)
-                                            if (!_.isObject(newValue)) {
-                                                Data.createNestedObject(row, attr.split("."), newValue);
-                                            }
-                                        }
-                                    });
-                                });
 
                                 var lastRow = -1;
                                 if (scope.resultsNum <= params.endRow) {
@@ -309,7 +274,7 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                                 preventUpdate = !(!_.isEmpty(selection) && e.selectedRows.length < selection.length);
 
                                 // Get selected row IDs
-                                var selRows = _.pluck(e.selectedRows, "id");
+                                var selRows = getIdsFromSelection(e.selectedRows);
 
                                 // Set selected rows in DashboardService
                                 DashboardService.setGridSelection(selectionId, selRows);

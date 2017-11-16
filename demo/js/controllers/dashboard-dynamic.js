@@ -1,4 +1,4 @@
-angular.module('yds').controller('DashboardDynamicController', ['$scope', '$timeout', '$location', '$anchorScroll', '$window', '$filter', 'DashboardService',
+angular.module("yds").controller("DashboardDynamicController", ["$scope", "$timeout", "$location", "$anchorScroll", "$window", "$filter", "DashboardService",
     function ($scope, $timeout, $location, $anchorScroll, $window, $filter, DashboardService) {
         var scope = $scope;
 
@@ -19,7 +19,7 @@ angular.module('yds').controller('DashboardDynamicController', ['$scope', '$time
          */
         scope.updateSelectedFilters = function () {
             scope.dashboardsConfig.selectedFilters =
-                $filter('filter')(scope.dashboardsConfig.filters, {checked: true});
+                $filter("filter")(scope.dashboardsConfig.filters, {checked: true});
 
             // Save the selected filters to the DashboardService
             DashboardService.saveObject("filter", scope.dashboardsConfig.selectedFilters);
@@ -73,6 +73,8 @@ angular.module('yds').controller('DashboardDynamicController', ['$scope', '$time
             switch (filterType) {
                 case "grid":
                     return "col-md-6";
+                case "grid-grouped":
+                    return "col-md-7";
                 case "heatmap":
                     return "col-md-6";
                 case "year":

@@ -1,4 +1,4 @@
-<div class="container flex" ng-controller="CountryController">
+<div class="container" ng-controller="CountryController">
     <!--Header row-->
     <div class="row">
         <!--Country flag + name-->
@@ -47,9 +47,9 @@
     </div>
 
     <!--Tabs for Europam & Integrity Index-->
-    <div class="row flex" style="margin-top: 15px">
-        <div class="col-md-12 flex">
-            <uib-tabset justified="true" class="flex">
+    <div class="row" style="margin-top: 15px">
+        <div class="col-md-12">
+            <uib-tabset justified="true">
                 <!--Datasets-->
                 <uib-tab>
                     <uib-tab-heading><i class="fa fa-database" aria-hidden="true"></i> Datasets</uib-tab-heading>
@@ -103,13 +103,13 @@
                 </uib-tab>
 
                 <!--Indexes-->
-                <uib-tab class="flex">
+                <uib-tab>
                     <uib-tab-heading>
                         <img src="img/digiwhist-icon-2x.png" style="height: 14px; width: 14px;"/> Indexes
                     </uib-tab-heading>
-                    <uib-tabset type="pills" class="flex" style="min-height: 768px">
+                    <uib-tabset type="pills">
                         <!--Public Integrity Tab-->
-                        <uib-tab heading="Index of Public Integrity" class="flex">
+                        <uib-tab heading="Index of Public Integrity">
                             <div class="row">
                                 <div class="col-md-12 index-tab-controls-container">
                                     <!--Open in new tab button-->
@@ -128,18 +128,17 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="row flex">
+                            <div class="row">
                                 <!--Public Integrity iFrame-->
-                                <div class="col-md-12 flex">
-                                    <iframe ng-src="{{ publicIntegrityUrl }}"
-                                            frameborder="0"
-                                            class="flex"></iframe>
+                                <div class="col-md-12">
+                                    <iframe ng-src="{{ publicIntegrityUrl }}" frameborder="0"
+                                            style="width: 100%; min-height: 768px"></iframe>
                                 </div>
                             </div>
                         </uib-tab>
 
                         <!--Public Accountability (EuroPAM) tab-->
-                        <uib-tab heading="Index of Public Accountability" class="flex">
+                        <uib-tab heading="Index of Public Accountability">
                             <div class="row">
                                 <div class="col-md-12 index-tab-controls-container">
                                     <!--Open in new tab button-->
@@ -158,12 +157,11 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="row flex">
+                            <div class="row">
                                 <!--EuroPAM iFrame-->
-                                <div class="col-md-12 flex">
-                                    <iframe ng-src="{{ euroPamUrl }}"
-                                            frameborder="0"
-                                            class="flex"></iframe>
+                                <div class="col-md-12">
+                                    <iframe ng-src="{{ euroPamUrl }}" frameborder="0"
+                                            style="width: 100%; min-height: 768px"></iframe>
                                 </div>
                             </div>
                         </uib-tab>

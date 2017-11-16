@@ -142,7 +142,7 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
                                 scope.enablePaging = params.enablePaging;
                             }
 
-                            if (chart === "grid" && _.has(params, "gridtype")) {
+                            if (chart === "grid" && _.has(params, "gridtype") && params.gridtype !== "grid-adv") {
                                 if (_.has(params, "query")) {
                                     filters.q = params.query;
                                 }

@@ -96,8 +96,9 @@ angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile
                         // Add grid type to the URL
                         dataAnalysisUrl += keyValueToUrlParam("gridtype", gridType);
 
-                        // For grid-results grid, we also need to specify which API to use
-                        if (gridType === "grid-results") {
+                        // For grid-results grid, we also need to specify some extra parameters (and for grid advanced,
+                        // get the filters)
+                        if (gridType === "grid-results" || gridType === "grid-adv") {
                             var useGridApi = scope.useGridApi;
 
                             if (_.isUndefined(useGridApi)) {

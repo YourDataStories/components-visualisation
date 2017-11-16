@@ -250,6 +250,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     params: {
                         viewType: "contract.buyers.all",
                         selectionId: "buyer_organizations"
+                        // viewType: "publicproject.filter.buyers.all",
+                        // selectionId: "buyer_organizations"
                     }
                 }, {
                     name: "Sellers",
@@ -260,7 +262,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     }
                 }, {
                     name: "CPVs",
-                    type: "grid",
+                    type: "grid-grouped",
                     params: {
                         viewType: "contract.CPVs.for.countries.and.period",
                         selectionId: "cpvs"
@@ -336,9 +338,9 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     }
                 }, {
                     name: "Sectors",
-                    type: "grid",
+                    type: "grid-grouped",
                     params: {
-                        viewType: "tradeactivity.sectors.for.countries.and.period",
+                        viewType: "tradeactivity.sectors.for.countries.and.period.tree",
                         selectionId: "sectors"
                     }
                 }, {
@@ -610,17 +612,19 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 apiOptions[dashboard.getYearParamName(dashboardId)] = "[" + minYear + " TO " + maxYear + "]";
             }
 
-            // Gather data for any grid filters
-            filters = _.where(enabledFilters, {type: "grid"});
+            // Gather data for any grid & grid-grouped filters
+            filters = _.union(
+                _.where(enabledFilters, {type: "grid"}),
+                _.where(enabledFilters, {type: "grid-grouped"})
+            );
 
             _.each(filters, function (gridFilter) {
                 var selectionId = gridFilter.params.selectionId;
                 var selection = dashboard.getGridSelection(selectionId);
 
                 // Check that the selection is not undefined, and at least the 1st item has an "id" property
-                if (!_.isUndefined(selection) && _.has(_.first(selection), "id")) {
-                    selection = _.pluck(selection, "id");
-                    apiOptions[selectionId] = selection;
+                if (!_.isUndefined(selection) && !_.isEmpty(selection)) {
+                    apiOptions[selectionId] = selection.join(",");
                 }
             });
 
@@ -1147,6 +1151,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                             dashboard.subscribeSelectionChanges(scope, changeHandler));
                         break;
                     case "grid":
+                    case "grid-grouped":
                         subscriptions.push(
                             dashboard.subscribeGridSelectionChanges(scope, changeHandler));
                         break;
