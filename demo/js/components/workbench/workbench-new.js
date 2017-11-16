@@ -187,6 +187,9 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
                  * Add data to the chart depending on the selection that has been made in the view/axes selection tab
                  */
                 scope.createChart = function () {
+                    // Clear previous error message (if any)
+                    scope.ydsAlert = "";
+
                     // Get selected axes data
                     var selection = {
                         x: getValidAxisData(scope.selection.x),
@@ -205,7 +208,7 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
                         // Add data to chart
                         editor.chart.data.settings(response.data);
                     }, function (error) {
-                        console.error(error.message);
+                        scope.ydsAlert = error.data.message;
                     });
 
                     // Feed the axis selection to the Personalization service with weight of 1
