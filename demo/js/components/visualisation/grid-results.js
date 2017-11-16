@@ -640,7 +640,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                                 }
                                             } else {
                                                 // Send numeric filter
-                                                filterExtraParams["-" + key] =
+                                                filterExtraParams["+" + key] =
                                                     filterOperators[filterValue.type - 1] + " " + filterValue.filter;
                                             }
                                         });
