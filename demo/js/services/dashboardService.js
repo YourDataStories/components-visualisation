@@ -624,7 +624,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
                 // Check that the selection is not undefined, and at least the 1st item has an "id" property
                 if (!_.isUndefined(selection) && !_.isEmpty(selection)) {
-                    apiOptions[selectionId] = selection;
+                    apiOptions[selectionId] = selection.join(",");
                 }
             });
 
