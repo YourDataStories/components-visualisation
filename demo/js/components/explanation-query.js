@@ -99,7 +99,7 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
                 extraParams.explain_calls = 1;
 
                 // Simulate the component's original request
-                if (chartType !== "grid" || gridType === "grid") {
+                if (chartType !== "grid" || gridType === "grid" || gridType === "grid-adv") {
                     // Use regular project visualization function
                     Data.getProjectVis(chartType, projectId, viewType, lang, extraParams)
                         .then(responseSuccess, responseError);
