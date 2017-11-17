@@ -1,6 +1,5 @@
-angular.module('yds').factory('Workbench', ['YDS_CONSTANTS', '$q', '$http', 'Data',
+angular.module("yds").factory("Workbench", ["YDS_CONSTANTS", "$q", "$http", "Data",
     function (YDS_CONSTANTS, $q, $http, Data) {
-
         var slidesConfig = {
             noWrap: false,
             active: 0,
@@ -35,14 +34,14 @@ angular.module('yds').factory('Workbench', ['YDS_CONSTANTS', '$q', '$http', 'Dat
 
         return {
             init: function () {
-                //iterate through all the available vis options of the carousel and deactivate them
+                // Iterate through all the available vis options of the carousel and deactivate them
                 _.each(slidesConfig.slides, function (slideView) {
                     _.each(slideView.images, function (image) {
                         image.visible = false;
                     })
                 });
 
-                //initialize the configuration options of workbench
+                // Initialize the configuration options of workbench
                 workbenchConfig = {
                     alert: "",
                     selectedVis: "default",
@@ -67,7 +66,7 @@ angular.module('yds').factory('Workbench', ['YDS_CONSTANTS', '$q', '$http', 'Dat
                 return workbenchConfig;
             },
             initLineChart: function (elementId) {
-                //initialize the configuration options of the line chart component
+                // Initialize the configuration options of the line chart component
                 _.extend(lineChartConfig, baseChartConfig, {
                     options: {
                         chart: {renderTo: elementId},
@@ -83,7 +82,7 @@ angular.module('yds').factory('Workbench', ['YDS_CONSTANTS', '$q', '$http', 'Dat
                 return lineChartConfig;
             },
             initScatterChart: function (elementId) {
-                //initialize the configuration options of the scatter chart component
+                // Initialize the configuration options of the scatter chart component
                 _.extend(scatterChartConfig, baseChartConfig, {
                     options: {
                         chart: {
@@ -103,12 +102,12 @@ angular.module('yds').factory('Workbench', ['YDS_CONSTANTS', '$q', '$http', 'Dat
                 return scatterChartConfig;
             },
             initBarChart: function (elementId) {
-                //initialize the configuration options of the bar chart component
+                // Initialize the configuration options of the bar chart component
                 _.extend(barChartConfig, baseChartConfig, {
                     categories: [],
                     options: {
                         chart: {
-                            type: 'column',
+                            type: "column",
                             renderTo: elementId
                         },
                         title: {text: "Not available"},
@@ -116,10 +115,10 @@ angular.module('yds').factory('Workbench', ['YDS_CONSTANTS', '$q', '$http', 'Dat
                         legend: {enabled: true},
                         exporting: {enabled: true},
                         tooltip: {
-                            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                            '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
-                            footerFormat: '</table>',
+                            headerFormat: "<span style='font-size:10px'>{point.key}</span><table>",
+                            pointFormat: "<tr><td style='color:{series.color};padding:0'>{series.name}: </td>" +
+                            "<td style='padding:0'><b>{point.y:.0f}</b></td></tr>",
+                            footerFormat: "</table>",
                             shared: true,
                             useHTML: true
                         },
@@ -141,7 +140,7 @@ angular.module('yds').factory('Workbench', ['YDS_CONSTANTS', '$q', '$http', 'Dat
             checkVisAvailability: function (slideId, visType) {
                 return _.findWhere(slidesConfig.slides[slideId].images, {type: visType}).visible;
             },
-            getLineBarVis: function (visType, viewType, xAxis, yAxis, basketIds, lang, sparql) {
+            getWorkbenchVisualisation: function (visType, viewType, xAxis, yAxis, basketIds, lang, sparql) {
                 var visUrl = "";
                 var deferred = $q.defer();
 
@@ -161,14 +160,14 @@ angular.module('yds').factory('Workbench', ['YDS_CONSTANTS', '$q', '$http', 'Dat
                 }
 
                 // If sparql parameter is true add parameter to the URL
-                if (sparql == true) {
+                if (sparql === true) {
                     visUrl += "?sparql=1";
                 }
 
                 $http({
-                    method: 'POST',
+                    method: "POST",
                     url: visUrl,
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"},
                     data: {
                         lang: lang,
                         type: viewType,
@@ -187,11 +186,11 @@ angular.module('yds').factory('Workbench', ['YDS_CONSTANTS', '$q', '$http', 'Dat
             getAvailableVisualisations: function (lang, basketIds) {
                 var deferred = $q.defer();
 
-                //call the service with POST method
+                // Call the service with POST method
                 $http({
-                    method: 'POST',
+                    method: "POST",
                     url: "http://" + YDS_CONSTANTS.API_PLOT_INFO + "?lang=" + lang,
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"},
                     data: Data.transform(JSON.stringify(basketIds))
                 }).then(function (response) {
                     deferred.resolve(response.data);
@@ -205,14 +204,14 @@ angular.module('yds').factory('Workbench', ['YDS_CONSTANTS', '$q', '$http', 'Dat
                 return lineChartConfig.initialized;
             },
             addLineAxisY: function () {			// function used to add combobox entries for the configuration of the line chart visualization
-                // check if there is any combobox with default value
+                // Check if there is any combobox with default value
                 var nonSelectedCombo = _.where(lineChartConfig.axisYConfig, {selected: ""});
 
-                // if there is an empty combobox or the number of comboboxes is equals with number
-                // of the line axis, stop the excecution of the function
+                // If there is an empty combobox or the number of comboboxes is equals with number
+                // Of the line axis, stop the excecution of the function
                 if (nonSelectedCombo.length > 0 ||
                     lineChartConfig.axisYConfig.length > 5 ||
-                    lineChartConfig.axisYConfig.length == lineChartConfig.axisY.length) {
+                    lineChartConfig.axisYConfig.length === lineChartConfig.axisY.length) {
 
                     return false;
                 } else {
@@ -221,26 +220,26 @@ angular.module('yds').factory('Workbench', ['YDS_CONSTANTS', '$q', '$http', 'Dat
                         options: lineChartConfig.axisY
                     };
 
-                    //else create a new combobox with default values and append it to the combobox array
+                    // Else create a new combobox with default values and append it to the combobox array
                     lineChartConfig.axisYConfig.push(newCombo);
                 }
             },
-            removeLineAxisY: function (index) {		//function used to remove combobox entries for the configuration of the line chart visualization
+            removeLineAxisY: function (index) {		// Function used to remove combobox entries for the configuration of the line chart visualization
                 if (lineChartConfig.axisYConfig.length > 1)
                     lineChartConfig.axisYConfig.splice(index, 1);
             },
             getScatterChartStatus: function () {
                 return scatterChartConfig.initialized;
             },
-            addScatterAxisY: function () {			// function used to add combobox entries for the configuration of the scatter chart visualization
-                // check if there is any combobox with default value
+            addScatterAxisY: function () {			// Function used to add combobox entries for the configuration of the scatter chart visualization
+                // Check if there is any combobox with default value
                 var nonSelectedCombo = _.where(scatterChartConfig.axisYConfig, {selected: ""});
 
-                // if there is an empty combobox or the number of comboboxes is equals with number
+                // If there is an empty combobox or the number of comboboxes is equals with number
                 // of the scatter axis, stop the excecution of the function
                 if (nonSelectedCombo.length > 0 ||
                     scatterChartConfig.axisYConfig.length > 5 ||
-                    scatterChartConfig.axisYConfig.length == scatterChartConfig.axisY.length) {
+                    scatterChartConfig.axisYConfig.length === scatterChartConfig.axisY.length) {
 
                     return false;
                 } else {
@@ -249,26 +248,26 @@ angular.module('yds').factory('Workbench', ['YDS_CONSTANTS', '$q', '$http', 'Dat
                         options: scatterChartConfig.axisY
                     };
 
-                    //else create a new combobox with default values and append it to the combobox array
+                    // Else create a new combobox with default values and append it to the combobox array
                     scatterChartConfig.axisYConfig.push(newCombo);
                 }
             },
-            removeScatterAxisY: function (index) {		//function used to remove combobox entries for the configuration of the scatter chart visualization
+            removeScatterAxisY: function (index) {		// Function used to remove combobox entries for the configuration of the scatter chart visualization
                 if (scatterChartConfig.axisYConfig.length > 1)
                     scatterChartConfig.axisYConfig.splice(index, 1);
             },
             getBarChartStatus: function () {
                 return barChartConfig.initialized;
             },
-            addBarAxisY: function () {			// function used to add combobox entries for the configuration of the bar chart visualization
-                // check if there is any combobox with default value
+            addBarAxisY: function () {			// Function used to add combobox entries for the configuration of the bar chart visualization
+                // Check if there is any combobox with default value
                 var nonSelectedCombo = _.where(barChartConfig.axisYConfig, {selected: ""});
 
-                // if there is an empty combobox or the number of comboboxes is equals with number
+                // If there is an empty combobox or the number of comboboxes is equals with number
                 // of the bar axis, stop the execution of the function
                 if (nonSelectedCombo.length > 0 ||
                     barChartConfig.axisYConfig.length > 5 ||
-                    barChartConfig.axisYConfig.length == barChartConfig.axisY.length) {
+                    barChartConfig.axisYConfig.length === barChartConfig.axisY.length) {
 
                     return false;
                 } else {
@@ -277,11 +276,11 @@ angular.module('yds').factory('Workbench', ['YDS_CONSTANTS', '$q', '$http', 'Dat
                         options: barChartConfig.axisY
                     };
 
-                    //else create a new combobox with default values and append it to the combobox array
+                    // Else create a new combobox with default values and append it to the combobox array
                     barChartConfig.axisYConfig.push(newCombo);
                 }
             },
-            removeBarAxisY: function (index) {		//function used to remove combobox entries for the configuration of the bar chart visualization
+            removeBarAxisY: function (index) {		// Function used to remove combobox entries for the configuration of the bar chart visualization
                 if (barChartConfig.axisYConfig.length > 1)
                     barChartConfig.axisYConfig.splice(index, 1);
             }

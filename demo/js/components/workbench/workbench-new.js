@@ -200,7 +200,7 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
                     };
 
                     // Get chart data
-                    Workbench.getLineBarVis("generic", scope.chartConfig.selectedView.type, selection.x, selection.y,
+                    Workbench.getWorkbenchVisualisation("generic", scope.chartConfig.selectedView.type, selection.x, selection.y,
                         _.pluck(scope.selectedItems, "basket_item_id"), scope.lang, false).then(function (response) {
                         // Reset the chart preview
                         editor.chart.new();
@@ -375,10 +375,11 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
                     // Toggle the item's selection state
                     item.selected = !item.selected;
 
-                    var selectedItemIds = _.pluck(scope.selectedItems, "basket_item_id");
-
                     if (!_.isEmpty(scope.selectedItems)) {
-                        // Get available views and axes for this item
+                        // Get IDs of selected items
+                        var selectedItemIds = _.pluck(scope.selectedItems, "basket_item_id");
+
+                        // Get available views and axes for the selected items
                         scope.plotOptionsLoading = true;
                         Workbench.getAvailableVisualisations(scope.lang, selectedItemIds).then(function (response) {
                             // Keep view data to use for drop downs later

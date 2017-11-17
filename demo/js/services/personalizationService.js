@@ -109,7 +109,8 @@ angular.module("yds").factory("Personalization", ["$http", "$q", "YDS_CONSTANTS"
                 transformRequest: customRequestTransform,
                 data: {
                     JSONObjectList: JSON.stringify(allAxisIds)
-                }
+                },
+                timeout: 5000
             }).then(function (response) {
                 if (_.has(response.data, "output")) {
                     // Separate X and Y axis item IDs
