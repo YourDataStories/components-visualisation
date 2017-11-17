@@ -277,13 +277,9 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
             url: "/browse",
             templateUrl: "templates-demo/browse.html"
         })
-        .state("workbench", {
-            url: "/workbench",
-            templateUrl: "templates-demo/workbench/workbench.html"
-        })
         .state("workbench-new", {
             url: "/workbench-new",
-            templateUrl: "templates-demo/workbench/workbench-new.html"
+            templateUrl: "templates-demo/workbench-new.html"
         });
 });
 
