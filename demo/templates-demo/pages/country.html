@@ -123,7 +123,22 @@
                         <i class="fa fa-tachometer" aria-hidden="true"></i> World Development Indicators
                     </uib-tab-heading>
 
-                    World Development Indicators
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>World Development Indicators</h4>
+
+                            <yds-grid
+                                    project-id="{{ projectId }}"
+                                    view-type="country.indicator.search"
+                                    allow-selection="true"
+                                    sorting="true"
+                                    lang="el"
+                                    filtering="true"
+                                    quick-filtering="true"
+                                    element-h="300">
+                            </yds-grid>
+                        </div>
+                    </div>
                 </uib-tab>
 
                 <!--Indexes-->
