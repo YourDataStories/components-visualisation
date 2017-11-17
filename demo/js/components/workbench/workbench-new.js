@@ -8,8 +8,8 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
             },
             templateUrl: Data.templatePath + "templates/workbench/workbench-new.html",
             link: function (scope, element) {
+                var editorContainer = _.first(angular.element(element[0].querySelector(".highcharts-editor-container")));
                 scope.ydsAlert = "";
-                var editorContainer = angular.element(element[0].querySelector(".highcharts-editor-container"));
 
                 //if userId is undefined or empty, stop the execution of the directive
                 if (_.isUndefined(scope.userId) || scope.userId.trim().length === 0) {
@@ -65,7 +65,7 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
                             }
                         };
 
-                        editor = highed.YDSEditor(editorContainer[0], editorOptions, suggestedTemplates, createLibraryList, createViewSelector);
+                        editor = highed.YDSEditor(editorContainer, editorOptions, suggestedTemplates, createLibraryList, createViewSelector);
 
                         // Add click event to the Editor's download buttons, to update the Personalization service
                         $("button.highed-imp-button > a:contains('Download')").parent().click(function () {
@@ -377,26 +377,31 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
 
                     var selectedItemIds = _.pluck(scope.selectedItems, "basket_item_id");
 
-                    // Get available views and axes for this item
-                    scope.plotOptionsLoading = true;
-                    Workbench.getAvailableVisualisations(scope.lang, selectedItemIds).then(function (response) {
-                        // Keep view data to use for drop downs later
-                        allViews = response.data;
+                    if (!_.isEmpty(scope.selectedItems)) {
+                        // Get available views and axes for this item
+                        scope.plotOptionsLoading = true;
+                        Workbench.getAvailableVisualisations(scope.lang, selectedItemIds).then(function (response) {
+                            // Keep view data to use for drop downs later
+                            allViews = response.data;
 
-                        // Add available views to the scope
-                        scope.availableViews = _.map(response.data, function (viewItem) {
-                            return {
-                                label: (viewItem.label || viewItem.type),
-                                type: viewItem.type
-                            };
+                            // Add available views to the scope
+                            scope.availableViews = _.map(response.data, function (viewItem) {
+                                return {
+                                    label: (viewItem.label || viewItem.type),
+                                    type: viewItem.type
+                                };
+                            });
+                            scope.viewsLoaded = true;
+                            scope.plotOptionsLoading = false;
+                        }, function (error) {
+                            scope.ydsAlert = error.data.message;
+                            scope.viewsLoaded = false;
+                            scope.plotOptionsLoading = false;
                         });
-                        scope.viewsLoaded = true;
-                        scope.plotOptionsLoading = false;
-                    }, function (error) {
-                        scope.ydsAlert = error.data.message;
-                        scope.viewsLoaded = false;
-                        scope.plotOptionsLoading = false;
-                    });
+                    } else {
+                        // No items selected, so remove any previously selected view
+                        scope.chartConfig.selectedView = undefined;
+                    }
                 };
             }
         }
