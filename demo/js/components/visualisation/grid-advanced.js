@@ -22,6 +22,8 @@ angular.module("yds").directive("ydsGridAdvanced", ["Data", "Filters", "$timeout
                 embedBtnY: "@",         // Y-axis position of the embed button
                 popoverPos: "@",        // The side of the embed button from which the embed window will appear
 
+                explanationBtnX: "@",   // Explanation button horizontal position
+                explanationBtnY: "@",   // Explanation button vertical position
                 disableExplanation: "@" // Set to true to disable the explanation button
             },
             templateUrl: Data.templatePath + "templates/visualisation/grid-advanced.html",

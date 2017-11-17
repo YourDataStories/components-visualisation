@@ -49,14 +49,14 @@ angular.module("yds").directive("ydsBasketBtn", ["$compile", "Data", "Basket", "
 
                 if (!_.isUndefined(enableBasket) && enableBasket === "true") {
                     if (!_.isUndefined(projectId)) {
-                        var basketBtnX = scope.basketBtnX;		// Indicates the x position the embed button
-                        var basketBtnY = scope.basketBtnY;		// Indicates the y position the embed button
+                        var basketBtnX = scope.basketBtnX;		// Indicates the x position the basket button
+                        var basketBtnY = scope.basketBtnY;		// Indicates the y position the basket button
 
-                        // If embedBtnX property is undefined assign the default value
+                        // If basketBtnX property is undefined assign the default value
                         if (_.isUndefined(basketBtnX) || _.isNaN(basketBtnX))
                             basketBtnX = 12;
 
-                        // If embedBtnY property is undefined assign the default value
+                        // If basketBtnY property is undefined assign the default value
                         if (_.isUndefined(basketBtnY) || _.isNaN(basketBtnY))
                             basketBtnY = 12;
 
@@ -66,7 +66,7 @@ angular.module("yds").directive("ydsBasketBtn", ["$compile", "Data", "Basket", "
                             "<i class='fa fa-shopping-basket' aria-hidden='true'></i>" +
                             "</button>";
 
-                        // Compile the embed button and append it to the element's container
+                        // Compile the basket button and append it to the element's container
                         var compiledTemplate = $compile(basketBtnTemplate)(scope);
                         compiledTemplate.css("position", "absolute");
                         compiledTemplate.css("top", basketBtnY + "px");
