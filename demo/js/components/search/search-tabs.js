@@ -14,7 +14,7 @@ angular.module("yds").directive("ydsSearchTabs", ["Data", "Search", "$location",
             },
             templateUrl: Data.templatePath + "templates/search/search-tabs.html",
             link: function (scope) {
-                scope.initialized = false;	    // flag that indicated when the component is initialized
+                scope.initialized = false;	    // Flag that indicated when the component is initialized
                 scope.tabs = {};                // Object with tab information
                 scope.translations = Translations.getAll(scope.lang);   // Translations used for no results message
 
@@ -30,7 +30,7 @@ angular.module("yds").directive("ydsSearchTabs", ["Data", "Search", "$location",
                 var prevRules = "";             // Keeps previous advanced search rules
                 var prevTab = "";               // Keeps previous tab name value
 
-                // check if the language attr is defined, else assign default value
+                // Check if the language attribute is defined, else assign default value
                 if (_.isUndefined(scope.lang) || scope.lang.trim() === "")
                     scope.lang = "en";
 
@@ -38,7 +38,7 @@ angular.module("yds").directive("ydsSearchTabs", ["Data", "Search", "$location",
                 if (_.isUndefined(scope.enableAdvSearch) || (scope.enableAdvSearch !== "true" && scope.enableAdvSearch !== "false"))
                     scope.enableAdvSearch = "true";
 
-                // if no url parameter prefix is defined or it is only whitespace, use not parameter prefix
+                // if no url parameter prefix is defined or it is only whitespace, use no parameter prefix
                 if (_.isUndefined(paramPrefix) || (paramPrefix.trim() === "" && paramPrefix.length > 0)) {
                     paramPrefix = "";
                     scope.urlParamPrefix = "";
@@ -87,10 +87,10 @@ angular.module("yds").directive("ydsSearchTabs", ["Data", "Search", "$location",
                             // Update amounts of tabs
                             _.each(scope.tabs, function (tab) {
                                 if (_.has(response.tabResultCounts, tab.concept)) {
-                                    // update the tab's amount to the new one
+                                    // Update the tab's amount to the new one
                                     tab.amount = response.tabResultCounts[tab.concept];
                                 } else {
-                                    // set tab's amount to 0
+                                    // Set tab's amount to 0
                                     tab.amount = 0;
                                 }
                             });
@@ -174,8 +174,8 @@ angular.module("yds").directive("ydsSearchTabs", ["Data", "Search", "$location",
 
                 var pageLoadHandler = function () {
                     if (!scope.initialized) {
-                        urlChangeHandler();     // call url change handler to initialize the page
-                        pageLoadListener();     // remove event listener
+                        urlChangeHandler();     // Call url change handler to initialize the page
+                        pageLoadListener();     // Remove event listener
                     }
                 };
 

@@ -14,11 +14,11 @@ angular.module("yds").directive("ydsFacets", ["Data", "Search", "$location", "$w
                 scope.applyBtnText = "";		// Variable that contains the text shown inside the apply button (used for internationalization)
 
                 // Check if the tabbed attr is defined, else assign default value
-                if (angular.isUndefined(scope.tabbed) || scope.tabbed.trim() === "")
+                if (_.isUndefined(scope.tabbed) || scope.tabbed.trim() === "")
                     scope.tabbed = "false";
 
                 // Check if the language attr is defined, else assign default value
-                if (angular.isUndefined(scope.lang) || scope.lang.trim() === "")
+                if (_.isUndefined(scope.lang) || scope.lang.trim() === "")
                     scope.lang = "en";
 
                 // Define the text of the "Apply" button based on the components language
@@ -63,7 +63,8 @@ angular.module("yds").directive("ydsFacets", ["Data", "Search", "$location", "$w
                 };
 
                 /**
-                 * Transform the user selected facets list to a format which is valid as a URL parameter
+                 * Transform the user selected facets list to a format which is valid as a URL parameter and apply them
+                 * to the search, using either URL parameters or a redirection depending on Tabbed vs normal Search.
                  */
                 scope.applyFacets = function () {
                     var facetUrlParts = [];

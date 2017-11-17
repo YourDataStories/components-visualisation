@@ -11,7 +11,7 @@ app.factory("Search", ["$http", "$q", "$location", "YDS_CONSTANTS", "Data",
          * Trigger the callbacks of observers
          */
         var notifyObservers = function (observerStack) {
-            angular.forEach(observerStack, function (callback) {
+            _.forEach(observerStack, function (callback) {
                 callback();
             });
         };
@@ -23,8 +23,9 @@ app.factory("Search", ["$http", "$q", "$location", "YDS_CONSTANTS", "Data",
         var saveFacets = function (response) {
             var responseQ = response.data.responseHeader.params.q;
 
-            // Check that the response is for the current keyword
-            if (responseQ === keyword) {
+            // Check that the response is for the current keyword, or that the search box is empty (when this happens,
+            // the saved keyword is undefined and facets are for "*" search keyword)
+            if (responseQ === keyword || (responseQ === "*" && _.isUndefined(keyword))) {
                 // Get the facet view from the response of the search API
                 facetsView = _.find(response.view, function (view) {
                     return "SearchFacets" in view
