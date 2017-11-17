@@ -37,6 +37,8 @@
             <div ng-if="disableNormalisation != 'true'" class="pull-right" style="margin-right: 20px;">
                 <span>{{ translations.normalisePrompt }}</span>
                 <div class="btn-group btn-group-sm">
+                    <label class="btn btn-default" ng-model="normaliseRadio.value" uib-btn-radio="'no'">
+                        {{ translations.noNorm }}</label>
                     <label class="btn btn-default" ng-model="normaliseRadio.value" uib-btn-radio="'gdp'">
                         {{ translations.gdp }}</label>
                     <label class="btn btn-default" ng-model="normaliseRadio.value" uib-btn-radio="'percapita'">

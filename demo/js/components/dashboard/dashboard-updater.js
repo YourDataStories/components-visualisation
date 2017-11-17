@@ -49,7 +49,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 // Keep previous parameter values, to check if the component needs to be re-rendered
                 var prevParams = null;
                 var prevAggregateType = "amount";
-                var prevNormaliseType = "gdp";
+                var prevNormaliseType = "no";
 
                 // If type is undefined, set default value
                 if (_.isUndefined(scope.type) || scope.type.trim() === "")
@@ -167,7 +167,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                         // If the normaliseType attribute is defined (and valid), add it to the extra parameters
                         var normaliseType = scope.normaliseType;
                         if (!_.isUndefined(normaliseType) &&
-                            (normaliseType === "gdp" || normaliseType === "percapita")) {
+                            (normaliseType === "no" ||normaliseType === "gdp" || normaliseType === "percapita")) {
                             scope.extraParams = _.extend({
                                 normalise: normaliseType
                             }, scope.extraParams);
@@ -261,7 +261,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
 
                 // If the normaliseType attribute is defined, watch it for changes and update the chart
                 if (!_.isUndefined(scope.normaliseType) &&
-                    (scope.normaliseType === "gdp" || scope.aggregateType === "percapita")) {
+                    (scope.normaliseType === "no" || scope.normaliseType === "gdp" || scope.aggregateType === "percapita")) {
                     scope.$watch("normaliseType", updateExtraParams);
                 }
 

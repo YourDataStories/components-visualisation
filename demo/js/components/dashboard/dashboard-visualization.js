@@ -36,7 +36,7 @@ angular.module("yds").directive("ydsDashboardVisualization", ["DashboardService"
                 };
 
                 scope.normaliseRadio = {
-                    value: "gdp"
+                    value: "no"
                 };
 
                 scope.enableBudget = false;         // Budget button disabled by default
@@ -50,6 +50,7 @@ angular.module("yds").directive("ydsDashboardVisualization", ["DashboardService"
                         count: "Αριθμός",
                         tooltip: "Επιλέξτε αν τα γραφήματα θα παρουσιάζουν ποσά ή αριθμούς αντικειμένων.",
                         prompt: "Προβολή:",
+                        noNorm: "No Norm.",
                         gdp: "GDP",
                         pcap: "Per capita",
                         normalisePrompt: "Normalise:"
@@ -62,6 +63,7 @@ angular.module("yds").directive("ydsDashboardVisualization", ["DashboardService"
                         count: "Number",
                         tooltip: "Select whether visualisations will present amounts or counts over items.",
                         prompt: "Show:",
+                        noNorm: "No Norm.",
                         gdp: "GDP",
                         pcap: "Per capita",
                         normalisePrompt: "Normalise:"
