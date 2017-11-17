@@ -484,6 +484,42 @@ app.factory("Search", ["$http", "$q", "$location", "YDS_CONSTANTS", "Data",
             return deferred.promise;
         };
 
+        /**
+         * Get available values for one or more grid column filters.
+         * @param concept       Concept to get values for
+         * @param attributes    Attributes list with the attributes to get values for
+         */
+        var getSearchFieldValues = function (concept, attributes) {
+            // Get filters from server
+            var deferred = $q.defer();
+
+            // (Temporary?) Remove .el or .en from end of attribute, if it's there...
+            attributes = _.map(attributes, function (attr) {
+                var langPos = attr.length - 3;
+                if (attr.indexOf(".en") === langPos || attr.indexOf(".el") === langPos) {
+                    return attr.substr(0, langPos);
+                } else {
+                    return attr;
+                }
+            });
+
+            $http({
+                method: "GET",
+                url: "http://" + YDS_CONSTANTS.API_SEARCH_FIELD_VALUES,
+                params: {
+                    type: concept,
+                    field: attributes.join(",")
+                },
+                headers: {"Content-Type": "application/json"}
+            }).then(function (response) {
+                deferred.resolve(response.data);
+            }, function (error) {
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
+        };
+
         return {
             setKeyword: function (newKeyword) {
                 keyword = newKeyword
@@ -501,6 +537,7 @@ app.factory("Search", ["$http", "$q", "$location", "YDS_CONSTANTS", "Data",
             getSearchTabs: getSearchTabs,
             getSuggestions: getSuggestions,
             getQueryBuilderFilters: getQueryBuilderFilters,
+            getSearchFieldValues: getSearchFieldValues,
 
             geti18nLangs: function () {
                 return i18nLangs

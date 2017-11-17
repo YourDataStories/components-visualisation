@@ -40,6 +40,7 @@ app.constant("YDS_CONSTANTS", {
     "API_GEOJSON_GR": "platform.yourdatastories.eu/api/json-ld/geo/greece",
     "API_DESCRIBE": "platform.yourdatastories.eu/api/json-ld/model/describe.tcl",
     "API_GRAPH_NODE": "platform.yourdatastories.eu/api/json-ld/graph/node.tcl",
+    "API_SEARCH_FIELD_VALUES": "platform.yourdatastories.eu/api/json-ld/component/search_field_values.tcl",
 
     "SEARCH_RESULTS_URL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search",
     "SEARCH_RESULTS_URL_EL": "http://ydsdev.iit.demokritos.gr/YDSComponents/#!/search-el",
@@ -358,6 +359,7 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
 
     /**
      * Get options for the combobox-selector component
+     * @param query
      * @param facet_field
      */
     dataService.getComboboxFacetItems = function (query, facet_field) {
@@ -502,7 +504,6 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
         // Return the last object in the hierarchy:
         return base;
     };
-
 
     /**
      * Find a value in the data even if the attribute name in the view doesn't match exactly

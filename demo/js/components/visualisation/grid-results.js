@@ -510,6 +510,20 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                         }
                                     });
 
+                                    // Only for trade activities for now...
+                                    if (grid.viewType === "TradeActivity") {
+                                        // Get attribute names for which we need to get search field values for
+                                        var attributeViews = _.filter(responseView, function (viewItem) {
+                                            return _.contains(["string", "string-i18n"], viewItem.type);
+                                        });
+
+                                        // Get filter values from search field values service
+                                        Search.getSearchFieldValues(grid.viewType, _.pluck(attributeViews, "attribute"))
+                                            .then(function (response) {
+                                                //todo
+                                            });
+                                    }
+
                                     if (enableViewButton === "true") {
                                         // Make the 1st column have links to more details
                                         columnDefs = addLinkRendererToColumnDefs(columnDefs);
