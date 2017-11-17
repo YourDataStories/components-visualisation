@@ -1207,6 +1207,7 @@ a.aggregate_link_bright:after, a.aggregate_link_dark:after {
 /* Make Highcharts Editor take up 75% of the viewport height */
 .highcharts-editor-container {
     height: 75vh;
+    min-height: 450px;
 }
 
 /* Show scrollbar in view/axes selection step of Workbench if content is too long */
