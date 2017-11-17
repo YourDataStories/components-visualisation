@@ -512,6 +512,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                     });
 
                                     // Only for trade activities for now...
+                                    var allowedFilterTypes = ["string-i18n", "string", "integer", "float", "year"];
                                     if (grid.viewType === "TradeActivity") {
                                         var customFilterValuesTypes = ["string", "string-i18n"];
 
@@ -526,10 +527,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                             .then(function (response) {
                                                 allFilterValues = response;
 
-                                                console.log(response);
-
                                                 // Enable filters for columns that are of the supported types
-                                                var allowedFilterTypes = ["string-i18n", "string", "integer", "float", "year"];
                                                 _.each(responseView, function (viewItem, index) {
                                                     if (_.contains(allowedFilterTypes, viewItem.type)) {
                                                         // Get the column definition
@@ -557,6 +555,12 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                                 //todo: Check before doing this.
                                                 scope.gridOptions.api.sizeColumnsToFit();
                                             });
+                                    } else {
+                                        // Temporary solution until filtering is enabled for all concepts
+                                        _.each(responseView, function (viewItem, index) {
+                                            // Disable filters for columns that are not of the supported types
+                                            columnDefs[index].suppressMenu = !_.contains(allowedFilterTypes, viewItem.type);
+                                        });
                                     }
 
                                     scope.gridOptions.api.setColumnDefs(columnDefs);
@@ -580,6 +584,11 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                 if (_.isNull(dataSampleObj) && !useGridProcessing) {
                                     // Save a sample object
                                     dataSampleObj = _.first(responseData);
+                                }
+
+                                // Get all filter values, to know which was deselected later
+                                if (_.isNull(allFilterValues)) {
+                                    allFilterValues = Data.getFilterValuesFromData(responseView, rowsThisPage);
                                 }
 
                                 // Notify the grid with the new rows
