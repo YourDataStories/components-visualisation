@@ -515,7 +515,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                     });
 
                                     // Only for trade activities for now...
-                                    var allowedFilterTypes = ["string-i18n", "string", "integer", "float", "year"];
+                                    var allowedFilterTypes = ["string-i18n", "string", "integer", "float", "year", "format_to_amount"];
                                     if (grid.viewType === "TradeActivity") {
                                         var customFilterValuesTypes = ["string", "string-i18n"];
 
