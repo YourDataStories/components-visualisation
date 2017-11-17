@@ -25,6 +25,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 baseUrl: "@",               // Base URL to send to API
                 aggregateType: "@",         // Type of aggregation that the displayed chart should make (count/amount)
 
+                quickFiltering: "@",        // Enable or disable quick filtering in selection grid
                 enableGridViewBtn: "@",     // Enable or disable the view button in grid-paging
                 enableSelection: "@",       // Enable or disable day selection in traffic-observation component
                 minHeight: "@",             // Minimum height of this component's container
