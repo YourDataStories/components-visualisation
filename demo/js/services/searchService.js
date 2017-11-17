@@ -493,16 +493,6 @@ app.factory("Search", ["$http", "$q", "$location", "YDS_CONSTANTS", "Data",
             // Get filters from server
             var deferred = $q.defer();
 
-            // (Temporary?) Remove .el or .en from end of attribute, if it's there...
-            attributes = _.map(attributes, function (attr) {
-                var langPos = attr.length - 3;
-                if (attr.indexOf(".en") === langPos || attr.indexOf(".el") === langPos) {
-                    return attr.substr(0, langPos);
-                } else {
-                    return attr;
-                }
-            });
-
             $http({
                 method: "GET",
                 url: "http://" + YDS_CONSTANTS.API_SEARCH_FIELD_VALUES,
@@ -512,7 +502,7 @@ app.factory("Search", ["$http", "$q", "$location", "YDS_CONSTANTS", "Data",
                 },
                 headers: {"Content-Type": "application/json"}
             }).then(function (response) {
-                deferred.resolve(response.data);
+                deferred.resolve(response.data.data);
             }, function (error) {
                 deferred.reject(error);
             });

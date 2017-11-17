@@ -501,32 +501,62 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                     // Format the column definitions returned from the API
                                     var columnDefs = Data.prepareGridColumns(responseView);
 
-                                    // Disable filters for columns that are not of the supported types
-                                    var allowedFilterTypes = ["string-i18n", "string", "integer", "float", "year"];
-                                    _.each(responseView, function (viewItem, index) {
-                                        if (!_.contains(allowedFilterTypes, viewItem.type)) {
-                                            // Disable filters on the corresponding column definition
-                                            columnDefs[index].suppressMenu = true;
-                                        }
+                                    if (enableViewButton === "true") {
+                                        // Make the 1st column have links to more details
+                                        columnDefs = addLinkRendererToColumnDefs(columnDefs);
+                                    }
+
+                                    // Turn off filtering for all columns, for now
+                                    _.each(columnDefs, function (columnDef) {
+                                        columnDef.suppressMenu = true;
                                     });
 
                                     // Only for trade activities for now...
                                     if (grid.viewType === "TradeActivity") {
+                                        var customFilterValuesTypes = ["string", "string-i18n"];
+
                                         // Get attribute names for which we need to get search field values for
                                         var attributeViews = _.filter(responseView, function (viewItem) {
-                                            return _.contains(["string", "string-i18n"], viewItem.type);
+                                            return _.contains(customFilterValuesTypes, viewItem.type);
                                         });
 
-                                        // Get filter values from search field values service
+                                        // Get filter values from search field values service. If the request fails,
+                                        // we do nothing and continue with disabled filtering
                                         Search.getSearchFieldValues(grid.viewType, _.pluck(attributeViews, "attribute"))
                                             .then(function (response) {
-                                                //todo
-                                            });
-                                    }
+                                                allFilterValues = response;
 
-                                    if (enableViewButton === "true") {
-                                        // Make the 1st column have links to more details
-                                        columnDefs = addLinkRendererToColumnDefs(columnDefs);
+                                                console.log(response);
+
+                                                // Enable filters for columns that are of the supported types
+                                                var allowedFilterTypes = ["string-i18n", "string", "integer", "float", "year"];
+                                                _.each(responseView, function (viewItem, index) {
+                                                    if (_.contains(allowedFilterTypes, viewItem.type)) {
+                                                        // Get the column definition
+                                                        var colDef = columnDefs[index];
+
+                                                        // Enable filtering on it
+                                                        colDef.suppressMenu = false;
+
+                                                        // If the type of the column should have custom filter values, set them
+                                                        if (_.contains(customFilterValuesTypes, viewItem.type)) {
+                                                            colDef.filter = "set";
+                                                            colDef.filterParams = {
+                                                                values: allFilterValues[viewItem.attribute],
+                                                                newRowsAction: "keep"
+                                                            };
+                                                        }
+
+                                                        columnDefs[index] = colDef;
+                                                    }
+                                                });
+
+                                                // Set column definitions again, this time with filters...
+                                                scope.gridOptions.api.setColumnDefs(columnDefs);
+
+                                                //todo: Check before doing this.
+                                                scope.gridOptions.api.sizeColumnsToFit();
+                                            });
                                     }
 
                                     scope.gridOptions.api.setColumnDefs(columnDefs);
@@ -550,11 +580,6 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                 if (_.isNull(dataSampleObj) && !useGridProcessing) {
                                     // Save a sample object
                                     dataSampleObj = _.first(responseData);
-                                }
-
-                                // Get all filter values, to know which was deselected later
-                                if (_.isNull(allFilterValues)) {
-                                    allFilterValues = Data.getFilterValuesFromData(responseView, rowsThisPage);
                                 }
 
                                 // Notify the grid with the new rows
