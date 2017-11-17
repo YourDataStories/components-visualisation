@@ -3,24 +3,25 @@ angular.module("yds").directive("ydsDashboardVisualization", ["DashboardService"
         return {
             restrict: "E",
             scope: {
-                projectId: "@",         // Project ID of chart
-                dashboardId: "@",       // ID used for getting selected year range from DashboardService
-                addToBasket: "@",       // If true, the save to basket button will appear in visualizations
-                disableColor: "@",      // If true, the component will ignore the color of the selected aggregate type
-                defaultChart: "@",      // Chart to show on initialization of the component. Default is "bar".
-                type: "@",              // View type of component. If not set, will get it from DashboardService
-                lang: "@",              // Language of charts
-                baseUrl: "@",           // Base URL to send to API
-                title: "@",             // Title of component
-                elementH: "@",          // Height of component
-                dynamicDashboard: "@",  // Set to true if you are using this in a Dashboard with dynamic filters
+                projectId: "@",             // Project ID of chart
+                dashboardId: "@",           // ID used for getting selected year range from DashboardService
+                addToBasket: "@",           // If true, the save to basket button will appear in visualizations
+                disableColor: "@",          // If true, the component will ignore the color of the selected aggregate type
+                defaultChart: "@",          // Chart to show on initialization of the component. Default is "bar".
+                type: "@",                  // View type of component. If not set, will get it from DashboardService
+                lang: "@",                  // Language of charts
+                baseUrl: "@",               // Base URL to send to API
+                title: "@",                 // Title of component
+                elementH: "@",              // Height of component
+                dynamicDashboard: "@",      // Set to true if you are using this in a Dashboard with dynamic filters
 
-                numberOfItems: "@",     // Number of items that the charts are expected to show. If too big, will use paging
-                pagingThreshold: "@",   // Number of items that when exceeded, components with paging should be used
+                numberOfItems: "@",         // Number of items that the charts are expected to show. If too big, will use paging
+                pagingThreshold: "@",       // Number of items that when exceeded, components with paging should be used
 
-                disableAggregates: "@", // If true, will disable the extra filters for amount/count
+                disableAggregates: "@",     // If true, will disable the extra filters for amount/count
+                disableNormalisation: "@",  // If true, will disable the extra filters for GDP/per capita
 
-                enableRating: "@"       // Enable rating buttons for this component
+                enableRating: "@"           // Enable rating buttons for this component
             },
             templateUrl: Data.templatePath + "templates/dashboard/dashboard-visualization.html",
             link: function (scope) {
@@ -33,6 +34,11 @@ angular.module("yds").directive("ydsDashboardVisualization", ["DashboardService"
                 scope.aggregateRadio = {
                     value: "amount"
                 };
+
+                scope.normaliseRadio = {
+                    value: "gdp"
+                };
+
                 scope.enableBudget = false;         // Budget button disabled by default
 
                 // Set the amount/count button translations and, if needed, the default title
@@ -43,7 +49,10 @@ angular.module("yds").directive("ydsDashboardVisualization", ["DashboardService"
                         budget: "Προϋπολογισμός",
                         count: "Αριθμός",
                         tooltip: "Επιλέξτε αν τα γραφήματα θα παρουσιάζουν ποσά ή αριθμούς αντικειμένων.",
-                        prompt: "Προβολή:"
+                        prompt: "Προβολή:",
+                        gdp: "GDP",
+                        pcap: "Per capita",
+                        normalisePrompt: "Normalise:"
                     };
                 } else {
                     scope.title = scope.title || "Details";
@@ -52,7 +61,10 @@ angular.module("yds").directive("ydsDashboardVisualization", ["DashboardService"
                         budget: "Budget",
                         count: "Number",
                         tooltip: "Select whether visualisations will present amounts or counts over items.",
-                        prompt: "Show:"
+                        prompt: "Show:",
+                        gdp: "GDP",
+                        pcap: "Per capita",
+                        normalisePrompt: "Normalise:"
                     };
                 }
 
@@ -160,7 +172,7 @@ angular.module("yds").directive("ydsDashboardVisualization", ["DashboardService"
                 };
 
                 /**
-                 * Handles view type selection changes
+                 * Handle view type selection changes
                  */
                 var viewTypeChangeHandler = function () {
                     updateViewType();

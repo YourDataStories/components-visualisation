@@ -5,14 +5,18 @@
 
             <!--Chart type radio buttons-->
             <div class="btn-group btn-group-sm pull-right" id="vistypes">
-                <label ng-model="selectedVis" uib-btn-radio="'grid'" ng-click="selectVis('grid')" class="btn btn-default" title="Grid View">
+                <label ng-model="selectedVis" uib-btn-radio="'grid'"
+                       ng-click="selectVis('grid')" class="btn btn-default" title="Grid View">
                     <i class="fa fa-list-alt" aria-hidden="true"></i></label>
-                <label ng-model="selectedVis" uib-btn-radio="'pie'" ng-click="selectVis('pie')" class="btn btn-default" title="Pie Chart">
+                <label ng-model="selectedVis" uib-btn-radio="'pie'"
+                       ng-click="selectVis('pie')" class="btn btn-default" title="Pie Chart">
                     <i class="fa fa-pie-chart" aria-hidden="true"></i></label>
-                <label ng-model="selectedVis" uib-btn-radio="'bar'" ng-click="selectVis('bar')" class="btn btn-default" title="Bar Chart">
+                <label ng-model="selectedVis" uib-btn-radio="'bar'"
+                       ng-click="selectVis('bar')" class="btn btn-default" title="Bar Chart">
                     <i class="fa fa-bar-chart" aria-hidden="true"></i></label>
-                <label ng-model="selectedVis" uib-btn-radio="'tree'" ng-click="selectVis('tree')" class="btn btn-default" style="max-width: 35px; max-height: 30px"
-                        title="Treemap Chart">
+                <label ng-model="selectedVis" uib-btn-radio="'tree'"
+                       ng-click="selectVis('tree')" class="btn btn-default" style="max-width: 35px; max-height: 30px"
+                       title="Treemap Chart">
                     <img src="fonts/ic_view_quilt_black_18px.svg"/></label>
             </div>
 
@@ -20,9 +24,23 @@
             <div ng-if="disableAggregates != 'true'" class="pull-right" style="margin-right: 20px;">
                 <span uib-tooltip="{{ translations.tooltip }}">{{ translations.prompt }}</span>
                 <div class="btn-group btn-group-sm">
-                    <label class="btn btn-default" ng-model="aggregateRadio.value" uib-btn-radio="'amount'">{{ translations.amount }}</label>
-                    <label class="btn btn-default" ng-show="enableBudget" ng-model="aggregateRadio.value" uib-btn-radio="'budget'">{{ translations.budget }}</label>
-                    <label class="btn btn-default" ng-model="aggregateRadio.value" uib-btn-radio="'count'">{{ translations.count}}</label>
+                    <label class="btn btn-default" ng-model="aggregateRadio.value" uib-btn-radio="'amount'">
+                        {{ translations.amount }}</label>
+                    <label class="btn btn-default" ng-show="enableBudget" ng-model="aggregateRadio.value"
+                           uib-btn-radio="'budget'">{{ translations.budget }}</label>
+                    <label class="btn btn-default" ng-model="aggregateRadio.value" uib-btn-radio="'count'">
+                        {{ translations.count}}</label>
+                </div>
+            </div>
+
+            <!--GDP/Per capita radio buttons-->
+            <div ng-if="disableNormalisation != 'true'" class="pull-right" style="margin-right: 20px;">
+                <span>{{ translations.normalisePrompt }}</span>
+                <div class="btn-group btn-group-sm">
+                    <label class="btn btn-default" ng-model="normaliseRadio.value" uib-btn-radio="'gdp'">
+                        {{ translations.gdp }}</label>
+                    <label class="btn btn-default" ng-model="normaliseRadio.value" uib-btn-radio="'percapita'">
+                        {{ translations.pcap }}</label>
                 </div>
             </div>
         </div>
@@ -38,6 +56,7 @@
                         dashboard-id="{{ dashboardId }}"
                         min-height="{{ elementH }}"
                         base-url="{{ baseUrl }}"
+                        normalise-type="{{ normaliseRadio.value }}"
                         aggregate-type="{{ aggregateRadio.value }}"
                         dynamic-dashboard="{{ dynamicDashboard }}"
                         add-to-basket="{{ addToBasket }}"
@@ -55,6 +74,7 @@
                         dashboard-id="{{ dashboardId }}"
                         min-height="{{ elementH }}"
                         base-url="{{ baseUrl }}"
+                        normalise-type="{{ normaliseRadio.value }}"
                         aggregate-type="{{ aggregateRadio.value }}"
                         number-of-items="{{ numberOfItems }}"
                         dynamic-dashboard="{{ dynamicDashboard }}"
@@ -72,6 +92,7 @@
                         dashboard-id="{{ dashboardId }}"
                         min-height="{{ elementH }}"
                         base-url="{{ baseUrl }}"
+                        normalise-type="{{ normaliseRadio.value }}"
                         aggregate-type="{{ aggregateRadio.value }}"
                         dynamic-dashboard="{{ dynamicDashboard }}"
                         add-to-basket="{{ addToBasket }}"
@@ -89,6 +110,7 @@
                         dashboard-id="{{ dashboardId }}"
                         min-height="{{ elementH }}"
                         base-url="{{ baseUrl }}"
+                        normalise-type="{{ normaliseRadio.value }}"
                         aggregate-type="{{ aggregateRadio.value }}"
                         dynamic-dashboard="{{ dynamicDashboard }}"
                         add-to-basket="{{ addToBasket }}"
@@ -106,6 +128,7 @@
                         dashboard-id="{{ dashboardId }}"
                         min-height="{{ elementH }}"
                         base-url="{{ baseUrl }}"
+                        normalise-type="{{ normaliseRadio.value }}"
                         aggregate-type="{{ aggregateRadio.value }}"
                         number-of-items="{{ numberOfItems }}"
                         dynamic-dashboard="{{ dynamicDashboard }}"
@@ -122,6 +145,7 @@
                         view-type="{{ selViewType }}"
                         dashboard-id="{{ dashboardId }}"
                         min-height="{{ elementH }}"
+                        normalise-type="{{ normaliseRadio.value }}"
                         aggregate-type="{{ aggregateRadio.value }}"
                         base-url="{{ baseUrl }}"
                         dynamic-dashboard="{{ dynamicDashboard }}"
