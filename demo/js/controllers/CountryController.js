@@ -3,6 +3,7 @@ angular.module("yds").controller("CountryController", ["$scope", "$location", "$
         var scope = $scope;
         // Set base URL variable
         scope.baseUrl = YDS_CONSTANTS.PROJECT_DETAILS_URL;
+        scope.lang = "en";
 
         // Get project ID from url parameters or set Greece as default country
         var projectId = $location.search().id;
