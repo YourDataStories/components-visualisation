@@ -1586,3 +1586,8 @@ div.dcat-value {
     font-size: 20px;
     line-height: 50px;
 }
+
+/* Remove left margin from ag-grid's checkboxes */
+.ag-fresh span.ag-cell-wrapper > input.ag-selection-checkbox {
+    margin-left: 0;
+}
