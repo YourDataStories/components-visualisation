@@ -51,6 +51,10 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 var prevAggregateType = "amount";
                 var prevNormaliseType = "no";
 
+                // If projectId is undefined, set default value (none)
+                if (_.isUndefined(scope.projectId) || scope.projectId.trim() === "")
+                    scope.projectId = "none";
+
                 // If type is undefined, set default value
                 if (_.isUndefined(scope.type) || scope.type.trim() === "")
                     scope.type = "info";
@@ -167,7 +171,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                         // If the normaliseType attribute is defined (and valid), add it to the extra parameters
                         var normaliseType = scope.normaliseType;
                         if (!_.isUndefined(normaliseType) &&
-                            (normaliseType === "no" ||normaliseType === "gdp" || normaliseType === "percapita")) {
+                            (normaliseType === "no" || normaliseType === "gdp" || normaliseType === "percapita")) {
                             scope.extraParams = _.extend({
                                 normalise: normaliseType
                             }, scope.extraParams);
