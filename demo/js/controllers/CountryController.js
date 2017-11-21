@@ -36,11 +36,16 @@ angular.module("yds").controller("CountryController", ["$scope", "$location", "$
                 return code.length === 2;
             });
 
-            // Create iframe URLs
-            scope.publicIntegrityUrl = $sce.trustAsResourceUrl(
-                "http://integrity-index.org/country-profile/?id=" + threeLetterCode + "&yr=2017");
-            scope.euroPamUrl = $sce.trustAsResourceUrl(
-                "http://europam.eu/index.php?module=country-profile&country=" + scope.countryName);
+            // Create object containing information for the indexes' tabs
+            scope.indexes = [{
+                heading: "Index of Public Integrity",
+                url: $sce.trustAsResourceUrl(
+                    "http://integrity-index.org/country-profile/?id=" + threeLetterCode + "&yr=2017")
+            }, {
+                heading: "Index of Public Accountability",
+                url: $sce.trustAsResourceUrl(
+                    "http://europam.eu/index.php?module=country-profile&country=" + scope.countryName)
+            }];
 
             // Links for Trade Activity Dashboard buyer & seller URLs
             scope.tradeActivityBuyerUrl = $sce.trustAsResourceUrl("http://platform.yourdatastories.eu/" +

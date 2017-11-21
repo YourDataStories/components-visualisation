@@ -147,12 +147,12 @@
                         <img src="img/digiwhist-icon-2x.png" style="height: 14px; width: 14px;"/> Indexes
                     </uib-tab-heading>
                     <uib-tabset type="pills">
-                        <!--Public Integrity Tab-->
-                        <uib-tab heading="Index of Public Integrity">
+                        <!--Tabs for each index-->
+                        <uib-tab ng-repeat="index in indexes" heading="{{ index.heading }}">
                             <div class="row">
                                 <div class="col-md-12 index-tab-controls-container">
                                     <!--Open in new tab button-->
-                                    <a ng-href="{{ publicIntegrityUrl }}"
+                                    <a ng-href="{{ index.url }}"
                                        target="_blank"
                                        class="btn btn-primary btn-lg">
                                         <span class="glyphicon glyphicon-share"></span> Open in new tab
@@ -168,38 +168,9 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <!--Public Integrity iFrame-->
+                                <!--Index iFrame-->
                                 <div class="col-md-12">
-                                    <iframe ng-src="{{ publicIntegrityUrl }}" frameborder="0"
-                                            style="width: 100%; min-height: 768px"></iframe>
-                                </div>
-                            </div>
-                        </uib-tab>
-
-                        <!--Public Accountability (EuroPAM) tab-->
-                        <uib-tab heading="Index of Public Accountability">
-                            <div class="row">
-                                <div class="col-md-12 index-tab-controls-container">
-                                    <!--Open in new tab button-->
-                                    <a ng-href="{{ euroPamUrl }}"
-                                       target="_blank"
-                                       class="btn btn-primary btn-lg">
-                                        <span class="glyphicon glyphicon-share"></span> Open in new tab
-                                    </a>
-
-                                    <!--Digiwhist button-->
-                                    <a href="http://digiwhist.eu/"
-                                       target="_blank"
-                                       class="btn btn-info btn-lg">
-                                        In cooperation with Digiwhist
-                                        <img src="img/digiwhist-icon-2x.png" style="height: 18px; width: 18px;"/>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <!--EuroPAM iFrame-->
-                                <div class="col-md-12">
-                                    <iframe ng-src="{{ euroPamUrl }}" frameborder="0"
+                                    <iframe ng-src="{{ index.url }}" frameborder="0"
                                             style="width: 100%; min-height: 768px"></iframe>
                                 </div>
                             </div>
