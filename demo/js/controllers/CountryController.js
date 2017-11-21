@@ -1,5 +1,5 @@
-angular.module("yds").controller("CountryController", ["$scope", "$location", "$sce", "YDS_CONSTANTS", "Data",
-    function ($scope, $location, $sce, YDS_CONSTANTS, Data) {
+angular.module("yds").controller("CountryController", ["$scope", "$location", "$sce", "YDS_CONSTANTS", "Data", "DashboardService",
+    function ($scope, $location, $sce, YDS_CONSTANTS, Data, DashboardService) {
         var scope = $scope;
         // Set base URL variable
         scope.baseUrl = YDS_CONSTANTS.PROJECT_DETAILS_URL;
@@ -8,6 +8,9 @@ angular.module("yds").controller("CountryController", ["$scope", "$location", "$
         // Get project ID from url parameters or set Greece as default country
         var projectId = $location.search().id;
         scope.projectId = projectId || "http://linkedeconomy.org/resource/Country/GR";
+
+        // Prevent W.D.I. grid from remembering past selection
+        DashboardService.setCookieObject("country_indicator_search_country_page", undefined);
 
         /**
          * Given a response from the server for a country description, generate the required items to display
