@@ -46,10 +46,9 @@
         </div>
     </div>
 
-    <!--Tabs for Europam & Integrity Index-->
     <div class="row" style="margin-top: 15px">
         <div class="col-md-12">
-            <uib-tabset>
+            <uib-tabset active="activeTab">
                 <!--Datasets-->
                 <uib-tab>
                     <uib-tab-heading><i class="fa fa-database" aria-hidden="true"></i> Datasets</uib-tab-heading>
@@ -107,6 +106,8 @@
                                     lang="el"
                                     filtering="true"
                                     quick-filtering="true"
+                                    explanation-btn-x="300"
+                                    explanation-btn-y="7"
                                     element-h="300">
                             </yds-grid>
                         </div>
@@ -114,7 +115,7 @@
                 </uib-tab>
 
                 <!--Indexes-->
-                <uib-tab>
+                <uib-tab index="'indexes'">
                     <uib-tab-heading>
                         <img src="img/digiwhist-icon-2x.png" style="height: 14px; width: 14px;"/> Indexes
                     </uib-tab-heading>
@@ -142,7 +143,7 @@
                             <div class="row">
                                 <!--Index iFrame-->
                                 <div class="col-md-12">
-                                    <iframe ng-src="{{ index.url }}" frameborder="0"
+                                    <iframe ng-if="activeTab === 'indexes'" ng-src="{{ index.url }}" frameborder="0"
                                             style="width: 100%; min-height: 768px"></iframe>
                                 </div>
                             </div>
