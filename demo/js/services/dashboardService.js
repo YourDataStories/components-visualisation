@@ -737,6 +737,12 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 case "traffic_observation_contracts":
                     addTrafficObservationParams(apiOptions);
                     break;
+                case "country_page":
+                    var indicators = dashboard.getGridSelection("country_indicators");
+                    if (!_.isEmpty(indicators)) {
+                        apiOptions["indicators"] = indicators.join(",");
+                    }
+                    break;
             }
 
             // Remove string values that contain "null" from the parameters

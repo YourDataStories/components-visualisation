@@ -117,6 +117,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                     "comparison2",
                     "comparison_details_1",
                     "comparison_details_2",
+                    "country_page",
                     "public_project"
                 ];
 
