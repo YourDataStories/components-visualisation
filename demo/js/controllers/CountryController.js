@@ -47,32 +47,51 @@ angular.module("yds").controller("CountryController", ["$scope", "$location", "$
                     "http://europam.eu/index.php?module=country-profile&country=" + scope.countryName)
             }];
 
-            // Links for Trade Activity Dashboard buyer & seller URLs
-            scope.tradeActivityBuyerUrl = $sce.trustAsResourceUrl("http://platform.yourdatastories.eu/" +
-                "official-development-assistance/#!?dashboard=tradeactivity" +
-                "&filters=~(tradeactivity_hasorigin_countries_all~(~(code~'" + twoLetterCode + ")))");
+            // Create object with information for the Dashboard tabs
+            scope.dashboardTabs = [{
+                dashboardName: "Trade Activities",
+                iconClass: "fa-exchange",
+                buttons: [{
+                    title: "Buyer",
+                    url: $sce.trustAsResourceUrl("http://platform.yourdatastories.eu/" +
+                        "official-development-assistance/#!?dashboard=tradeactivity" +
+                        "&filters=~(tradeactivity_hasorigin_countries_all~(~(code~'" + twoLetterCode + ")))")
+                }, {
+                    title: "Seller",
+                    url: $sce.trustAsResourceUrl("http://platform.yourdatastories.eu/" +
+                        "official-development-assistance/#!?dashboard=tradeactivity" +
+                        "&filters=~(tradeactivity_hasdestination_countries_all~(~(code~'" + twoLetterCode + ")))")
+                }]
+            }, {
+                dashboardName: "Aid Activities",
+                iconClass: "fa-medkit",
+                buttons: [{
+                    title: "Benefactor",
+                    url: $sce.trustAsResourceUrl("http://platform.yourdatastories.eu/" +
+                        "official-development-assistance/#!?dashboard=aidactivity" +
+                        "&filters=~(aidactivity_benefactor_countries_all~(~(code~'" + twoLetterCode + ")))")
+                }, {
+                    title: "Beneficiary",
+                    url: $sce.trustAsResourceUrl("http://platform.yourdatastories.eu/" +
+                        "official-development-assistance/#!?dashboard=aidactivity" +
+                        "&filters=~(aidactivity_beneficiary_countries_all~(~(code~'" + twoLetterCode + ")))")
+                }]
+            }, {
+                dashboardName: "Contracts",
+                iconClass: "fa-pencil",
+                buttons: [{
+                    title: "Buyer",
+                    url: $sce.trustAsResourceUrl("http://platform.yourdatastories.eu/" +
+                        "public-contracts/#!?dashboard=contract" +
+                        "&filters=~(contract_buyer_countries_all~(~(code~'" + twoLetterCode + ")))")
+                }, {
+                    title: "Seller",
+                    url: $sce.trustAsResourceUrl("http://platform.yourdatastories.eu/" +
+                        "public-contracts/#!?dashboard=contract" +
+                        "&filters=~(contract_seller_countries_all~(~(code~'" + twoLetterCode + ")))")
+                }]
+            }];
 
-            scope.tradeActivitySellerUrl = $sce.trustAsResourceUrl("http://platform.yourdatastories.eu/" +
-                "official-development-assistance/#!?dashboard=tradeactivity" +
-                "&filters=~(tradeactivity_hasdestination_countries_all~(~(code~'" + twoLetterCode + ")))");
-
-            // Links for Aid Activity Dashboard benefactor & beneficiary URLs
-            scope.aidActivityBenefactorUrl = $sce.trustAsResourceUrl("http://platform.yourdatastories.eu/" +
-                "official-development-assistance/#!?dashboard=aidactivity" +
-                "&filters=~(aidactivity_benefactor_countries_all~(~(code~'" + twoLetterCode + ")))");
-
-            scope.aidActivityBeneficiaryUrl = $sce.trustAsResourceUrl("http://platform.yourdatastories.eu/" +
-                "official-development-assistance/#!?dashboard=aidactivity" +
-                "&filters=~(aidactivity_beneficiary_countries_all~(~(code~'" + twoLetterCode + ")))");
-
-            // Links for Contract Dashboard buyer & seller URLs
-            scope.contractBuyerUrl = $sce.trustAsResourceUrl("http://platform.yourdatastories.eu/" +
-                "public-contracts/#!?dashboard=contract" +
-                "&filters=~(contract_buyer_countries_all~(~(code~'" + twoLetterCode + ")))");
-
-            scope.contractSellerUrl = $sce.trustAsResourceUrl("http://platform.yourdatastories.eu/" +
-                "public-contracts/#!?dashboard=contract" +
-                "&filters=~(contract_seller_countries_all~(~(code~'" + twoLetterCode + ")))");
         };
 
         // Get description of country in order to extract the required properties
