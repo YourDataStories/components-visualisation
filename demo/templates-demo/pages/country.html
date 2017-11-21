@@ -50,7 +50,7 @@
         <div class="col-md-12">
             <uib-tabset active="activeTab">
                 <!--Datasets-->
-                <uib-tab>
+                <uib-tab index="'datasets'">
                     <uib-tab-heading><i class="fa fa-database" aria-hidden="true"></i> Datasets</uib-tab-heading>
 
                     <div class="row">
@@ -71,7 +71,7 @@
                 </uib-tab>
 
                 <!--Tabs for Trade, Aid Activities and Contracts Dashboards-->
-                <uib-tab ng-repeat="tab in dashboardTabs">
+                <uib-tab ng-repeat="tab in dashboardTabs track by $index" index="$index">
                     <uib-tab-heading>
                         <i class="fa" ng-class="tab.iconClass" aria-hidden="true"></i> {{ tab.dashboardName }}
                     </uib-tab-heading>
@@ -89,7 +89,8 @@
                     </div>
                 </uib-tab>
 
-                <uib-tab>
+                <!--World Development Indicators-->
+                <uib-tab index="'wdi'">
                     <uib-tab-heading>
                         <i class="fa fa-tachometer" aria-hidden="true"></i> World Development Indicators
                     </uib-tab-heading>
