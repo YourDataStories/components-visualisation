@@ -55,17 +55,27 @@
 
                     <div class="row">
                         <div class="col-md-12">
-                            <yds-grid
+                            <yds-grid-results
                                     project-id="{{ projectId }}"
                                     view-type="country.datasets"
-                                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect"
-                                    sorting="true"
-                                    filtering="true"
+                                    use-grid-api="true"
                                     element-h="300"
                                     col-resize="true"
+                                    view-in-dashboard="true"
                                     add-to-basket="false"
                                     enable-rating="true">
-                            </yds-grid>
+                            </yds-grid-results>
+                        </div>
+                    </div>
+
+                    <!--DCAT AP Dataset description-->
+                    <div class="row">
+                        <div class="col-md-12" ng-class="{'dcat-ap-container-min-height': hasSelectedProject}">
+                            <yds-dcat-ap-item
+                                    ng-if="selectedProject.length > 0"
+                                    item-uri="{{ selectedProject }}"
+                                    base-url="http://ydsdev.iit.demokritos.gr/YDSComponents/#!/redirect">
+                            </yds-dcat-ap-item>
                         </div>
                     </div>
                 </uib-tab>

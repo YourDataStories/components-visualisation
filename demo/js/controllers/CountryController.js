@@ -1,5 +1,5 @@
-angular.module("yds").controller("CountryController", ["$scope", "$location", "$sce", "YDS_CONSTANTS", "Data", "DashboardService",
-    function ($scope, $location, $sce, YDS_CONSTANTS, Data, DashboardService) {
+angular.module("yds").controller("CountryController", ["$scope", "$location", "$sce", "$timeout", "YDS_CONSTANTS", "Data", "DashboardService",
+    function ($scope, $location, $sce, $timeout, YDS_CONSTANTS, Data, DashboardService) {
         var scope = $scope;
         // Set base URL variable
         scope.baseUrl = YDS_CONSTANTS.PROJECT_DETAILS_URL;
@@ -11,6 +11,10 @@ angular.module("yds").controller("CountryController", ["$scope", "$location", "$
 
         // Prevent W.D.I. grid from remembering past selection
         DashboardService.setCookieObject("country_indicator_search_country_page", undefined);
+
+        // Set selected project (Dataset) variables
+        scope.hasSelectedProject = false;   // Shows where a project has been selected, ever (since loading the page)
+        scope.selectedProject = null;       // Holds currently selected Dataset ID
 
         /**
          * Given a response from the server for a country description, generate the required items to display
@@ -101,5 +105,14 @@ angular.module("yds").controller("CountryController", ["$scope", "$location", "$
         // Get description of country in order to extract the required properties
         Data.getItemDescription(scope.projectId, null, 0, 0)
             .then(showCountryInfo);
+
+        // Listen for changes in the selected project (for the Datasets grid) and add it to the scope
+        DashboardService.subscribeProjectChanges(scope, function () {
+            scope.selectedProject = null;
+            $timeout(function () {
+                scope.selectedProject = DashboardService.getSelectedProjectInfo().id;
+                scope.hasSelectedProject = true;
+            });
+        });
     }
 ]);

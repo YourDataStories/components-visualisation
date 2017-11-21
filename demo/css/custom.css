@@ -1591,3 +1591,8 @@ div.dcat-value {
 .ag-fresh span.ag-cell-wrapper > input.ag-selection-checkbox {
     margin-left: 0;
 }
+
+/* Minimum height for the DCAT-AP component container in the Country page */
+.dcat-ap-container-min-height {
+    min-height: 900px;
+}
