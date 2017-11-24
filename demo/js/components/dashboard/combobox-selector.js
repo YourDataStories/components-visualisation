@@ -46,7 +46,9 @@ angular.module("yds").directive("ydsComboboxSelector", ["$timeout", "DashboardSe
                     // Check if there is a saved selection in the cookies, and use that as default
                     var defaultSelection = null;
                     var cookieValue = DashboardService.getCookieObject(selectionType);
-                    if (!_.isUndefined(cookieValue)) {
+
+                    //todo: Add attribute to disable remembering last selected values instead of using useFilterApi
+                    if (!_.isUndefined(cookieValue) && scope.useFilterApi !== "true") {
                         // Add IDs list for Selectivity default value, and save to DashboardService
                         defaultSelection = cookieValue.split(",");
                         DashboardService.saveObject(selectionType, cookieValue);
