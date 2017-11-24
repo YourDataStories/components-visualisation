@@ -3,7 +3,7 @@ angular.module("yds").directive("queryBuilder", ["$compile", "$ocLazyLoad", "$lo
         return {
             restrict: "E",
             scope: {
-                lang: "@",               // Language of the query builder
+                lang: "@",              // Language of the query builder
                 urlParamPrefix: "@",	// Prefix to add before all url parameters (optional)
                 maxSuggestions: "@",    // Max suggestions to show in typeahead popups
                 concept: "@",           // Concept to get filters for
@@ -15,6 +15,7 @@ angular.module("yds").directive("queryBuilder", ["$compile", "$ocLazyLoad", "$lo
             link: function (scope) {
                 scope.qbInputs = {};		// Keeps the QueryBuilder's typeahead ng models
                 scope.noFilters = false;    // If there are no filters, show it on the page
+                var builder = null;         // Variable to keep builder instance
 
                 var paramPrefix = scope.urlParamPrefix;
                 var watchRuleUrlParam = scope.watchRuleUrlParam;
@@ -51,33 +52,43 @@ angular.module("yds").directive("queryBuilder", ["$compile", "$ocLazyLoad", "$lo
                     return rules;
                 };
 
+                /**
+                 * Get jQuery DOM object for the builder, or create it if it doesn't exist.
+                 * @returns {*}
+                 */
+                var getBuilder = function () {
+                    if (_.isNull(builder) || builder.length === 0) {
+                        builder = $("#" + scope.builderId);
+                    }
+
+                    return builder;
+                };
+
                 // Lazy load jQuery QueryBuilder and add it to the page
                 $ocLazyLoad.load({
                     files: [
-                        Data.templatePath + "lib/bootstrap-popover.min.js",                // Bootstrap JS (only Popover, for filter description)
-                        Data.templatePath + "css/query-builder.default.min.css",           // QueryBuilder's CSS
-                        Data.templatePath + "lib/query-builder.standalone.min.js",         // QueryBuilder JavaScript
+                        Data.templatePath + "lib/bootstrap-popover.min.js",             // Bootstrap JS (only Popover, for filter description)
+                        Data.templatePath + "css/query-builder.default.min.css",        // QueryBuilder's CSS
+                        Data.templatePath + "lib/query-builder.standalone.min.js",      // QueryBuilder JavaScript
 
-                        Data.templatePath + "css/bootstrap-datepicker3.min.css",           // Bootstrap Datepicker's CSS
-                        Data.templatePath + "lib/bootstrap-datepicker.min.js",             // Bootstrap Datepicker's JavaScript
+                        Data.templatePath + "css/bootstrap-datepicker3.min.css",        // Bootstrap Datepicker's CSS
+                        Data.templatePath + "lib/bootstrap-datepicker.min.js",          // Bootstrap Datepicker's JavaScript
 
-                        Data.templatePath + "css/bootstrap-slider.min.css",                // Bootstrap Slider CSS
-                        Data.templatePath + "lib/bootstrap-slider.min.js",                 // Bootstrap Slider JavaScript
+                        Data.templatePath + "css/bootstrap-slider.min.css",             // Bootstrap Slider CSS
+                        Data.templatePath + "lib/bootstrap-slider.min.js",              // Bootstrap Slider JavaScript
 
-                        Data.templatePath + "lib/querybuilder-selectivity-plugin.js",      // Selectivity QueryBuilder plugin
+                        Data.templatePath + "lib/querybuilder-selectivity-plugin.js",   // Selectivity QueryBuilder plugin
 
-                        Data.templatePath + "css/selectize.bootstrap3.css",                // Selectize Bootstrap 3 theme
-                        Data.templatePath + "lib/selectize.min.js",                        // Selectize javaScript
-                        Data.templatePath + "lib/plugins/yds-country-selector.js",                 // Country selection jQuery plugin
-                        Data.templatePath + "lib/plugins/yds-currency-selector.js",                // Currency selection jQuery plugin
-                        Data.templatePath + "lib/plugins/yds-year-selector.js",                    // Year selection jQuery plugin
-                        Data.templatePath + "lib/plugins/yds-map-selector.js"                      // Map point selection jQuery plugin
+                        Data.templatePath + "css/selectize.bootstrap3.css",             // Selectize Bootstrap 3 theme
+                        Data.templatePath + "lib/selectize.min.js",                     // Selectize javaScript
+                        Data.templatePath + "lib/plugins/yds-country-selector.js",      // Country selection jQuery plugin
+                        Data.templatePath + "lib/plugins/yds-currency-selector.js",     // Currency selection jQuery plugin
+                        Data.templatePath + "lib/plugins/yds-year-selector.js",         // Year selection jQuery plugin
+                        Data.templatePath + "lib/plugins/yds-map-selector.js"           // Map point selection jQuery plugin
                     ],
                     cache: true,
                     serie: true
                 }).then(function () {
-                    var builder = $("#" + scope.builderId);
-
                     // Get filters for query builder from API
                     Search.getQueryBuilderFilters(scope.conceptId)
                         .then(function (filters) {
@@ -94,7 +105,7 @@ angular.module("yds").directive("queryBuilder", ["$compile", "$ocLazyLoad", "$lo
                                 }
 
                                 // Create the builder
-                                builder.queryBuilder({
+                                getBuilder().queryBuilder({
                                     plugins: {
                                         "filter-description": null,
                                         "selectivity-plugin": {
@@ -115,17 +126,17 @@ angular.module("yds").directive("queryBuilder", ["$compile", "$ocLazyLoad", "$lo
 
                                 // Watch for all changes in the builder, and update the rules in QueryBuilderService
                                 // (https://github.com/mistic100/jQuery-QueryBuilder/issues/195)
-                                builder.on("afterDeleteGroup.queryBuilder afterUpdateRuleFilter.queryBuilder " +
+                                getBuilder().on("afterDeleteGroup.queryBuilder afterUpdateRuleFilter.queryBuilder " +
                                     "afterAddRule.queryBuilder afterDeleteRule.queryBuilder afterUpdateRuleValue.queryBuilder " +
                                     "afterUpdateRuleOperator.queryBuilder afterUpdateGroupCondition.queryBuilder ", function (e) {
-                                    queryBuilderService.setRules(scope.builderId, builder.queryBuilder('getRules'));
-                                }).on('validationError.queryBuilder', function (e) {
+                                    queryBuilderService.setRules(scope.builderId, getBuilder().queryBuilder("getRules"));
+                                }).on("validationError.queryBuilder", function (e) {
                                     // Don't display QueryBuilder's validation errors
                                     e.preventDefault();
                                 });
 
                                 // Fix for Bootstrap Popover from http://stackoverflow.com/a/34766224
-                                $('body').off('hidden.bs.popover').on('hidden.bs.popover', function (e) {
+                                $("body").off("hidden.bs.popover").on("hidden.bs.popover", function (e) {
                                     $(e.target).data("bs.popover").inState.click = false;
                                 });
 
@@ -142,7 +153,7 @@ angular.module("yds").directive("queryBuilder", ["$compile", "$ocLazyLoad", "$lo
                                             var newRules = getRulesFromUrlParam();
 
                                             if (!_.isUndefined(newRules)) {
-                                                builder.queryBuilder('setRules', newRules);
+                                                getBuilder().queryBuilder("setRules", newRules);
                                             }
                                         }
                                     });
@@ -204,15 +215,15 @@ angular.module("yds").directive("queryBuilder", ["$compile", "$ocLazyLoad", "$lo
                             // Add setter and getter for the slider
                             filter.valueSetter = function (rule, value) {
                                 if (rule.operator.nb_inputs === 1) value = [value];
-                                rule.$el.find('.rule-value-container input').each(function (i) {
-                                    $(this).slider('setValue', value[i] || 0);
+                                rule.$el.find(".rule-value-container input").each(function (i) {
+                                    $(this).slider("setValue", value[i] || 0);
                                 });
                             };
 
                             filter.valueGetter = function (rule) {
                                 var value = [];
-                                rule.$el.find('.rule-value-container input').each(function () {
-                                    value.push($(this).slider('getValue'));
+                                rule.$el.find(".rule-value-container input").each(function () {
+                                    value.push($(this).slider("getValue"));
                                 });
                                 return rule.operator.nb_inputs === 1 ? value[0] : value;
                             };
@@ -337,7 +348,7 @@ angular.module("yds").directive("queryBuilder", ["$compile", "$ocLazyLoad", "$lo
                  */
                 scope.typeaheadSelectHandler = function (ruleId, selectedItem) {
                     // Get root model
-                    var rootModel = $("#" + scope.builderId).queryBuilder('getModel');
+                    var rootModel = $("#" + scope.builderId).queryBuilder("getModel");
 
                     // Set rule's value in the model
                     setRule(rootModel, ruleId, selectedItem);
