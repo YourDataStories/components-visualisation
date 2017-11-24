@@ -84,7 +84,8 @@
 
                 <!--Agricultural Products-->
                 <uib-tab index="'agr-products'">
-                    <uib-tab-heading><i class="fa fa-pagelines" aria-hidden="true"></i> Agricultural Products</uib-tab-heading>
+                    <uib-tab-heading><i class="fa fa-pagelines" aria-hidden="true"></i> Agricultural Products
+                    </uib-tab-heading>
                 </uib-tab>
 
                 <!--Industries-->
@@ -102,6 +103,12 @@
                     <uib-tab-heading>
                         <i class="fa" ng-class="tab.iconClass" aria-hidden="true"></i> {{ tab.dashboardName }}
                     </uib-tab-heading>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ng-include src="tab.descriptionUrl"></ng-include>
+                        </div>
+                    </div>
 
                     <div class="row">
                         <div class="col-md-12" style="text-align: center">

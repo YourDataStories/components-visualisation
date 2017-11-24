@@ -59,6 +59,7 @@ angular.module("yds").controller("CountryController", ["$scope", "$location", "$
             scope.dashboardTabs = [{
                 dashboardName: "Trade Activities",
                 iconClass: "fa-exchange",
+                descriptionUrl: $sce.trustAsResourceUrl("templates-demo/dashboards/descriptions/trade.html"),
                 buttons: [{
                     title: "Buyer",
                     url: $sce.trustAsResourceUrl("http://platform.yourdatastories.eu/" +
@@ -73,6 +74,7 @@ angular.module("yds").controller("CountryController", ["$scope", "$location", "$
             }, {
                 dashboardName: "Aid Activities",
                 iconClass: "fa-medkit",
+                descriptionUrl: $sce.trustAsResourceUrl("templates-demo/dashboards/descriptions/aid.html"),
                 buttons: [{
                     title: "Benefactor",
                     url: $sce.trustAsResourceUrl("http://platform.yourdatastories.eu/" +
@@ -87,6 +89,7 @@ angular.module("yds").controller("CountryController", ["$scope", "$location", "$
             }, {
                 dashboardName: "Contracts",
                 iconClass: "fa-pencil",
+                descriptionUrl: $sce.trustAsResourceUrl("templates-demo/dashboards/descriptions/contracts.html"),
                 buttons: [{
                     title: "Buyer",
                     url: $sce.trustAsResourceUrl("http://platform.yourdatastories.eu/" +
