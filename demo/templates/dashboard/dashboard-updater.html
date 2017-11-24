@@ -18,6 +18,20 @@
             lang="{{ lang }}">
     </yds-info>
 
+    <yds-heatmap
+            ng-switch-when="heatmap-simple"
+            project-id="{{ projectId }}"
+            view-type="{{ viewType }}"
+            color-axis="true"
+            legend="true"
+            legend-v-align="bottom"
+            dashboard-id="{{ dashboardId }}"
+            extra-params="extraParams"
+            no-border="true"
+            base-url="{{ baseUrl }}"
+            element-h="{{ minHeight }}">
+    </yds-heatmap>
+
     <yds-donut-pie
             ng-switch-when="donut-pie"
             project-id="none"

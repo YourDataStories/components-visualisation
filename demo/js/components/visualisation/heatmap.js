@@ -6,6 +6,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                 projectId: "@",         // ID of the project
                 viewType: "@",          // View type of heatmap
                 lang: "@",			    // Language of the data
+                extraParams: "=",       // Extra parameters for the API
 
                 colorAxis: "@",         // Enable or disable colored axis of chart
                 colorType: "@",			// Axis color type (linear or logarithmic)
@@ -55,6 +56,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                 heatmapContainer.id = elementId;
 
                 // Any extra parameters will be saved to check if something changed before refreshing the heatmap
+                var originalParams = scope.extraParams;
                 var extraParams = {};
 
                 // Selectivity instance & last colorAxis parameters used
@@ -568,6 +570,11 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                     // Add base URL to parameters, if it exists
                     if (!_.isUndefined(baseUrl)) {
                         extraParams.baseurl = baseUrl;
+                    }
+
+                    // If there are original parameters, use those
+                    if (!_.isUndefined(originalParams)) {
+                        extraParams = _.extend(extraParams, originalParams);
                     }
 
                     // Get heatmap data

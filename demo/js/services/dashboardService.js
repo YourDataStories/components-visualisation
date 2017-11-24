@@ -743,6 +743,11 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                         apiOptions["indicators"] = indicators.join(",");
                     }
                     break;
+                case "country_producing_heatmap":
+                    apiOptions["agricultural.products"] = dashboard.getObject("country_agricultural_products");
+                    apiOptions["industries"] = dashboard.getObject("country_industries");
+                    apiOptions["natural.resources"] = dashboard.getObject("country_natural_resources");
+                    break;
             }
 
             // Remove string values that contain "null" from the parameters

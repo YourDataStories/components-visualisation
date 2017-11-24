@@ -87,6 +87,7 @@
                     <uib-tab-heading><i class="fa fa-industry" aria-hidden="true"></i> Products/Industries/Resources
                     </uib-tab-heading>
 
+                    <!--Comboboxes row-->
                     <div class="row">
                         <div class="col-md-4">
                             <yds-combobox-selector
@@ -114,6 +115,20 @@
                                     selection-type="country_natural_resources"
                                     title="Natural Resources">
                             </yds-combobox-selector>
+                        </div>
+                    </div>
+
+                    <!--Heatmap-->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <yds-dashboard-updater
+                                    type="heatmap-simple"
+                                    project-id="{{ projectId }}"
+                                    view-type="country.producing.countries"
+                                    dashboard-id="country_producing_heatmap"
+                                    base-url="http://platform.yourdatastories.eu/country-details"
+                                    min-height="350">
+                            </yds-dashboard-updater>
                         </div>
                     </div>
                 </uib-tab>
