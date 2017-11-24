@@ -336,7 +336,11 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
 
                         if (_.has(view, "colorAxis")) {
                             colorAxisParams = view.colorAxis;
-                            _.first(scope.heatmap.colorAxis).update(colorAxisParams);
+                            if (!_.has(colorAxisParams, "stops")) {
+                                // Make the stops explicitly null, because we have stops in the default colorAxis, so by
+                                // just "updating" it, it does not remove them if they are not null in the new params.
+                                colorAxisParams.stops = null;
+                            }
                         }
                     }
 
@@ -480,6 +484,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                     }
 
                     if (firstLoad) {
+                        console.log("FIRTS LOAD");
                         // On first load, restore selected countries from cookie
                         var cookieCountries = DashboardService.getCookieObject(cookieKey);
 
@@ -503,6 +508,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                         // Force an update of the legend and the colorAxis to make the legend show correctly
                         scope.heatmap.legend.update();
                         if (!_.isNull(colorAxisParams)) {
+                            console.log("updating axis", colorAxisParams);
                             _.first(scope.heatmap.colorAxis).update(colorAxisParams);
                         }
 
