@@ -29,6 +29,20 @@ angular.module("yds").directive("ydsComboboxSelector", ["$timeout", "DashboardSe
                  * @param response
                  */
                 var getItemsSuccess = function (response) {
+                    var items;
+
+                    // Get items from the response depending on the API which was used...
+                    if (scope.useFilterApi === "true") {
+                        items = _.map(response.data.value, function (item) {
+                            return {
+                                id: item.id,
+                                text: item.label
+                            }
+                        });
+                    } else {
+                        items = response;
+                    }
+
                     // Check if there is a saved selection in the cookies, and use that as default
                     var defaultSelection = null;
                     var cookieValue = DashboardService.getCookieObject(selectionType);
@@ -40,7 +54,7 @@ angular.module("yds").directive("ydsComboboxSelector", ["$timeout", "DashboardSe
 
                     // Create Selectivity menu
                     var selectivity = $(selectivityContainer).selectivity({
-                        items: response,
+                        items: items,
                         multiple: true,
                         value: defaultSelection,
                         placeholder: "Select " + scope.title
@@ -59,11 +73,11 @@ angular.module("yds").directive("ydsComboboxSelector", ["$timeout", "DashboardSe
 
                 if (scope.useFilterApi === "true") {
                     // Use filters API
-                    Data.getComboboxFilters(scope.projectId, scope.type, undefined, "en").then(function (response) {
-                        console.log(response);
-                    }, function (error) {
-                        scope.ydsAlert = error.message;
-                    });
+                    Data.getComboboxFilters(scope.projectId, scope.type, undefined, "en")
+                        .then(getItemsSuccess,
+                            function (error) {
+                                scope.ydsAlert = error.message;
+                            });
                 } else {
                     // Call Facets API
                     Data.getComboboxFacetItems("*", type)
