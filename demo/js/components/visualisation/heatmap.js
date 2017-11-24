@@ -21,6 +21,7 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                 countrySelection: "@",  // Allow selecting countries on the map
                 europeOnly: "@",		// If true, the heatmap will show a map of Europe instead of the entire world
                 zoomToCountry: "@",     // If true and there's only 1 point, zoom to it (works only with selection off)
+                baseUrl: "@",           // (Optional) Base URL to send to API
 
                 exporting: "@",         // Enable or disable the export of the chart
                 noBorder: "@",			// If true, the component will have no border
@@ -45,6 +46,7 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                 var elementH = scope.elementH;
                 var europeOnly = scope.europeOnly;
                 var zoomToCountry = scope.zoomToCountry;
+                var baseUrl = scope.baseUrl;
 
                 var heatmapContainer = _.first(angular.element(elem[0].querySelector(".heatmap-container")));
 
@@ -543,6 +545,11 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                         } else {
                             extraParams = newExtraParams;
                         }
+                    }
+
+                    // Add base URL to parameters, if it exists
+                    if (!_.isUndefined(baseUrl)) {
+                        extraParams.baseurl = baseUrl;
                     }
 
                     // Get heatmap data
