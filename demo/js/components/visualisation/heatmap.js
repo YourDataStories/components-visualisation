@@ -1,5 +1,5 @@
-angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "Data", "DashboardService",
-    function ($window, $ocLazyLoad, Data, DashboardService) {
+angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeout", "Data", "DashboardService",
+    function ($window, $ocLazyLoad, $timeout, Data, DashboardService) {
         return {
             restrict: "E",
             scope: {
@@ -336,7 +336,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "Data",
 
                         if (_.has(view, "colorAxis")) {
                             colorAxisParams = view.colorAxis;
-                            scope.heatmap.colorAxis[0].update(view.colorAxis);
+                            _.first(scope.heatmap.colorAxis).update(colorAxisParams);
                         }
                     }
 
@@ -451,7 +451,10 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "Data",
                                 });
 
                                 pointToZoom.zoomTo();
-                                scope.heatmap.mapZoom(3);
+                                $timeout(function () {
+                                    // With many points we need timeout here...
+                                    scope.heatmap.mapZoom(3);
+                                });
                             }
                         }
                     } else {
