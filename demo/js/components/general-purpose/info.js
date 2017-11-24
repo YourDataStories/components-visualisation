@@ -81,10 +81,17 @@ angular.module("yds").directive("ydsInfo", ["Data", "Translations", "$sce", func
                             // For "point_name_array", add new line instead of comma
                             var delimiterStr = infoValue.type === "point_name_array" ? "<br />" : ", ";
                             _.each(items, function (item) {
-                                listHtmlStr += item.code + " " + item.name + delimiterStr;
+                                var newItem = item.code + " " + item.name;
+
+                                // Add URL if it exists
+                                if (_.has(item, "url")) {
+                                    newItem = "<a href='" + item.url + "' target='_blank'>" + newItem + "</a>";
+                                }
+
+                                listHtmlStr += newItem + delimiterStr;
                             });
 
-                            listHtmlStr = listHtmlStr.slice(0, -2);
+                            listHtmlStr = listHtmlStr.slice(0, -delimiterStr.length);
 
                             scope.info[infoValue.header] = {
                                 value: $sce.trustAsHtml(listHtmlStr),
