@@ -20,7 +20,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "Data",
                 dynamicDashboard: "@",  // Set to true if you are using this in a Dashboard with dynamic filters
                 countrySelection: "@",  // Allow selecting countries on the map
                 europeOnly: "@",		// If true, the heatmap will show a map of Europe instead of the entire world
-                zoomToCountry: "@",     // If true and there's only 1 point, zoom to it (works only with selection off)
+                zoomToCountry: "@",     // If true, zoom to the first point (works only with selection off)
                 baseUrl: "@",           // (Optional) Base URL to send to API
 
                 exporting: "@",         // Enable or disable the export of the chart
@@ -340,10 +340,6 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "Data",
                         }
                     }
 
-                    // Save the number of points (Highcharts modifies the object later, and the count is needed to
-                    // check if we should zoom in)
-                    var pointsNum = response.data.length;
-
                     if (_.isEmpty(scope.heatmap.series)) {
                         var mapData = Highcharts.maps["custom/world"];
                         if (europeOnly === "true") {
@@ -446,7 +442,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "Data",
                             scope.heatmap.addSeries(newSeries);
 
                             // Check if we should zoom in to a country
-                            if (zoomToCountry === "true" && pointsNum === 1) {
+                            if (zoomToCountry === "true") {
                                 var countryCode = _.first(response.data).code;
 
                                 // Find the point by its code and zoom to it
