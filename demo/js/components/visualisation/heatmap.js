@@ -1,11 +1,11 @@
-angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "DashboardService",
-    function (Data, $ocLazyLoad, DashboardService) {
+angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "Data", "DashboardService",
+    function ($window, $ocLazyLoad, Data, DashboardService) {
         return {
             restrict: "E",
             scope: {
-                projectId: "@",         // ID of the project that the data belong
-                viewType: "@",          // Name of the array that contains the visualised data
-                lang: "@",			    // Lang of the visualised data
+                projectId: "@",         // ID of the project
+                viewType: "@",          // View type of heatmap
+                lang: "@",			    // Language of the data
 
                 colorAxis: "@",         // Enable or disable colored axis of chart
                 colorType: "@",			// Axis color type (linear or logarithmic)
@@ -427,6 +427,21 @@ angular.module("yds").directive("ydsHeatmap", ["Data", "$ocLazyLoad", "Dashboard
                             // Highcharts chart is initialized, create data for Selectivity dropdown
                             initializeSelectivity();
                         } else {
+                            // If base URL is defined and since selection is disabled, add click event
+                            // for the points, to go to their URL (if they have any)
+                            if (!_.isUndefined(baseUrl)) {
+                                newSeries.point = {
+                                    events: {
+                                        click: function () {
+                                            if (_.has(this.options, "url")) {
+                                                // Open the URL in a new tab
+                                                $window.open(this.options.url, "_blank");
+                                            }
+                                        }
+                                    }
+                                };
+                            }
+
                             // Add new series to the heatmap
                             scope.heatmap.addSeries(newSeries);
 
