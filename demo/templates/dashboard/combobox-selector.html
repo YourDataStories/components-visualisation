@@ -2,6 +2,12 @@
     <!--Title-->
     <b>{{ title }}</b>
 
+    <!--Alert-->
+    <div uib-alert class="alert-danger" ng-if="ydsAlert.length>0" close="hideAlert()">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        {{ydsAlert}}
+    </div>
+
     <!--Select-->
     <div class="selectivity-container"></div>
 </div>

@@ -82,20 +82,37 @@
                     </div>
                 </uib-tab>
 
-                <!--Agricultural Products-->
-                <uib-tab index="'agr-products'">
-                    <uib-tab-heading><i class="fa fa-pagelines" aria-hidden="true"></i> Agricultural Products
+                <!--Products/Industries/Resources tab-->
+                <uib-tab index="'pir'">
+                    <uib-tab-heading><i class="fa fa-industry" aria-hidden="true"></i> Products/Industries/Resources
                     </uib-tab-heading>
-                </uib-tab>
 
-                <!--Industries-->
-                <uib-tab index="'industries'">
-                    <uib-tab-heading><i class="fa fa-industry" aria-hidden="true"></i> Industries</uib-tab-heading>
-                </uib-tab>
-
-                <!--Natural Resources-->
-                <uib-tab index="'natural-resources'">
-                    <uib-tab-heading><i class="fa fa-tint" aria-hidden="true"></i> Natural Resources</uib-tab-heading>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <yds-combobox-selector
+                                project-id="{{ projectId }}"
+                                type="combobox.country.agricultural.products"
+                                use-filter-api="true"
+                                title="Agricultural Products">
+                            </yds-combobox-selector>
+                        </div>
+                        <div class="col-md-4">
+                            <yds-combobox-selector
+                                project-id="{{ projectId }}"
+                                type="combobox.country.industries"
+                                use-filter-api="true"
+                                title="Industries">
+                            </yds-combobox-selector>
+                        </div>
+                        <div class="col-md-4">
+                            <yds-combobox-selector
+                                project-id="{{ projectId }}"
+                                type="combobox.country.natural.resources"
+                                use-filter-api="true"
+                                title="Natural Resources">
+                            </yds-combobox-selector>
+                        </div>
+                    </div>
                 </uib-tab>
 
                 <!--Tabs for Trade, Aid Activities and Contracts Dashboards-->
