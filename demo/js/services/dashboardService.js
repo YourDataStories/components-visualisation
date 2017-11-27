@@ -300,14 +300,14 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     name: "Benefactor Organisations",
                     type: "grid",
                     params: {
-                        viewType: "aidactivity.benefactor.organisations.all",
+                        viewType: "aidactivity.benefactor.organisations.all.filter",
                         selectionId: "benefactor_orgs"
                     }
                 }, {
                     name: "Beneficiary Organisations",
                     type: "grid",
                     params: {
-                        viewType: "aidactivity.beneficiary.organisations.all",
+                        viewType: "aidactivity.beneficiary.organisations.all.filter",
                         selectionId: "beneficiary_orgs"
                     }
                 }, {
