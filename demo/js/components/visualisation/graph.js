@@ -134,6 +134,34 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                 };
 
                 /**
+                 * Navigate "back" from the current Graph state (same action as "navigating up" from the last node that
+                 * was opened)
+                 */
+                scope.navigateBack = function () {
+                    // Start from main node, and traverse the graph until we find the last node with 1 outgoing edge.
+                    var currNode = cy.$id(mainNodeId);
+
+                    // While the current node has only 1 outgoing edge, follow it
+                    while (currNode.outgoers("node").length === 1) {
+                        currNode = _.first(currNode.outgoers("node"));
+                    }
+
+                    if (currNode.outgoers("node").length > 1) {
+                        if (currNode.incomers("node").length === 1) {
+                            currNode = _.first(currNode.incomers("node"));
+                        } else {
+                            // No node was found with no children, do nothing
+                            currNode = null;
+                        }
+                    }
+
+                    // If a node was found to open, open it.
+                    if (!_.isNull(currNode)) {
+                        loadNodeChildren(currNode);
+                    }
+                };
+
+                /**
                  * Get the children of the given node from the API, and add them to the graph. If the node already has
                  * the correct amount of children "close" it and navigate to the upper graph level.
                  * @param node  Node to load children for
