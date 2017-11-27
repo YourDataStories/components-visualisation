@@ -22,6 +22,16 @@
         </div>
     </div>
 
+    <!--Alert row-->
+    <div class="row" ng-if="ydsAlert.length > 0">
+        <div class="col-md-12">
+            <div uib-alert class="alert-danger" close="hideAlert()">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                {{ ydsAlert }}
+            </div>
+        </div>
+    </div>
+
     <!--Graph & Info panel-->
     <div class="row flex">
         <!--Back button-->

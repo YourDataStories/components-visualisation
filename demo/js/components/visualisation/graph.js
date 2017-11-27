@@ -33,11 +33,12 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                 scope.graphLayouts = Graph.getLayouts();
                 scope.selectedLayout = _.first(scope.graphLayouts);
 
+                scope.childrenListThreshold = 50;
                 scope.showNodeInfo = false;
                 scope.showNodeInfoComponent = false;
                 scope.maxDepth = 1;
-                scope.childrenListThreshold = 50;
                 scope.showBackBtn = false;
+                scope.ydsAlert = "";
 
                 // The Cytoscape instance for this graph component
                 var cy = null;
@@ -64,6 +65,14 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
 
                 scope.selectLayout = function () {
                     reloadLayout();
+                };
+
+                var showAlert = function (error) {
+                    scope.ydsAlert = error.data.message;
+                };
+
+                scope.hideAlert = function () {
+                    scope.ydsAlert = "";
                 };
 
                 /**
@@ -237,9 +246,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
 
                                     // To enable or disable the "Back" button, check if there is a node that we can go "back" to.
                                     scope.showBackBtn = !_.isNull(getBackNode());
-                                }, function (error) {
-                                    console.error("Error while loading more nodes: ", error);
-                                });
+                                }, showAlert);
                         } else {
                             // Remove all children of the node
                             removeAllChildNodes(node);
@@ -480,7 +487,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                     Graph.getData(mainNodeId, lang)
                         .then(function (data) {
                             addDataToGraph(data, true);
-                        });
+                        }, showAlert);
                 };
 
                 // Load cytoscape if not loaded already and create the graph
