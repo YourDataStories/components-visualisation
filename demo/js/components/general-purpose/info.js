@@ -7,6 +7,7 @@ angular.module("yds").directive("ydsInfo", ["Data", "Translations", "$sce", func
             lang: "@",          // Lang of the visualised data
             labelColWidth: "@", // Width of the labels column (1-11, using bootstrap's grid)
             vertical: "@",      // If true, the info component will have a vertical layout
+            baseUrl: "@",       // (Optional) Base URL to send to API
             extraParams: "="    // Extra parameters to send with API call
         },
         templateUrl: Data.templatePath + "templates/general-purpose/info.html",
@@ -16,9 +17,10 @@ angular.module("yds").directive("ydsInfo", ["Data", "Translations", "$sce", func
             var lang = scope.lang;
             var vertical = scope.vertical;
             var labelColWidth = parseInt(scope.labelColWidth);
+            var baseUrl = scope.baseUrl;
             var extraParams = scope.extraParams;
 
-            //check if project id or grid type are defined
+            // Check if the project id is defined
             if (_.isUndefined(projectId) || projectId.trim() === "") {
                 scope.ydsAlert = "The YDS component is not properly initialized " +
                     "because the projectId or the viewType attribute aren't configured properly. " +
@@ -26,18 +28,19 @@ angular.module("yds").directive("ydsInfo", ["Data", "Translations", "$sce", func
                 return false;
             }
 
-            //check if info-type attribute is empty and assign the default value
+            // Check if info-type attribute is empty and assign the default value
             if (_.isUndefined(viewType) || viewType.trim() === "")
                 viewType = "default";
 
-            //check if the language attr is defined, else assign default value
+            // Check if the language attribute is defined, else assign default value
             if (_.isUndefined(lang) || lang.trim() === "")
                 lang = "en";
 
-            //check if the vertical attr is defined, else assign default value
+            // Check if the vertical attribute is defined, else assign default value
             if (_.isUndefined(vertical) || (vertical !== "true" && vertical !== "false"))
                 vertical = "false";
 
+            // Check if the labelColWidth attribute is defined and valid, else assign default value
             if (_.isUndefined(labelColWidth) || _.isNaN(labelColWidth) || labelColWidth > 11 || labelColWidth < 1) {
                 labelColWidth = 4;
             }
@@ -63,6 +66,13 @@ angular.module("yds").directive("ydsInfo", ["Data", "Translations", "$sce", func
                 "country_code_name_array",
                 "point_name_array"
             ];
+
+            // Add base URL to extraParams, if there is any
+            if (!_.isUndefined(baseUrl)) {
+                extraParams = _.extend({
+                    baseurl: baseUrl
+                }, extraParams);
+            }
 
             Data.getProjectVis("info", projectId, viewType, lang, extraParams)
                 .then(function (response) {
