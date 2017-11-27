@@ -522,8 +522,8 @@ app.factory("Data", ["$http", "$q", "$window", "$sce", "DashboardService", "YDS_
         _.each(view, function (viewValue) {
             if (viewValue.type === "url") {
                 // Find URL & value
-                var url = dataService.deepObjSearch(data, viewValue.url);
                 var label = dataService.deepObjSearch(data, viewValue.attribute);
+                var url = _.has(viewValue, "url") ? dataService.deepObjSearch(data, viewValue.url) : label;
 
                 if (viewValue["addbase"] === 1) {
                     // Add base URL to the data
