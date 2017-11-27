@@ -255,23 +255,21 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     type: "grid",
                     checked: true,
                     params: {
-                        viewType: "contract.buyers.all",
+                        viewType: "contract.buyers.all.filter",
                         selectionId: "buyer_organizations"
-                        // viewType: "publicproject.filter.buyers.all",
-                        // selectionId: "buyer_organizations"
                     }
                 }, {
                     name: "Sellers",
                     type: "grid",
                     params: {
-                        viewType: "contract.sellers.all",
+                        viewType: "contract.sellers.all.filter",
                         selectionId: "seller_organizations"
                     }
                 }, {
                     name: "CPVs",
                     type: "grid-grouped",
                     params: {
-                        viewType: "contract.CPVs.for.countries.and.period",
+                        viewType: "contract.CPVs.for.countries.and.period.filter",
                         selectionId: "cpvs"
                     }
                 }, {
