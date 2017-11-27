@@ -1,4 +1,4 @@
-angular.module("yds").directive("ydsInfo", ["Data", "Translations", "$sce", function (Data, Translations, $sce) {
+angular.module("yds").directive("ydsInfo", ["YDS_CONSTANTS", "Data", "Translations", "$sce", function (YDS_CONSTANTS, Data, Translations, $sce) {
     return {
         restrict: "E",
         scope: {
@@ -78,8 +78,17 @@ angular.module("yds").directive("ydsInfo", ["Data", "Translations", "$sce", func
                 .then(function (response) {
                     _.each(response.view, function (infoValue) {
                         if (infoValue.type === "url") {
+                            // Find URL & value
+                            var url = Data.deepObjSearch(response.data, infoValue.url);
+                            var val = Data.deepObjSearch(response.data, infoValue.attribute);
+
+                            if (infoValue["addbase"] === 1) {
+                                // Add base URL to the data
+                                url = YDS_CONSTANTS.PROJECT_DETAILS_URL + "?id=" + url + "&type=" + infoValue["urltype"];
+                            }
+
                             scope.info[infoValue.header] = {
-                                value: $sce.trustAsHtml(Data.deepObjSearch(response.data, infoValue.attribute)),
+                                value: $sce.trustAsHtml("<a href='" + url + "' target='_blank'>" + val + "</a>"),
                                 type: infoValue.type
                             };
                         } else if (_.contains(htmlLists, infoValue.type)) {
