@@ -33,7 +33,6 @@ angular.module("yds").directive("ydsInfoTable", ["Data", "Translations", "$sce",
             if (_.isUndefined(lang) || lang.trim() === "")
                 lang = "en";
 
-            scope.info = {};
             scope.translations = {
                 showMore: Translations.get(lang, "showMore"),
                 showLess: Translations.get(lang, "showLess")
@@ -53,54 +52,7 @@ angular.module("yds").directive("ydsInfoTable", ["Data", "Translations", "$sce",
                         scope.isEmptyObj = true;
                     }
 
-                    // Add columns based on the view
-                    _.each(response.view, function (infoValue) {
-                        switch (infoValue.type) {
-                            case "url":
-                                // Find URL & value
-                                var url = Data.deepObjSearch(response.data, infoValue.url);
-                                var val = Data.deepObjSearch(response.data, infoValue.attribute);
-
-                                scope.info[infoValue.header] = {
-                                    value: $sce.trustAsHtml("<a href='" + url + "' target='_blank'>" + val + "</a>"),
-                                    type: infoValue.type
-                                };
-                                break;
-                            case "country_code_name_array":
-                                var countries = Data.deepObjSearch(response.data, infoValue.attribute);
-
-                                // Create string with all countries and their flag htmls
-                                var countriesStr = "";
-                                _.each(countries, function (country) {
-                                    countriesStr += country.code + " " + country.name + ", ";
-                                });
-
-                                countriesStr = countriesStr.slice(0, -2);
-
-                                scope.info[infoValue.header] = {
-                                    value: $sce.trustAsHtml(countriesStr),
-                                    type: infoValue.type
-                                };
-                                break;
-                            case "year":
-                                var val = Data.deepObjSearch(response.data, infoValue.attribute);
-
-                                scope.info[infoValue.header] = {
-                                    value: new Date(val).getFullYear(),
-                                    type: infoValue.type
-                                };
-                                break;
-                            default:
-                                scope.info[infoValue.header] = {
-                                    value: Data.deepObjSearch(response.data, infoValue.attribute),
-                                    type: infoValue.type
-                                };
-                                break;
-                        }
-
-                        if (_.isArray(scope.info[infoValue.header].value))
-                            scope.info[infoValue.header].value = scope.info[infoValue.header].value.join()
-                    });
+                    scope.info = Data.prepareInfoData(response.data, response.view);
                 }, function (error) {
                     if (_.isNull(error) || _.isUndefined(error) || _.isUndefined(error.message))
                         scope.ydsAlert = "An error has occurred, please check the configuration of the component.";

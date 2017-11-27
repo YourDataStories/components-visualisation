@@ -80,7 +80,7 @@ app.directive("clipboard", ["$document", function () {
     }
 }]);
 
-app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANTS", function ($http, $q, $window, DashboardService, YDS_CONSTANTS) {
+app.factory("Data", ["$http", "$q", "$window", "$sce", "DashboardService", "YDS_CONSTANTS", function ($http, $q, $window, $sce, DashboardService, YDS_CONSTANTS) {
     var dataService = {};
 
     // Set template path
@@ -89,6 +89,12 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
     // Values that should be excluded from extra chart parameters (used in Trustworthiness & chart embedding)
     dataService.omittedChartParams = ["chart", "id", "viewType", "lang", "gridapi", "gridtype", "enablePaging", "tab",
         "numberOfItems", "pagingGrid", "gridDetailsType"];
+
+    // Info component view-types that contain code/value pairs with HTML code
+    var infoHtmlLists = [
+        "country_code_name_array",
+        "point_name_array"
+    ];
 
     /**
      * Convert date to timestamp
@@ -506,6 +512,75 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
     };
 
     /**
+     * Prepare data for Info components
+     * @param data
+     * @param view
+     */
+    dataService.prepareInfoData = function (data, view) {
+        var infoData = {};
+
+        _.each(view, function (viewValue) {
+            if (viewValue.type === "url") {
+                // Find URL & value
+                var url = dataService.deepObjSearch(data, viewValue.url);
+                var label = dataService.deepObjSearch(data, viewValue.attribute);
+
+                if (viewValue["addbase"] === 1) {
+                    // Add base URL to the data
+                    url = YDS_CONSTANTS.PROJECT_DETAILS_URL + "?id=" + url + "&type=" + viewValue["urltype"];
+                }
+
+                infoData[viewValue.header] = {
+                    value: $sce.trustAsHtml("<a href='" + url + "' target='_blank'>" + label + "</a>"),
+                    type: viewValue.type
+                };
+            } else if (_.contains(infoHtmlLists, viewValue.type)) {
+                var items = dataService.deepObjSearch(data, viewValue.attribute);
+
+                // Create string with all countries and their flag htmls
+                var listHtmlStr = "";
+
+                // For "point_name_array", add new line instead of comma
+                var delimiterStr = viewValue.type === "point_name_array" ? "<br />" : ", ";
+                _.each(items, function (item) {
+                    var newItem = item.code + " " + item.name;
+
+                    // Add URL if it exists
+                    if (_.has(item, "url")) {
+                        newItem = "<a href='" + item.url + "' target='_blank'>" + newItem + "</a>";
+                    }
+
+                    listHtmlStr += newItem + delimiterStr;
+                });
+
+                listHtmlStr = listHtmlStr.slice(0, -delimiterStr.length);
+
+                infoData[viewValue.header] = {
+                    value: $sce.trustAsHtml(listHtmlStr),
+                    type: "html_list"
+                };
+            } else if (viewValue.type === "year") {
+                var val = dataService.deepObjSearch(data, viewValue.attribute);
+
+                infoData[viewValue.header] = {
+                    value: new Date(val).getFullYear(),
+                    type: viewValue.type
+                };
+            } else {
+                infoData[viewValue.header] = {
+                    value: dataService.deepObjSearch(data, viewValue.attribute),
+                    type: viewValue.type
+                };
+            }
+
+            if (_.isArray(infoData[viewValue.header].value))
+                infoData[viewValue.header].value = infoData[viewValue.header].value.join(", ");
+        });
+
+        return infoData;
+    };
+
+    /**
      * Find a value in the data even if the attribute name in the view doesn't match exactly
      * @param result    The result
      * @param attribute The name of the attribute to find (from the view)
@@ -588,13 +663,20 @@ app.factory("Data", ["$http", "$q", "$window", "DashboardService", "YDS_CONSTANT
 
     /**
      * Get an ISO-8601 timestamp, and keep the time part
-     * @param timestamp
+     * @param timestamp ISO-8601 timestamp
      * @returns {*}
      */
     var formatTime = function (timestamp) {
         return timestamp.substr(0, timestamp.length - 4).split("T")[1];
     };
 
+    /**
+     * Prepare the data for showing them in grids. Finds missing values, applies some transformations etc.
+     * @param newData   Data from API
+     * @param newView   View for data from API
+     * @param prefLang  (Optional) Preferred language of grid
+     * @returns {*}
+     */
     dataService.prepareGridData = function (newData, newView, prefLang) {
         // Set default value for preferred language
         //todo: Get preferred language from grids
