@@ -170,7 +170,24 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
 
                     // If a node was found to open, open it.
                     if (!_.isNull(currNode)) {
-                        loadNodeChildren(currNode);
+                        if (currNode.data().numberOfItems < scope.childrenListThreshold) {
+                            // Not a lot of nodes, open the node normally
+                            loadNodeChildren(currNode);
+                        } else {
+                            // The node has too many child nodes, so we remove its current children
+                            removeAllChildNodes(currNode);
+
+                            // Load the children of its parent node
+                            var parentNodes = currNode.incomers("node");
+                            if (parentNodes.length === 1) {
+                                loadNodeChildren(_.first(parentNodes));
+                            }
+
+                            // And finally "click" the node to show its children in the child list.
+                            nodeClickHandler({
+                                target: currNode
+                            });
+                        }
                     }
                 };
 
