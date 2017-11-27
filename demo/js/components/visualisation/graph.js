@@ -37,6 +37,7 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                 scope.showNodeInfoComponent = false;
                 scope.maxDepth = 1;
                 scope.childrenListThreshold = 50;
+                scope.showBackBtn = false;
 
                 // The Cytoscape instance for this graph component
                 var cy = null;
@@ -134,10 +135,11 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                 };
 
                 /**
-                 * Navigate "back" from the current Graph state (same action as "navigating up" from the last node that
-                 * was opened)
+                 * Find the node that we should go "back" to. Starting from the main node and traversing the graph until
+                 * we find a node that has > 1 outgoing edges, return the last one with 1 outgoing edge.
+                 * @returns {*} Cytoscape.js node
                  */
-                scope.navigateBack = function () {
+                var getBackNode = function () {
                     // Start from main node, and traverse the graph until we find the last node with 1 outgoing edge.
                     var currNode = cy.$id(mainNodeId);
 
@@ -154,6 +156,17 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                             currNode = null;
                         }
                     }
+
+                    return currNode;
+                };
+
+                /**
+                 * Navigate "back" from the current Graph state (same action as "navigating up" from the last node that
+                 * was opened)
+                 */
+                scope.navigateBack = function () {
+                    // Find which node we should go "back" to
+                    var currNode = getBackNode();
 
                     // If a node was found to open, open it.
                     if (!_.isNull(currNode)) {
@@ -203,7 +216,10 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
                                                 cy.remove("[id='" + nodeId + "']");
                                             }
                                         }
-                                    })
+                                    });
+
+                                    // To enable or disable the "Back" button, check if there is a node that we can go "back" to.
+                                    scope.showBackBtn = !_.isNull(getBackNode());
                                 }, function (error) {
                                     console.error("Error while loading more nodes: ", error);
                                 });
@@ -238,6 +254,9 @@ angular.module("yds").directive("ydsGraph", ["Data", "Graph", "Translations", "$
 
                             // Reload the graph layout
                             reloadLayout();
+
+                            // To enable or disable the "Back" button, check if there is a node that we can go "back" to.
+                            scope.showBackBtn = !_.isNull(getBackNode());
                         }
                     } else if (_.has(targetNodeData, "numberOfItems")) {
                         // Unselect previously clicked node
