@@ -19,6 +19,14 @@ angular.module("yds").controller("DashboardDynamicController", ["$scope", "$time
             selectedFilters: []
         };
 
+        // Column width classes for each filter type
+        scope.filterColumnClass = {
+            "grid": "col-md-6",
+            "grid-grouped": "col-md-12",
+            "heatmap": "col-md-6",
+            "year": "col-md-4"
+        };
+
         scope.showProjectInfo = false;
         scope.aggregateToShow = 0;
         scope.aggregateClasses = [];
@@ -72,26 +80,6 @@ angular.module("yds").controller("DashboardDynamicController", ["$scope", "$time
                     scope.dashboardVisActiveTab = 0;
                 });
             });
-        };
-
-        /**
-         * Return the Bootstrap column class for a specified filter type
-         * @param filterType
-         * @returns {*}
-         */
-        scope.getFilterColumnClass = function (filterType) {
-            switch (filterType) {
-                case "grid":
-                    return "col-md-6";
-                case "grid-grouped":
-                    return "col-md-12";
-                case "heatmap":
-                    return "col-md-6";
-                case "year":
-                    return "col-md-4";
-                default:
-                    return "col-md-3";
-            }
         };
 
         scope.selectTab = function (tabIndex) {

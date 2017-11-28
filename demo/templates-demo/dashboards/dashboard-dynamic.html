@@ -42,7 +42,7 @@
             <div class="row">
                 <div ng-repeat="filter in dashboardsConfig.selectedFilters"
                      ng-switch="filter.type"
-                     ng-class="getFilterColumnClass(filter.type)">
+                     ng-class="filterColumnClass[filter.type] || 'col-md-3'">
 
                     <!--Heatmap filter-->
                     <div ng-switch-when="heatmap" class="panel panel-default">
