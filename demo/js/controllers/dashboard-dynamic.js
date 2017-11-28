@@ -4,7 +4,16 @@ angular.module("yds").controller("DashboardDynamicController", ["$scope", "$time
         var defaultDashboard = "aidactivity";
 
         scope.dashboardsConfig = {
-            types: DashboardService.getDashboardTypes(),
+            types: [{
+                label: "Aid Activity",
+                type: "aidactivity"
+            }, {
+                label: "Trade Activity",
+                type: "tradeactivity"
+            }, {
+                label: "Contract",
+                type: "contract"
+            }],
             selectedDashboard: defaultDashboard,
             filters: [],
             selectedFilters: []

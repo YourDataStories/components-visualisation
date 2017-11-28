@@ -4,13 +4,12 @@
         <div class="col-md-12">
             <strong>Dashboard types: </strong>
             <div class="btn-group" style="text-transform: capitalize;">
-                <label ng-repeat="type in dashboardsConfig.types track by $index"
+                <label ng-repeat="dbtype in dashboardsConfig.types track by dbtype.type"
                        ng-model="dashboardsConfig.selectedDashboard"
-                       ng-click="changeDashboardType(type)"
-                       uib-uncheckable="$last"
-                       uib-btn-radio="type"
+                       ng-click="changeDashboardType(dbtype.type)"
+                       uib-btn-radio="dbtype.type"
                        class="btn btn-default">
-                    {{ type }}
+                    {{ dbtype.label }}
                 </label>
             </div>
         </div>

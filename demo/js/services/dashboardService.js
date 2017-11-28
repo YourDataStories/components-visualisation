@@ -556,15 +556,6 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
         };
 
         /**
-         * Return the available Dashboard types, based on the "aggregates" variable (which holds the list of aggregates
-         * for each available Dashboard)
-         * @returns {*}
-         */
-        dashboard.getDashboardTypes = function () {
-            return _.keys(aggregates);
-        };
-
-        /**
          * Returns the search-tabs parameters for the specified dashboardId
          * @param dashboardId
          * @returns {*}
