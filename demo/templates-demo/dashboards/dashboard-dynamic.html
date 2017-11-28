@@ -1,7 +1,14 @@
 <div class="container" ng-controller="DashboardDynamicController">
-    <!--Dashboard type selection buttons-->
+    <!--Page title-->
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-9">
+            <h2 style="margin-top: 0; margin-bottom: 20px;">Personalised Dashboard</h2>
+        </div>
+    </div>
+
+    <div class="row margin-bottom-30">
+        <!--Dashboard type selection buttons-->
+        <div class="col-md-9">
             <strong>Dashboard types: </strong>
             <div class="btn-group" style="text-transform: capitalize;">
                 <label ng-repeat="dbtype in dashboardsConfig.types track by dbtype.type"
@@ -13,15 +20,8 @@
                 </label>
             </div>
         </div>
-    </div>
 
-    <!--Title & save/clear filters buttons-->
-    <div class="row">
-        <div class="col-md-9">
-            <h2 style="text-transform: capitalize;">
-                {{ dashboardsConfig.selectedDashboard }} Dashboard (Custom)
-            </h2>
-        </div>
+        <!--Save/clear filters buttons-->
         <div class="col-md-3" style="text-align: right">
             <yds-save-filters-button
                     dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
