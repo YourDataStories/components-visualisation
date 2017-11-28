@@ -16,7 +16,7 @@
                        ng-click="changeDashboardType(dbtype.type)"
                        uib-btn-radio="dbtype.type"
                        class="btn btn-default">
-                    {{ dbtype.label }}
+                    <i class="fa" ng-class="dbtype.icon" aria-hidden="true"></i> {{ dbtype.label }}
                 </label>
             </div>
         </div>

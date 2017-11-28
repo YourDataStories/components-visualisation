@@ -6,13 +6,16 @@ angular.module("yds").controller("DashboardDynamicController", ["$scope", "$time
         scope.dashboardsConfig = {
             types: [{
                 label: "Aid Activity",
-                type: "aidactivity"
+                type: "aidactivity",
+                icon: "fa-medkit"
             }, {
                 label: "Trade Activity",
-                type: "tradeactivity"
+                type: "tradeactivity",
+                icon: "fa-exchange"
             }, {
                 label: "Contract",
-                type: "contract"
+                type: "contract",
+                icon: "fa-pencil"
             }],
             selectedDashboard: defaultDashboard,
             filters: [],
