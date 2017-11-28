@@ -22,6 +22,7 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                 selectionType: "@",     // Selection type ("single" or "multiple")
                 dashboardId: "@",       // Used for setting/getting parameters to/from DashboardService
                 selectionId: "@",       // ID for saving the selection for the specified dashboardId
+                ignoreOwnSelection: "@",// Set to true to ignore the grid's own selections (to prevent refreshing)
                 checkboxInNewCol: "@",  // If true, the grid will add the selection checkboxes in a new column
 
                 enableRating: "@"       // Enable rating buttons for this component
@@ -48,6 +49,7 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                 var selectionType = scope.selectionType;
                 var dashboardId = scope.dashboardId;
                 var selectionId = scope.selectionId;
+                var ignoreOwnSelection = scope.ignoreOwnSelection;
 
                 // If selection is enabled, this will be used to reselect rows after refreshing the grid data
                 var selection = [];
@@ -92,9 +94,12 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                     selectionType = "multiple";
 
                 // Check if the checkboxInNewCol attribute is defined, else assign default value
-                if (_.isUndefined(scope.checkboxInNewCol) || (scope.checkboxInNewCol !== "true" && scope.checkboxInNewCol !== "false")) {
+                if (_.isUndefined(scope.checkboxInNewCol) || (scope.checkboxInNewCol !== "true" && scope.checkboxInNewCol !== "false"))
                     scope.checkboxInNewCol = "false";
-                }
+
+                // Check if the ignoreOwnSelection attribute is defined, else assign default value
+                if (_.isUndefined(ignoreOwnSelection) || (ignoreOwnSelection !== "true" && ignoreOwnSelection !== "false"))
+                    ignoreOwnSelection = "false";
 
                 // Show loading animation
                 scope.loading = true;
@@ -296,6 +301,12 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
 
                 // Watch for changes in extra parameters and update the grid
                 scope.$watch("extraParams", function (newValue, oldValue) {
+                    if (ignoreOwnSelection === "true") {
+                        // Remove own selection from the extra params, to not cause a refresh...
+                        newValue = _.omit(newValue, selectionId);
+                        oldValue = _.omit(oldValue, selectionId);
+                    }
+
                     // Check if the grid should update (ignoring the grid's own selections)
                     if (!_.isEqual(newValue, oldValue) && !preventUpdate) {
                         // Show loading animation and hide any errors
