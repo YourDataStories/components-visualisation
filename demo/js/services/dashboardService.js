@@ -186,9 +186,9 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 "contract_buyer_countries_all",
                 "contract_seller_countries_all",
                 "year_contract",
-                "contract_CPVs_for_countries_and_period_contract",
-                "contract_buyers_all_contract",
-                "contract_sellers_all_contract" //todo: verify this is correct
+                "contract_CPVs_for_countries_and_period_filter_contract",
+                "contract_buyers_all_filter_contract",
+                "contract_sellers_all_filter_contract"
             ],
             comparison: [
                 "contract_comparison_CPVs_for_countries_and_period_comparison1",
