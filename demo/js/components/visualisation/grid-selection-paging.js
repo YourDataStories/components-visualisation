@@ -128,6 +128,7 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                     }
 
                     // Select new rows
+                    var foundItems = [];
                     if (!_.isEmpty(selection)) {
                         scope.gridOptions.api.forEachNode(function (node) {
                             // Check if this node is in the selection
@@ -137,10 +138,17 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                             if (isSelected) {
                                 // The node was selected before, so select it again
                                 scope.gridOptions.api.selectNode(node, true);
+                                foundItems.push(nodeId);
                             }
 
                             preventUpdate = false;
                         });
+
+                        // Display warning in console if any items were dropped
+                        if (foundItems.length < selection.length) {
+                            console.warn("Some items were dropped because their nodes were not found!",
+                                _.difference(selection, foundItems));
+                        }
                     }
                 };
 
