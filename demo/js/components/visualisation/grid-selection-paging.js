@@ -110,19 +110,17 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
 
                 // Set cookie variables
                 var cookieKey = grid.viewType + "_" + dashboardId;
-                // var firstLoad = true;
+                var firstLoad = true;
 
                 var preventSelectionEvent = false;
 
                 /**
                  * Select the ones that are indicated in the selection parameter (matches them by their "id" attribute)
-                 * If the dashboardId attribute of the component contains "comparison", it deselects all previously
-                 * selected rows before selecting the new ones
-                 * @param selection Rows to select. Should be array of objects with "id" attributes in them.
+                 * @param selection Rows to select. Should be array of ids.
                  */
                 var selectRows = function (selection) {
                     // Deselect previously selected rows
-                    if (dashboardId.indexOf("comparison") !== -1 && !preventUpdate) {
+                    if (!preventUpdate) {
                         // Prevent the next selection event from doing anything (because deselectAll() will fire it)
                         preventSelectionEvent = true;
 
@@ -133,7 +131,8 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                     if (!_.isEmpty(selection)) {
                         scope.gridOptions.api.forEachNode(function (node) {
                             // Check if this node is in the selection
-                            var isSelected = _.contains(selection, node.data.id);
+                            var nodeId = _.has(node.data, "id_original") ? node.data["id_original"] : node.data.id;
+                            var isSelected = _.contains(selection, nodeId);
 
                             if (isSelected) {
                                 // The node was selected before, so select it again
@@ -218,6 +217,24 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
 
                                 params.successCallback(rowsThisPage, lastRow);
                                 hasColDefs = true;
+
+                                // At first load of grid, check if there are any cookies with a selection for this grid
+                                if (firstLoad) {
+                                    var cookieSel = DashboardService.getCookieObject(cookieKey);
+
+                                    if (!_.isEmpty(cookieSel)) {
+                                        // Add selection from cookie to the selection variable, so the rows will be selected
+                                        // below if selection is enabled
+                                        selection = cookieSel;
+                                    }
+
+                                    firstLoad = false;
+                                }
+
+                                // Select any points that were previously selected
+                                if (!_.isEmpty(selection)) {
+                                    selectRows(selection);
+                                }
                             };
 
                             // Function to be called when grid results retrieval fails

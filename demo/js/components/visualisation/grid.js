@@ -221,7 +221,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                  * Select the ones that are indicated in the selection parameter (matches them by their "id" attribute)
                  * If the dashboardId attribute of the component contains "comparison", it deselects all previously
                  * selected rows before selecting the new ones
-                 * @param selection Rows to select. Should be array of objects with "id" attributes in them.
+                 * @param selection Rows to select. Should be array ids.
                  */
                 var selectRows = function (selection) {
                     // Deselect previously selected rows
