@@ -1,7 +1,7 @@
 angular.module("yds").controller("DashboardDynamicController", ["$scope", "$timeout", "$location", "$anchorScroll", "$window", "$filter", "DashboardService",
     function ($scope, $timeout, $location, $anchorScroll, $window, $filter, DashboardService) {
         var scope = $scope;
-        var defaultDashboard = "aidactivity";
+        var defaultDashboard = DashboardService.getCookieObject("dynamic_dashboard_type") || "aidactivity";
 
         scope.dashboardsConfig = {
             types: [{
@@ -48,6 +48,9 @@ angular.module("yds").controller("DashboardDynamicController", ["$scope", "$time
          * @param newType
          */
         scope.changeDashboardType = function (newType) {
+            // Save new Dashboard type to cookies
+            DashboardService.setCookieObject("dynamic_dashboard_type", newType);
+
             // Get new filters
             scope.dashboardsConfig.filters = DashboardService.getDashboardFilters(newType);
 
