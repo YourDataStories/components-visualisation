@@ -229,13 +229,11 @@ app.factory("Search", ["$http", "$q", "$location", "YDS_CONSTANTS", "Data",
 
         /**
          * Format the applied facets located inside the search url
-         * @param newKeyword    The search term
          * @param prefLang      Prefered results language
          * @param pageLimit     The max number of results returned from the API
          * @param pageNumber    The page number of the results
          */
-        var performSearch = function (newKeyword, prefLang, pageLimit, pageNumber) {
-            //todo: newKeyword is not used here?
+        var performSearch = function (prefLang, pageLimit, pageNumber) {
             var deferred = $q.defer();
 
             // Define an object with the standard params required for the search query

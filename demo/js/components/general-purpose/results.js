@@ -96,7 +96,7 @@ angular.module('yds').directive('ydsResults', ['YDS_CONSTANTS', '$window', '$tem
                     Search.setKeyword(searchTerm);
                     scope.pagination.setCurrent(pageNumber);
 
-                    Search.performSearch(searchTerm, scope.lang, 10, scope.pagination.getCurrent())
+                    Search.performSearch(scope.lang, 10, scope.pagination.getCurrent())
                         .then(function (response) {
                             var results = angular.copy(response.data.response.docs);
                             var resultsCount = response.data.response.numFound;

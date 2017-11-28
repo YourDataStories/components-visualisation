@@ -279,18 +279,9 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                  * @returns {*}
                  */
                 var getRowStyle = function (params) {
-                    // If "Time" column says "1 Hour" or is blank, add appropriate color
-                    if (_.has(params.data, "time")) {
-                        var time = params.data.time.trim();
-                        switch (time) {
-                            case "<b>1 Hour</b>":
-                                //todo: Check if this is still used in Traffic Observation dashboard and remove it...
-                                return {"background-color": "#DDF6D5"};
-                                break;
-                            case "":
-                                return {"background-color": "#CAE9E3"};
-                                break;
-                        }
+                    // If "Time" column is blank, add appropriate color
+                    if (_.has(params.data, "time") && params.data.time.trim() === "") {
+                        return {"background-color": "#CAE9E3"};
                     }
 
                     return null;
