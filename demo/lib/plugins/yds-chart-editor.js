@@ -352,7 +352,6 @@ highed.YDSEditor = function (parent, attributes, suggestedTemplates, createLibra
 
     highed.ready(function () {
         resize();
-        window.scrollTo(0, 1);
     });
 
     if (!properties.useHeader) {
