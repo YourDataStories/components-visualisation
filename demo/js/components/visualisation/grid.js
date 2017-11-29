@@ -206,9 +206,11 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                  * Clear grid filters (quick filter and ag-grid column filters)
                  */
                 scope.clearComboFilters = function () {
+                    // Clear quick filter
                     scope.filters.quickFilterValue = "";
                     scope.gridOptions.api.setQuickFilter("");
 
+                    // Clear ag-grid column filters
                     scope.gridOptions.api.setFilterModel(null);
                     scope.gridOptions.api.onFilterChanged();
                 };

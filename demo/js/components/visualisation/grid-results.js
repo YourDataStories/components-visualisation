@@ -222,11 +222,16 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 };
 
                 /**
-                 * Clear the quick filter
+                 * Clear the grid's filters
                  */
                 scope.clearComboFilters = function () {
+                    // Clear quick filter (& number of loaded rows, because the grid will refresh data)
                     scope.loadedRows = 0;
                     scope.quickFilterValue = "";
+
+                    // Clear ag-grid column filters
+                    scope.gridOptions.api.setFilterModel(null);
+                    scope.gridOptions.api.onFilterChanged();
 
                     visualizeGrid();
                 };
