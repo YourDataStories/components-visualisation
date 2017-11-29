@@ -11,7 +11,7 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
                 var editorContainer = _.first(angular.element(element[0].querySelector(".highcharts-editor-container")));
                 scope.ydsAlert = "";
 
-                //if userId is undefined or empty, stop the execution of the directive
+                // If userId is undefined or empty, stop the execution of the directive
                 if (_.isUndefined(scope.userId) || scope.userId.trim().length === 0) {
                     scope.ydsAlert = "The YDS component is not properly configured." +
                         "Please check the corresponding documentation section";
@@ -200,8 +200,8 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
                     };
 
                     // Get chart data
-                    Workbench.getWorkbenchVisualisation("generic", scope.chartConfig.selectedView.type, selection.x, selection.y,
-                        _.pluck(scope.selectedItems, "basket_item_id"), scope.lang, false).then(function (response) {
+                    Workbench.getWorkbenchVisualisation(scope.chartConfig.selectedView.type, selection.x, selection.y,
+                        _.pluck(scope.selectedItems, "basket_item_id"), scope.lang).then(function (response) {
                         // Reset the chart preview
                         editor.chart.new();
 

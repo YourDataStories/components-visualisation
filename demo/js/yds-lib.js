@@ -18,9 +18,6 @@ app.constant("YDS_CONSTANTS", {
     "API_MAP": "platform.yourdatastories.eu/api/json-ld/component/map.tcl",
     "API_PIE": "platform.yourdatastories.eu/api/json-ld/component/piechart.tcl",
     "API_PLOT_INFO": "platform.yourdatastories.eu/api/json-ld/component/plotinfo.tcl",
-    "API_INTERACTIVE_BAR": "platform.yourdatastories.eu/api/json-ld/component/barchart.tcl/interactive",
-    "API_INTERACTIVE_LINE": "platform.yourdatastories.eu/api/json-ld/component/linechart.tcl/interactive",
-    "API_INTERACTIVE_SCATTER": "platform.yourdatastories.eu/api/json-ld/component/scatterchart.tcl/interactive",
     "API_INTERACTIVE_GENERIC": "platform.yourdatastories.eu/api/json-ld/component/genericchart.tcl",
     "API_SEARCH": "platform.yourdatastories.eu/api/json-ld/component/search.tcl",
     "API_SEARCH_SUGGESTIONS": "platform.yourdatastories.eu/api/json-ld/component/suggest.tcl",
@@ -1546,7 +1543,7 @@ app.factory("Filters", [function () {
         var componentFilter = _.findWhere(allFilters, {componentId: newCompId});
 
         // If the component exists in the filters array-update it, else push a new array item
-        if (!angular.isUndefined(componentFilter))
+        if (!_.isUndefined(componentFilter))
             componentFilter.filters = angular.copy(newFilter);
         else {
             filters.push({

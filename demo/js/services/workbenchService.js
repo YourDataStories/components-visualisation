@@ -1,33 +1,12 @@
 angular.module("yds").factory("Workbench", ["YDS_CONSTANTS", "$q", "$http", "Data",
     function (YDS_CONSTANTS, $q, $http, Data) {
         return {
-            getWorkbenchVisualisation: function (visType, viewType, xAxis, yAxis, basketIds, lang, sparql) {
-                var visUrl = "";
+            getWorkbenchVisualisation: function (viewType, xAxis, yAxis, basketIds, lang) {
                 var deferred = $q.defer();
-
-                switch (visType) {
-                    case "linechart":
-                        visUrl = "http://" + YDS_CONSTANTS.API_INTERACTIVE_LINE;
-                        break;
-                    case "scatterchart":
-                        visUrl = "http://" + YDS_CONSTANTS.API_INTERACTIVE_SCATTER;
-                        break;
-                    case "barchart":
-                        visUrl = "http://" + YDS_CONSTANTS.API_INTERACTIVE_BAR;
-                        break;
-                    case "generic":
-                        visUrl = "http://" + YDS_CONSTANTS.API_INTERACTIVE_GENERIC;
-                        break
-                }
-
-                // If sparql parameter is true add parameter to the URL
-                if (sparql === true) {
-                    visUrl += "?sparql=1";
-                }
 
                 $http({
                     method: "POST",
-                    url: visUrl,
+                    url: "http://" + YDS_CONSTANTS.API_INTERACTIVE_GENERIC,
                     headers: {"Content-Type": "application/x-www-form-urlencoded"},
                     data: {
                         lang: lang,

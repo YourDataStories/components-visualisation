@@ -64,7 +64,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                 var colorAxisParams = null;
 
                 // Check if the project id is defined
-                if (angular.isUndefined(projectId) || projectId.trim() === "") {
+                if (_.isUndefined(projectId) || projectId.trim() === "") {
                     scope.ydsAlert = "The YDS component is not properly initialized " +
                         "because the projectId attribute isn't configured properly. " +
                         "Please check the corresponding documentation section";
