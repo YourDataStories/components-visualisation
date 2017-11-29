@@ -3,11 +3,11 @@ angular.module("yds").directive("ydsGridAdvanced", ["Data", "Filters", "$timeout
         return {
             restrict: "E",
             scope: {
-                projectId: "@",         // ID of the project that the data belong
-                viewType: "@",          // Name of the array that contains the visualised data
-                lang: "@",              // Lang of the visualised data
-                elementH: "@",          // Set the height of the component
-                pageSize: "@",          // Set the number of results rendered on each grid page
+                projectId: "@",         // ID of the project
+                viewType: "@",          // View type of data
+                lang: "@",              // Language of the visualised data
+                elementH: "@",          // Height of the component
+                pageSize: "@",          // Number of results rendered on each grid page
 
                 combobox: "@",          // Set the types of the combobox filters (year, country)
                 comboboxLabels: "@",    // Set the labels that will be used for each combobox
@@ -84,7 +84,6 @@ angular.module("yds").directive("ydsGridAdvanced", ["Data", "Filters", "$timeout
                 gridWrapper.style.height = grid.elementH + "px";
                 gridWrapper.style.marginBottom = "80px";
 
-
                 /**
                  * Show errors on top of the visualization
                  */
@@ -132,7 +131,6 @@ angular.module("yds").directive("ydsGridAdvanced", ["Data", "Filters", "$timeout
                     return deferred.promise;
                 };
 
-
                 /**
                  * Extract the combobox values defined on the element's attributes
                  */
@@ -176,7 +174,6 @@ angular.module("yds").directive("ydsGridAdvanced", ["Data", "Filters", "$timeout
                         showAlert("", true, true);
                     }
                 };
-
 
                 /**
                  * Render the grid based on the available filters
@@ -224,7 +221,6 @@ angular.module("yds").directive("ydsGridAdvanced", ["Data", "Filters", "$timeout
                     scope.gridOptions.api.setDatasource(dataSource);
                 };
 
-
                 /**
                  * Apply combobox filters
                  */
@@ -254,9 +250,8 @@ angular.module("yds").directive("ydsGridAdvanced", ["Data", "Filters", "$timeout
                     Filters.addAdvancedGridFilter(grid.elementId, appliedFilters);
                 };
 
-
                 /**
-                 * Clear combobox filters
+                 * Clear the grid's filters
                  */
                 scope.clearComboFilters = function () {
                     // Clear the filters' error message and initialize the selected value of each filter
@@ -265,6 +260,10 @@ angular.module("yds").directive("ydsGridAdvanced", ["Data", "Filters", "$timeout
                     _.each(scope.comboboxFilters, function (filter) {
                         filter.selected = "";
                     });
+
+                    // Clear ag-grid column filters
+                    scope.gridOptions.api.setFilterModel(null);
+                    scope.gridOptions.api.onFilterChanged();
                 };
 
                 // Extract the user provided filters, and render the grid
