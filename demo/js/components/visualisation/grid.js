@@ -50,7 +50,10 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 var gridContainer = _.first(angular.element(element[0].querySelector(".grid-container")));
 
                 // Set the variables which will be used for the creation of the grid
-                scope.quickFilterValue = "";
+                scope.filters = {
+                    quickFilterValue: ""
+                };
+
                 var grid = {
                     elementId: "grid" + Data.createRandomId(),
                     projectId: scope.projectId,
@@ -187,7 +190,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
 
                     // If quick filtering is enabled and has length > 0, get its value and create an extra filter
                     if (grid.quickFiltering === "true")
-                        gridFilters["_ydsQuickFilter_"] = scope.quickFilterValue;
+                        gridFilters["_ydsQuickFilter_"] = scope.filters.quickFilterValue;
 
                     Filters.addGridFilter(grid.elementId, gridFilters);
                 };
@@ -197,6 +200,17 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                  */
                 scope.applyQuickFilter = function (input) {
                     scope.gridOptions.api.setQuickFilter(input);
+                };
+
+                /**
+                 * Clear grid filters (quick filter and ag-grid column filters)
+                 */
+                scope.clearComboFilters = function () {
+                    scope.filters.quickFilterValue = "";
+                    scope.gridOptions.api.setQuickFilter("");
+
+                    scope.gridOptions.api.setFilterModel(null);
+                    scope.gridOptions.api.onFilterChanged();
                 };
 
                 /**
