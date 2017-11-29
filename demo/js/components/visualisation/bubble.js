@@ -2,10 +2,9 @@ angular.module("yds").directive("ydsBubble", ["YDS_CONSTANTS", "Data", "$window"
     return {
         restrict: "E",
         scope: {
-            projectId: "@",         // ID of the project that the data belong
-            viewType: "@",          // Name of the array that contains the visualised data
-            lang: "@",              // Lang of the visualised data
-
+            projectId: "@",         // ID of the project
+            viewType: "@",          // View type of data
+            lang: "@",              // Language of the visualised data
             extraParams: "=",       // Extra attributes to pass to the API, if needed
             baseUrl: "@",           // Base URL to send to API (optional)
 
@@ -31,11 +30,11 @@ angular.module("yds").directive("ydsBubble", ["YDS_CONSTANTS", "Data", "$window"
         },
         templateUrl: Data.templatePath + "templates/visualisation/bubble.html",
         link: function (scope, element, attrs) {
-            var bubbleContainer = angular.element(element[0].querySelector(".bubble-container"));
+            var bubbleContainer = _.first(angular.element(element[0].querySelector(".bubble-container")));
 
             // Create a random id for the element that will render the plot
             var elementId = "bubble" + Data.createRandomId();
-            bubbleContainer[0].id = elementId;
+            bubbleContainer.id = elementId;
 
             var projectId = scope.projectId;
             var viewType = scope.viewType;
@@ -47,39 +46,39 @@ angular.module("yds").directive("ydsBubble", ["YDS_CONSTANTS", "Data", "$window"
             var extraParams = scope.extraParams;
             var baseUrl = scope.baseUrl;
 
-            // Check if the projectId and the viewType attr is defined, else stop the process
+            // Check if the projectId attribute is defined, else stop the process
             if (_.isUndefined(projectId) || projectId.trim() === "") {
                 scope.ydsAlert = "The YDS component is not properly configured." +
                     "Please check the corresponding documentation section";
                 return false;
             }
 
-            // Check if pie-type attribute is empty and assign the default value
+            // Check if view-type attribute is empty and assign the default value
             if (_.isUndefined(viewType) || viewType.trim() === "")
                 viewType = "default";
 
-            // Check if the language attr is defined, else assign default value
+            // Check if the language attribute is defined, else assign default value
             if (_.isUndefined(lang) || lang.trim() === "")
                 lang = "en";
 
-            // Check if the exporting attr is defined, else assign default value
+            // Check if the exporting attribute is defined, else assign default value
             if (_.isUndefined(exporting) || (exporting !== "true" && exporting !== "false"))
                 exporting = "true";
 
-            // Check if legend attr is defined, else assign default value
+            // Check if legend attribute is defined, else assign default value
             if (_.isUndefined(legend) || legend.trim() === "")
                 legend = "false";
 
-            // Check if the component's height attr is defined, else assign default value
+            // Check if the component's height attribute is defined, else assign default value
             if (_.isUndefined(elementH) || _.isNaN(elementH))
                 elementH = 200;
 
-            // Check if the component's title size attr is defined, else assign default value
+            // Check if the component's title size attribute is defined, else assign default value
             if (_.isUndefined(titleSize) || titleSize.length === 0 || _.isNaN(titleSize))
                 titleSize = 18;
 
             // Set the height of the plot
-            bubbleContainer[0].style.height = elementH + "px";
+            bubbleContainer.style.height = elementH + "px";
 
             // Add base URL to extra params, if needed
             if (!_.isUndefined(baseUrl) && baseUrl.length > 0) {
@@ -112,7 +111,7 @@ angular.module("yds").directive("ydsBubble", ["YDS_CONSTANTS", "Data", "$window"
                                 symbolY: 19
                             }
                         },
-
+                        filename: "YDS Bubble - " + options.title.text || "chart",
                         enabled: (exporting === "true")
                     };
 

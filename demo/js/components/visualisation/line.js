@@ -42,14 +42,14 @@ angular.module("yds").directive("ydsLine", ["Data", "Filters", function (Data, F
             var titleSize = parseInt(scope.titleSize);
             var extraParams = scope.extraParams;
 
-            // Check if the projectId and the viewType attribute is defined, else stop the process
+            // Check if the projectId attribute is defined, else stop the process
             if (_.isUndefined(projectId) || projectId.trim() === "") {
                 scope.ydsAlert = "The YDS component is not properly configured." +
                     "Please check the corresponding documentation section";
                 return false;
             }
 
-            // Check if pie-type attribute is empty and assign the default value
+            // Check if view-type attribute is empty and assign the default value
             if (_.isUndefined(viewType) || viewType.trim() === "")
                 viewType = "default";
 
@@ -94,6 +94,7 @@ angular.module("yds").directive("ydsLine", ["Data", "Filters", function (Data, F
                                 symbolY: 19
                             }
                         },
+                        filename: options.title.text || "chart",
                         enabled: (exporting === "true")
                     };
 

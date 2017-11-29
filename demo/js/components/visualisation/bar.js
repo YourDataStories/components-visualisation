@@ -2,9 +2,9 @@ angular.module("yds").directive("ydsBar", ["Data", "Filters", function (Data, Fi
     return {
         restrict: "E",
         scope: {
-            projectId: "@",         // Id of the project that the data belong
-            viewType: "@",          // Name of the array that contains the visualised data
-            lang: "@",              // Lang of the visualised data
+            projectId: "@",         // ID of the project
+            viewType: "@",          // View type of data
+            lang: "@",              // Language of the visualised data
 
             extraParams: "=",       // Extra attributes to pass to the API, if needed
             enablePaging: "@",      // Enable paging (default is false)
@@ -32,11 +32,11 @@ angular.module("yds").directive("ydsBar", ["Data", "Filters", function (Data, Fi
         },
         templateUrl: Data.templatePath + "templates/visualisation/bar.html",
         link: function (scope, element) {
-            var barContainer = angular.element(element[0].querySelector(".bar-container"));
+            var barContainer = _.first(angular.element(element[0].querySelector(".bar-container")));
 
-            //create a random id for the element that will render the chart
+            // Create a random id for the element that will render the chart
             var elementId = "bar" + Data.createRandomId();
-            barContainer[0].id = elementId;
+            barContainer.id = elementId;
 
             var projectId = scope.projectId;
             var viewType = scope.viewType;
@@ -53,7 +53,7 @@ angular.module("yds").directive("ydsBar", ["Data", "Filters", function (Data, Fi
                 Filters.addExtraParamsFilter(elementId, extraParams);
             }
 
-            // Check if the projectId and the viewType attr is defined, else stop the process
+            // Check if the projectId attribute is defined, else stop the process
             if (_.isUndefined(projectId) || projectId.trim() === "") {
                 scope.ydsAlert = "The YDS component is not properly configured. " +
                     "Please check the corresponding documentation section.";
@@ -64,27 +64,27 @@ angular.module("yds").directive("ydsBar", ["Data", "Filters", function (Data, Fi
             if (_.isUndefined(viewType) || viewType.trim() === "")
                 viewType = "default";
 
-            // Check if the language attr is defined, else assign default value
+            // Check if the language attribute is defined, else assign default value
             if (_.isUndefined(lang) || lang.trim() === "")
                 lang = "en";
 
-            // Check if the exporting attr is defined, else assign default value
+            // Check if the exporting attribute is defined, else assign default value
             if (_.isUndefined(exporting) || (exporting !== "true" && exporting !== "false"))
                 exporting = "true";
 
-            // Check if the enablePaging attr is defined, else assign default value
+            // Check if the enablePaging attribute is defined, else assign default value
             if (_.isUndefined(scope.enablePaging) || (scope.enablePaging !== "true" && scope.enablePaging !== "false"))
                 scope.enablePaging = "false";
 
-            // Check if the pageSize attr is defined, else assign default value
+            // Check if the pageSize attribute is defined, else assign default value
             if (_.isUndefined(pageSize) || _.isNaN(pageSize))
                 pageSize = 100;
 
-            // Check if the component's height attr is defined, else assign default value
+            // Check if the component's height attribute is defined, else assign default value
             if (_.isUndefined(elementH) || _.isNaN(elementH))
                 elementH = 200;
 
-            // Check if the component's title size attr is defined, else assign default value
+            // Check if the component's title size attribute is defined, else assign default value
             if (_.isUndefined(titleSize) || titleSize.length === 0 || _.isNaN(titleSize))
                 titleSize = 18;
 
@@ -106,9 +106,9 @@ angular.module("yds").directive("ydsBar", ["Data", "Filters", function (Data, Fi
 
             // Set the height of the chart
             if (scope.enablePaging === "true") {
-                barContainer[0].style.height = (parseInt(elementH) - 35) + "px";
+                barContainer.style.height = (parseInt(elementH) - 35) + "px";
             } else {
-                barContainer[0].style.height = elementH + "px";
+                barContainer.style.height = elementH + "px";
             }
 
             /**
@@ -175,7 +175,7 @@ angular.module("yds").directive("ydsBar", ["Data", "Filters", function (Data, Fi
                                         symbolY: 19
                                     }
                                 },
-
+                                filename: "YDS Bar - " + options.title.text || "chart",
                                 enabled: (exporting === "true")
                             };
 

@@ -2,10 +2,9 @@ angular.module("yds").directive("ydsPie", ["Data", "Filters", function (Data, Fi
     return {
         restrict: "E",
         scope: {
-            projectId: "@",         // Id of the project that the data belong
-            viewType: "@",          // Name of the array that contains the visualised data
-            lang: "@",              // Lang of the visualised data
-
+            projectId: "@",         // ID of the project
+            viewType: "@",          // View type of data
+            lang: "@",              // Language of the visualised data
             extraParams: "=",       // Extra attributes to pass to the API, if needed
 
             exporting: "@",         // Enable or disable the export of the chart
@@ -29,11 +28,11 @@ angular.module("yds").directive("ydsPie", ["Data", "Filters", function (Data, Fi
         },
         templateUrl: Data.templatePath + "templates/visualisation/pie.html",
         link: function (scope, element, attrs) {
-            var pieContainer = angular.element(element[0].querySelector(".pie-container"));
+            var pieContainer = _.first(angular.element(element[0].querySelector(".pie-container")));
 
             // Create a random id for the element that will render the chart
             var elementId = "pie" + Data.createRandomId();
-            pieContainer[0].id = elementId;
+            pieContainer.id = elementId;
 
             var projectId = scope.projectId;
             var viewType = scope.viewType;
@@ -55,23 +54,23 @@ angular.module("yds").directive("ydsPie", ["Data", "Filters", function (Data, Fi
                 return false;
             }
 
-            // Check if pie-type attribute is empty and assign the default value
+            // Check if view type attribute is empty and assign the default value
             if (_.isUndefined(viewType) || viewType.trim() === "")
                 viewType = "default";
 
-            // Check if the language attr is defined, else assign default value
+            // Check if the language attribute is defined, else assign default value
             if (_.isUndefined(lang) || lang.trim() === "")
                 lang = "en";
 
-            // Check if the exporting attr is defined, else assign default value
+            // Check if the exporting attribute is defined, else assign default value
             if (_.isUndefined(exporting) || (exporting !== "true" && exporting !== "false"))
                 exporting = "true";
 
-            // Check if the component's height attr is defined, else assign default value
+            // Check if the component's height attribute is defined, else assign default value
             if (_.isUndefined(elementH) || _.isNaN(elementH))
                 elementH = 200;
 
-            // Check if the component's title size attr is defined, else assign default value
+            // Check if the component's title size attribute is defined, else assign default value
             if (_.isUndefined(titleSize) || titleSize.length === 0 || _.isNaN(titleSize))
                 titleSize = 18;
 
@@ -79,7 +78,7 @@ angular.module("yds").directive("ydsPie", ["Data", "Filters", function (Data, Fi
             scope.loading = true;
 
             // Set the height of the chart
-            pieContainer[0].style.height = elementH + "px";
+            pieContainer.style.height = elementH + "px";
 
             // Get the pie data from the server
             Data.getProjectVis("pie", scope.projectId, viewType, lang, extraParams)
@@ -104,7 +103,7 @@ angular.module("yds").directive("ydsPie", ["Data", "Filters", function (Data, Fi
                                 symbolY: 19
                             }
                         },
-
+                        filename: "YDS Pie - " + options.title.text || "chart",
                         enabled: (exporting === "true")
                     };
 

@@ -2,10 +2,9 @@ angular.module("yds").directive("ydsTreeMap", ["Data", "Filters", function (Data
     return {
         restrict: "E",
         scope: {
-            projectId: "@",         // ID of the project that the data belong
-            viewType: "@",          // Name of the array that contains the visualised data
-            lang: "@",              // Lang of the visualised data
-
+            projectId: "@",         // ID of the project
+            viewType: "@",          // View type of data
+            lang: "@",              // Language of the visualised data
             extraParams: "=",       // Extra attributes to pass to the API, if needed
 
             exporting: "@",         // Enable or disable the export of the plot
@@ -29,11 +28,11 @@ angular.module("yds").directive("ydsTreeMap", ["Data", "Filters", function (Data
         },
         templateUrl: Data.templatePath + "templates/visualisation/treemap.html",
         link: function (scope, element, attrs) {
-            var treemapContainer = angular.element(element[0].querySelector(".treemap-container"));
+            var treemapContainer = _.first(angular.element(element[0].querySelector(".treemap-container")));
 
             // Create a random id for the element that will render the plot
             var elementId = "treemap" + Data.createRandomId();
-            treemapContainer[0].id = elementId;
+            treemapContainer.id = elementId;
 
             var projectId = scope.projectId;
             var viewType = scope.viewType;
@@ -59,19 +58,19 @@ angular.module("yds").directive("ydsTreeMap", ["Data", "Filters", function (Data
             if (_.isUndefined(viewType) || viewType.trim() === "")
                 viewType = "default";
 
-            // Check if the language attr is defined, else assign default value
+            // Check if the language attribute is defined, else assign default value
             if (_.isUndefined(lang) || lang.trim() === "")
                 lang = "en";
 
-            // Check if the exporting attr is defined, else assign default value
+            // Check if the exporting attribute is defined, else assign default value
             if (_.isUndefined(exporting) || (exporting !== "true" && exporting !== "false"))
                 exporting = "true";
 
-            // Check if the component's height attr is defined, else assign default value
+            // Check if the component's height attribute is defined, else assign default value
             if (_.isUndefined(elementH) || _.isNaN(elementH))
                 elementH = 200;
 
-            // Check if the component's title size attr is defined, else assign default value
+            // Check if the component's title size attribute is defined, else assign default value
             if (_.isUndefined(titleSize) || titleSize.length === 0 || _.isNaN(titleSize))
                 titleSize = 18;
 
@@ -79,7 +78,7 @@ angular.module("yds").directive("ydsTreeMap", ["Data", "Filters", function (Data
             scope.loading = true;
 
             // Set the height of the plot
-            treemapContainer[0].style.height = elementH + "px";
+            treemapContainer.style.height = elementH + "px";
 
             Data.getProjectVis("treemap", projectId, viewType, lang, extraParams)
                 .then(function (response) {
@@ -113,6 +112,7 @@ angular.module("yds").directive("ydsTreeMap", ["Data", "Filters", function (Data
                                     symbolY: 19
                                 }
                             },
+                            filename: "YDS Treemap - " + chartTitle || "chart",
                             enabled: (exporting === "true")
                         },
                         series: [
