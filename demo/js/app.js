@@ -185,10 +185,6 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
                 };
             }
         })
-        .state("projects-el", {
-            url: "/projects-el",
-            templateUrl: "templates-demo/pages/resource-el.html"
-        })
         .state("trustworthiness", {
             url: "/trustworthiness",
             templateUrl: "templates-demo/pages/trustworthiness.html"
