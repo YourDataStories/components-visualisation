@@ -1,5 +1,5 @@
-angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "$templateRequest", "Data", "Basket", "Workbench", "Personalization",
-    function ($ocLazyLoad, $compile, $templateRequest, Data, Basket, Workbench, Personalization) {
+angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "$templateRequest", "$timeout", "Data", "Basket", "Workbench", "Personalization",
+    function ($ocLazyLoad, $compile, $templateRequest, $timeout, Data, Basket, Workbench, Personalization) {
         return {
             restrict: "E",
             scope: {
@@ -75,6 +75,9 @@ angular.module("yds").directive("ydsWorkbenchNew", ["$ocLazyLoad", "$compile", "
                             // Feed the axis selection to the Personalization service with weight of 2
                             feedAxisToPersonalization(2);
                         });
+
+                        // Force a resize of the editor (helps when the Workbench is embedded in Dashboards)
+                        $timeout(editor.resize);
                     });
 
                     // Listen for template selection event
