@@ -29,11 +29,10 @@ angular.module("yds").directive("ydsTrafficObservation", ["$timeout", "Data",
 
                 scope.showChart = false;
 
-                // Check if project id or grid type are defined
+                // Check if project id is defined
                 if (_.isUndefined(projectId) || projectId.trim() === "") {
-                    scope.ydsAlert = "The YDS component is not properly initialized " +
-                        "because the projectId or the viewType attribute aren't configured properly. " +
-                        "Please check the corresponding documentation section";
+                    scope.ydsAlert = "The YDS component is not properly configured. " +
+                        "Please check the corresponding documentation section.";
                     return false;
                 }
 
@@ -53,7 +52,7 @@ angular.module("yds").directive("ydsTrafficObservation", ["$timeout", "Data",
                 if (_.isUndefined(elementH) || _.isNaN(elementH))
                     elementH = 200;
 
-                // Set the id and the height of the grid component
+                // Set the id and the height of the component
                 trafficContainer.id = elementId;
                 trafficWrapper.style.height = elementH + "px";
 
@@ -116,10 +115,11 @@ angular.module("yds").directive("ydsTrafficObservation", ["$timeout", "Data",
                                     var lastYearTraffic = formattedStrToInt(row[maxYear]);
 
                                     var trafficIncrease = lastYearTraffic - firstYearTraffic;
-                                    var percentageDiff = (trafficIncrease / firstYearTraffic) * 100;
+                                    var percentageDiff =
+                                        (firstYearTraffic !== 0) ? (trafficIncrease / firstYearTraffic) * 100 : 0;
 
                                     row.increase = trafficIncrease.toLocaleString();
-                                    row.percent = Math.round(percentageDiff * 10) / 10
+                                    row.percent = Math.round(percentageDiff * 10) / 10;
                                 });
 
                                 // Add headers for traffic increase & percentage change
