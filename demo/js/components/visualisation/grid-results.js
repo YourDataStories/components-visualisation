@@ -681,7 +681,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
 
                                                 if (!_.isEmpty(deselected)) {
                                                     var prefix = "-";   // By default, remove items
-                                                    var itemsToSend = deselected;
+                                                    var itemsToSend = _.map(deselected, encodeURIComponent);    // Encode because sometimes items contain semicolon
 
                                                     if (deselected.length >= originalFilterValues.length) {
                                                         // If everything was deselected, add *
@@ -689,7 +689,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                                     } else if (deselected.length > allowedItems.length) {
                                                         // More items are deselected than selected, send the selected ones
                                                         prefix = "+";
-                                                        itemsToSend = allowedItems;
+                                                        itemsToSend = _.map(allowedItems, encodeURIComponent);
                                                     }
 
                                                     filterExtraParams[prefix + key] = itemsToSend;
