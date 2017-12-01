@@ -32,8 +32,16 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                     max: maxValue
                 };
 
-                // todo: Generate this array from min/max values, e.g. https://stackoverflow.com/a/846249
-                var selectValues = [minValue, 1, 10, 100, 1000, maxValue];
+                // Generate array with some numbers between the min/max values
+                // Another way: https://stackoverflow.com/a/846249
+                var comboboxValues = [minValue];
+
+                var i = 0;
+                while (_.last(comboboxValues) < maxValue) {
+                    comboboxValues.push(Math.pow(10, i));
+                    i++;
+                }
+                comboboxValues.push(maxValue);
 
                 // Check if there is a saved selection in the cookies, and use that as default
                 var cookieValue = DashboardService.getCookieObject(selectionType);
@@ -62,7 +70,7 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                 // todo: When adding items, check if they are numbers and between min/max values (see createFilter)
                 // Create options that are applicable to both comboboxes
                 var selectizeOptions = {
-                    options: _.map(selectValues, function (item) {
+                    options: _.map(comboboxValues, function (item) {
                         return {
                             value: item,
                             text: item

@@ -291,7 +291,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                         apiParam: "amount",
                         label: "Amount",
                         min: 0,
-                        max: 1000000000000
+                        max: 1000000000
                     }
                 }
             ],
@@ -347,7 +347,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                         apiParam: "budget",
                         label: "Budget",
                         min: 0,
-                        max: 1000000000000
+                        max: 1000000000
                     }
                 }, {
                     name: "Spending",
@@ -357,7 +357,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                         apiParam: "spending",
                         label: "Spending",
                         min: 0,
-                        max: 1000000000000
+                        max: 1000000000
                     }
                 }
             ],
@@ -399,7 +399,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                         apiParam: "amount",
                         label: "Amount",
                         min: 0,
-                        max: 1000000000000
+                        max: 1000000000
                     }
                 }
             ]
