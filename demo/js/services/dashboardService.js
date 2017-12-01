@@ -283,6 +283,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     name: "Amount",
                     type: "amount",
                     params: {
+                        selectionId: "contract_amount",
+                        apiParam: "amount",
                         label: "Amount",
                         min: 0,
                         max: 1000000000000
@@ -337,6 +339,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     name: "Budget",
                     type: "amount",
                     params: {
+                        selectionId: "aid_budget",
+                        apiParam: "budget",
                         label: "Budget",
                         min: 0,
                         max: 1000000000000
@@ -345,6 +349,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     name: "Spending",
                     type: "amount",
                     params: {
+                        selectionId: "aid_spending",
+                        apiParam: "spending",
                         label: "Spending",
                         min: 0,
                         max: 1000000000000
@@ -385,6 +391,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     type: "amount",
                     checked: true,
                     params: {
+                        selectionId: "trade_amount",
+                        apiParam: "amount",
                         label: "Amount",
                         min: 0,
                         max: 1000000000000
@@ -655,6 +663,19 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 // Check that the selection is not undefined, and at least the 1st item has an "id" property
                 if (!_.isUndefined(selection) && !_.isEmpty(selection)) {
                     apiOptions[selectionId] = selection.join(",");
+                }
+            });
+
+            // Gather data for amount filters
+            filters = _.where(enabledFilters, {type: "amount"});
+
+            _.each(filters, function (filter) {
+                var selectionId = filter.params.selectionId;
+                var apiParam = filter.params.apiParam;
+                var selection = dashboard.getObject(selectionId);
+
+                if (!_.isUndefined(selection) && selection.trim().length > 0) {
+                    apiOptions[apiParam] = selection;
                 }
             });
 
