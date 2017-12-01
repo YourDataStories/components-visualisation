@@ -11,11 +11,8 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
             },
             templateUrl: Data.templatePath + "templates/dashboard/large-number-range-selector.html",
             link: function (scope, element, attrs) {
-                var selectizeDiv = _.first(angular.element(element[0].querySelector(".large-number-range-select")));
-
-                // noinspection UnnecessaryLocalVariableJS
-                var elementId = "lnrs" + Data.createRandomId();
-                selectizeDiv.id = elementId;
+                var minDiv = _.first(angular.element(element[0].querySelector(".min-number-select")));
+                var maxDiv = _.first(angular.element(element[0].querySelector(".max-number-select")));
 
                 var minValue = parseInt(scope.minValue);
                 var maxValue = parseInt(scope.maxValue);
@@ -49,8 +46,8 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                 // Save initial slider value to DashboardService
                 // saveValueToDashboardService();
 
-                // Initialize Selectize.js
-                $(selectizeDiv).selectize({
+                //todo: When adding items, check if they are numbers and between min/max values (see createFilter)
+                var selectizeOptions = {
                     options: _.map(selectValues, function (item) {
                         return {
                             value: item,
@@ -61,8 +58,11 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                     createOnBlur: true,
                     maxItems: 1,
                     placeholder: "Select " + scope.title
-                });
-                //todo: When adding items, check if they are numbers and between min/max values (see createFilter)
+                };
+
+                // Initialize Selectize.js
+                $(minDiv).selectize(selectizeOptions);
+                $(maxDiv).selectize(selectizeOptions);
             }
         };
     }

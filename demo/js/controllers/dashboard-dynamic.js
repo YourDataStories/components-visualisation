@@ -27,6 +27,7 @@ angular.module("yds").controller("DashboardDynamicController", ["$scope", "$time
             "grid": "col-md-6",
             "grid-grouped": "col-md-12",
             "heatmap": "col-md-6",
+            "amount": "col-md-6",
             "year": "col-md-4"
         };
 

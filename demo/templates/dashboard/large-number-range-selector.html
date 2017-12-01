@@ -1,4 +1,22 @@
 <div class="component-wrapper">
-    <h3>{{ title }}</h3>
-    <div class="large-number-range-select"></div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {{ title }}
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <!--Min value-->
+                <div class="col-xs-6">
+                    <b>Min:</b>
+                    <div class="min-number-select"></div>
+                </div>
+
+                <!--Max value-->
+                <div class="col-xs-6">
+                    <b>Max:</b>
+                    <div class="max-number-select"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
