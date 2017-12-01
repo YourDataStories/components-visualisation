@@ -512,7 +512,7 @@ body #main .container:first-child {
     left: 4px;
 }
 
-.rzslider.vertical .rz-pointer {
+.rzslider.rz-vertical .rz-pointer {
     left: -6px !important;
 }
 
