@@ -42,6 +42,7 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                     i++;
                 }
                 comboboxValues.push(maxValue);
+                comboboxValues.push("*");
 
                 // Check if there is a saved selection in the cookies, and use that as default
                 var cookieValue = DashboardService.getCookieObject(selectionType);
@@ -49,8 +50,8 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                     // Split cookie value to min/max values and add then to the selection to be used as defaults
                     var vals = cookieValue.replace(/\[|]/g, "").split(" TO ");
 
-                    selection.min = parseInt(vals[0]);
-                    selection.max = parseInt(vals[1]);
+                    selection.min = vals[0] === "*" ? "*" : parseInt(vals[0]);
+                    selection.max = vals[1] === "*" ? "*" : parseInt(vals[1]);
                 }
 
                 /**
