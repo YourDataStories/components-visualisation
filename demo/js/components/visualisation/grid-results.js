@@ -68,7 +68,8 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 };
 
                 scope.loadedRows = 0;
-                var query = "";
+                var query = "";             // Last query
+                var queryHasQF = false;     // Indicates whether the quick filter's value has been added to the saved query
                 var hasColDefs = false;     // Indicates if the column definitions have been loaded for the grid
                 var dataView = null;        // The view of the grid will be kept here, to use for exporting
                 var dataSampleObj = null;   // A sample object from the grid's results, for use in exporting
@@ -225,13 +226,13 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                  * Clear the grid's filters
                  */
                 scope.clearComboFilters = function () {
+                    // Clear ag-grid column filters (calling onFilterChanged() not needed since we refresh the grid)
+                    scope.gridOptions.api.setFilterModel(null);
+
                     // Clear quick filter (& number of loaded rows, because the grid will refresh data)
                     scope.loadedRows = 0;
                     scope.quickFilterValue = "";
-
-                    // Clear ag-grid column filters
-                    scope.gridOptions.api.setFilterModel(null);
-                    scope.gridOptions.api.onFilterChanged();
+                    query = "";
 
                     visualizeGrid();
                 };
@@ -278,12 +279,14 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                     }
 
                     if (_.isUndefined(extraParams) || _.isEmpty(extraParams)) {
+                        queryHasQF = false;
                         deferred.resolve(newKeyword);
                     } else {
                         if (query.length === 0) {
                             Data.getType2SolrQuery(grid.viewType, extraParams).then(function (response) {
                                 // Remember query so we don't need to call this API every time the page changes
                                 query = response.data.q;
+                                queryHasQF = false;
 
                                 // Resolve promise
                                 deferred.resolve(query);
@@ -428,6 +431,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                  * @returns {{}}        Params object for YDS API
                  */
                 var getFilterParams = function (agGridParams) {
+                    //todo: Move this function to a service
                     var filterExtraParams = {};
 
                     if (!_.isNull(allFilterValues) && _.has(agGridParams, "filterModel") && !_.isEmpty(agGridParams.filterModel)) {
@@ -473,6 +477,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                  * Render the grid
                  */
                 var visualizeGrid = function (quickFilter) {
+                    //todo: Doesn't need "quickFilter" parameter, since there is scope.quickFilterValue
                     // Create grid data source
                     var dataSource = {
                         rowCount: null, // behave as infinite scroll
@@ -675,8 +680,9 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                 // Get the search query, and merge it with the quick filter if it's defined
                                 getSearchQuery().then(function (searchQuery) {
                                     query = searchQuery;
-                                    if (!_.isUndefined(quickFilter)) {
+                                    if (!_.isUndefined(quickFilter) && !queryHasQF) {
                                         query += " AND " + quickFilter;
+                                        queryHasQF = true;
                                     }
 
                                     // Try to find any selected facets
