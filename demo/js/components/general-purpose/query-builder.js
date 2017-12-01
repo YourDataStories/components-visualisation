@@ -79,8 +79,6 @@ angular.module("yds").directive("queryBuilder", ["$compile", "$ocLazyLoad", "$lo
 
                         Data.templatePath + "lib/querybuilder-selectivity-plugin.js",   // Selectivity QueryBuilder plugin
 
-                        Data.templatePath + "css/selectize.bootstrap3.css",             // Selectize Bootstrap 3 theme
-                        Data.templatePath + "lib/selectize.min.js",                     // Selectize javaScript
                         Data.templatePath + "lib/plugins/yds-country-selector.js",      // Country selection jQuery plugin
                         Data.templatePath + "lib/plugins/yds-currency-selector.js",     // Currency selection jQuery plugin
                         Data.templatePath + "lib/plugins/yds-year-selector.js",         // Year selection jQuery plugin
