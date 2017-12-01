@@ -6,6 +6,7 @@
     <div ng-show="quickFiltering=='true'">
         <div class="component-adv-quick-filter-label"><i class="glyphicon glyphicon-filter"></i>Quick Filter:</div>
         <input type="text"
+               ng-keypress="$event.keyCode == 13 ? applyComboFilters() : null"
                class="form-control component-adv-quick-filter"
                ng-model="quickFilterValue"/>
 
