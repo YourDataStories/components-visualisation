@@ -174,18 +174,22 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 "year_aidactivity",
                 "aidactivity_benefactor_organisations_all_aidactivity",
                 "aidactivity_beneficiary_organisations_all_aidactivity",
-                "aidactivity_sectors_for_countries_and_period_tree_aidactivity"
+                "aidactivity_sectors_for_countries_and_period_tree_aidactivity",
+                "aid_spending",
+                "aid_budget"
             ],
             tradeactivity: [
                 "tradeactivity_hasdestination_countries_all",
                 "tradeactivity_hasorigin_countries_all",
                 "year_tradeactivity",
+                "trade_amount",
                 "tradeactivity_sectors_for_countries_and_period_tree_tradeactivity"
             ],
             contract: [
                 "contract_buyer_countries_all",
                 "contract_seller_countries_all",
                 "year_contract",
+                "contract_amount",
                 "contract_CPVs_for_countries_and_period_filter_contract",
                 "contract_buyers_all_filter_contract",
                 "contract_sellers_all_filter_contract"

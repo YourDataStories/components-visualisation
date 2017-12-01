@@ -35,14 +35,15 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                 // todo: Generate this array from min/max values, e.g. https://stackoverflow.com/a/846249
                 var selectValues = [minValue, 1, 10, 100, 1000, maxValue];
 
-                // todo: Check if there is a saved selection in the cookies, and use that as default
-                // var cookieValue = DashboardService.getCookieObject(selectionType);
-                // if (!_.isUndefined(cookieValue) && !_.isNull(cookieValue)) {
-                //     defaultValue = cookieValue;
-                // }
+                // Check if there is a saved selection in the cookies, and use that as default
+                var cookieValue = DashboardService.getCookieObject(selectionType);
+                if (!_.isUndefined(cookieValue) && !_.isNull(cookieValue)) {
+                    // Split cookie value to min/max values and add then to the selection to be used as defaults
+                    var vals = cookieValue.replace(/\[|]/g, "").split(" TO ");
 
-                // Save initial slider value to DashboardService
-                saveValueToDashboardService();
+                    selection.min = parseInt(vals[0]);
+                    selection.max = parseInt(vals[1]);
+                }
 
                 /**
                  * Handle changes in the values of the Selectize.js comboboxes.
@@ -51,7 +52,9 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                  */
                 var changeHandler = function (valName, newValue) {
                     // Save new selection to variable, and Dashboard service
-                    selection[valName] = newValue;
+                    if (!_.isUndefined(valName) && !_.isUndefined(newValue)) {
+                        selection[valName] = newValue;
+                    }
 
                     DashboardService.saveObject(selectionType, "[" + selection.min + " TO " + selection.max + "]");
                 };
@@ -88,6 +91,9 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                         changeHandler("max", item);
                     }
                 }));
+
+                // Save initial slider value to DashboardService
+                changeHandler();
             }
         };
     }
