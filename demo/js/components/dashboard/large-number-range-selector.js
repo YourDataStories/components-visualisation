@@ -35,13 +35,6 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                 // todo: Generate this array from min/max values, e.g. https://stackoverflow.com/a/846249
                 var selectValues = [minValue, 1, 10, 100, 1000, maxValue];
 
-                /**
-                 * Save the current value of the slider to the DashboardService
-                 */
-                var saveValueToDashboardService = function () {
-                    DashboardService.saveObject(selectionType, "[" + selection.min + " TO " + selection.max + "]");
-                };
-
                 // todo: Check if there is a saved selection in the cookies, and use that as default
                 // var cookieValue = DashboardService.getCookieObject(selectionType);
                 // if (!_.isUndefined(cookieValue) && !_.isNull(cookieValue)) {
@@ -57,16 +50,14 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                  * @param newValue  The new value
                  */
                 var changeHandler = function (valName, newValue) {
+                    // Save new selection to variable, and Dashboard service
                     selection[valName] = newValue;
 
-                    $timeout(function () {
-                        // todo: Check that $timeout is required here
-                        saveValueToDashboardService();
-                    });
-                    console.log("Current selection: ", selection);
+                    DashboardService.saveObject(selectionType, "[" + selection.min + " TO " + selection.max + "]");
                 };
 
                 // todo: When adding items, check if they are numbers and between min/max values (see createFilter)
+                // Create options that are applicable to both comboboxes
                 var selectizeOptions = {
                     options: _.map(selectValues, function (item) {
                         return {
