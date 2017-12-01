@@ -33,7 +33,7 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                 };
 
                 // todo: Generate this array from min/max values, e.g. https://stackoverflow.com/a/846249
-                var selectValues = [0, 1, 10, 100, 1000];
+                var selectValues = [minValue, 1, 10, 100, 1000, maxValue];
 
                 /**
                  * Save the current value of the slider to the DashboardService
@@ -67,7 +67,6 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                 };
 
                 // todo: When adding items, check if they are numbers and between min/max values (see createFilter)
-                // todo: Set default values of the comboboxes to the min/max values
                 var selectizeOptions = {
                     options: _.map(selectValues, function (item) {
                         return {
@@ -84,13 +83,16 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                     }
                 };
 
-                // Initialize Selectize.js
+                // Initialize Selectize.js for min and max comboboxes
                 $(minDiv).selectize(_.extend(selectizeOptions, {
+                    items: [selection.min],
                     onChange: function (item) {
                         changeHandler("min", item);
                     }
                 }));
+
                 $(maxDiv).selectize(_.extend(selectizeOptions, {
+                    items: [selection.max],
                     onChange: function (item) {
                         changeHandler("max", item);
                     }
