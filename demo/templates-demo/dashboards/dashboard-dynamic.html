@@ -112,6 +112,15 @@
                             lang="{{ filter.params.lang || 'en' }}">
                     </yds-dashboard-updater>
 
+                    <!--Amount filter-->
+                    <yds-large-number-range
+                            ng-switch-when="amount"
+                            title="{{ filter.params.label }}"
+                            selection-type="{{ filter.params.selectionId }}"
+                            min-value="{{ filter.params.min }}"
+                            max-value="{{ filter.params.max }}">
+                    </yds-large-number-range>
+
                     <div ng-switch-default><span style="color: red; font-weight: bold">
                         Filter not implemented. Configuration:</span> {{ filter }}
                     </div>

@@ -279,6 +279,14 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     params: {
                         label: "Time Period for Contracts"
                     }
+                }, {
+                    name: "Amount",
+                    type: "amount",
+                    params: {
+                        label: "Amount",
+                        min: 0,
+                        max: 1000000000000
+                    }
                 }
             ],
             "aidactivity": [
@@ -325,6 +333,22 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     params: {
                         label: "Time Period for Aid Activities"
                     }
+                }, {
+                    name: "Budget",
+                    type: "amount",
+                    params: {
+                        label: "Budget",
+                        min: 0,
+                        max: 1000000000000
+                    }
+                }, {
+                    name: "Spending",
+                    type: "amount",
+                    params: {
+                        label: "Spending",
+                        min: 0,
+                        max: 1000000000000
+                    }
                 }
             ],
             "tradeactivity": [
@@ -355,6 +379,15 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     checked: true,
                     params: {
                         label: "Time Period for Trade Activities"
+                    }
+                }, {
+                    name: "Amount",
+                    type: "amount",
+                    checked: true,
+                    params: {
+                        label: "Amount",
+                        min: 0,
+                        max: 1000000000000
                     }
                 }
             ]
