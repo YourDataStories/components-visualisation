@@ -501,17 +501,18 @@ body #main .container:first-child {
 /********************************/
 /**** RZSLIDER CUSTOMIZATION ****/
 /********************************/
-rzslider .rz-pointer {
+.rzslider .rz-pointer {
     height: 16px;
     width: 16px;
     top: -5px;
 }
-rzslider .rz-pointer:after {
+
+.rzslider .rz-pointer:after {
     top: 4px;
     left: 4px;
 }
 
-rzslider.vertical .rz-pointer {
+.rzslider.vertical .rz-pointer {
     left: -6px !important;
 }
 

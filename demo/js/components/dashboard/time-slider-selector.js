@@ -18,7 +18,7 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                 var type = scope.type;
                 var minYear = parseInt(scope.minYear);
                 var maxYear = parseInt(scope.maxYear);
-                var defaultValue = parseInt(scope.defaultValue);
+                var defaultValue = scope.defaultValue;
                 var dashboardId = scope.dashboardId;
                 var selectionType = scope.selectionType;
 
@@ -48,9 +48,6 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
 
                     // Apply modification to the value depending on the type
                     switch (type) {
-                        case "day":
-                            finalValue = weekDays[scope.slider.value];
-                            break;
                         case "time":
                         case "minutes":
                             finalValue = minutesToTime(scope.slider.value);
@@ -79,10 +76,8 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                 if (!_.isUndefined(cookieValue) && !_.isNull(cookieValue)) {
                     switch (type) {
                         case "year":
-                            defaultValue = cookieValue;
-                            break;
                         case "day":
-                            defaultValue = DashboardService.weekDayToNum(cookieValue);
+                            defaultValue = cookieValue;
                             break;
                         case "time":
                         case "minutes":
@@ -116,14 +111,14 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                             ceil: maxYear
                         };
 
-                        defaultValue = defaultValue || minYear;
+                        defaultValue = parseInt(defaultValue) || minYear;
                         break;
                     case "day":
                         specificOptions = {
                             stepsArray: weekDays
                         };
 
-                        defaultValue = defaultValue || 0;
+                        defaultValue = defaultValue || _.first(weekDays);
                         break;
                     case "time":
                         specificOptions = {
@@ -133,7 +128,7 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                             translate: minutesToTime
                         };
 
-                        defaultValue = defaultValue || 0;
+                        defaultValue = parseInt(defaultValue) || 0;
                         break;
                     case "minutes":
                         specificOptions = {
@@ -145,7 +140,7 @@ angular.module("yds").directive("ydsTimeSlider", ["$timeout", "DashboardService"
                             }
                         };
 
-                        defaultValue = defaultValue || 0;
+                        defaultValue = parseInt(defaultValue) || 0;
                 }
 
                 // Set slider options
