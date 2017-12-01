@@ -1200,6 +1200,10 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                         subscriptions.push(
                             dashboard.subscribeYearChanges(scope, changeHandler));
                         break;
+                    case "amount":
+                        subscriptions.push(
+                            dashboard.subscribeObjectChanges(scope, changeHandler));
+                        break;
                     default:
                         console.warn("Unknown filter type in Dashboard Updater: " + type);
                 }
