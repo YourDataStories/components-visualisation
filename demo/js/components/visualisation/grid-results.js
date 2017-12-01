@@ -299,7 +299,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
 
                 /**
                  * Set the project that should be selected in DashboardService.
-                 * (Used only if view-in-dashboard attribute is true)
+                 * (Used when view-in-dashboard attribute is true)
                  * @param itemId
                  */
                 scope.viewBtn = function (itemId) {
@@ -419,6 +419,54 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                     }
 
                     return columnDefs;
+                };
+
+                /**
+                 * Given the parameters object given by ag-grid, check if there is a filter model, and create an object
+                 * with the filter parameters as expected by the YDS API.
+                 * @param agGridParams  Params object from ag-grid
+                 * @returns {{}}        Params object for YDS API
+                 */
+                var getFilterParams = function (agGridParams) {
+                    var filterExtraParams = {};
+
+                    if (!_.isNull(allFilterValues) && _.has(agGridParams, "filterModel") && !_.isEmpty(agGridParams.filterModel)) {
+                        // console.log("Filter model", params.filterModel);
+                        // Find which items were removed from each filter, and add them to be sent
+                        _.each(agGridParams.filterModel, function (filterValue, key) {
+                            if (_.has(allFilterValues, key)) {
+                                // String type filter
+                                var allowedItems = filterValue;
+                                var originalFilterValues = allFilterValues[key];
+
+                                // Start by getting the list of deselected items...
+                                var deselected = _.difference(originalFilterValues, allowedItems);
+                                // console.log("Deselected:", deselected);
+
+                                if (!_.isEmpty(deselected)) {
+                                    var prefix = "-";   // By default, remove items
+                                    var itemsToSend = _.map(deselected, encodeURIComponent);    // Encode because sometimes items contain semicolon
+
+                                    if (deselected.length >= originalFilterValues.length) {
+                                        // If everything was deselected, add *
+                                        itemsToSend = "*";
+                                    } else if (deselected.length > allowedItems.length) {
+                                        // More items are deselected than selected, send the selected ones
+                                        prefix = "+";
+                                        itemsToSend = _.map(allowedItems, encodeURIComponent);
+                                    }
+
+                                    filterExtraParams[prefix + key] = itemsToSend;
+                                }
+                            } else {
+                                // Send numeric filter
+                                filterExtraParams["+" + key] =
+                                    filterOperators[filterValue.type - 1] + " " + filterValue.filter;
+                            }
+                        });
+                    }
+
+                    return filterExtraParams;
                 };
 
                 /**
@@ -664,43 +712,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                     });
 
                                     // Get filter parameters, if any
-                                    var filterExtraParams = {};
-
-                                    if (!_.isNull(allFilterValues) && _.has(params, "filterModel") && !_.isEmpty(params.filterModel)) {
-                                        // console.log("Filter model", params.filterModel);
-                                        // Find which items were removed from each filter, and add them to be sent
-                                        _.each(params.filterModel, function (filterValue, key) {
-                                            if (_.has(allFilterValues, key)) {
-                                                // String type filter
-                                                var allowedItems = filterValue;
-                                                var originalFilterValues = allFilterValues[key];
-
-                                                // Start by getting the list of deselected items...
-                                                var deselected = _.difference(originalFilterValues, allowedItems);
-                                                // console.log("Deselected:", deselected);
-
-                                                if (!_.isEmpty(deselected)) {
-                                                    var prefix = "-";   // By default, remove items
-                                                    var itemsToSend = _.map(deselected, encodeURIComponent);    // Encode because sometimes items contain semicolon
-
-                                                    if (deselected.length >= originalFilterValues.length) {
-                                                        // If everything was deselected, add *
-                                                        itemsToSend = "*";
-                                                    } else if (deselected.length > allowedItems.length) {
-                                                        // More items are deselected than selected, send the selected ones
-                                                        prefix = "+";
-                                                        itemsToSend = _.map(allowedItems, encodeURIComponent);
-                                                    }
-
-                                                    filterExtraParams[prefix + key] = itemsToSend;
-                                                }
-                                            } else {
-                                                // Send numeric filter
-                                                filterExtraParams["+" + key] =
-                                                    filterOperators[filterValue.type - 1] + " " + filterValue.filter;
-                                            }
-                                        });
-                                    }
+                                    var filterExtraParams = getFilterParams(params);
 
                                     if (_.isUndefined(rules)) {
                                         // Perform normal search
