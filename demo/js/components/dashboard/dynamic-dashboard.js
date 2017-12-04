@@ -1,5 +1,5 @@
-angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location", "$anchorScroll", "$window", "$filter", "$sce", "DashboardService", "Data",
-    function ($timeout, $location, $anchorScroll, $window, $filter, $sce, DashboardService, Data) {
+angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location", "$anchorScroll", "$window", "$sce", "DashboardService", "Data",
+    function ($timeout, $location, $anchorScroll, $window, $sce, DashboardService, Data) {
         return {
             restrict: "E",
             scope: {
@@ -59,7 +59,7 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                     var selectedFilters;
                     if (_.isUndefined(forceFilters) || _.isEmpty(forceFilters)) {
                         // Get filters where the checked property is true
-                        selectedFilters = $filter("filter")(scope.dashboardsConfig.filters, {checked: true});
+                        selectedFilters = _.where(scope.dashboardsConfig.filters, {checked: true});
                     } else {
                         // Use the given filters as selected
                         selectedFilters = forceFilters;
