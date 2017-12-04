@@ -159,7 +159,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
 
                 if (grid.quickFiltering === "true") {
                     gridWrapper.style.height = (grid.elementH) + "px";
-                    gridContainer.style.height = (grid.elementH - 35) + "px";
+                    gridContainer.style.height = (grid.elementH - 55) + "px";
                 } else {
                     gridWrapper.style.height = grid.elementH + "px";
                 }
