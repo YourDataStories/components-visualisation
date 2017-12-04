@@ -169,6 +169,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
         // The cookie keys that are created in each Dashboard
         var dashboardCookies = {
             aidactivity: [
+                "filter_aidactivity",
                 "aidactivity_benefactor_countries_all",
                 "aidactivity_beneficiary_countries_all",
                 "year_aidactivity",
@@ -179,6 +180,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 "aid_budget"
             ],
             tradeactivity: [
+                "filter_tradeactivity",
                 "tradeactivity_hasdestination_countries_all",
                 "tradeactivity_hasorigin_countries_all",
                 "year_tradeactivity",
@@ -186,6 +188,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 "tradeactivity_sectors_for_countries_and_period_tree_tradeactivity"
             ],
             contract: [
+                "filter_contract",
                 "contract_buyer_countries_all",
                 "contract_seller_countries_all",
                 "year_contract",
