@@ -1605,3 +1605,58 @@ div.dcat-value {
     margin-left: 30px;
     z-index: 1;
 }
+
+/* Styling for Dynamic Dashboard Filter selection checkboxes */
+label.btn.dashboard-filter-label span {
+    font-size: 1.5em ;
+}
+
+label.dashboard-filter-label input[type="checkbox"] ~ i.fa.fa-square-o{
+    color: #c8c8c8;    display: inline;
+}
+label.dashboard-filter-label input[type="checkbox"] ~ i.fa.fa-check-square-o{
+    display: none;
+}
+label.dashboard-filter-label input[type="checkbox"]:checked ~ i.fa.fa-square-o{
+    display: none;
+}
+label.dashboard-filter-label input[type="checkbox"]:checked ~ i.fa.fa-check-square-o{
+    color: #7AA3CC;
+    display: inline;
+}
+label.dashboard-filter-label:hover input[type="checkbox"] ~ i.fa {
+    color: #7AA3CC;
+}
+
+div[data-toggle="buttons"] label.dashboard-filter-label.active{
+    color: #7AA3CC;
+}
+
+div[data-toggle="buttons"] label.dashboard-filter-label {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 2em;
+    text-align: left;
+    white-space: nowrap;
+    vertical-align: top;
+    cursor: pointer;
+    border: 0 solid #c8c8c8;
+    border-radius: 3px;
+    color: #c8c8c8;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+div[data-toggle="buttons"] label.dashboard-filter-label:hover {
+    color: #7AA3CC;
+}
+
+div[data-toggle="buttons"] label.dashboard-filter-label:active, div[data-toggle="buttons"] label.dashboard-filter-label.active {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}

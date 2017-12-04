@@ -35,9 +35,30 @@
         </div>
     </div>
 
+    <!--Filter selection-->
+    <div class="row">
+        <div class="col-md-12">
+            <b>Filters selection:</b>
+
+            <div class="btn-group" data-toggle="buttons">
+                <label ng-repeat="filter in dashboardsConfig.filters"
+                       ng-class="{'active': filter.checked}"
+                       class="btn dashboard-filter-label">
+                    <input type="checkbox"
+                           ng-model="filter.checked"
+                           ng-change="updateSelectedFilters()"
+                           value="{{ filter.name }}">
+                    <i class="fa fa-square-o fa-2x"></i>
+                    <i class="fa fa-check-square-o fa-2x"></i>
+                    <span>{{ filter.name }}</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
     <!--Filters Container-->
     <div class="row margin-bottom-30">
-        <div class="col-md-10">
+        <div class="col-md-12">
             <!--Filters-->
             <div class="row">
                 <div ng-repeat="filter in dashboardsConfig.selectedFilters"
@@ -125,19 +146,6 @@
                         Filter not implemented. Configuration:</span> {{ filter }}
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <h4>Filters selection:</h4>
-
-            <div ng-repeat="filter in dashboardsConfig.filters" class="checkbox">
-                <label>
-                    <input type="checkbox"
-                           ng-model="filter.checked"
-                           ng-change="updateSelectedFilters()"
-                           value="{{ filter.name }}">
-                    {{ filter.name }}
-                </label>
             </div>
         </div>
     </div>
