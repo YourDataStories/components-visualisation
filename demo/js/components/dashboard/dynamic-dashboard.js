@@ -1,5 +1,5 @@
-angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location", "$anchorScroll", "$window", "$filter", "DashboardService", "Data",
-    function ($timeout, $location, $anchorScroll, $window, $filter, DashboardService, Data) {
+angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location", "$anchorScroll", "$window", "$filter", "$sce", "DashboardService", "Data",
+    function ($timeout, $location, $anchorScroll, $window, $filter, $sce, DashboardService, Data) {
         return {
             restrict: "E",
             scope: {
@@ -21,15 +21,18 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                     types: [{
                         label: "Aid Activity",
                         type: "aidactivity",
-                        icon: "fa-medkit"
+                        icon: "fa-medkit",
+                        detailsUrl: $sce.trustAsHtml("templates-demo/pages/view-aid.html")
                     }, {
                         label: "Trade Activity",
                         type: "tradeactivity",
-                        icon: "fa-exchange"
+                        icon: "fa-exchange",
+                        detailsUrl: $sce.trustAsHtml("templates-demo/pages/view-trade.html")
                     }, {
                         label: "Contract",
                         type: "contract",
-                        icon: "fa-pencil"
+                        icon: "fa-pencil",
+                        detailsUrl: $sce.trustAsHtml("templates-demo/pages/view-contract.html")
                     }],
                     selectedDashboard: defaultDashboard,
                     filters: [],
@@ -75,14 +78,23 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                     // Update selected filters
                     scope.updateSelectedFilters();
 
-                    // Update the aggregates
+                    // Empty the aggregates arrays & details URL to put new items
                     scope.aggregates = [];
                     scope.aggregateTitles = [];
                     scope.aggregateClasses = [];
 
-                    $timeout(function () {
-                        var aggregates = DashboardService.getAggregates(newType);
+                    scope.showProjectInfo = false;
+                    scope.detailsUrl = "";
 
+                    $timeout(function () {
+                        // Find URL for the current type and add it to scope
+                        scope.detailsUrl = _.findWhere(scope.dashboardsConfig.types, {
+                            type: newType
+                        }).detailsUrl;
+
+                        scope.showProjectInfo = false;
+
+                        var aggregates = DashboardService.getAggregates(newType);
                         scope.aggregateClass = "col-md-" + aggregates.width;
 
                         // Set classes for tabs
