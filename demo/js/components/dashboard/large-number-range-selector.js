@@ -28,8 +28,8 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                     maxValue = 100;
 
                 var selection = {
-                    min: minValue,
-                    max: maxValue
+                    min: "*",
+                    max: "*"
                 };
 
                 // Generate array with some numbers between the min/max values
