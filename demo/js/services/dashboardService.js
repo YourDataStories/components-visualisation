@@ -230,7 +230,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
         var dashboardPaths = {
             aidactivity: "dashboard-aid",
             tradeactivity: "dashboard-trade",
-            contract: "dashboardp1",
+            contract: "dashboard-contract",
             comparison: "country-comparison",
             public_project: "public-works",
             traffic_observation: "traffic-observations"

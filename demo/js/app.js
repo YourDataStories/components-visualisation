@@ -109,9 +109,9 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
             url: "/dashboard2",
             templateUrl: "templates-demo/dashboards/dashboard2.html"
         })
-        .state("dashboardp1", {
-            url: "/dashboardp1",
-            templateUrl: "templates-demo/dashboards/dashboard-p1.html"
+        .state("dashboard-contract", {
+            url: "/dashboard-contract",
+            templateUrl: "templates-demo/dashboards/dashboard-contract.html"
         })
         .state("public-works", {
             url: "/public-works",
