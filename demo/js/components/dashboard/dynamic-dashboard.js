@@ -59,7 +59,10 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                     var selectedFilters;
                     if (_.isUndefined(forceFilters) || _.isEmpty(forceFilters)) {
                         // Get filters where the checked property is true
-                        selectedFilters = _.where(scope.dashboardsConfig.filters, {checked: true});
+                        selectedFilters = _.chain(scope.dashboardsConfig.filters)
+                            .where({checked: true})
+                            .pluck("name")
+                            .value();
                     } else {
                         // Use the given filters as selected
                         selectedFilters = forceFilters;
@@ -72,8 +75,7 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
 
                     // Save the selected filters to the DashboardService (since the names of the filters are unique
                     // per dashboard, we use them as IDs)
-                    DashboardService.saveObject("filter_" + scope.dashboardsConfig.selectedDashboard,
-                        _.pluck(selectedFilters, "name"));
+                    DashboardService.saveObject("filter_" + scope.dashboardsConfig.selectedDashboard, selectedFilters);
                 };
 
                 /**
