@@ -220,7 +220,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                             DashboardService.updateFilterSubscriptions(dashboardId, filterSubscriptions, scope, createHeatmap);
 
                             // Check if the Heatmap should be updated (in case a filter type was completely removed)
-                            var newParams = DashboardService.getApiOptionsDynamic(dashboardId, "filter");
+                            var newParams = DashboardService.getApiOptionsDynamic(dashboardId);
 
                             if (!_.isEqual(newParams, extraParams)) {
                                 createHeatmap();
@@ -553,7 +553,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                     if (useDashboardParams === "true") {
                         var newExtraParams;
                         if (scope.dynamicDashboard === "true") {
-                            newExtraParams = DashboardService.getApiOptionsDynamic(dashboardId, "filter");
+                            newExtraParams = DashboardService.getApiOptionsDynamic(dashboardId);
                         } else {
                             newExtraParams = DashboardService.getApiOptions(dashboardId);
                         }

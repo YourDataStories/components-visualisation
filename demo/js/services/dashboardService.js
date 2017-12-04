@@ -613,14 +613,13 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * Get the extra parameters that should be sent to the API with each (dynamic) Dashboard component request,
          * using the filters that are enabled in that Dashboard.
          * @param dashboardId       Dashboard ID to get filters for
-         * @param enabledFiltersKey Key that was used to save the enabled filters
          * @returns {{}}
          */
-        dashboard.getApiOptionsDynamic = function (dashboardId, enabledFiltersKey) {
+        dashboard.getApiOptionsDynamic = function (dashboardId) {
             var apiOptions = {};
 
             // Get the required data
-            var enabledFilters = dashboard.getObject(enabledFiltersKey);
+            var enabledFilters = getEnabledFilters(dashboardId);
             var apiOptionsMap = dashboard.getApiOptionsMapping(dashboardId);
 
             // Gather data for any map filters
@@ -1194,6 +1193,20 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
         };
 
         /**
+         * Get enabled filter objects for a Dashboard ID
+         * @param dashboardId
+         */
+        var getEnabledFilters = function (dashboardId) {
+            // Get set of enabled filter names
+            var filterNames = dashboard.getObject("filter_" + dashboardId);
+
+            // Get all the filters for this dashboard, and keep only the ones that are enabled
+            return _.filter(dashboard.getDashboardFilters(dashboardId), function (filter) {
+                return _.contains(filterNames, filter.name);
+            });
+        };
+
+        /**
          * Subscribe to the appropriate selection changes, based on the filters that are currently enabled
          * @param dashboardId   Dashboard ID
          * @param subscriptions Array with functions to unsubscribe from the subscribed filters
@@ -1202,11 +1215,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          */
         dashboard.updateFilterSubscriptions = function (dashboardId, subscriptions, scope, changeHandler) {
             // Get set of enabled filter types
-            var filterNames = dashboard.getObject("filter_" + dashboardId);
-            var enabledFilters = _.filter(dashboard.getDashboardFilters(dashboardId), function (filter) {
-                return _.contains(filterNames, filter.name);
-            });
-            var filterTypes = _.uniq(_.pluck(enabledFilters, "type"));
+            var filterTypes = _.uniq(_.pluck(getEnabledFilters(dashboardId), "type"));
 
             // Unsubscribe from old filter types
             _.each(subscriptions, function (unsubscribeFunction) {

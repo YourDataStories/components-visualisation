@@ -137,7 +137,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                     var newParams;
                     if (scope.dynamicDashboard === "true") {
                         // Get options for the enabled filters
-                        newParams = DashboardService.getApiOptionsDynamic(dashboardId, "filter");
+                        newParams = DashboardService.getApiOptionsDynamic(dashboardId);
                     } else {
                         newParams = DashboardService.getApiOptions(dashboardId);
                     }
@@ -248,7 +248,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                         DashboardService.updateFilterSubscriptions(dashboardId, filterSubscriptions, scope, updateExtraParams);
 
                         // Check if we should update the extra parameters in case a filter type was removed
-                        var newParams = DashboardService.getApiOptionsDynamic(dashboardId, "filter");
+                        var newParams = DashboardService.getApiOptionsDynamic(dashboardId);
 
                         if (!_.isEqual(newParams, prevParams)) {
                             updateExtraParams();
