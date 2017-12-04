@@ -60,7 +60,8 @@
         <div class="col-md-12">
             <!--Filters-->
             <div class="row">
-                <div ng-repeat="filter in dashboardsConfig.selectedFilters"
+                <div ng-repeat="filter in dashboardsConfig.filters"
+                     ng-if="filter.checked == true"
                      ng-switch="filter.type"
                      ng-class="filterColumnClass[filter.type] || 'col-md-3'">
 
@@ -222,8 +223,8 @@
                     <uib-tabset active="ctTab"
                                 template-url="templates/tabset-panel-success.html">
                         <uib-tab heading="View Data" index="0">
-                            <p class="text-justify">The following table shows all {{ dashboardsConfig.selectedDashboard
-                                }}s for the selected seller and
+                            <p class="text-justify">The following table shows all
+                                {{ dashboardsConfig.selectedDashboard }}s for the selected seller and
                                 buyer countries that span the selected time period. You can obtain the same results
                                 through search: an example is provided on the
                                 <!--Because of extra scopes created by uib-tab we need

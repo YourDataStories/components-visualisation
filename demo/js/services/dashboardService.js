@@ -257,7 +257,6 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 }, {
                     name: "Buyers",
                     type: "grid",
-                    checked: true,
                     params: {
                         viewType: "contract.buyers.all.filter",
                         selectionId: "buyer_organizations"
@@ -327,7 +326,6 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 }, {
                     name: "Sectors",
                     type: "grid-grouped",
-                    checked: true,
                     params: {
                         viewType: "aidactivity.sectors.for.countries.and.period.tree",
                         selectionId: "sectors"
@@ -393,7 +391,6 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 }, {
                     name: "Amount",
                     type: "amount",
-                    checked: true,
                     params: {
                         selectionId: "trade_amount",
                         apiParam: "amount",

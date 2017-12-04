@@ -35,8 +35,7 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                         detailsUrl: $sce.trustAsHtml("templates-demo/pages/view-contract.html")
                     }],
                     selectedDashboard: defaultDashboard,
-                    filters: [],
-                    selectedFilters: []
+                    filters: []
                 };
 
                 // Column width classes for each filter type
@@ -56,12 +55,25 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                 /**
                  * Update the selected filters array to include only the filters which are selected in the filters checkbox list
                  */
-                scope.updateSelectedFilters = function () {
-                    scope.dashboardsConfig.selectedFilters =
-                        $filter("filter")(scope.dashboardsConfig.filters, {checked: true});
+                scope.updateSelectedFilters = function (forceFilters) {
+                    var selectedFilters;
+                    if (_.isUndefined(forceFilters) || _.isEmpty(forceFilters)) {
+                        // Get filters where the checked property is true
+                        selectedFilters = $filter("filter")(scope.dashboardsConfig.filters, {checked: true});
+                    } else {
+                        // Use the given filters as selected
+                        selectedFilters = forceFilters;
 
-                    // Save the selected filters to the DashboardService
-                    DashboardService.saveObject("filter", scope.dashboardsConfig.selectedFilters);
+                        // Make selected filters be checked, and all others unchecked
+                        _.each(scope.dashboardsConfig.filters, function (filter) {
+                            filter.checked = _.contains(selectedFilters, filter.name);
+                        });
+                    }
+
+                    // Save the selected filters to the DashboardService (since the names of the filters are unique
+                    // per dashboard, we use them as IDs)
+                    DashboardService.saveObject("filter_" + scope.dashboardsConfig.selectedDashboard,
+                        _.pluck(selectedFilters, "name"));
                 };
 
                 /**
@@ -72,11 +84,15 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                     // Save new Dashboard type to cookies
                     DashboardService.setCookieObject("dynamic_dashboard_type", newType);
 
-                    // Get new filters
+                    // Get new available filters
                     scope.dashboardsConfig.filters = DashboardService.getDashboardFilters(newType);
 
+                    // Check there are any saved filters for the new Dashboard type
+                    var oldFilters = DashboardService
+                        .getCookieObject("filter_" + scope.dashboardsConfig.selectedDashboard);
+
                     // Update selected filters
-                    scope.updateSelectedFilters();
+                    scope.updateSelectedFilters(oldFilters);
 
                     // Empty the aggregates arrays & details URL to put new items
                     scope.aggregates = [];
