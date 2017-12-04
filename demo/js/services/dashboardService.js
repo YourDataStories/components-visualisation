@@ -228,8 +228,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
         // var dashboardUrlPrefix = "http://yds-lib.dev/#!/";
 
         var dashboardPaths = {
-            aidactivity: "dashboard2",
-            tradeactivity: "dashboard2",
+            aidactivity: "dashboard-aid",
+            tradeactivity: "dashboard-trade",
             contract: "dashboardp1",
             comparison: "country-comparison",
             public_project: "public-works",
