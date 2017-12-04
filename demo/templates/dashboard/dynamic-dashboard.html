@@ -61,7 +61,7 @@
             <!--Filters-->
             <div class="row">
                 <div ng-repeat="filter in dashboardsConfig.filters"
-                     ng-if="filter.checked == true"
+                     ng-if="filter.checked"
                      ng-switch="filter.type"
                      ng-class="filterColumnClass[filter.type] || 'col-md-3'">
 

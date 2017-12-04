@@ -245,7 +245,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                     // Subscribe to changes in filters (when filters change, will subscribe only to the required filter
                     // types to watch for changes)
                     DashboardService.subscribeObjectChanges(scope, function () {
-                        DashboardService.updateFilterSubscriptions(filterSubscriptions, scope, updateExtraParams);
+                        DashboardService.updateFilterSubscriptions(dashboardId, filterSubscriptions, scope, updateExtraParams);
 
                         // Check if we should update the extra parameters in case a filter type was removed
                         var newParams = DashboardService.getApiOptionsDynamic(dashboardId, "filter");
@@ -255,7 +255,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                         }
                     });
 
-                    DashboardService.updateFilterSubscriptions(filterSubscriptions, scope, updateExtraParams);
+                    DashboardService.updateFilterSubscriptions(dashboardId, filterSubscriptions, scope, updateExtraParams);
                 }
 
                 // If the aggregateType attribute is defined, watch it for changes and update the chart

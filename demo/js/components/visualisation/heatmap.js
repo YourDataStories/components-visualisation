@@ -217,7 +217,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                         // For dynamic dashboards, we should subscribe to the selected filters in the Dashboard
                         var filterSubscriptions = [];
                         DashboardService.subscribeObjectChanges(scope, function () {
-                            DashboardService.updateFilterSubscriptions(filterSubscriptions, scope, createHeatmap);
+                            DashboardService.updateFilterSubscriptions(dashboardId, filterSubscriptions, scope, createHeatmap);
 
                             // Check if the Heatmap should be updated (in case a filter type was completely removed)
                             var newParams = DashboardService.getApiOptionsDynamic(dashboardId, "filter");
@@ -227,7 +227,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                             }
                         });
 
-                        DashboardService.updateFilterSubscriptions(filterSubscriptions, scope, createHeatmap);
+                        DashboardService.updateFilterSubscriptions(dashboardId, filterSubscriptions, scope, createHeatmap);
                     }
 
                     createHeatmap();

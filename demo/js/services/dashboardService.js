@@ -1194,13 +1194,19 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
         };
 
         /**
-         * Subscribe to the
+         * Subscribe to the appropriate selection changes, based on the filters that are currently enabled
+         * @param dashboardId   Dashboard ID
          * @param subscriptions Array with functions to unsubscribe from the subscribed filters
          * @param scope         Scope to use for subscribing to new changes
          * @param changeHandler Function that will be called when the selection of a filter changes
          */
-        dashboard.updateFilterSubscriptions = function (subscriptions, scope, changeHandler) {
-            var filterTypes = _.uniq(_.pluck(dashboard.getObject("filter"), "type"));
+        dashboard.updateFilterSubscriptions = function (dashboardId, subscriptions, scope, changeHandler) {
+            // Get set of enabled filter types
+            var filterNames = dashboard.getObject("filter_" + dashboardId);
+            var enabledFilters = _.filter(dashboard.getDashboardFilters(dashboardId), function (filter) {
+                return _.contains(filterNames, filter.name);
+            });
+            var filterTypes = _.uniq(_.pluck(enabledFilters, "type"));
 
             // Unsubscribe from old filter types
             _.each(subscriptions, function (unsubscribeFunction) {
@@ -1232,7 +1238,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     default:
                         console.warn("Unknown filter type in Dashboard Updater: " + type);
                 }
-            })
+            });
         };
 
         /**
