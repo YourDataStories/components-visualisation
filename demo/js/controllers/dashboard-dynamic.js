@@ -1,8 +1,16 @@
 angular.module("yds").controller("DashboardDynamicController", ["$scope", "$timeout", "$location", "$anchorScroll", "$window", "$filter", "DashboardService",
     function ($scope, $timeout, $location, $anchorScroll, $window, $filter, DashboardService) {
         var scope = $scope;
-        var defaultDashboard = DashboardService.getCookieObject("dynamic_dashboard_type") || "aidactivity";
 
+        // If there is a "type" in the scope, use that as the default dashboard, or get it from cookies
+        var defaultDashboard;
+        if (_.isUndefined(scope.type) || scope.type === "choose") {
+            defaultDashboard = DashboardService.getCookieObject("dynamic_dashboard_type") || "aidactivity";
+        } else {
+            defaultDashboard = scope.type;
+        }
+
+        // Set configuration of Dashboards
         scope.dashboardsConfig = {
             types: [{
                 label: "Aid Activity",
