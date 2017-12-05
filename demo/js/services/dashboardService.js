@@ -573,15 +573,6 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
         };
 
         /**
-         * Return the api options mappings
-         * @param dashboardId
-         * @returns {{countries: string, benefactors: string}}
-         */
-        dashboard.getApiOptionsMapping = function (dashboardId) {
-            return countryListMapping[dashboardId];
-        };
-
-        /**
          * Return the year parameter mapping for the specified dashboardId
          * @param dashboardId
          * @returns {*}
@@ -620,7 +611,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
             // Get the required data
             var enabledFilters = getEnabledFilters(dashboardId);
-            var apiOptionsMap = dashboard.getApiOptionsMapping(dashboardId);
+            var apiOptionsMap = countryListMapping[dashboardId];
 
             // Gather data for any map filters
             var filters = _.where(enabledFilters, {type: "heatmap"});
@@ -630,7 +621,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 filters = _.pluck(_.pluck(filters, "params"), "viewType");
 
                 _.each(apiOptionsMap, function (viewType, key) {
-                    if (filters.indexOf(viewType) !== -1) {
+                    if (_.contains(filters, viewType)) {
                         // The filter for this key is enabled, add its value to the parameters
                         var countries = dashboard.getCountries(viewType);
                         countries = _.pluck(countries, "code").join(",");
@@ -692,7 +683,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @returns {{}}
          */
         dashboard.getApiOptions = function (dashboardId) {
-            var apiOptionsMap = dashboard.getApiOptionsMapping(dashboardId);
+            var apiOptionsMap = countryListMapping[dashboardId];
 
             // Get min and max selected year and create the year range string for request
             var minYear = dashboard.getMinYear(dashboardId);

@@ -33,16 +33,6 @@ angular.module("yds").controller("Dashboard2Controller", ["$scope", "$timeout", 
          */
         scope.setSelectedSector = function (newSector, setTitle) {
             if (scope.selectedSector !== newSector) {
-                if (!_.isUndefined(scope.selectedSector)) {
-                    // Get country types for previously selected sector
-                    var map = DashboardService.getApiOptionsMapping(scope.selectedSector);
-
-                    // For country type of previous sector, clear its selected countries
-                    _.each(map, function (countryType) {
-                        DashboardService.clearCountries(countryType);
-                    });
-                }
-
                 // Get aggregates for new sector
                 var aggregates = DashboardService.getAggregates(newSector);
                 scope.aggregateClass = "col-md-" + aggregates.width;
