@@ -542,7 +542,12 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
             // Restore the new cookie values
             _.each(cookies, function (data, key) {
-                dashboard.setCookieObject(key, data);
+                if (key.indexOf("filter_") !== -1) {
+                    // Restore selected filter values as objects
+                    dashboard.saveObject(key, data);
+                } else {
+                    dashboard.setCookieObject(key, data);
+                }
             });
 
             // Go to the dashboard

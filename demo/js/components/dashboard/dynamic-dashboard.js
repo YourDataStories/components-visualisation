@@ -7,8 +7,9 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
             },
             templateUrl: Data.templatePath + "templates/dashboard/dynamic-dashboard.html",
             link: function (scope, element, attrs) {
+                var defaultDashboard, oldFilters;
+
                 // If there is a "type" in the scope, use that as the default dashboard, or get it from cookies
-                var defaultDashboard;
                 if (_.isUndefined(scope.type) || scope.type.trim() === "") {
                     scope.type = "choose";
                     defaultDashboard = DashboardService.getCookieObject("dynamic_dashboard_type") || "aidactivity";
@@ -89,6 +90,13 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                     // Get new available filters
                     scope.dashboardsConfig.filters = DashboardService.getDashboardFilters(newType);
 
+                    // Check there are any saved filters for the new Dashboard type
+                    oldFilters = DashboardService
+                        .getCookieObject("filter_" + scope.dashboardsConfig.selectedDashboard);
+
+                    // Update selected filters
+                    scope.updateSelectedFilters(oldFilters);
+
                     // Empty the aggregates arrays & details URL to put new items
                     scope.aggregates = [];
                     scope.aggregateTitles = [];
@@ -98,14 +106,6 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                     scope.detailsUrl = "";
 
                     $timeout(function () {
-                        // Check there are any saved filters for the new Dashboard type (this is done in a timeout
-                        // in order for the sharing button to have time to restore filters from cookies)
-                        var oldFilters = DashboardService
-                            .getCookieObject("filter_" + scope.dashboardsConfig.selectedDashboard);
-
-                        // Update selected filters
-                        scope.updateSelectedFilters(oldFilters);
-
                         // Find URL for the current type and add it to scope
                         scope.detailsUrl = _.findWhere(scope.dashboardsConfig.types, {
                             type: newType
@@ -157,6 +157,16 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                         scope.selectedProject = DashboardService.getSelectedProjectInfo();
                         scope.showProjectInfo = true;
                     });
+                });
+
+                // Subscribe to object changes until we restore filters from cookies
+                var unsub = DashboardService.subscribeObjectChanges(scope, function () {
+                    var newFilters = DashboardService.getObject("filter_" + scope.dashboardsConfig.selectedDashboard);
+
+                    if (!_.isEqual(newFilters, oldFilters)) {
+                        scope.updateSelectedFilters(newFilters);
+                        unsub();    // We don't need to be subscribed to object changes anymore
+                    }
                 });
             }
         };
