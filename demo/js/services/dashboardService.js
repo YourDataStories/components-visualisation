@@ -202,6 +202,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 "contract_comparison_CPVs_for_countries_and_period_comparison2",
                 "contract_comparison_countryA_countries_all",
                 "contract_comparison_countryB_countries_all",
+                "comparison_amount",
                 "year_comparison"
             ],
             public_project: [
@@ -718,6 +719,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 case "galway_traffic":
                     if (!_.isEmpty(dashboard.getGridSelection("galway_contract")))
                         apiOptions.contract = dashboard.getGridSelection("galway_contract").join(",");
+
                     break;
                 case "public_project":
                     if (!_.isEmpty(dashboard.getGridSelection("sellers")))
@@ -725,6 +727,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
                     if (!_.isEmpty(dashboard.getGridSelection("buyers")))
                         apiOptions.buyers = dashboard.getGridSelection("buyers").join(",");
+
                     break;
                 case "comparison":
                     if (!_.isEmpty(dashboard.getGridSelection("cpv1")))
@@ -732,14 +735,26 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
                     if (!_.isEmpty(dashboard.getGridSelection("cpv2")))
                         apiOptions.cpv2 = dashboard.getGridSelection("cpv2").join(",");
+
+                    if (!_.isEmpty(dashboard.getObject("comparison_amount")))
+                        apiOptions.amount = dashboard.getObject("comparison_amount");
+
                     break;
                 case "comparison1":
                     // Add year from "comparison" dashboardId
                     apiOptions.year = "[" + dashboard.getMinYear("comparison") + " TO " + dashboard.getMaxYear("comparison") + "]";
+
+                    if (!_.isEmpty(dashboard.getObject("comparison_amount")))
+                        apiOptions.amount = dashboard.getObject("comparison_amount");
+
                     break;
                 case "comparison2":
                     // Add year from "comparison" dashboardId
                     apiOptions.year = "[" + dashboard.getMinYear("comparison") + " TO " + dashboard.getMaxYear("comparison") + "]";
+
+                    if (!_.isEmpty(dashboard.getObject("comparison_amount")))
+                        apiOptions.amount = dashboard.getObject("comparison_amount");
+
                     break;
                 case "comparison_details_1":
                     // Add CPV 1
@@ -748,6 +763,10 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
                     // Add year from "comparison" dashboardId
                     apiOptions.year = "[" + dashboard.getMinYear("comparison") + " TO " + dashboard.getMaxYear("comparison") + "]";
+
+                    if (!_.isEmpty(dashboard.getObject("comparison_amount")))
+                        apiOptions.amount = dashboard.getObject("comparison_amount");
+
                     break;
                 case "comparison_details_2":
                     // Add CPV 2
@@ -756,6 +775,10 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
                     // Add year from "comparison" dashboardId
                     apiOptions.year = "[" + dashboard.getMinYear("comparison") + " TO " + dashboard.getMaxYear("comparison") + "]";
+
+                    if (!_.isEmpty(dashboard.getObject("comparison_amount")))
+                        apiOptions.amount = dashboard.getObject("comparison_amount");
+
                     break;
                 case "traffic_observation_line1":
                     addTrafficObservationParams(apiOptions);
@@ -765,6 +788,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     if (!_.isUndefined(directions1)) {
                         apiOptions["trafficobservation.directions_aggregate"] = directions1;
                     }
+
                     break;
                 case "traffic_observation_line2":
                     addTrafficObservationParams(apiOptions);
@@ -774,21 +798,25 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     if (!_.isUndefined(directions2)) {
                         apiOptions["trafficobservation.directions_aggregate"] = directions2;
                     }
+
                     break;
                 case "traffic_observation":
                 case "traffic_observation_contracts":
                     addTrafficObservationParams(apiOptions);
+
                     break;
                 case "country_page":
                     var indicators = dashboard.getGridSelection("country_indicators");
                     if (!_.isEmpty(indicators)) {
                         apiOptions["indicators"] = indicators.join(",");
                     }
+
                     break;
                 case "country_producing_heatmap":
                     apiOptions["agricultural.products"] = dashboard.getObject("country_agricultural_products");
                     apiOptions["industries"] = dashboard.getObject("country_industries");
                     apiOptions["natural.resources"] = dashboard.getObject("country_natural_resources");
+
                     break;
             }
 
