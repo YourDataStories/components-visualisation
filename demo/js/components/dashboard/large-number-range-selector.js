@@ -50,8 +50,22 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                     // Split cookie value to min/max values and add then to the selection to be used as defaults
                     var vals = cookieValue.replace(/\[|]/g, "").split(" TO ");
 
-                    selection.min = vals[0] === "*" ? "*" : parseInt(vals[0]);
-                    selection.max = vals[1] === "*" ? "*" : parseInt(vals[1]);
+                    // Get min & max values as integers, or "*" string
+                    var min = (vals[0] === "*") ? "*" : parseInt(vals[0]);
+                    var max = (vals[1] === "*") ? "*" : parseInt(vals[1]);
+
+                    // Ensure that the default min/max values are added to the list
+                    if (!_.contains(comboboxValues, min)) {
+                        comboboxValues.push(min);
+                    }
+
+                    if (!_.contains(comboboxValues, max)) {
+                        comboboxValues.push(max);
+                    }
+
+                    // Set the selection
+                    selection.min = min;
+                    selection.max = max;
                 }
 
                 /**
@@ -68,7 +82,7 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                     DashboardService.saveObject(selectionType, "[" + selection.min + " TO " + selection.max + "]");
                 };
 
-                // todo: When adding items, check if they are numbers and between min/max values (see createFilter)
+                // todo: When adding items, check if they are numbers (see createFilter)
                 // Create options that are applicable to both comboboxes
                 var selectizeOptions = {
                     options: _.map(comboboxValues, function (item) {
