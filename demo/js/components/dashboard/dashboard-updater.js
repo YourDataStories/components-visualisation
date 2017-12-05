@@ -121,6 +121,19 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                     "public_project"
                 ];
 
+                // Create list of Dashboard IDs that contain object selection
+                var objDashboards = [
+                    "traffic_observation",
+                    "country_producing_heatmap",
+                    "traffic_observation_line1",
+                    "traffic_observation_line2",
+                    "comparison",
+                    "comparison1",
+                    "comparison2",
+                    "comparison_details_1",
+                    "comparison_details_2"
+                ];
+
                 /**
                  * Cause a refresh of the component by setting the type to an empty string and then back to the original
                  */
@@ -238,7 +251,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                     }
 
                     // Check if we should subscribe to object changes
-                    if (dashboardId === "traffic_observation" || dashboardId === "country_producing_heatmap" || dashboardId.indexOf("traffic_observation_line") !== -1) {
+                    if (_.contains(objDashboards, dashboardId)) {
                         DashboardService.subscribeObjectChanges(scope, updateExtraParams);
                     }
                 } else {
@@ -259,14 +272,12 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 }
 
                 // If the aggregateType attribute is defined, watch it for changes and update the chart
-                if (!_.isUndefined(scope.aggregateType) &&
-                    (scope.aggregateType === "amount" || scope.aggregateType === "count" || scope.aggregateType === "budget")) {
+                if (!_.isUndefined(scope.aggregateType) && _.contains(["amount", "count", "budget"], scope.aggregateType)) {
                     scope.$watch("aggregateType", updateExtraParams);
                 }
 
                 // If the normaliseType attribute is defined, watch it for changes and update the chart
-                if (!_.isUndefined(scope.normaliseType) &&
-                    (scope.normaliseType === "no" || scope.normaliseType === "gdp" || scope.aggregateType === "percapita")) {
+                if (!_.isUndefined(scope.normaliseType) && _.contains(["no", "gdp", "percapita"], scope.normaliseType)) {
                     scope.$watch("normaliseType", updateExtraParams);
                 }
 
