@@ -82,7 +82,6 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                     DashboardService.saveObject(selectionType, "[" + selection.min + " TO " + selection.max + "]");
                 };
 
-                // todo: When adding items, check if they are numbers (see createFilter)
                 // Create options that are applicable to both comboboxes
                 var selectizeOptions = {
                     options: _.map(comboboxValues, function (item) {
@@ -94,7 +93,8 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                     create: true,
                     createOnBlur: true,
                     maxItems: 1,
-                    placeholder: "Select " + scope.title
+                    placeholder: "Select " + scope.title,
+                    createFilter: "^[0-9]+$"    // Allow only numbers as user input
                 };
 
                 // Initialize Selectize.js for min and max comboboxes
