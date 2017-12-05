@@ -228,8 +228,11 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 scope.$on("$destroy", function () {
                     // If the grid filtering is enabled remove the filter event listener
                     if (grid.filtering === "true" || grid.quickFiltering === "true") {
-                        scope.gridOptions.api.removeEventListener("afterFilterChanged", filterModifiedListener);
                         Filters.remove(grid.elementId);
+
+                        if (_.has(scope.gridOptions, "api")) {
+                            scope.gridOptions.api.removeEventListener("afterFilterChanged", filterModifiedListener);
+                        }
                     }
                 });
 
