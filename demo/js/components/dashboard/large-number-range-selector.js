@@ -61,7 +61,7 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                  */
                 var changeHandler = function (valName, newValue) {
                     // Save new selection to variable, and Dashboard service
-                    if (!_.isUndefined(valName) && !_.isUndefined(newValue)) {
+                    if (!_.isUndefined(valName) && !_.isUndefined(newValue) && newValue.length > 0) {
                         selection[valName] = newValue;
                     }
 
@@ -80,10 +80,7 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                     create: true,
                     createOnBlur: true,
                     maxItems: 1,
-                    placeholder: "Select " + scope.title,
-                    onChange: function (item) {
-                        console.log("Selected ", item);
-                    }
+                    placeholder: "Select " + scope.title
                 };
 
                 // Initialize Selectize.js for min and max comboboxes
