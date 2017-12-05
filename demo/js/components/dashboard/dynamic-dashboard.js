@@ -89,13 +89,6 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                     // Get new available filters
                     scope.dashboardsConfig.filters = DashboardService.getDashboardFilters(newType);
 
-                    // Check there are any saved filters for the new Dashboard type
-                    var oldFilters = DashboardService
-                        .getCookieObject("filter_" + scope.dashboardsConfig.selectedDashboard);
-
-                    // Update selected filters
-                    scope.updateSelectedFilters(oldFilters);
-
                     // Empty the aggregates arrays & details URL to put new items
                     scope.aggregates = [];
                     scope.aggregateTitles = [];
@@ -105,6 +98,14 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                     scope.detailsUrl = "";
 
                     $timeout(function () {
+                        // Check there are any saved filters for the new Dashboard type (this is done in a timeout
+                        // in order for the sharing button to have time to restore filters from cookies)
+                        var oldFilters = DashboardService
+                            .getCookieObject("filter_" + scope.dashboardsConfig.selectedDashboard);
+
+                        // Update selected filters
+                        scope.updateSelectedFilters(oldFilters);
+
                         // Find URL for the current type and add it to scope
                         scope.detailsUrl = _.findWhere(scope.dashboardsConfig.types, {
                             type: newType
