@@ -15,6 +15,7 @@ app.constant("YDS_CONSTANTS", {
     "API_SCATTER": "platform.yourdatastories.eu/api/json-ld/component/scatterchart.tcl",
     "API_BUBBLE": "platform.yourdatastories.eu/api/json-ld/component/bubblechart.tcl",
     "API_TREEMAP": "platform.yourdatastories.eu/api/json-ld/component/treemap.tcl",
+    "API_SUNBURST": "platform.yourdatastories.eu/api/json-ld/component/sunburst.tcl",
     "API_MAP": "platform.yourdatastories.eu/api/json-ld/component/map.tcl",
     "API_PIE": "platform.yourdatastories.eu/api/json-ld/component/piechart.tcl",
     "API_PLOT_INFO": "platform.yourdatastories.eu/api/json-ld/component/plotinfo.tcl",
@@ -1239,6 +1240,9 @@ app.factory("Data", ["$http", "$q", "$window", "$sce", "DashboardService", "YDS_
                 break;
             case "heatmap":
                 visualizationUrl = "http://" + YDS_CONSTANTS.API_HEATMAP;
+                break;
+            case "sunburst":
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_SUNBURST;
                 break;
             default:
                 deferred.reject({
