@@ -101,13 +101,13 @@ angular.module("yds").directive("ydsSunburst", ["Data", "DashboardService", func
                         series.point.events = {
                             select: function (e) {
                                 // Set the selected point as selected in DashboardService (in an array)
-                                DashboardService.setGridSelection(selectionId, [
-                                    e.target.id
-                                ]);
+                                var currSelection = DashboardService.getGridSelection(selectionId);
+                                DashboardService.setGridSelection(selectionId, _.union(currSelection, [e.target.id]));
                             },
-                            unselect: function () {
+                            unselect: function (e) {
                                 // Set the selection as empty array as only a single item should be selected at a time
-                                DashboardService.setGridSelection(selectionId, []);
+                                var currSelection = DashboardService.getGridSelection(selectionId);
+                                DashboardService.setGridSelection(selectionId, _.without(currSelection, e.target.id));
                             }
                         }
                     });
