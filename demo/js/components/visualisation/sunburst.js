@@ -126,29 +126,28 @@ angular.module("yds").directive("ydsSunburst", ["Data", "DashboardService", func
                     scope.loading = false;
                 });
 
-            // DashboardService.subscribeGridSelectionChanges(scope, function () {
-            //     // If the selection for this pie changed, select the appropriate CPV if it exists in one of the series
-            //     var selection = DashboardService.getGridSelection(selectionId);
-            //
-            //     if (!_.isEmpty(selection)) {
-            //         // Get actual selection (it can be only one in this case)
-            //         var idToSelect = _.first(selection);
-            //
-            //         // Look in each series for the CPV with the ID to select
-            //         _.each(chart.series, function (series) {
-            //             _.each(series.points, function (point) {
-            //                 if (point.id === idToSelect) {
-            //                     point.select(true, false);
-            //                 }
-            //             });
-            //         });
-            //     } else {
-            //         // Deselect all points
-            //         _.each(chart.series, function (series) {
-            //             _.first(series.points).select(false, false);
-            //         });
-            //     }
-            // });
+            DashboardService.subscribeGridSelectionChanges(scope, function () {
+                // If the selection for this pie changed, select the appropriate CPV if it exists in one of the series
+                var selection = DashboardService.getGridSelection(selectionId);
+                if (!_.isEmpty(selection)) {
+                    // Get actual selection (it can be only one in this case)
+                    var idToSelect = _.first(selection);
+
+                    // Look in each series for the CPV with the ID to select
+                    _.each(chart.series, function (series) {
+                        _.each(series.points, function (point) {
+                            if (point.id === idToSelect) {
+                                point.select(true, false);
+                            }
+                        });
+                    });
+                } else {
+                    // Deselect all points
+                    _.each(chart.series, function (series) {
+                        _.first(series.points).select(false, false);
+                    });
+                }
+            });
         }
     };
 }]);
