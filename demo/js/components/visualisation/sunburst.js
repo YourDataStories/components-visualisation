@@ -26,7 +26,7 @@ angular.module("yds").directive("ydsSunburst", ["Data", "DashboardService", func
             var exporting = scope.exporting;
             var elementH = scope.elementH;
             var extraParams = scope.extraParams;
-            // var selectionId = scope.selectionId;
+            var selectionId = scope.selectionId;
 
             var chart = null;
 
@@ -82,26 +82,35 @@ angular.module("yds").directive("ydsSunburst", ["Data", "DashboardService", func
                     };
 
                     // Add selection events to all series
-                    // _.each(options.series, function (series) {
-                    //     series.allowPointSelect = true;
-                    //
-                    //     if (!_.has(series, "point")) {
-                    //         series.point = {};
-                    //     }
-                    //
-                    //     series.point.events = {
-                    //         select: function (e) {
-                    //             // Set the selected point as selected in DashboardService (in an array)
-                    //             DashboardService.setGridSelection(selectionId, [
-                    //                 e.target
-                    //             ]);
-                    //         },
-                    //         unselect: function () {
-                    //             // Set the selection as empty array as only a single item should be selected at a time
-                    //             DashboardService.setGridSelection(selectionId, []);
-                    //         }
-                    //     }
-                    // });
+                    _.each(options.series, function (series) {
+                        series.allowPointSelect = true;
+
+                        if (!_.has(series, "point")) {
+                            series.point = {};
+                        }
+
+                        // Add selected point color
+                        series.states = {
+                            select: {
+                                color: "#a4edba",
+                                borderColor: "black",
+                                dashStyle: "shortdot"
+                            }
+                        };
+
+                        series.point.events = {
+                            select: function (e) {
+                                // Set the selected point as selected in DashboardService (in an array)
+                                DashboardService.setGridSelection(selectionId, [
+                                    e.target.id
+                                ]);
+                            },
+                            unselect: function () {
+                                // Set the selection as empty array as only a single item should be selected at a time
+                                DashboardService.setGridSelection(selectionId, []);
+                            }
+                        }
+                    });
 
                     chart = new Highcharts.Chart(elementId, options);
 
@@ -123,7 +132,7 @@ angular.module("yds").directive("ydsSunburst", ["Data", "DashboardService", func
             //
             //     if (!_.isEmpty(selection)) {
             //         // Get actual selection (it can be only one in this case)
-            //         var idToSelect = _.first(selection).id;
+            //         var idToSelect = _.first(selection);
             //
             //         // Look in each series for the CPV with the ID to select
             //         _.each(chart.series, function (series) {
