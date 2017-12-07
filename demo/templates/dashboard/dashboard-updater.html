@@ -32,6 +32,15 @@
             element-h="{{ minHeight }}">
     </yds-heatmap>
 
+    <yds-sunburst
+            ng-switch-when="sunburst"
+            project-id="{{ projectId }}"
+            view-type="{{ viewType }}"
+            selection-id="{{ selectionId }}"
+            extra-params="extraParams"
+            element-h="{{ minHeight }}">
+    </yds-sunburst>
+
     <yds-donut-pie
             ng-switch-when="donut-pie"
             project-id="none"
