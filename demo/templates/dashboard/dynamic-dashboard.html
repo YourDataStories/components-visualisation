@@ -238,9 +238,9 @@
                                 table below, and press its
                                 “View” button. The related transactions and sectors will be listed in a new page.</p>
 
-                            <!--Items grid-->
+                            <!--Items grid (only show when there are aggregates, so it refreshes when Dashboard type changes -->
                             <yds-dashboard-updater
-                                    ng-if="ctTab == 0"
+                                    ng-if="ctTab == 0 && aggregates.length > 0"
                                     type="grid"
                                     id="dashboard-data-grid"
                                     view-type="{{ dashboardsConfig.selectedDashboard + '.listitems.for.countries.and.period' }}"
@@ -270,7 +270,7 @@
                             </div>
 
                             <yds-dashboard-updater
-                                    ng-if="ctTab == 1"
+                                    ng-if="ctTab == 1 && aggregates.length > 0"
                                     type="search"
                                     dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
                                     dynamic-dashboard="true"

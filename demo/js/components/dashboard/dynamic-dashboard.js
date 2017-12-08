@@ -111,8 +111,6 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                             type: newType
                         }).detailsUrl;
 
-                        scope.showProjectInfo = false;
-
                         var aggregates = DashboardService.getAggregates(newType);
                         scope.aggregateClass = "col-md-" + aggregates.width;
 
