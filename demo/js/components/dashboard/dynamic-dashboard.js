@@ -51,7 +51,7 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                     "grid-grouped": "col-md-12",
                     "heatmap": "col-md-6",
                     "amount": "col-md-6",
-                    "year": "col-md-4"
+                    "year": "col-md-6"
                 };
 
                 scope.showProjectInfo = false;
