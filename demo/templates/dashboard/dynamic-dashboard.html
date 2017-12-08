@@ -45,6 +45,7 @@
                        class="btn dashboard-filter-label">
                     <input type="checkbox"
                            ng-model="filter.checked"
+                           ng-disabled="filter.disabled"
                            ng-change="updateSelectedFilters()"
                            value="{{ filter.name }}">
                     <i class="fa fa-square-o fa-2x"></i>
