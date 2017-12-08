@@ -29,17 +29,17 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                         label: "Aid Activity",
                         type: "aidactivity",
                         icon: "fa-medkit",
-                        detailsUrl: $sce.trustAsHtml("templates-demo/pages/view-aid.html")
+                        detailsUrl: $sce.trustAsHtml(Data.templatePath + "templates-demo/pages/view-aid.html")
                     }, {
                         label: "Trade Activity",
                         type: "tradeactivity",
                         icon: "fa-exchange",
-                        detailsUrl: $sce.trustAsHtml("templates-demo/pages/view-trade.html")
+                        detailsUrl: $sce.trustAsHtml(Data.templatePath + "templates-demo/pages/view-trade.html")
                     }, {
                         label: "Contract",
                         type: "contract",
                         icon: "fa-pencil",
-                        detailsUrl: $sce.trustAsHtml("templates-demo/pages/view-contract.html")
+                        detailsUrl: $sce.trustAsHtml(Data.templatePath + "templates-demo/pages/view-contract.html")
                     }],
                     selectedDashboard: defaultDashboard,
                     filters: []
