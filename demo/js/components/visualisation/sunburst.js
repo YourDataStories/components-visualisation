@@ -29,6 +29,7 @@ angular.module("yds").directive("ydsSunburst", ["Data", "DashboardService", func
             var selectionId = scope.selectionId;
 
             var chart = null;
+            var lastSelection = null;
 
             // Check if the projectId attr is defined, else stop the process
             if (_.isUndefined(projectId) || projectId.trim() === "") {
@@ -104,8 +105,10 @@ angular.module("yds").directive("ydsSunburst", ["Data", "DashboardService", func
                                 var currSelection = DashboardService.getGridSelection(selectionId);
 
                                 if (!_.contains(currSelection, e.target.id)) {
-                                    DashboardService.setGridSelection(selectionId,
-                                        _.union(currSelection, [e.target.id]));
+                                    var newSelection = _.union(currSelection, [e.target.id]);
+                                    DashboardService.setGridSelection(selectionId, newSelection);
+
+                                    lastSelection = newSelection;
                                 }
                             },
                             unselect: function (e) {
@@ -113,8 +116,10 @@ angular.module("yds").directive("ydsSunburst", ["Data", "DashboardService", func
                                 var currSelection = DashboardService.getGridSelection(selectionId);
 
                                 if (_.contains(currSelection, e.target.id)) {
-                                    DashboardService.setGridSelection(selectionId,
-                                        _.without(currSelection, e.target.id));
+                                    var newSelection = _.without(currSelection, e.target.id);
+                                    DashboardService.setGridSelection(selectionId, newSelection);
+
+                                    lastSelection = newSelection;
                                 }
                             }
                         }
@@ -135,9 +140,10 @@ angular.module("yds").directive("ydsSunburst", ["Data", "DashboardService", func
                 });
 
             DashboardService.subscribeGridSelectionChanges(scope, function () {
-                // If the selection for this pie changed, select the appropriate CPV if it exists in one of the series
+                // If the selection for this sunburst changed, select the appropriate CPV if it exists in a series
                 var selection = DashboardService.getGridSelection(selectionId);
-                if (!_.isEmpty(selection)) {
+
+                if (!_.isEmpty(selection) && !_.isEqual(lastSelection, selection)) {
                     // Get actual selection (it can be only one in this case)
                     var idToSelect = _.first(selection);
 
@@ -149,7 +155,7 @@ angular.module("yds").directive("ydsSunburst", ["Data", "DashboardService", func
                             }
                         });
                     });
-                } else {
+                } else if (_.isEmpty(selection)) {
                     // Deselect all points
                     _.each(chart.series, function (series) {
                         _.first(series.points).select(false, false);
