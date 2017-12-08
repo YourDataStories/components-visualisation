@@ -224,10 +224,9 @@
                     <uib-tabset active="ctTab"
                                 template-url="templates/tabset-panel-success.html">
                         <uib-tab heading="View Data" index="0">
-                            <p class="text-justify">The following table shows all
-                                {{ dashboardsConfig.selectedDashboard }}s for the selected seller and
-                                buyer countries that span the selected time period. You can obtain the same results
-                                through search: an example is provided on the
+                            <p class="text-justify">
+                                {{ dashboardsConfig.viewDataDescription }}
+                                You can obtain the same results through search: an example is provided on the
                                 <!--Because of extra scopes created by uib-tab we need
                                 to access the ctTab variable like this-->
                                 <a ng-click="$parent.$parent.ctTab = 1">search tab</a>.</p>
