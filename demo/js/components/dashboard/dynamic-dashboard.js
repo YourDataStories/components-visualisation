@@ -29,19 +29,26 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                         label: "Aid Activity",
                         type: "aidactivity",
                         icon: "fa-medkit",
-                        detailsUrl: $sce.trustAsHtml("templates-demo/pages/view-aid.html")
+                        detailsUrl: $sce.trustAsHtml("templates-demo/pages/view-aid.html"),
+                        viewDataDescription: "The following table shows all Aid Activities for the selected " +
+                        "benefactor and beneficiary countries that span the selected time period."
                     }, {
                         label: "Trade Activity",
                         type: "tradeactivity",
                         icon: "fa-exchange",
-                        detailsUrl: $sce.trustAsHtml("templates-demo/pages/view-trade.html")
+                        detailsUrl: $sce.trustAsHtml("templates-demo/pages/view-trade.html"),
+                        viewDataDescription: "The following table shows all Trade Activities for the selected " +
+                        "origin and destination countries that span the selected time period."
                     }, {
                         label: "Contract",
                         type: "contract",
                         icon: "fa-pencil",
-                        detailsUrl: $sce.trustAsHtml("templates-demo/pages/view-contract.html")
+                        detailsUrl: $sce.trustAsHtml("templates-demo/pages/view-contract.html"),
+                        viewDataDescription: "The following table shows all Contracts for the selected " +
+                        "seller and buyer countries that span the selected time period."
                     }],
                     selectedDashboard: defaultDashboard,
+                    viewDataDescription: "",
                     filters: []
                 };
 
@@ -111,11 +118,15 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                     scope.showProjectInfo = false;
                     scope.detailsUrl = "";
 
+                    // Find configuration for the new Dashboard
+                    var newDashboardConfig = _.findWhere(scope.dashboardsConfig.types, {
+                        type: newType
+                    });
+
                     $timeout(function () {
-                        // Find URL for the current type and add it to scope
-                        scope.detailsUrl = _.findWhere(scope.dashboardsConfig.types, {
-                            type: newType
-                        }).detailsUrl;
+                        // Update scope variables with URL for the current concept details and short description
+                        scope.detailsUrl = newDashboardConfig.detailsUrl;
+                        scope.dashboardsConfig.viewDataDescription = newDashboardConfig.viewDataDescription;
 
                         var aggregates = DashboardService.getAggregates(newType);
                         scope.aggregateClass = "col-md-" + aggregates.width;
