@@ -382,7 +382,13 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                     viewType = undefined;
                                 }
 
-                                Data.downloadGridResultDataAsCsv(query, facets, rules, viewType, grid.lang, selectedCols);
+                                // Get ag-grid filtering parameters
+                                var filterParams = getFilterParams({
+                                    filterModel: scope.gridOptions.api.getFilterModel()
+                                });
+
+                                Data.downloadGridResultDataAsCsv(
+                                    query, facets, rules, viewType, grid.lang, selectedCols, filterParams);
                             });
                         });
                     }
@@ -435,7 +441,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                     var filterExtraParams = {};
 
                     if (!_.isNull(allFilterValues) && _.has(agGridParams, "filterModel") && !_.isEmpty(agGridParams.filterModel)) {
-                        // console.log("Filter model", params.filterModel);
+                        // console.log("Filter model", agGridParams.filterModel);
                         // Find which items were removed from each filter, and add them to be sent
                         _.each(agGridParams.filterModel, function (filterValue, key) {
                             if (_.has(allFilterValues, key)) {
@@ -485,8 +491,6 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                         overflowSize: grid.pageSize,
                         pageSize: grid.pageSize,
                         getRows: function (params) {
-                            // console.log("Data source called with params", params);
-
                             // Function to be called when grid results are retrieved successfully
                             var gridResultDataSuccess = function (response) {
                                 // Extract needed variables from server response

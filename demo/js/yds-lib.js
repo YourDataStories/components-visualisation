@@ -1072,14 +1072,15 @@ app.factory("Data", ["$http", "$q", "$window", "$sce", "DashboardService", "YDS_
 
     /**
      * Download grid results as a CSV file
-     * @param query     Search query
-     * @param facets    Facets of data to export
-     * @param rules     Advanced search rules (if applicable)
-     * @param viewType  View type of data
-     * @param lang      Language of data
-     * @param columns   Columns to export
+     * @param query         Search query
+     * @param facets        Facets of data to export
+     * @param rules         Advanced search rules (if applicable)
+     * @param viewType      View type of data
+     * @param lang          Language of data
+     * @param columns       Columns to export
+     * @param extraParams   Extra parameters for the API (such as ag-grid filters)
      */
-    dataService.downloadGridResultDataAsCsv = function (query, facets, rules, viewType, lang, columns) {
+    dataService.downloadGridResultDataAsCsv = function (query, facets, rules, viewType, lang, columns, extraParams) {
         // Create facets array
         var fq = facets;
         if (!_.isUndefined(viewType)) {
@@ -1106,6 +1107,9 @@ app.factory("Data", ["$http", "$q", "$window", "$sce", "DashboardService", "YDS_
             fl: fields,
             lang: lang
         };
+
+        // Add the extra params to the parameters
+        _.extend(params, extraParams);
 
         if (!_.isUndefined(rules)) {
             // Advanced search
@@ -1141,9 +1145,12 @@ app.factory("Data", ["$http", "$q", "$window", "$sce", "DashboardService", "YDS_
             var url = "http://" + YDS_CONSTANTS.API_SEARCH + "?export=csv";
 
             _.each(params, function (value, key) {
-                if (key === "fq") {
-                    _.each(value, function (value) {
-                        url += "&" + key + "=" + encodeURIComponent(value);
+                // Replace "+" with "%2B" like Angular's $http, so that the API will process filter params correctly
+                key = key.replace("+", "%2B");
+
+                if (_.isArray(value)) {
+                    _.each(value, function (arrayValue) {
+                        url += "&" + key + "=" + encodeURIComponent(arrayValue);
                     });
                 } else {
                     url += "&" + key + "=" + encodeURIComponent(value);
