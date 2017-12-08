@@ -19,17 +19,17 @@
             <yds-save-filters-button
                     dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
                     info-type="{{ dashboardsConfig.selectedDashboard }}.filters.selected"
-                    lang="en">
+                    lang="{{ lang }}">
             </yds-save-filters-button>
 
             <yds-clear-filters-button
                     dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
-                    lang="en">
+                    lang="{{ lang }}">
             </yds-clear-filters-button>
 
             <yds-dashboard-sharing
                     dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
-                    lang="en">
+                    lang="{{ lang }}">
             </yds-dashboard-sharing>
         </div>
     </div>
@@ -113,7 +113,7 @@
                             number-of-items="{{ aggregateValues[filter.params.viewType] }}"
                             base-url="http://platform.yourdatastories.eu/project-details"
                             min-height="225"
-                            lang="{{ filter.params.lang || 'en' }}">
+                            lang="{{ filter.params.lang || lang }}">
                     </yds-dashboard-updater>
 
                     <!--Grid Grouped filter (e.g. for CPVs)-->
@@ -131,7 +131,7 @@
                             number-of-items="{{ aggregateValues[filter.params.viewType] }}"
                             base-url="http://platform.yourdatastories.eu/project-details"
                             min-height="300"
-                            lang="{{ filter.params.lang || 'en' }}">
+                            lang="{{ filter.params.lang || lang }}">
                     </yds-dashboard-updater>
 
                     <!--Amount filter-->
@@ -205,7 +205,7 @@
                             dynamic-dashboard="true"
                             dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
                             min-height="90"
-                            lang="en">
+                            lang="{{ lang }}">
                     </yds-dashboard-updater>
                 </div>
             </div>
@@ -249,7 +249,7 @@
                                     add-to-basket="true"
                                     enable-rating="true"
                                     min-height="420"
-                                    lang="en">
+                                    lang="{{ lang }}">
                             </yds-dashboard-updater>
                         </uib-tab>
 
@@ -276,7 +276,7 @@
                                     dynamic-dashboard="true"
                                     add-to-basket="true"
                                     min-height="480"
-                                    lang="en">
+                                    lang="{{ lang }}">
                             </yds-dashboard-updater>
                         </uib-tab>
 
@@ -284,7 +284,7 @@
                             <!--Workbench-->
                             <yds-workbench-new
                                     ng-if="ctTab == 2"
-                                    user-id="ydsUser"></yds-workbench-new>
+                                    user-id="{{ userId }}"></yds-workbench-new>
                         </uib-tab>
                     </uib-tabset>
                 </div>

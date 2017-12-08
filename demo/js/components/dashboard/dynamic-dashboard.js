@@ -3,7 +3,9 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
         return {
             restrict: "E",
             scope: {
-                type: "@"   // Type of Dashboard. If undefined, will show type selection radio buttons.
+                userId: "@",    // User ID
+                lang: "@",      // Language of Dashboard
+                type: "@"       // Type of Dashboard. If undefined, will show type selection radio buttons.
             },
             templateUrl: Data.templatePath + "templates/dashboard/dynamic-dashboard.html",
             link: function (scope, element, attrs) {
@@ -16,6 +18,10 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                 } else {
                     defaultDashboard = scope.type;
                 }
+
+                // Set default language, if not already set
+                if (_.isUndefined(scope.lang) || scope.lang.trim() === "")
+                    scope.lang = "en";
 
                 // Set configuration of Dashboards
                 scope.dashboardsConfig = {
