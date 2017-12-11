@@ -105,7 +105,7 @@ angular.module("yds").directive("ydsSunburst", ["Data", "DashboardService", func
                                 var currSelection = DashboardService.getGridSelection(selectionId);
 
                                 if (!_.contains(currSelection, e.target.id)) {
-                                    var newSelection = _.union(currSelection, [e.target.id]);
+                                    var newSelection = [e.target.id];
                                     DashboardService.setGridSelection(selectionId, newSelection);
 
                                     lastSelection = newSelection;
