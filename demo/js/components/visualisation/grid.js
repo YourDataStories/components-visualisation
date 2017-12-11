@@ -487,8 +487,12 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
 
                     // Watch for changes in the selection and select the appropriate rows
                     DashboardService.subscribeGridSelectionChanges(scope, function () {
-                        var selection = DashboardService.getGridSelection(selectionId);
-                        selectRows(selection);
+                        var newSelection = DashboardService.getGridSelection(selectionId);
+
+                        // Call selectRows if selection changed...
+                        if (!_.isUndefined(newSelection) && !_.isEqual(newSelection, selection)) {
+                            selectRows(newSelection);
+                        }
                     });
                 }
 
