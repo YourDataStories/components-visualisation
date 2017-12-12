@@ -2,12 +2,16 @@ angular.module("yds").directive("ydsInfoTable", ["Data", "Translations", "$sce",
     return {
         restrict: "E",
         scope: {
-            projectId: "@",     // Id of the project that the data belong
+            projectId: "@",     // ID of the project
             viewType: "@",      // Type of the info object
             lang: "@",          // Lang of the visualised data
             baseUrl: "@",       // Base URL to send to API
             isEmptyObj: "=",    // Object that the component will set to true when there is no data to display
-            extraParams: "="    // Extra parameters to send with API call
+            extraParams: "=",   // Extra parameters to send with API call
+
+            addToBasket: "@",   // Enable or disable "add to basket" functionality, values: true, false
+            basketBtnX: "@",    // X-axis position of the basket button
+            basketBtnY: "@"     // Y-axis position of the basket button
         },
         templateUrl: Data.templatePath + "templates/general-purpose/info-table.html",
         link: function (scope) {
@@ -17,10 +21,10 @@ angular.module("yds").directive("ydsInfoTable", ["Data", "Translations", "$sce",
             var baseUrl = scope.baseUrl;
             var extraParams = scope.extraParams;
 
-            // Check if project id or grid type are defined
+            // Check if project id is defined
             if (_.isUndefined(projectId) || projectId.trim() === "") {
                 scope.ydsAlert = "The YDS component is not properly initialized " +
-                    "because the projectId or the viewType attribute aren't configured properly. " +
+                    "because the projectId isn't configured properly. " +
                     "Please check the corresponding documentation section.";
                 return false;
             }
@@ -29,7 +33,7 @@ angular.module("yds").directive("ydsInfoTable", ["Data", "Translations", "$sce",
             if (_.isUndefined(viewType) || viewType.trim() === "")
                 viewType = "default";
 
-            // Check if the language attr is defined, else assign default value
+            // Check if the language attribute is defined, else assign default value
             if (_.isUndefined(lang) || lang.trim() === "")
                 lang = "en";
 

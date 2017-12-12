@@ -1,4 +1,4 @@
-<div class="yds-info-table-wrapper">
+<div class="yds-info-table-wrapper info-container" yds-basket-btn>
     <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length>0">
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
         <span class="sr-only">Error:</span>
@@ -6,23 +6,26 @@
     </div>
     <table class="table table-striped">
         <tbody>
-            <tr ng-repeat="(key, infoObj) in info">
-                <td class="info-table-title">{{ key }}</td>
+        <tr ng-repeat="(key, infoObj) in info">
+            <td class="info-table-title">{{ key }}</td>
 
-                <!--Long string-->
-                <td ng-if="infoObj.type=='string-i18n-long'"
-                    ng-tt-more-label="{{translations.showMore}}"
-                    ng-tt-less-label="{{translations.showLess}}"
-                    ng-text-truncate="infoObj.value" ng-tt-words-threshold="40">
-                    {{infoObj.value}}
-                </td>
+            <!--Long string-->
+            <td ng-if="infoObj.type=='string-i18n-long'"
+                ng-tt-more-label="{{translations.showMore}}"
+                ng-tt-less-label="{{translations.showLess}}"
+                ng-text-truncate="infoObj.value" ng-tt-words-threshold="40">
+                {{infoObj.value}}
+            </td>
 
-                <!--URL or country array-->
-                <td ng-if="infoObj.type=='url' || infoObj.type=='country_code_name_array'" ng-bind-html="infoObj.value"></td>
+            <!--URL or country array-->
+            <td ng-if="infoObj.type=='url' || infoObj.type=='country_code_name_array'"
+                ng-bind-html="infoObj.value"></td>
 
-                <!--Default-->
-                <td ng-if="infoObj.type!='string-i18n-long' && infoObj.type!='url' && infoObj.type!='country_code_name_array'">{{ infoObj.value }}</td>
-            </tr>
+            <!--Default-->
+            <td ng-if="infoObj.type!='string-i18n-long' && infoObj.type!='url' && infoObj.type!='country_code_name_array'">
+                {{ infoObj.value }}
+            </td>
+        </tr>
         </tbody>
     </table>
 </div>
