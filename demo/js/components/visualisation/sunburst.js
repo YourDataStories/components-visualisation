@@ -140,6 +140,10 @@ angular.module("yds").directive("ydsSunburst", ["Data", "DashboardService", func
                 });
 
             DashboardService.subscribeGridSelectionChanges(scope, function () {
+                // Only continue if chart is initialized
+                if (_.isNull(chart))
+                    return;
+
                 // If the selection for this sunburst changed, select the appropriate CPV if it exists in a series
                 var selection = DashboardService.getGridSelection(selectionId);
 
