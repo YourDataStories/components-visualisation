@@ -270,6 +270,9 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
 
                             preventUpdate = false;
                         });
+                    } else {
+                        // New selection is empty, so deselect all nodes
+                        scope.gridOptions.api.deselectAll();
                     }
                 };
 
@@ -491,6 +494,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
 
                         // Call selectRows if selection changed...
                         if (!_.isUndefined(newSelection) && !_.isEqual(newSelection, selection)) {
+                            console.log("selecitng new rows????", newSelection);
                             selectRows(newSelection);
                         }
                     });
