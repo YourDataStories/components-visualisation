@@ -39,6 +39,14 @@
                 element-h="{{ elementH }}">
         </yds-line>
 
+        <yds-info-table
+                ng-switch-when="info"
+                project-id="{{ projectId }}"
+                view-type="{{ viewType }}"
+                extra-params="extraParams"
+                lang="{{ lang }}">
+        </yds-info-table>
+
         <yds-scatter
                 ng-switch-when="scatter"
                 project-id="{{ projectId }}"
