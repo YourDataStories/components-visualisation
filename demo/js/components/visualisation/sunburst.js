@@ -105,7 +105,7 @@ angular.module("yds").directive("ydsSunburst", ["Data", "DashboardService", func
                                 var currSelection = DashboardService.getGridSelection(selectionId);
 
                                 if (!_.contains(currSelection, e.target.id)) {
-                                    var newSelection = _.union(currSelection, [e.target.id]);
+                                    var newSelection = [e.target.id];
                                     DashboardService.setGridSelection(selectionId, newSelection);
 
                                     lastSelection = newSelection;
@@ -148,13 +148,22 @@ angular.module("yds").directive("ydsSunburst", ["Data", "DashboardService", func
                     var idToSelect = _.first(selection);
 
                     // Look in each series for the CPV with the ID to select
+                    var newPointFound = false;
                     _.each(chart.series, function (series) {
                         _.each(series.points, function (point) {
                             if (point.id === idToSelect) {
                                 point.select(true, false);
+                                newPointFound = true;
                             }
                         });
                     });
+
+                    // If no point was found to select, we need to deselect the current one, if there is any.
+                    if (!newPointFound) {
+                        _.each(chart.getSelectedPoints(), function (point) {
+                            point.select(false, false);
+                        });
+                    }
                 } else if (_.isEmpty(selection)) {
                     // Deselect all points
                     _.each(chart.series, function (series) {

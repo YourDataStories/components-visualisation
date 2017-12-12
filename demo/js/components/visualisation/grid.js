@@ -176,8 +176,6 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 var cookieKey = grid.viewType + "_" + dashboardId;
                 var firstLoad = true;
 
-                var preventSelectionEvent = false;
-
                 /**
                  * When a filter is updated, update the filter object of the component by using the Filters service
                  */
@@ -243,14 +241,6 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                  * @param selection Rows to select. Should be array ids.
                  */
                 var selectRows = function (selection) {
-                    // Deselect previously selected rows
-                    if (dashboardId.indexOf("comparison") !== -1 && !preventUpdate) {
-                        // Prevent the next selection event from doing anything (because deselectAll() will fire it)
-                        preventSelectionEvent = true;
-
-                        scope.gridOptions.api.deselectAll();
-                    }
-
                     // Select new rows
                     if (!_.isEmpty(selection)) {
                         scope.gridOptions.api.forEachNode(function (node) {
@@ -268,7 +258,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                                 }
 
                                 // The node was selected before, so select it again
-                                scope.gridOptions.api.selectNode(node, true);
+                                scope.gridOptions.api.selectNode(node, (selectionType === "multiple"));
                                 scope.gridOptions.api.ensureNodeVisible(node);
                             }
 
@@ -406,8 +396,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                                 scope.gridOptions.suppressRowClickSelection = true;
                                 scope.gridOptions.onSelectionChanged = function (e) {
                                     // Ignore event if grid is loading, or it's marked to be skipped
-                                    if (scope.loading || preventSelectionEvent) {
-                                        preventSelectionEvent = false;
+                                    if (scope.loading) {
                                         return;
                                     }
 
@@ -487,8 +476,12 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
 
                     // Watch for changes in the selection and select the appropriate rows
                     DashboardService.subscribeGridSelectionChanges(scope, function () {
-                        var selection = DashboardService.getGridSelection(selectionId);
-                        selectRows(selection);
+                        var newSelection = DashboardService.getGridSelection(selectionId);
+
+                        // Call selectRows if selection changed...
+                        if (!_.isUndefined(newSelection) && !_.isEqual(newSelection, selection)) {
+                            selectRows(newSelection);
+                        }
                     });
                 }
 
