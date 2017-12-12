@@ -89,6 +89,10 @@ angular.module("yds").directive("ydsBubble", ["YDS_CONSTANTS", "Data", "$window"
 
             Data.getProjectVis("bubble", projectId, viewType, lang, extraParams)
                 .then(function (response) {
+                    // Check that the component has not been destroyed
+                    if (scope.$$destroyed)
+                        return;
+
                     var options = response.data;
 
                     // Add element ID to render the chart to in the options
