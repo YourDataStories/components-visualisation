@@ -16,7 +16,6 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
 
                 var minValue = parseInt(scope.minValue);
                 var maxValue = parseInt(scope.maxValue);
-                // var defaultValue = scope.defaultValue;
                 var selectionType = scope.selectionType;
 
                 // Check if minValue attribute is defined, else assign default value
@@ -87,7 +86,7 @@ angular.module("yds").directive("ydsLargeNumberRange", ["$timeout", "DashboardSe
                     options: _.map(comboboxValues, function (item) {
                         return {
                             value: item,
-                            text: item
+                            text: item.toLocaleString(undefined, {minimumFractionDigits: 0})
                         };
                     }),
                     create: true,
