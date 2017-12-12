@@ -36,6 +36,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 embedBtnX: "@",         // X-axis position of the embed button
                 embedBtnY: "@",         // Y-axis position of the embed button
                 popoverPos: "@",        // The side of the embed button from which the embed window will appear
+                fitColumns: "@",        // Set to true to make the grid fit the columns to the grid width after loading
 
                 enableRating: "@",      // Enable rating buttons for this component
 
@@ -77,6 +78,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 var selectionId = scope.selectionId;
                 var groupedData = scope.groupedData;
                 var ignoreOwnSelection = scope.ignoreOwnSelection;
+                var fitColumns = scope.fitColumns;
 
                 // If selection is enabled, this will be used to reselect rows after refreshing the grid data
                 var selection = [];
@@ -87,10 +89,10 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                     Filters.addExtraParamsFilter(grid.elementId, extraParams);
                 }
 
-                // Check if project id or grid type are defined
+                // Check if project id is defined
                 if (_.isUndefined(grid.projectId) || grid.projectId.trim() === "") {
                     scope.ydsAlert = "The YDS component is not properly initialized " +
-                        "because the projectId or the viewType attribute aren't configured properly. " +
+                        "because the projectId isn't configured properly. " +
                         "Please check the corresponding documentation section";
                     return false;
                 }
@@ -146,6 +148,10 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 // Check if the ignoreOwnSelection attribute is defined, else assign default value
                 if (_.isUndefined(ignoreOwnSelection) || (ignoreOwnSelection !== "true" && ignoreOwnSelection !== "false"))
                     ignoreOwnSelection = "false";
+
+                // Check if the fitColumns attribute is defined, else assign default value
+                if (_.isUndefined(fitColumns) || (fitColumns !== "true" && fitColumns !== "false"))
+                    fitColumns = "false";
 
                 // Check if the selectionType attribute is defined, else assign default value
                 if (_.isUndefined(selectionType) || (selectionType !== "single" && selectionType !== "multiple"))
@@ -420,6 +426,11 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                             // If filtering is enabled, register function to watch for filter updates
                             if (grid.filtering === "true" || grid.quickFiltering === "true") {
                                 scope.gridOptions.api.addEventListener("afterFilterChanged", filterModifiedListener);
+                            }
+
+                            // Fit the columns to fit the grid width (if enabled)
+                            if (fitColumns === "true") {
+                                scope.gridOptions.api.sizeColumnsToFit();
                             }
 
                             // Remove loading animation
