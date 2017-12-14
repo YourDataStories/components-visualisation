@@ -152,10 +152,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                     },
                     title: {text: ""},
                     mapNavigation: {
-                        enabled: true,
-                        buttonOptions: {
-                            style: {display: "none"}
-                        }
+                        enabled: true
                     },
                     exporting: {
                         buttons: {
