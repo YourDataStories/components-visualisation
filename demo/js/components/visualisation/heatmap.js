@@ -328,13 +328,12 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
 
                     // Add listener for when something in Selectivity is added or removed
                     $(selectivity).on("change", function (e) {
-                        // todo: Has problems after adding country swapping...
                         if (_.has(e, "added") && !_.isUndefined(e.added)) {
                             selectPointByCode(e.added.id, true);
                         }
 
                         if (_.has(e, "removed") && !_.isUndefined(e.removed)) {
-                            selectPointByCode(e.removed.id, true);
+                            selectPointByCode(e.removed.id, false);
                         }
                     });
                 };
