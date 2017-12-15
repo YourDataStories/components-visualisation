@@ -523,17 +523,29 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                 };
 
                 /**
-                 * Get formatted points from the heatmap and add them as the selection in Selectivity
-                 * @param selectivity    Selectivity instance
+                 * Get formatted points from the heatmap and add them as selected items in Selectivity
+                 * @param selectivity   Selectivity instance
                  * @param points        Points to select
                  */
                 var setSelectivityData = function (selectivity, points) {
-                    $(selectivity).selectivity("data", points.map(function (country) {
-                        return {
-                            id: country.code,
-                            text: country.name
+                    // Transform the points into Selectivity's format
+                    var formattedPoints = points.map(function (country) {
+                        if (_.isUndefined(country.code) || _.isUndefined(country.name)) {
+                            // Problem with this point, needs to be removed.
+                            return null;
+                        } else {
+                            return {
+                                id: country.code,
+                                text: country.name
+                            };
                         }
-                    }), {
+                    });
+
+                    // Remove null values (countries that cannot be selected on this Heatmap right now)
+                    formattedPoints = _.reject(formattedPoints, _.isNull);
+
+                    // Add points to Selectivity
+                    $(selectivity).selectivity("data", formattedPoints, {
                         triggerChange: false
                     });
 
