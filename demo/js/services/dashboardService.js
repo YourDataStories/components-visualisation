@@ -249,6 +249,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     type: "heatmap",
                     checked: true,  // This filter is selected by default
                     params: {
+                        legendTitle: "Number of Contracts per Buyer Country",
                         viewType: "contract.buyer.countries.all",
                         europeOnly: true
                     }
@@ -257,6 +258,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     type: "heatmap",
                     checked: true,
                     params: {
+                        legendTitle: "Number of Contracts per Seller Country",
                         viewType: "contract.seller.countries.all"
                     }
                 }, {
@@ -305,6 +307,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     type: "heatmap",
                     checked: true,
                     params: {
+                        legendTitle: "Number of Aid Activities per Benefactor Country",
                         viewType: "aidactivity.benefactor.countries.all"
                     }
                 }, {
@@ -312,6 +315,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     type: "heatmap",
                     checked: true,
                     params: {
+                        legendTitle: "Number of Aid Activities per Beneficiary Country",
                         viewType: "aidactivity.beneficiary.countries.all"
                     }
                 }, {
@@ -372,6 +376,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     type: "heatmap",
                     checked: true,
                     params: {
+                        legendTitle: "Number of Trade Activities per Origin Country",
                         viewType: "tradeactivity.hasorigin.countries.all"
                     }
                 }, {
@@ -379,6 +384,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     type: "heatmap",
                     checked: true,
                     params: {
+                        legendTitle: "Number of Trade Activities per Destination Country",
                         viewType: "tradeactivity.hasdestination.countries.all"
                     }
                 }, {

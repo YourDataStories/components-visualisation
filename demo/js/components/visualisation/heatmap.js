@@ -12,6 +12,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                 colorType: "@",			// Axis color type (linear or logarithmic)
 
                 legend: "@",            // Enable or disable chart legend
+                legendTitle: "@",       // Title for the legend
                 legendVAlign: "@",      // Vertical alignment of the chart legend (top, middle, bottom)
                 legendHAlign: "@",      // Horizontal alignment of the chart legend (left, center, right)
                 legendLayout: "@",      // Layout of the chart legend (vertical, horizontal)
@@ -194,6 +195,13 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                         verticalAlign: legendVAlign,
                         align: legendHAlign
                     };
+
+                    // Add legend title, if there is any
+                    if (!_.isUndefined(scope.legendTitle) && scope.legendTitle.length > 0) {
+                        heatmapOptions.legend.title = {
+                            text: scope.legendTitle
+                        };
+                    }
                 }
 
                 // Set the height of the chart
