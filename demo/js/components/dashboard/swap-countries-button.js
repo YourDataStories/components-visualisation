@@ -23,9 +23,32 @@ angular.module("yds").directive("ydsSwapCountriesButton", ["Translations", "Dash
                  * Swap the selected countries between the two enabled Heatmap filters
                  */
                 scope.swapCountries = function () {
-                    //todo: Swap countries
+                    // Get country types for this Dashboard
                     var countryTypes = DashboardService.getCountryTypes(scope.dashboardId);
-                    console.log(countryTypes);
+
+                    // Only continue if there are 2 possible country types
+                    if (countryTypes.length !== 2)
+                        return;
+
+                    // Get the value for each country type
+                    var countryValues = [];
+                    _.each(countryTypes, function (cType) {
+                        var value = DashboardService.getCountries(cType);
+
+                        // Add to the list if it's not undefined
+                        if (!_.isUndefined(value)) {
+                            countryValues.push(value);
+                        }
+                    });
+
+                    // Only continue if both maps had a value
+                    if (countryValues.length !== 2)
+                        return;
+
+                    console.log("types", countryTypes);
+                    console.log("values", countryValues);
+
+                    //todo: Swap countries
                 };
             }
         };
