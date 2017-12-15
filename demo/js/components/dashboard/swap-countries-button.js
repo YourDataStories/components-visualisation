@@ -8,6 +8,7 @@ angular.module("yds").directive("ydsSwapCountriesButton", ["Translations", "Dash
             },
             templateUrl: Data.templatePath + "templates/dashboard/swap-countries-button.html",
             link: function (scope) {
+                // todo: Pressing the button multiple times quickly makes it stop working
                 // Boolean that indicates whether countries can be swapped right now
                 scope.canSwapCountries = true;
 
@@ -24,7 +25,8 @@ angular.module("yds").directive("ydsSwapCountriesButton", ["Translations", "Dash
                  */
                 scope.swapCountries = function () {
                     // Get country types for this Dashboard
-                    var countryTypes = DashboardService.getCountryTypes(scope.dashboardId);
+                    var countryMapping = DashboardService.getCountryMapping(scope.dashboardId);
+                    var countryTypes = _.values(countryMapping);
 
                     // Only continue if there are 2 possible country types
                     if (countryTypes.length !== 2)

@@ -207,6 +207,12 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                     }
                 }
 
+                // If country selection is enabled, find the parameter type for this heatmap
+                var paramType = null;
+                if (countrySelection === "true") {
+                    paramType = _.invert(DashboardService.getCountryMapping(dashboardId))[viewType];
+                }
+
                 // Set the height of the chart
                 heatmapContainer.style.height = elementH + "px";
 
@@ -247,6 +253,19 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                         DashboardService.clearCountries(scope.viewType);
                     });
                 }
+
+                /**
+                 * Select or deselect a point in the Heatmap by its code
+                 * @param pointCode Code of point (Country code)
+                 * @param select    Boolean, true to select, false to deselect.
+                 */
+                var selectPointByCode = function (pointCode, select) {
+                    var pointToSelect = _.findWhere(heatmap.series[0].data, {
+                        "iso-a2": pointCode
+                    });
+
+                    pointToSelect.select(select, true);
+                };
 
                 /**
                  * Take Highmaps points array and keep only the country names, codes and values
@@ -302,26 +321,12 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
 
                     // Add listener for when something in Selectivity is added or removed
                     $(selectivity).on("change", function (e) {
-                        var points = heatmap.series[0].data;
-
                         if (_.has(e, "added") && !_.isUndefined(e.added)) {
-                            var countryToSelect = e.added.id;
-
-                            var pointToSelect = _.findWhere(points, {
-                                "iso-a2": countryToSelect
-                            });
-
-                            pointToSelect.select(true, true);
+                            selectPointByCode(e.added.id, true);
                         }
 
                         if (_.has(e, "removed") && !_.isUndefined(e.removed)) {
-                            var countryToDeselect = e.removed.id;
-
-                            var pointToDeselect = _.findWhere(points, {
-                                "iso-a2": countryToDeselect
-                            });
-
-                            pointToDeselect.select(false, true);
+                            selectPointByCode(e.removed.id, true);
                         }
                     });
                 };
@@ -573,7 +578,37 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                         } else {
                             extraParams = newExtraParams;
 
-                            //todo: Check if this heatmap's selection has changed, and if yes, use the new selection...
+                            // Check if this heatmap's selection has changed and if yes, use the new selection.
+                            // This happens when countries are swapped between maps in the Dashboards.
+                            if (!_.isNull(heatmap) && _.has(extraParams, paramType)) {
+                                var highchartsPoints = heatmap.getSelectedPoints();
+                                var currPoints = _.pluck(formatPoints(highchartsPoints), "code").sort();
+
+                                var newPoints = extraParams[paramType].split(",").sort();
+
+                                // If the points changed, we should use the new points
+                                if (!_.isEqual(currPoints, newPoints)) {
+                                    // console.log(paramType, "should use new points:", newPoints);
+                                    // Get the currently selected points of the heatmap
+                                    _.each(highchartsPoints, function (point) {
+                                        var pointCode = point["iso-a2"];
+
+                                        if (_.contains(newPoints, pointCode)) {
+                                            // the point is selected now, and should stay like this.
+                                            // Remove it from the new points array
+                                            newPoints = _.without(newPoints, pointCode);
+                                        } else {
+                                            // The point is selected now, but should NOT be
+                                            point.select(false, true);
+                                        }
+                                    });
+
+                                    // For the remaining country codes in newPoints, select them
+                                    _.each(newPoints, function (newPointCode) {
+                                        selectPointByCode(newPointCode, true);
+                                    });
+                                }
+                            }
                         }
                     }
 

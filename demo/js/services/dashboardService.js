@@ -616,13 +616,13 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
         };
 
         /**
-         * Get the country types for a Dashboard
+         * Get the parameter names -> country view types mapping object for a Dashboard
          * @param dashboardId
-         * @returns {null}
+         * @returns {*}
          */
-        dashboard.getCountryTypes = function (dashboardId) {
+        dashboard.getCountryMapping = function (dashboardId) {
             if (_.has(countryListMapping, dashboardId)) {
-                return _.values(countryListMapping[dashboardId]);
+                return countryListMapping[dashboardId];
             } else {
                 return null;
             }
