@@ -588,22 +588,12 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
 
                                 // If the points changed, we should use the new points
                                 if (!_.isEqual(currPoints, newPoints)) {
-                                    // console.log(paramType, "should use new points:", newPoints);
-                                    // Get the currently selected points of the heatmap
+                                    // Deselect currently selected points of Heatmap
                                     _.each(highchartsPoints, function (point) {
-                                        var pointCode = point["iso-a2"];
-
-                                        if (_.contains(newPoints, pointCode)) {
-                                            // the point is selected now, and should stay like this.
-                                            // Remove it from the new points array
-                                            newPoints = _.without(newPoints, pointCode);
-                                        } else {
-                                            // The point is selected now, but should NOT be
-                                            point.select(false, true);
-                                        }
+                                        point.select(false, true);
                                     });
 
-                                    // For the remaining country codes in newPoints, select them
+                                    // Select the new points
                                     _.each(newPoints, function (newPointCode) {
                                         selectPointByCode(newPointCode, true);
                                     });
