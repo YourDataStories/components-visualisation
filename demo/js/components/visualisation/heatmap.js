@@ -264,7 +264,10 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                         "iso-a2": pointCode
                     });
 
-                    pointToSelect.select(select, true);
+                    // If the point was found and the selection will change, change it
+                    if (!_.isUndefined(pointToSelect) && pointToSelect.selected !== select) {
+                        pointToSelect.select(select, true);
+                    }
                 };
 
                 /**
@@ -503,19 +506,9 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                         var cookieCountries = DashboardService.getCookieObject(cookieKey);
 
                         if (!_.isEmpty(cookieCountries)) {
-                            // Get points of heatmap
-                            var points = heatmap.series[0].points;
-
                             // For each cookie country, try to find it in the heatmap series and select it
                             _.each(cookieCountries, function (point) {
-                                var pointToSelect = _.findWhere(points, {
-                                    "iso-a2": point.code
-                                });
-
-                                // Select the point if found (selected check not needed with firstLoad variable)
-                                if (!_.isUndefined(pointToSelect) && !pointToSelect.selected) {
-                                    pointToSelect.select(true, true);
-                                }
+                                selectPointByCode(point.code, true);
                             });
                         }
 
