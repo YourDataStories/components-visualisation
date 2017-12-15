@@ -165,6 +165,8 @@ angular.module("yds").directive("ydsAggregate", ["Data", "DashboardService", "$s
                         }
 
                         initialized = true;
+                    }, function (error) {
+                        console.error("Error when getting data for Aggregate: ", viewType, error.message);
                     });
                 };
 
