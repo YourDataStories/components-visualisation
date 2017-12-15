@@ -56,6 +56,9 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                 var elementId = "heatmap" + Data.createRandomId();
                 heatmapContainer.id = elementId;
 
+                // Highcharts Heatmap instance
+                var heatmap = null;
+
                 // Any extra parameters will be saved to check if something changed before refreshing the heatmap
                 var originalParams = scope.extraParams;
                 var extraParams = {};
@@ -266,7 +269,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                  */
                 var getSelectivityItemsFromPoints = function () {
                     // Keep only countries that have a value, which means they are available for selection
-                    var selectivityData = _.filter(scope.heatmap.series[0].data, function (item) {
+                    var selectivityData = _.filter(heatmap.series[0].data, function (item) {
                         return !_.isNull(item.value) && !_.isUndefined(item["iso-a2"]);
                     });
 
@@ -299,7 +302,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
 
                     // Add listener for when something in Selectivity is added or removed
                     $(selectivity).on("change", function (e) {
-                        var points = scope.heatmap.series[0].data;
+                        var points = heatmap.series[0].data;
 
                         if (_.has(e, "added") && !_.isUndefined(e.added)) {
                             var countryToSelect = e.added.id;
@@ -332,7 +335,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                     // Initialize heatmap if it's not initialized
                     if (!heatmapOptions.initialized) {
                         // Create empty heatmap
-                        scope.heatmap = new Highcharts.Map(heatmapOptions);
+                        heatmap = new Highcharts.Map(heatmapOptions);
 
                         heatmapOptions.initialized = true;
                     }
@@ -351,7 +354,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                         }
                     }
 
-                    if (_.isEmpty(scope.heatmap.series)) {
+                    if (_.isEmpty(heatmap.series)) {
                         var mapData = Highcharts.maps["custom/world"];
                         if (europeOnly === "true") {
                             mapData = Highcharts.maps["custom/europe"];
@@ -396,7 +399,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                                 events: {
                                     select: function () {
                                         // Get selected points
-                                        var points = scope.heatmap.getSelectedPoints();
+                                        var points = heatmap.getSelectedPoints();
                                         points.push(this);
 
                                         points = formatPoints(points);
@@ -409,7 +412,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                                     },
                                     unselect: function () {
                                         // Get selected points
-                                        var points = scope.heatmap.getSelectedPoints();
+                                        var points = heatmap.getSelectedPoints();
 
                                         // Remove unselected points from points
                                         var pIndex = points.indexOf(this);
@@ -429,7 +432,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                             };
 
                             // Add new series to the heatmap
-                            scope.heatmap.addSeries(newSeries);
+                            heatmap.addSeries(newSeries);
 
                             // Highcharts chart is initialized, create data for Selectivity dropdown
                             initializeSelectivity();
@@ -450,31 +453,31 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                             }
 
                             // Add new series to the heatmap
-                            scope.heatmap.addSeries(newSeries);
+                            heatmap.addSeries(newSeries);
 
                             // Check if we should zoom in to a country
                             if (zoomToCountry === "true") {
                                 var countryCode = _.first(response.data).code;
 
                                 // Find the point by its code and zoom to it
-                                var pointToZoom = _.findWhere(scope.heatmap.series[0].points, {
+                                var pointToZoom = _.findWhere(heatmap.series[0].points, {
                                     code: countryCode
                                 });
 
                                 pointToZoom.zoomTo();
                                 $timeout(function () {
                                     // With many points we need timeout here...
-                                    scope.heatmap.mapZoom(3);
+                                    heatmap.mapZoom(3);
                                 });
                             }
                         }
                     } else {
                         // Heatmap already has a series, update it with new data
-                        scope.heatmap.series[0].setData(response.data);
+                        heatmap.series[0].setData(response.data);
 
                         // In the new data, select the points that were selected before, if they exist
                         var prevSelectedCountries = $(selectivity).selectivity("value");
-                        var heatmapCountries = scope.heatmap.series[0].data;
+                        var heatmapCountries = heatmap.series[0].data;
 
                         _.each(prevSelectedCountries, function (country) {
                             // Get the Highcharts point for this country
@@ -496,7 +499,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
 
                         if (!_.isEmpty(cookieCountries)) {
                             // Get points of heatmap
-                            var points = scope.heatmap.series[0].points;
+                            var points = heatmap.series[0].points;
 
                             // For each cookie country, try to find it in the heatmap series and select it
                             _.each(cookieCountries, function (point) {
@@ -512,9 +515,9 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                         }
 
                         // Force an update of the legend and the colorAxis to make the legend show correctly
-                        scope.heatmap.legend.update();
+                        heatmap.legend.update();
                         if (!_.isNull(colorAxisParams)) {
-                            _.first(scope.heatmap.colorAxis).update(colorAxisParams);
+                            _.first(heatmap.colorAxis).update(colorAxisParams);
                         }
 
                         firstLoad = false;
@@ -569,6 +572,8 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                             return;
                         } else {
                             extraParams = newExtraParams;
+
+                            //todo: Check if this heatmap's selection has changed, and if yes, use the new selection...
                         }
                     }
 
