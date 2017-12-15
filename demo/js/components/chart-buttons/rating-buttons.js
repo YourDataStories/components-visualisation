@@ -20,7 +20,7 @@ angular.module('yds').directive('ydsRating', ['$templateRequest', '$compile', '$
                 var defaultVisTypes = ["pie", "line", "scatter", "bubble", "bar", "tree", "map", "grid"];
 
                 // Set default language if it's not defined
-                if (_.isUndefined(lang) || lang.trim().length == 0) {
+                if (_.isUndefined(lang) || lang.trim().length === 0) {
                     lang = "en";
                 }
 
@@ -32,7 +32,7 @@ angular.module('yds').directive('ydsRating', ['$templateRequest', '$compile', '$
                     for (var i = 0; i < visTypesLen; i++) {
                         var index = elementClass.indexOf(defaultVisTypes[i]);
 
-                        if (index != -1) {
+                        if (index !== -1) {
                             visualisationType = defaultVisTypes[i];
                             visTypeFound = true;
 
@@ -50,21 +50,22 @@ angular.module('yds').directive('ydsRating', ['$templateRequest', '$compile', '$
 
                 // Get user ID from Basket service
                 var userId = Basket.getUserId();
-                if (_.isUndefined(userId) || userId.trim().length == 0) {
+                if (_.isUndefined(userId) || userId.trim().length === 0) {
                     console.warn("Username not set: using default \"ydsUser\"");
                     userId = "ydsUser";
                 }
 
                 // Add rating buttons to the chart
-                $templateRequest(Data.templatePath + "templates/chart-buttons/rating-buttons.html").then(function (html) {
-                    var template = angular.element(html);
+                $templateRequest(Data.templatePath + "templates/chart-buttons/rating-buttons.html")
+                    .then(function (html) {
+                        var template = angular.element(html);
 
-                    // Compile the element
-                    var compiledTemplate = $compile(template)(scope);
+                        // Compile the element
+                        var compiledTemplate = $compile(template)(scope);
 
-                    // Add element as a child to the parent
-                    element.parent().append(compiledTemplate);
-                });
+                        // Add element as a child to the parent
+                        element.append(compiledTemplate);
+                    });
 
                 /**
                  * Rate the chart with the specified number of stars

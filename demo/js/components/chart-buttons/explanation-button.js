@@ -44,21 +44,8 @@ angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile
                     // Compile the element
                     var compiledTemplate = $compile(template)(scope);
 
-                    // Position this element
-                    var explanationBtnX = parseInt(scope.explanationBtnX);
-                    var explanationBtnY = parseInt(scope.explanationBtnY);
-
-                    if (_.isUndefined(explanationBtnX) || _.isNaN(explanationBtnX)) {
-                        explanationBtnX = _.first(element.parent()).offsetWidth / 2;
-                    }
-                    compiledTemplate.css("left", explanationBtnX + "px");
-
-                    if (!_.isUndefined(explanationBtnY) && !_.isNaN(explanationBtnY)) {
-                        compiledTemplate.css("top", explanationBtnY + "px");
-                    }
-
                     // Add element as a child to the parent
-                    element.parent().append(compiledTemplate);
+                    element.append(compiledTemplate);
                 });
 
                 var keyValueToUrlParam = function (key, value) {

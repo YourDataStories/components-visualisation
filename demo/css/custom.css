@@ -1284,10 +1284,7 @@ a.aggregate_link_bright:after, a.aggregate_link_dark:after {
 
 /* Rating buttons styling */
 .rating-buttons-container {
-    position: absolute;
-    bottom: -30px;
-    right: 0;
-    z-index: 999;
+    float: right;
 }
 
 /* Rating buttons cursor */
@@ -1474,11 +1471,6 @@ div.dcat-value {
 }
 
 /* Chart explanation button */
-.explanation-button-container {
-    position: absolute;
-    bottom: -25px;
-}
-
 .btn-explanation {
     width: 24px;
     height: 20px;

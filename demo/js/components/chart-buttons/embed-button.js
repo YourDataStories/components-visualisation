@@ -44,22 +44,12 @@ angular.module("yds").directive("ydsEmbed", ["$compile", "Data", "Filters", func
 
             if (!_.isUndefined(embeddable) && embeddable === "true") {
                 if (!_.isUndefined(projectId)) {
-                    var popoverPos = scope.popoverPos;		// Indicates the position the popover
-                    var embedBtnX = scope.embedBtnX;		// Indicates the x position the embed button
-                    var embedBtnY = scope.embedBtnY;		// Indicates the y position the embed button
+                    var popoverPos = scope.popoverPos;		// Indicates the position of the popover
                     var defaultPos = ["top", "bottom", "left", "right"];
 
                     // If popover position is undefined assign the default value
                     if (_.isUndefined(popoverPos) || _.indexOf(defaultPos, popoverPos) === -1)
                         popoverPos = "right";
-
-                    // If embedBtnX property is undefined assign the default value
-                    if (_.isUndefined(embedBtnX) || _.isNaN(embedBtnX))
-                        embedBtnX = 12;
-
-                    // If embedBtnY property is undefined assign the default value
-                    if (_.isUndefined(embedBtnY) || _.isNaN(embedBtnY))
-                        embedBtnY = 12;
 
                     scope.popoverOpen = false;    // Flag that indicates if the embed tooltip is shown
                     scope.popover = {
@@ -80,14 +70,11 @@ angular.module("yds").directive("ydsEmbed", ["$compile", "Data", "Filters", func
 
                     // Compile the embed button and append it to the element's container
                     var compiledTemplate = $compile(embedBtnTemplate)(scope);
-                    compiledTemplate.css("position", "absolute");
-                    compiledTemplate.css("top", embedBtnY + "px");
-                    compiledTemplate.css("left", embedBtnX + "px");
                     compiledTemplate.css("z-index", 999);
                     compiledTemplate.css("font-size", 11 + "px");
                     compiledTemplate.css("cursor", "pointer");
 
-                    element.parent().append(compiledTemplate);
+                    element.append(compiledTemplate);
                 } else {
                     console.error("The embed extension is not configured properly");
                     return false;
@@ -115,7 +102,7 @@ angular.module("yds").directive("ydsEmbed", ["$compile", "Data", "Filters", func
                                 "</iframe>";
                             scope.popoverOpen = true;
                         }, function (error) {
-                            console.log("request embed code error:", error);
+                            console.log("Request embed code error:", error);
                         });
                 } else {
                     scope.popoverOpen = !scope.popoverOpen;

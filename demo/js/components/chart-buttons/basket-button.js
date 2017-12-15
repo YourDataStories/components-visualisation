@@ -21,7 +21,7 @@ angular.module("yds").directive("ydsBasketBtn", ["$compile", "Data", "Basket", "
                 if (_.isUndefined(lang))
                     lang = "en";
 
-                // Check if the element has id, accepted: "pie-container, line-container, bar-container, map-container"
+                // Check if the basket button can be applied to the component
                 if (!_.isUndefined(elementClass) && elementClass !== "") {
                     var visTypeFound = false;
 
@@ -49,17 +49,6 @@ angular.module("yds").directive("ydsBasketBtn", ["$compile", "Data", "Basket", "
 
                 if (!_.isUndefined(enableBasket) && enableBasket === "true") {
                     if (!_.isUndefined(projectId)) {
-                        var basketBtnX = scope.basketBtnX;		// Indicates the x position the basket button
-                        var basketBtnY = scope.basketBtnY;		// Indicates the y position the basket button
-
-                        // If basketBtnX property is undefined assign the default value
-                        if (_.isUndefined(basketBtnX) || _.isNaN(basketBtnX))
-                            basketBtnX = 12;
-
-                        // If basketBtnY property is undefined assign the default value
-                        if (_.isUndefined(basketBtnY) || _.isNaN(basketBtnY))
-                            basketBtnY = 12;
-
                         var basketBtnTemplate = "<button type='button' " +
                             "class='btn btn-default btn-xs embed-btn' " +
                             "ng-click = 'openBasketModal()'>" +
@@ -68,14 +57,11 @@ angular.module("yds").directive("ydsBasketBtn", ["$compile", "Data", "Basket", "
 
                         // Compile the basket button and append it to the element's container
                         var compiledTemplate = $compile(basketBtnTemplate)(scope);
-                        compiledTemplate.css("position", "absolute");
-                        compiledTemplate.css("top", basketBtnY + "px");
-                        compiledTemplate.css("left", basketBtnX + "px");
 
                         compiledTemplate.css("font-size", 11 + "px");
                         compiledTemplate.css("cursor", "pointer");
 
-                        element.parent().append(compiledTemplate);
+                        element.append(compiledTemplate);
                     } else {
                         console.error("The embed extension is not configured properly");
                         return false;
