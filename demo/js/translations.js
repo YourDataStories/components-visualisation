@@ -22,7 +22,9 @@ angular.module("yds").factory("Translations", [function () {
             showLessTxt: "Show Less",
 
             alternativeNamesTitle: "Alternative Names",
-            noAlternativeNamesMsg: "No alternative names were found!"
+            noAlternativeNamesMsg: "No alternative names were found!",
+
+            swapCountriesBtnLabel: "Swap Countries"
         },
         el: {
             saveResult: "Αποθήκευση",
@@ -46,7 +48,9 @@ angular.module("yds").factory("Translations", [function () {
             showLessTxt: "Λιγότερα",
 
             alternativeNamesTitle: "Εναλλακτικά Ονόματα",
-            noAlternativeNamesMsg: "Δεν βρέθηκε κανένα εναλλακτικό όνομα!"
+            noAlternativeNamesMsg: "Δεν βρέθηκε κανένα εναλλακτικό όνομα!",
+
+            swapCountriesBtnLabel: "Εναλλαγή Χωρών"
         }
     };
 
@@ -59,6 +63,3 @@ angular.module("yds").factory("Translations", [function () {
         }
     }
 }]);
-
-
-
