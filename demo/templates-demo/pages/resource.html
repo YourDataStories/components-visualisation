@@ -5,7 +5,8 @@
             <yds-info project-id="http://linkedeconomy.org/resource/TradeActivity/AD/NL/2016/350190"></yds-info>
         </div>
     </div>
-    <div class="row">
+
+    <div class="row margin-bottom-30">
         <div class="col-md-12">
             <yds-grid-advanced
                     project-id="http://linkedeconomy.org/resource/TradeActivity/AD/NL/2016/350190"
@@ -25,18 +26,20 @@
         </div>
     </div>
 
-    <!--todo: Add line & scatter charts-->
+    <!--todo: Add scatter chart?-->
 
-    <!--Sunburst test-->
-    <div class="row">
+    <!--Line test-->
+    <div class="row margin-bottom-30">
         <div class="col-md-6">
-            <yds-sunburst
+            <yds-line
                     project-id="none"
-                    view-type="contract.comparison.CPVs.for.countries.and.period"
-                    selection-id="cpv1"
-                    element-h="450"
-                    lang="en">
-            </yds-sunburst>
+                    view-type="trafficobservation.per.direction.time.vehicle.type"
+                    add-to-basket="true"
+                    embeddable="true"
+                    enable-rating="true"
+                    element-h="400"
+                    lang="{{ lang }}">
+            </yds-line>
         </div>
     </div>
 

@@ -1,8 +1,8 @@
-<div class="yds-info-table-wrapper info-container" yds-basket-btn>
-    <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length>0">
+<div class="yds-info-table-wrapper">
+    <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length > 0">
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
         <span class="sr-only">Error:</span>
-        {{ydsAlert}}
+        {{ ydsAlert }}
     </div>
     <table class="table table-striped">
         <tbody>
@@ -28,4 +28,8 @@
         </tr>
         </tbody>
     </table>
+
+    <div class="extra-buttons-row">
+        <span class="info-basket-btn" yds-basket-btn></span>
+    </div>
 </div>

@@ -1,8 +1,8 @@
 <div class="yds-info-wrapper">
-    <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length>0">
+    <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length > 0">
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
         <span class="sr-only">Error:</span>
-        {{ydsAlert}}
+        {{ ydsAlert }}
     </div>
     <div class="row" ng-repeat="(key, infoObj) in info">
         <div class="col" ng-class="labelCol"><span class="label label-primary">{{key}}:</span></div>
@@ -12,7 +12,11 @@
              ng-text-truncate="infoObj.value" ng-tt-words-threshold="40">
             {{infoObj.value}}
         </div>
-        <div class="col" ng-class="infoCol" ng-if="infoObj.type!='string-i18n-long' && infoObj.type!='url' && infoObj.type!='html_list'">{{infoObj.value}}</div>
-        <div class="col" ng-class="infoCol" ng-if="infoObj.type=='url' || infoObj.type=='html_list'" ng-bind-html="infoObj.value"></div>
+        <div class="col" ng-class="infoCol"
+             ng-if="infoObj.type!='string-i18n-long' && infoObj.type!='url' && infoObj.type!='html_list'">
+            {{infoObj.value}}
+        </div>
+        <div class="col" ng-class="infoCol" ng-if="infoObj.type=='url' || infoObj.type=='html_list'"
+             ng-bind-html="infoObj.value"></div>
     </div>
 </div>

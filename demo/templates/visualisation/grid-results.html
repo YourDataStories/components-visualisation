@@ -1,7 +1,7 @@
-<div id="gridresults" class="component-wrapper flex" ng-class="{'margin-bottom-30': enableRating == 'true'}">
-    <div uib-alert class="alert-danger" ng-if="ydsAlert.length>0" close="hideAlert()">
+<div id="gridresults" class="component-wrapper flex">
+    <div uib-alert class="alert-danger" ng-if="ydsAlert.length > 0" close="hideAlert()">
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-        {{ydsAlert}}
+        {{ ydsAlert }}
     </div>
     <div ng-show="quickFiltering=='true'">
         <div class="component-adv-quick-filter-label"><i class="glyphicon glyphicon-filter"></i>Quick Filter:</div>
@@ -26,9 +26,17 @@
             ng-if="exporting == 'true'" ng-style="exportBtnPos" ng-click="exportGrid()">
         <span class="glyphicon glyphicon-save-file"></span>
     </button>
-    <div class="flex ag-fresh grid-container" yds-embed yds-basket-btn yds-rating yds-explanation="grid-results"></div>
+    <div class="flex ag-fresh grid-container"></div>
     <div ng-if="showResultsNum == 'true'" class="grid-results-num-row">
         <span ng-if="resultsNum > 0">Showing {{ loadedRows }}/{{ resultsNum }} results</span>
         <span ng-if="resultsNum <= 0">No results found</span>
+    </div>
+
+    <!--todo: show results num in the extra buttons row-->
+    <div class="extra-buttons-row">
+        <span class="grid-embed-btn" yds-embed></span>
+        <span class="grid-basket-btn" yds-basket-btn></span>
+        <span class="grid-explanation-btn" yds-explanation="grid-results"></span>
+        <span class="grid-rating-btns" yds-rating></span>
     </div>
 </div>

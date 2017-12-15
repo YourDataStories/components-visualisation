@@ -1,9 +1,16 @@
-<div class="component-wrapper" ng-class="{'margin-bottom-30': enableRating == 'true'}">
-    <div class="scatter-container" style="width:100%;" yds-embed yds-basket-btn yds-rating yds-explanation>
-        <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length>0">
+<div class="component-wrapper">
+    <div class="scatter-container" style="width:100%;">
+        <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length > 0">
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span class="sr-only">Error:</span>
-            {{ydsAlert}}
+            {{ ydsAlert }}
         </div>
+    </div>
+
+    <div class="extra-buttons-row">
+        <span class="scatter-embed-btn" yds-embed></span>
+        <span class="scatter-basket-btn" yds-basket-btn></span>
+        <span class="scatter-explanation-btn" yds-explanation></span>
+        <span class="scatter-rating-btns" yds-rating></span>
     </div>
 </div>

@@ -1,14 +1,16 @@
-<div class="component-wrapper" ng-class="{'margin-bottom-30': enableRating == 'true'}">
-    <div class="bar-container" style="width:100%;" yds-embed yds-basket-btn yds-rating yds-explanation>
+<div class="component-wrapper">
+    <div class="bar-container" style="width:100%;">
         <div ng-if="loading" class="loading-container">
             <div class="loading-container-inside"><i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i> Loading...</div>
         </div>
-        <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length>0">
+        <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length > 0">
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span class="sr-only">Error:</span>
-            {{ydsAlert}}
+            {{ ydsAlert }}
         </div>
     </div>
+
+    <!--Paging controls-->
     <div ng-if="enablePaging == 'true'" class="bar-buttons-container clearfix">
         <!--Previous page button-->
         <button
@@ -32,5 +34,12 @@
                 ng-click="changePage('next')">
             Next
         </button>
+    </div>
+
+    <div class="extra-buttons-row">
+        <span class="bar-embed-btn" yds-embed></span>
+        <span class="bar-basket-btn" yds-basket-btn></span>
+        <span class="bar-explanation-btn" yds-explanation></span>
+        <span class="bar-rating-btns" yds-rating></span>
     </div>
 </div>
