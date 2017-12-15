@@ -266,6 +266,10 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
 
                     // If the point was found and the selection will change, change it
                     if (!_.isUndefined(pointToSelect) && pointToSelect.selected !== select) {
+                        // If we are going to select the point but its value is null, abort.
+                        if (select && _.isNull(pointToSelect.value))
+                            return;
+
                         pointToSelect.select(select, true);
                     }
                 };
@@ -324,6 +328,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
 
                     // Add listener for when something in Selectivity is added or removed
                     $(selectivity).on("change", function (e) {
+                        // todo: Has problems after adding country swapping...
                         if (_.has(e, "added") && !_.isUndefined(e.added)) {
                             selectPointByCode(e.added.id, true);
                         }
