@@ -2,14 +2,15 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
     function ($rootScope, $timeout, $cookies, $window) {
         var dashboard = {}; // Public methods go in this object
 
-        var countries = {};
-        var yearRange = {};
-        var selectedViewType = {};
-        var gridSeletion = {};
-        var objectStore = {};   // For storing various objects (e.g. enabled filters on dynamic dashboard)
-        var projectInfoType = "";
-        var projectInfoId = "";
-        var visualizationType = "";
+        var countries = {};         // For storing selected countries (from Heatmaps)
+        var yearRange = {};         // For storing selected year ranges
+        var selectedViewType = {};  // For storing selected view type
+        var gridSelection = {};     // For storing grid selections (e.g. CPVs)
+        var objectStore = {};       // For storing various objects (e.g. enabled filters on dynamic dashboard)
+
+        var projectInfoType = "";   // Type of currently selected project (from grids in View/Search Data)
+        var projectInfoId = "";     // Currently selected project ID (from grids in View/Search Data)
+        var visualizationType = ""; // Current Dashboard visualisation type (e.g. pie, bar...)
 
         var notifySelectionChangeLock = false;
         var notifyGridSelectionChangeLock = false;
@@ -609,6 +610,19 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
         };
 
         /**
+         * Get the country types for a Dashboard
+         * @param dashboardId
+         * @returns {null}
+         */
+        dashboard.getCountryTypes = function (dashboardId) {
+            if (_.has(countryListMapping, dashboardId)) {
+                return _.values(countryListMapping[dashboardId]);
+            } else {
+                return null;
+            }
+        };
+
+        /**
          * Get the extra parameters that should be sent to the API with each (dynamic) Dashboard component request,
          * using the filters that are enabled in that Dashboard.
          * @param dashboardId       Dashboard ID to get filters for
@@ -1065,9 +1079,18 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param newSelection
          */
         dashboard.setGridSelection = function (type, newSelection) {
-            gridSeletion[type] = newSelection;
+            gridSelection[type] = newSelection;
 
             notifyGridSelectionChange();
+        };
+
+        /**
+         * Get grid selection for a given type
+         * @param type
+         * @returns {*}
+         */
+        dashboard.getGridSelection = function (type) {
+            return gridSelection[type];
         };
 
         /**
@@ -1092,15 +1115,6 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          */
         dashboard.getCountries = function (type) {
             return countries[type];
-        };
-
-        /**
-         * Get grid selection for a given type
-         * @param type
-         * @returns {*}
-         */
-        dashboard.getGridSelection = function (type) {
-            return gridSeletion[type];
         };
 
         /**

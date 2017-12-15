@@ -24,6 +24,8 @@ angular.module("yds").directive("ydsSwapCountriesButton", ["Translations", "Dash
                  */
                 scope.swapCountries = function () {
                     //todo: Swap countries
+                    var countryTypes = DashboardService.getCountryTypes(scope.dashboardId);
+                    console.log(countryTypes);
                 };
             }
         };
