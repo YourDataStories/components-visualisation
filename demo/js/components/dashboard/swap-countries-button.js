@@ -45,10 +45,11 @@ angular.module("yds").directive("ydsSwapCountriesButton", ["Translations", "Dash
                     if (countryValues.length !== 2)
                         return;
 
-                    console.log("types", countryTypes);
-                    console.log("values", countryValues);
+                    // Set the first type's value to the last type's value
+                    DashboardService.setCountries(_.first(countryTypes), _.last(countryValues));
 
-                    //todo: Swap countries
+                    // Set the last type's value to the first type's value
+                    DashboardService.setCountries(_.last(countryTypes), _.first(countryValues));
                 };
             }
         };
