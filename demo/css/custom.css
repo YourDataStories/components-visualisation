@@ -1111,7 +1111,6 @@ a.list-group-item.load-more-button:hover > span.load-more-button-text {
     font-size: 11px;
     cursor: pointer;
     z-index: 999;
-    position: absolute;
 }
 
 .plain-layout-label, .info-table-title {

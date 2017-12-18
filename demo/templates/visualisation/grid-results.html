@@ -22,10 +22,6 @@
         </button>
         <div style="clear: both"></div>
     </div>
-    <button type="button" class="btn btn-default btn-xs grid-export-btn" ng-class="exportBtnClass"
-            ng-if="exporting == 'true'" ng-style="exportBtnPos" ng-click="exportGrid()">
-        <span class="glyphicon glyphicon-save-file"></span>
-    </button>
     <div class="flex ag-fresh grid-container"></div>
 
     <!--todo: show results num in the extra buttons row-->
@@ -34,6 +30,14 @@
         <span class="grid-basket-btn" yds-basket-btn></span>
         <span class="grid-explanation-btn" yds-explanation="grid-results"></span>
         <span class="grid-rating-btns" yds-rating></span>
+
+        <!--Export button-->
+        <span class="grid-export-btn">
+            <button type="button" class="btn btn-default btn-xs grid-export-btn" ng-class="exportBtnClass"
+                    ng-if="exporting == 'true'" ng-style="exportBtnPos" ng-click="exportGrid()">
+                <span class="glyphicon glyphicon-save-file"></span>
+            </button>
+        </span>
 
         <!--Results number text-->
         <span ng-if="showResultsNum == 'true' && resultsNum > 0">Showing {{ loadedRows }}/{{ resultsNum }} results</span>
