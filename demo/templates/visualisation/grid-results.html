@@ -27,10 +27,6 @@
         <span class="glyphicon glyphicon-save-file"></span>
     </button>
     <div class="flex ag-fresh grid-container"></div>
-    <div ng-if="showResultsNum == 'true'" class="grid-results-num-row">
-        <span ng-if="resultsNum > 0">Showing {{ loadedRows }}/{{ resultsNum }} results</span>
-        <span ng-if="resultsNum <= 0">No results found</span>
-    </div>
 
     <!--todo: show results num in the extra buttons row-->
     <div class="extra-buttons-row">
@@ -38,5 +34,9 @@
         <span class="grid-basket-btn" yds-basket-btn></span>
         <span class="grid-explanation-btn" yds-explanation="grid-results"></span>
         <span class="grid-rating-btns" yds-rating></span>
+
+        <!--Results number text-->
+        <span ng-if="showResultsNum == 'true' && resultsNum > 0">Showing {{ loadedRows }}/{{ resultsNum }} results</span>
+        <span ng-if="showResultsNum == 'true' && resultsNum <= 0">No results found</span>
     </div>
 </div>
