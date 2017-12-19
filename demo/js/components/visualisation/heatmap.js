@@ -366,6 +366,11 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                         }
                     }
 
+                    // Save the countries that exist on this heatmap in case they are needed
+                    // (right now, used for enabling/disabling the "swap" button
+                    var countryCodes = _.pluck(response.data, "code");
+                    DashboardService.saveObject(viewType + "_codes", countryCodes);
+
                     if (_.isEmpty(heatmap.series)) {
                         var mapData = Highcharts.maps["custom/world"];
                         if (europeOnly === "true") {
@@ -449,8 +454,8 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                             // Highcharts chart is initialized, create data for Selectivity dropdown
                             initializeSelectivity();
                         } else {
-                            // If base URL is defined and since selection is disabled, add click event
-                            // for the points, to go to their URL (if they have any)
+                            // If base URL is defined (and selection is disabled), add click event for the points
+                            // to go to their URL (if they have any)
                             if (!_.isUndefined(baseUrl)) {
                                 newSeries.point = {
                                     events: {
