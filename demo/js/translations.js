@@ -24,7 +24,8 @@ angular.module("yds").factory("Translations", [function () {
             alternativeNamesTitle: "Alternative Names",
             noAlternativeNamesMsg: "No alternative names were found!",
 
-            swapCountriesBtnLabel: "Swap Countries"
+            swapCountriesBtnLabel: "Swap Countries",
+            clearFiltersBtnLabel: "Clear selected filters"
         },
         el: {
             saveResult: "Αποθήκευση",
@@ -50,7 +51,8 @@ angular.module("yds").factory("Translations", [function () {
             alternativeNamesTitle: "Εναλλακτικά Ονόματα",
             noAlternativeNamesMsg: "Δεν βρέθηκε κανένα εναλλακτικό όνομα!",
 
-            swapCountriesBtnLabel: "Εναλλαγή Χωρών"
+            swapCountriesBtnLabel: "Εναλλαγή Χωρών",
+            clearFiltersBtnLabel: "Καθαρισμός φίλτρων"
         }
     };
 

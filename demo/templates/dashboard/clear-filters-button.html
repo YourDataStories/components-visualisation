@@ -1,4 +1,4 @@
 <button type="button" ng-disabled="disableBtn" class="btn btn-primary" ng-click="clearFilters()">
-    <span ng-if="lang != 'el'">Clear selected filters</span>
-    <span ng-if="lang == 'el'">Καθαρισμός φίλτρων</span>
+    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+    {{ btnLabel }}
 </button>

@@ -1,5 +1,5 @@
-angular.module("yds").directive("ydsClearFiltersButton", ["DashboardService", "Data", "$window",
-    function (DashboardService, Data, $window) {
+angular.module("yds").directive("ydsClearFiltersButton", ["Translations", "DashboardService", "Data", "$window",
+    function (Translations, DashboardService, Data, $window) {
         return {
             restrict: "E",
             scope: {
@@ -12,6 +12,9 @@ angular.module("yds").directive("ydsClearFiltersButton", ["DashboardService", "D
                 if (_.isUndefined(scope.lang) || scope.lang.trim().length === 0) {
                     scope.lang = "en";
                 }
+
+                // Get localized button label
+                scope.btnLabel = Translations.get(scope.lang, "clearFiltersBtnLabel");
 
                 // Make the button disabled if the given dashboardId is not set up in DashboardService
                 scope.disableBtn = !DashboardService.dashboardIdHasCookies(scope.dashboardId);
