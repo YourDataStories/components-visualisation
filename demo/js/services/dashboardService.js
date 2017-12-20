@@ -417,15 +417,18 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
         /**
          * Save a key/value pair
-         * @param key
-         * @param object
+         * @param key       Key
+         * @param object    Value to save
+         * @param noCookie  Set to true to prevent saving the value as a cookie too
          */
-        dashboard.saveObject = function (key, object) {
+        dashboard.saveObject = function (key, object, noCookie) {
             if (!_.has(objectStore, key) || !_.isEqual(objectStore[key], object)) {
                 objectStore[key] = object;
 
                 // Save to cookie as well, in case it is needed
-                dashboard.setCookieObject(key, object);
+                if (!_.isUndefined(noCookie) && !noCookie) {
+                    dashboard.setCookieObject(key, object);
+                }
 
                 notifyObjectChange();
             }

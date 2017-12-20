@@ -369,7 +369,7 @@ angular.module("yds").directive("ydsHeatmap", ["$window", "$ocLazyLoad", "$timeo
                     // Save the countries that exist on this heatmap in case they are needed
                     // (right now, used for enabling/disabling the "swap" button
                     var countryCodes = _.pluck(response.data, "code");
-                    DashboardService.saveObject(viewType + "_codes", countryCodes);
+                    DashboardService.saveObject(viewType + "_codes", countryCodes, true);
 
                     if (_.isEmpty(heatmap.series)) {
                         var mapData = Highcharts.maps["custom/world"];
