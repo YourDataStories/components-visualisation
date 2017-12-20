@@ -85,6 +85,7 @@ angular.module("yds").directive("ydsSwapCountriesButton", ["Translations", "Dash
                 var canSwapCountries = function () {
                     // Get values for the countries
                     // todo: Could remember previous country types and if they don't change, do nothing?
+                    // todo: After the button is enabled, if all countries of a heatmap are deselected, it remains enabled
                     var countryTypes = getCountryTypes();
 
                     // If there aren't two country types, disable the button
@@ -140,7 +141,30 @@ angular.module("yds").directive("ydsSwapCountriesButton", ["Translations", "Dash
                 };
 
                 var buttonEnableCheck = function () {
+                    // Enable the button only if the countries between the heatmaps can be swapped
                     scope.countrySwapEnabled = canSwapCountries();
+
+                    // Check that there are 2 heatmap filters enabled, to hide the button
+                    var filterLabels = DashboardService.getObject("filter_" + scope.dashboardId);
+
+                    // Get filters for this Dashboard
+                    var filters = DashboardService.getDashboardFilters(scope.dashboardId);
+
+                    // Count how many of the enabled filters are heatmaps
+                    var heatmapCount = 0;
+
+                    _.each(filterLabels, function (label) {
+                        var filter = _.findWhere(filters, {
+                            name: label
+                        });
+
+                        if (filter.type === "heatmap") {
+                            heatmapCount++;
+                        }
+                    });
+
+                    // Show button only if the enabled heatmaps are exactly 2
+                    scope.showButton = (heatmapCount === 2);
                 };
 
                 // When available countries change, check if we should enable/disable the button

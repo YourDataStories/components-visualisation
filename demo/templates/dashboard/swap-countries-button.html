@@ -1,7 +1,10 @@
-<button type="button"
-        ng-disabled="!countrySwapEnabled"
-        ng-click="swapCountries()"
-        class="btn btn-default">
-    <span class="glyphicon glyphicon-transfer"></span>
-    {{ btnLabel }}
-</button>
+<span class="swap-countries-btn-container">
+    <button type="button"
+            ng-show="showButton"
+            ng-disabled="!countrySwapEnabled"
+            ng-click="swapCountries()"
+            class="btn btn-default">
+        <span class="glyphicon glyphicon-transfer"></span>
+        {{ btnLabel }}
+    </button>
+</span>
