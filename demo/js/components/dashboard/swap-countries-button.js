@@ -85,7 +85,6 @@ angular.module("yds").directive("ydsSwapCountriesButton", ["Translations", "Dash
                 var canSwapCountries = function () {
                     // Get values for the countries
                     // todo: Could remember previous country types and if they don't change, do nothing?
-                    // todo: After the button is enabled, if all countries of a heatmap are deselected, it remains enabled
                     var countryTypes = getCountryTypes();
 
                     // If there aren't two country types, disable the button
@@ -93,8 +92,9 @@ angular.module("yds").directive("ydsSwapCountriesButton", ["Translations", "Dash
                         return false;
                     }
 
-                    // Get the selections
+                    // Get the selections (ignoring empty ones)
                     var selectedCountries = getCountryValues(countryTypes, true);
+                    selectedCountries = _.reject(selectedCountries, _.isEmpty);
 
                     // Check that both heatmaps had selections
                     if (selectedCountries.length !== 2) {
