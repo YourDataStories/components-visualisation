@@ -431,6 +431,12 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                                 scope.gridOptions.api.addEventListener("afterFilterChanged", filterModifiedListener);
                             }
 
+                            // If there is a quick filter value, apply it on the grid (can happen when grid refreshes)
+                            if (grid.quickFiltering === "true" &&
+                                _.has(scope.filters, "quickFilterValue") && scope.filters.quickFilterValue.length > 0) {
+                                scope.applyQuickFilter(scope.filters.quickFilterValue);
+                            }
+
                             // Fit the columns to fit the grid width (if enabled)
                             if (fitColumns === "true") {
                                 scope.gridOptions.api.sizeColumnsToFit();
