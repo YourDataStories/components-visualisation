@@ -29,6 +29,7 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                         label: "Aid Activity",
                         type: "aidactivity",
                         icon: "fa-medkit",
+                        infoUrl: $sce.trustAsHtml(Data.templatePath + "templates-demo/dashboards/dashboard2-info.html"),
                         detailsUrl: $sce.trustAsHtml(Data.templatePath + "templates-demo/pages/view-aid.html"),
                         viewDataDescription: "The following table shows all Aid Activities for the selected " +
                         "benefactor and beneficiary countries that span the selected time period."
@@ -36,6 +37,7 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                         label: "Trade Activity",
                         type: "tradeactivity",
                         icon: "fa-exchange",
+                        infoUrl: $sce.trustAsHtml(Data.templatePath + "templates-demo/dashboards/dashboard2-info.html"),
                         detailsUrl: $sce.trustAsHtml(Data.templatePath + "templates-demo/pages/view-trade.html"),
                         viewDataDescription: "The following table shows all Trade Activities for the selected " +
                         "origin and destination countries that span the selected time period."
@@ -43,6 +45,7 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                         label: "Contract",
                         type: "contract",
                         icon: "fa-pencil",
+                        infoUrl: null,
                         detailsUrl: $sce.trustAsHtml(Data.templatePath + "templates-demo/pages/view-contract.html"),
                         viewDataDescription: "The following table shows all Contracts for the selected " +
                         "seller and buyer countries that span the selected time period."
@@ -126,6 +129,7 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                     $timeout(function () {
                         // Update scope variables with URL for the current concept details and short description
                         scope.detailsUrl = newDashboardConfig.detailsUrl;
+                        scope.infoPopoverUrl = newDashboardConfig.infoUrl;
                         scope.dashboardsConfig.viewDataDescription = newDashboardConfig.viewDataDescription;
 
                         var aggregates = DashboardService.getAggregates(newType);

@@ -1,7 +1,7 @@
 <div class="component-wrapper">
     <div class="row margin-bottom-30">
         <!--Dashboard type selection buttons-->
-        <div ng-if="type === 'choose'" class="col-md-8">
+        <div ng-if="type === 'choose'" class="col-md-6">
             <strong>Dashboard types: </strong>
             <div class="btn-group" style="text-transform: capitalize;">
                 <label ng-repeat="dbtype in dashboardsConfig.types track by dbtype.type"
@@ -12,6 +12,15 @@
                     <i class="fa" ng-class="dbtype.icon" aria-hidden="true"></i> {{ dbtype.label }}
                 </label>
             </div>
+        </div>
+
+        <!--Learn more button-->
+        <div ng-if="infoPopoverUrl !== null" class="col-md-2">
+            <button popover-placement="auto" popover-class="dashboard2-info-popover"
+                    uib-popover-template="infoPopoverUrl"
+                    type="button" class="btn btn-green">
+                <span class="glyphicon glyphicon-info-sign"></span> Learn more
+            </button>
         </div>
 
         <!--Save/clear filters buttons-->
