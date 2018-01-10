@@ -80,6 +80,21 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-md-offset-2 col-md-6">
+            <!--Resource count bar chart-->
+            <yds-dashboard-updater
+                    type="bar"
+                    view-type="publicproject.resource.count.per.year"
+                    dashboard-id="public_project"
+                    embeddable="false"
+                    disable-explanation="true"
+                    min-height="100"
+                    lang="{{ lang }}">
+            </yds-dashboard-updater>
+        </div>
+    </div>
+
     <!--Dashboard Visualization-->
     <div class="row" style="margin-top: 10px">
         <div class="col-md-10" style="min-height: 600px">
