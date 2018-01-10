@@ -112,13 +112,24 @@
                     </div>
 
                     <!--Year Range filter-->
-                    <yds-year-range
-                            ng-switch-when="year"
-                            title="{{ filter.params.label }}"
-                            dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
-                            min-year="1997"
-                            max-year="2018">
-                    </yds-year-range>
+                    <div ng-switch-when="year">
+                        <!--Bar chart with item counts-->
+                        <yds-dashboard-updater
+                                project-id="none"
+                                view-type="aidactivity.resource.count.per.year"
+                                dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
+                                type="bar"
+                                min-height="100">
+                        </yds-dashboard-updater>
+
+                        <!--Year slider-->
+                        <yds-year-range
+                                title="{{ filter.params.label }}"
+                                dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
+                                min-year="1997"
+                                max-year="2018">
+                        </yds-year-range>
+                    </div>
 
                     <!--Grid filter-->
                     <yds-dashboard-updater
