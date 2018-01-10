@@ -28,6 +28,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
 
                 embeddable: "@",            // Set to true to enable the embed functionality
                 disableExplanation: "@",    // Set to true to disable the explanation button
+                exporting: "@",             // Set to true to enable exporting of charts
 
                 quickFiltering: "@",        // Enable or disable quick filtering in selection grid
                 enableGridViewBtn: "@",     // Enable or disable the view button in grid-paging
