@@ -49,6 +49,17 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Ranges</div>
                 <div class="panel-body">
+                    <!--Resource count bar chart-->
+                    <yds-dashboard-updater
+                            type="bar"
+                            view-type="trafficobservation.resource.count.per.year"
+                            dashboard-id="traffic_observation"
+                            embeddable="false"
+                            disable-explanation="true"
+                            min-height="100"
+                            lang="{{ lang }}">
+                    </yds-dashboard-updater>
+
                     <!--Start year-->
                     <yds-time-slider
                             type="year"

@@ -26,6 +26,9 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 aggregateType: "@",         // Type of aggregation that the displayed chart should make (count/amount)
                 normaliseType: "@",         // Type of normalisation that the displayed chart should make (gdp/per capita)
 
+                embeddable: "@",            // Set to true to enable the embed functionality
+                disableExplanation: "@",    // Set to true to disable the explanation button
+
                 quickFiltering: "@",        // Enable or disable quick filtering in selection grid
                 enableGridViewBtn: "@",     // Enable or disable the view button in grid-paging
                 enableSelection: "@",       // Enable or disable day selection in traffic-observation component
@@ -90,6 +93,10 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 // If enableSelection is undefined, set default value
                 if (_.isUndefined(scope.enableSelection) || (scope.enableSelection !== "true" && scope.enableSelection !== "false"))
                     scope.enableSelection = "true";
+
+                // If embeddable is undefined, set default value
+                if (_.isUndefined(scope.embeddable) || (scope.embeddable !== "true" && scope.embeddable !== "false"))
+                    scope.embeddable = "true";
 
                 // If dashboardId is undefined, set default value
                 if (_.isUndefined(dashboardId) || dashboardId.trim() === "") {
