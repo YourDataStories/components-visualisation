@@ -3,6 +3,10 @@ angular.module("yds").directive("ydsYearRange", ["$timeout", "DashboardService",
         return {
             restrict: "E",
             scope: {
+                enableBar: "@",     // Set to true to enable bar chart with resource counts. Required bar type to be set
+                barType: "@",       // Bar view type for resource counts
+                lang: "@",          // Language of component (only used for bar chart)
+
                 minYear: "@",       // Minimum year of the slider
                 maxYear: "@",       // Maximum year of the slider
                 dashboardId: "@",   // ID to use for saving year range in DashboardService
@@ -20,21 +24,25 @@ angular.module("yds").directive("ydsYearRange", ["$timeout", "DashboardService",
                 var dashboardId = scope.dashboardId;
                 var vertical = scope.vertical;
 
-                // Check if minYear attr is defined, else assign default value
+                // Check if minYear attribute is defined, else assign default value
                 if (_.isUndefined(minYear) || _.isNaN(minYear))
                     minYear = 1970;
 
-                // Check if maxYear attr is defined, else assign default value
+                // Check if maxYear attribute is defined, else assign default value
                 if (_.isUndefined(maxYear) || _.isNaN(maxYear))
                     maxYear = 2050;
 
-                // Check if dashboardId attr is defined, else assign default value
+                // Check if dashboardId attribute is defined, else assign default value
                 if (_.isUndefined(dashboardId) || dashboardId.length === 0)
                     dashboardId = "default";
 
-                // Check if vertical attr is defined, else assign default value
+                // Check if vertical attribute is defined, else assign default value
                 if (_.isUndefined(vertical) || (vertical !== "true" && vertical !== "false"))
                     vertical = "false";
+
+                // Check if enableBar attribute is defined, else assign default value
+                if (_.isUndefined(scope.enableBar) || (scope.enableBar !== "true" && scope.enableBar !== "false"))
+                    scope.enableBar = "false";
 
                 if (!_.isUndefined(height) && !_.isNaN(height)) {
                     scope.containerStyle = {

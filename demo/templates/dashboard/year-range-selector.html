@@ -3,10 +3,25 @@
         <h4 class="text-center">{{ title }}</h4>
     </div>
 
+    <!--Bar chart with resource counts-->
+    <yds-dashboard-updater
+            type="bar"
+            ng-if="initialized && enableBar === 'true'"
+            project-id="none"
+            view-type="{{ barType }}"
+            dashboard-id="{{ dashboardId }}"
+            embeddable="false"
+            disable-explanation="true"
+            exporting="false"
+            min-height="75"
+            lang="{{ lang }}">
+    </yds-dashboard-updater>
+
     <div ng-if="initialized" ng-style="containerStyle">
         <rzslider
                 rz-slider-options="yearSlider.options"
                 rz-slider-model="yearSlider.minValue"
-                rz-slider-high="yearSlider.maxValue"></rzslider>
+                rz-slider-high="yearSlider.maxValue">
+        </rzslider>
     </div>
 </div>
