@@ -22,7 +22,6 @@ angular.module("yds").directive("ydsYearRange", ["$timeout", "DashboardService",
                 var maxYear = parseInt(scope.maxYear);
                 var height = parseInt(scope.height);
                 var dashboardId = scope.dashboardId;
-                var vertical = scope.vertical;
 
                 // Check if minYear attribute is defined, else assign default value
                 if (_.isUndefined(minYear) || _.isNaN(minYear))
@@ -37,8 +36,8 @@ angular.module("yds").directive("ydsYearRange", ["$timeout", "DashboardService",
                     dashboardId = "default";
 
                 // Check if vertical attribute is defined, else assign default value
-                if (_.isUndefined(vertical) || (vertical !== "true" && vertical !== "false"))
-                    vertical = "false";
+                if (_.isUndefined(scope.vertical) || (scope.vertical !== "true" && scope.vertical !== "false"))
+                    scope.vertical = "false";
 
                 // Check if enableBar attribute is defined, else assign default value
                 if (_.isUndefined(scope.enableBar) || (scope.enableBar !== "true" && scope.enableBar !== "false"))
@@ -77,7 +76,7 @@ angular.module("yds").directive("ydsYearRange", ["$timeout", "DashboardService",
                         floor: minYear,
                         ceil: maxYear,
                         step: 1,
-                        vertical: (vertical === "true"),
+                        vertical: (scope.vertical === "true"),
                         onEnd: updateYearRange
                     }
                 };

@@ -29,6 +29,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 embeddable: "@",            // Set to true to enable the embed functionality
                 disableExplanation: "@",    // Set to true to disable the explanation button
                 exporting: "@",             // Set to true to enable exporting of charts
+                barVertical: "@",           // Set to true to enable vertical bar chart
 
                 quickFiltering: "@",        // Enable or disable quick filtering in selection grid
                 enableGridViewBtn: "@",     // Enable or disable the view button in grid-paging
@@ -232,6 +233,12 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                                 }
 
                                 break;
+                            case "bar":
+                                if (!_.isUndefined(scope.barVertical)) {
+                                    scope.extraParams.chart = (scope.barVertical === "true") ? "bar" : "column";
+                                }
+
+                                rerenderComponent();
                             case "grid":
                             case "grid-paging":
                                 if (!initialized) {
