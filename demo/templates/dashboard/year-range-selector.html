@@ -6,7 +6,7 @@
     <!--Bar chart with resource counts-->
     <yds-dashboard-updater
             type="bar"
-            ng-if="initialized && enableBar === 'true'"
+            ng-if="initialized && enableBar === 'true' && vertical === 'false'"
             project-id="none"
             view-type="{{ barType }}"
             dashboard-id="{{ dashboardId }}"
@@ -14,15 +14,36 @@
             disable-explanation="true"
             exporting="false"
             min-height="60"
-            bar-vertical="{{ vertical }}"
+            bar-vertical="false"
             lang="{{ lang }}">
     </yds-dashboard-updater>
 
-    <div ng-if="initialized" ng-style="containerStyle">
-        <rzslider
-                rz-slider-options="yearSlider.options"
-                rz-slider-model="yearSlider.minValue"
-                rz-slider-high="yearSlider.maxValue">
-        </rzslider>
+    <div ng-if="initialized" class="row">
+        <!--Slider container-->
+        <div ng-style="containerStyle"
+             ng-class="{'col-md-12': vertical === 'false' || enableBar === 'false', 'col-md-6': vertical === 'true' && enableBar === 'true'}">
+            <rzslider
+                    rz-slider-options="yearSlider.options"
+                    rz-slider-model="yearSlider.minValue"
+                    rz-slider-high="yearSlider.maxValue">
+            </rzslider>
+        </div>
+
+        <!--Vertical slider bar chart container-->
+        <div ng-if="enableBar === 'true' && vertical === 'true'"
+             class="col-md-6">
+            <yds-dashboard-updater
+                    type="bar"
+                    project-id="none"
+                    view-type="{{ barType }}"
+                    dashboard-id="{{ dashboardId }}"
+                    embeddable="false"
+                    disable-explanation="true"
+                    exporting="false"
+                    min-height="{{ height }}"
+                    bar-vertical="true"
+                    lang="{{ lang }}">
+            </yds-dashboard-updater>
+        </div>
     </div>
 </div>
