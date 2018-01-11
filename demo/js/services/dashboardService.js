@@ -174,8 +174,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 "aidactivity_benefactor_countries_all",
                 "aidactivity_beneficiary_countries_all",
                 "year_aidactivity",
-                "aidactivity_benefactor_organisations_all_aidactivity",
-                "aidactivity_beneficiary_organisations_all_aidactivity",
+                "aidactivity_benefactor_organisations_all_filter_aidactivity",
+                "aidactivity_beneficiary_organisations_all_filter_aidactivity",
                 "aidactivity_sectors_for_countries_and_period_tree_aidactivity",
                 "aid_spending",
                 "aid_budget"
