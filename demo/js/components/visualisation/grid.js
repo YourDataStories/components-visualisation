@@ -255,9 +255,14 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                             var isSelected = _.contains(selection, nodeId);
 
                             if (isSelected) {
-                                // If the node we will select is in a group, we also need to expand its parent
+                                // If the node we will select is in a group, we also need to expand its parents
                                 if (node.level > 0) {
-                                    node.parent.expanded = true;
+                                    // Expand all parent nodes until the root
+                                    var parentNode = node.parent;
+                                    while (!_.isUndefined(parentNode)) {
+                                        parentNode.expanded = true;
+                                        parentNode = parentNode.parent;
+                                    }
 
                                     // Call this so the grid will render the expanded group
                                     scope.gridOptions.api.onGroupExpandedOrCollapsed();
