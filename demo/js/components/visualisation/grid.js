@@ -270,7 +270,15 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
 
                                 // The node was selected before, so select it again
                                 scope.gridOptions.api.selectNode(node, (selectionType === "multiple"));
-                                scope.gridOptions.api.ensureNodeVisible(node);
+
+                                // Ensure this node is visible, after the grid loads the headers (which makes it resize)
+                                // If the event never happens, the selected node won't be made visible.
+                                scope.gridOptions.api.addEventListener("gridSizeChanged", function () {
+                                    scope.gridOptions.api.ensureNodeVisible(node);
+
+                                    // Remove the listener as we only want to do this once
+                                    scope.gridOptions.api.removeEventListener("gridSizeChanged");
+                                });
                             }
 
                             preventUpdate = false;
