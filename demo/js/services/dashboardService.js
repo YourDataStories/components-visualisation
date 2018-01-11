@@ -321,7 +321,6 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 }, {
                     name: "Benefactor Organisations",
                     type: "grid",
-                    disabled: true,
                     params: {
                         viewType: "aidactivity.benefactor.organisations.all.filter",
                         selectionId: "benefactor_orgs"
@@ -329,7 +328,6 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 }, {
                     name: "Beneficiary Organisations",
                     type: "grid",
-                    disabled: true,
                     params: {
                         viewType: "aidactivity.beneficiary.organisations.all.filter",
                         selectionId: "beneficiary_orgs"
