@@ -41,7 +41,7 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                     lang: scope.lang,
                     sorting: scope.sorting,
                     colResize: scope.colResize,
-                    pageSize: scope.pageSize,
+                    pageSize: parseInt(scope.pageSize),
                     elementH: scope.elementH
                 };
 
@@ -83,7 +83,7 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
 
                 // Check if the page size attribute is defined, else assign default value
                 if (_.isUndefined(grid.pageSize) || _.isNaN(grid.pageSize))
-                    grid.pageSize = "100";
+                    grid.pageSize = 100;
 
                 // Check if the component's height attribute is defined, else assign default value
                 if (_.isUndefined(grid.elementH) || _.isNaN(grid.elementH))
@@ -173,8 +173,8 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                     var dataSource = {
                         rowCount: null, // behave as infinite scroll
                         maxPagesInCache: 2,
-                        overflowSize: parseInt(grid.pageSize),
-                        pageSize: parseInt(grid.pageSize),
+                        overflowSize: grid.pageSize,
+                        pageSize: grid.pageSize,
                         getRows: function (params) {
                             // Function to be called when grid results are retrieved successfully
                             var getDataSuccess = function (response) {
@@ -221,6 +221,11 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                                 if (scope.resultsNum <= params.endRow) {
                                     // We reached the end, so set the last row to the number of total results
                                     lastRow = scope.resultsNum;
+                                }
+
+                                // If the rows returned are less than the page size, we reached the end
+                                if (rowsThisPage.length < grid.pageSize) {
+                                    lastRow = params.endRow - (grid.pageSize - rowsThisPage.length);
                                 }
 
                                 params.successCallback(rowsThisPage, lastRow);
