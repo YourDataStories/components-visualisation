@@ -335,18 +335,18 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                         selectionId: "beneficiary_orgs"
                     }
                 }, {
-                    name: "Sectors",
-                    type: "grid-grouped",
-                    params: {
-                        viewType: "aidactivity.sectors.for.countries.and.period.tree",
-                        selectionId: "sectors"
-                    }
-                }, {
                     name: "Year Range",
                     type: "year",
                     checked: true,
                     params: {
                         label: "Time Period for Aid Activities"
+                    }
+                }, {
+                    name: "Sectors",
+                    type: "grid-grouped",
+                    params: {
+                        viewType: "aidactivity.sectors.for.countries.and.period.tree",
+                        selectionId: "sectors"
                     }
                 }, {
                     name: "Budget",
@@ -388,14 +388,6 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                         viewType: "tradeactivity.hasdestination.countries.all"
                     }
                 }, {
-                    name: "Sectors",
-                    type: "grid-grouped",
-                    checked: true,
-                    params: {
-                        viewType: "tradeactivity.sectors.for.countries.and.period.tree",
-                        selectionId: "sectors"
-                    }
-                }, {
                     name: "Year Range",
                     type: "year",
                     checked: true,
@@ -411,6 +403,14 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                         label: "Amount",
                         min: 0,
                         max: 1000000000
+                    }
+                }, {
+                    name: "Sectors",
+                    type: "grid-grouped",
+                    checked: true,
+                    params: {
+                        viewType: "tradeactivity.sectors.for.countries.and.period.tree",
+                        selectionId: "sectors"
                     }
                 }
             ]
