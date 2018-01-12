@@ -670,8 +670,12 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 // Get min and max selected year and create the year range string for request
                 var minYear = dashboard.getMinYear(dashboardId);
                 var maxYear = dashboard.getMaxYear(dashboardId);
+                var yearRange = "[" + minYear + " TO " + maxYear + "]";
 
-                apiOptions[dashboard.getYearParamName(dashboardId)] = "[" + minYear + " TO " + maxYear + "]";
+                // Only add the year range parameter if it doesn't contain null values
+                if (yearRange.indexOf("null") === -1) {
+                    apiOptions[dashboard.getYearParamName(dashboardId)] = yearRange;
+                }
             }
 
             // Gather data for any grid & grid-grouped filters
