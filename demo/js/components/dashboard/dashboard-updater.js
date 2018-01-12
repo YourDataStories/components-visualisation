@@ -239,6 +239,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                                 }
 
                                 rerenderComponent();
+                                break;
                             case "grid":
                             case "grid-paging":
                                 if (!initialized) {

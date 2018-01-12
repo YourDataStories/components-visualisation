@@ -890,8 +890,10 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 "trafficobservation.direction": directions
             };
 
-            // Remove undefined values from the above object, and add the remaining ones to the apiOptions
-            _.extend(apiOptions, _.omit(extraValues, _.isUndefined));
+            // Remove undefined and null values from the above object, and add the remaining ones to the apiOptions
+            _.extend(apiOptions, _.omit(extraValues, function (item) {
+                return _.isUndefined(item) || _.isNull(item);
+            }));
 
             // Check that start year/day/time is smaller than end year/day/time, otherwise swap them
             ensureValueIntegrity(apiOptions, "trafficobservation.start_year", "trafficobservation.end_year");
