@@ -171,22 +171,21 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
 
                     if (differentParams || differentAggregateType || differentNormaliseType) {
                         prevParams = _.clone(newParams);    // Keep current parameters to check equality later
-                        scope.extraParams = newParams;      // Add new parameters to scope
 
                         // Add base URL to the extra params
                         if (!_.isUndefined(baseUrl) && baseUrl.length > 0) {
-                            scope.extraParams = _.extend({
+                            newParams = _.extend({
                                 baseurl: baseUrl
-                            }, scope.extraParams);
+                            }, newParams);
                         }
 
                         // If the aggregateType attribute is defined (and valid), add it to the extra parameters
                         var aggregateType = scope.aggregateType;
                         if (!_.isUndefined(aggregateType) &&
                             (aggregateType === "amount" || aggregateType === "count" || aggregateType === "budget")) {
-                            scope.extraParams = _.extend({
+                            newParams = _.extend({
                                 aggregate: aggregateType
-                            }, scope.extraParams);
+                            }, newParams);
 
                             prevAggregateType = scope.aggregateType;
                         }
@@ -195,14 +194,23 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                         var normaliseType = scope.normaliseType;
                         if (!_.isUndefined(normaliseType) &&
                             (normaliseType === "no" || normaliseType === "gdp" || normaliseType === "percapita")) {
-                            scope.extraParams = _.extend({
+                            newParams = _.extend({
                                 normalise: normaliseType
-                            }, scope.extraParams);
+                            }, newParams);
 
                             prevNormaliseType = scope.normaliseType;
                         }
 
-                        //noinspection FallThroughInSwitchStatementJS
+                        // If the barVertical parameter has been set, add it to the parameters
+                        if (!_.isUndefined(scope.barVertical)) {
+                            newParams = _.extend({
+                                chart: (scope.barVertical === "true") ? "bar" : "column"
+                            }, newParams);
+                        }
+
+                        // Add new parameters to scope
+                        scope.extraParams = newParams;
+
                         switch (scope.type) {
                             case "selection-grid":
                             case "selection-paging-grid":
@@ -233,13 +241,6 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                                 }
 
                                 break;
-                            case "bar":
-                                if (!_.isUndefined(scope.barVertical)) {
-                                    scope.extraParams.chart = (scope.barVertical === "true") ? "bar" : "column";
-                                }
-
-                                rerenderComponent();
-                                break;
                             case "grid":
                             case "grid-paging":
                                 if (!initialized) {
@@ -249,6 +250,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                                     initialized = true;
                                 }
                             // Continue to re-render grid
+                            // noinspection FallThroughInSwitchStatementJS
                             default:
                                 // Re-render component
                                 rerenderComponent();
