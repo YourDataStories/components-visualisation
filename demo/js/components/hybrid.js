@@ -143,6 +143,10 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
                             }
 
                             if (chart === "grid" && _.has(params, "gridtype") && params.gridtype !== "grid-adv") {
+                                if (_.has(params, "groupedData")) { // In the case of "grid" gridtype
+                                    scope.groupedData = params.groupedData;
+                                }
+
                                 if (_.has(params, "query")) {
                                     filters.q = params.query;
                                 }

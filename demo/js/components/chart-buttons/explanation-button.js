@@ -60,18 +60,15 @@ angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile
                     var attributes = _.extend({
                         id: scope.projectId,
                         viewType: scope.viewType,
-                        lang: scope.lang
+                        lang: scope.lang,
+                        groupedData: scope.groupedData,     // For grids with grouped data
+                        enablePaging: scope.enablePaging,   // For bar component
+                        numberOfItems: scope.numberOfItems  // For bar component
                     }, scope.extraParams);
 
                     // Set default language if it's not defined
                     if (_.isUndefined(attributes.lang) || attributes.lang.trim().length === 0) {
                         attributes.lang = "en";
-                    }
-
-                    // For bar charts, because they can have paging, also add the enablePaging & numberOfItems values
-                    if (visualisationType === "bar") {
-                        attributes.enablePaging = scope.enablePaging;
-                        attributes.numberOfItems = scope.numberOfItems;
                     }
 
                     // Generate the URL for the data analysis page
