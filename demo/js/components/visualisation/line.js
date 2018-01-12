@@ -31,8 +31,8 @@ angular.module("yds").directive("ydsLine", ["Data", "Filters", function (Data, F
             var lineContainer = _.first(angular.element(element[0].querySelector(".line-container")));
 
             // Create a random id for the element that will render the chart
-            var elementId = "line" + Data.createRandomId();
-            lineContainer.id = elementId;
+            scope.elementId = "line" + Data.createRandomId();
+            lineContainer.id = scope.elementId;
 
             var projectId = scope.projectId;
             var viewType = scope.viewType;
@@ -101,17 +101,17 @@ angular.module("yds").directive("ydsLine", ["Data", "Filters", function (Data, F
                     // Add events on load and after changing extremes, to add the line filter
                     options.chart.events = {
                         load: function (e) {
-                            Filters.addLineFilter(elementId, e.target);
+                            Filters.addLineFilter(scope.elementId, e.target);
                         }
                     };
 
                     options.xAxis.events = {
                         afterSetExtremes: function (e) {
-                            Filters.addLineFilter(elementId, e.target.chart);
+                            Filters.addLineFilter(scope.elementId, e.target.chart);
                         }
                     };
 
-                    new Highcharts.StockChart(elementId, options);
+                    new Highcharts.StockChart(scope.elementId, options);
                 }, function (error) {
                     if (_.isNull(error) || _.isUndefined(error) || _.isUndefined(error.message))
                         scope.ydsAlert = "An error has occurred, please check the configuration of the component.";

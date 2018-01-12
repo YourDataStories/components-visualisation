@@ -30,8 +30,8 @@ angular.module("yds").directive("ydsScatter", ["Data", function (Data) {
             var scatterContainer = _.first(angular.element(element[0].querySelector(".scatter-container")));
 
             // Create a random id for the element that will render the plot
-            var elementId = "scatter" + Data.createRandomId();
-            scatterContainer.id = elementId;
+            scope.elementId = "scatter" + Data.createRandomId();
+            scatterContainer.id = scope.elementId;
 
             var projectId = scope.projectId;
             var viewType = scope.viewType;
@@ -92,7 +92,7 @@ angular.module("yds").directive("ydsScatter", ["Data", function (Data) {
                         enabled: (exporting === "true")
                     };
 
-                    new Highcharts.Chart(elementId, options);
+                    new Highcharts.Chart(scope.elementId, options);
                 }, function (error) {
                     if (_.isNull(error) || _.isUndefined(error) || _.isUndefined(error.message))
                         scope.ydsAlert = "An error has occurred, please check the configuration of the component.";

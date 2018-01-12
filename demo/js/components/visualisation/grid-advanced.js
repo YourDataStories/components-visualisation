@@ -33,8 +33,8 @@ angular.module("yds").directive("ydsGridAdvanced", ["Data", "Filters", "$timeout
                 var gridContainer = _.first(angular.element(element[0].querySelector(".grid-container")));
 
                 // Set the variables which will be used for the creation of the grid
+                scope.elementId = "grid" + Data.createRandomId();
                 var grid = {
-                    elementId: "grid" + Data.createRandomId(),
                     lang: scope.lang,
                     projectId: scope.projectId,
                     viewType: scope.viewType,
@@ -79,7 +79,7 @@ angular.module("yds").directive("ydsGridAdvanced", ["Data", "Filters", "$timeout
                     grid.elementH = 300;
 
                 // Add the unique id generated for the grid component and set its height
-                gridContainer.id = grid.elementId;
+                gridContainer.id = scope.elementId;
                 gridContainer.style.height = grid.elementH + "px";
                 gridWrapper.style.height = grid.elementH + "px";
                 gridWrapper.style.marginBottom = "80px";
@@ -247,7 +247,7 @@ angular.module("yds").directive("ydsGridAdvanced", ["Data", "Filters", "$timeout
                     }
 
                     // Save new filters to filters service
-                    Filters.addAdvancedGridFilter(grid.elementId, appliedFilters);
+                    Filters.addAdvancedGridFilter(scope.elementId, appliedFilters);
                 };
 
                 /**

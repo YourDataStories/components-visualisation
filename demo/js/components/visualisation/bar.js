@@ -35,8 +35,8 @@ angular.module("yds").directive("ydsBar", ["Data", "Filters", function (Data, Fi
             var barContainer = _.first(angular.element(element[0].querySelector(".bar-container")));
 
             // Create a random id for the element that will render the chart
-            var elementId = "bar" + Data.createRandomId();
-            barContainer.id = elementId;
+            scope.elementId = "bar" + Data.createRandomId();
+            barContainer.id = scope.elementId;
 
             var projectId = scope.projectId;
             var viewType = scope.viewType;
@@ -50,7 +50,7 @@ angular.module("yds").directive("ydsBar", ["Data", "Filters", function (Data, Fi
 
             // If extra params exist, add them to Filters
             if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
-                Filters.addExtraParamsFilter(elementId, extraParams);
+                Filters.addExtraParamsFilter(scope.elementId, extraParams);
             }
 
             // Check if the projectId attribute is defined, else stop the process
@@ -179,7 +179,7 @@ angular.module("yds").directive("ydsBar", ["Data", "Filters", function (Data, Fi
                                 enabled: (exporting === "true")
                             };
 
-                            chart = new Highcharts.Chart(elementId, options);
+                            chart = new Highcharts.Chart(scope.elementId, options);
                         } else {
                             // Update the chart's options
                             chart.update(response.data);

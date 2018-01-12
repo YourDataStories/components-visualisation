@@ -31,8 +31,8 @@ angular.module("yds").directive("ydsTreeMap", ["Data", "Filters", function (Data
             var treemapContainer = _.first(angular.element(element[0].querySelector(".treemap-container")));
 
             // Create a random id for the element that will render the plot
-            var elementId = "treemap" + Data.createRandomId();
-            treemapContainer.id = elementId;
+            scope.elementId = "treemap" + Data.createRandomId();
+            treemapContainer.id = scope.elementId;
 
             var projectId = scope.projectId;
             var viewType = scope.viewType;
@@ -44,7 +44,7 @@ angular.module("yds").directive("ydsTreeMap", ["Data", "Filters", function (Data
 
             // If extra params exist, add them to Filters
             if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
-                Filters.addExtraParamsFilter(elementId, extraParams);
+                Filters.addExtraParamsFilter(scope.elementId, extraParams);
             }
 
             // Check if the projectId and the viewType attr is defined, else stop the process
@@ -101,7 +101,7 @@ angular.module("yds").directive("ydsTreeMap", ["Data", "Filters", function (Data
 
                     var options = {
                         chart: {
-                            renderTo: elementId
+                            renderTo: scope.elementId
                         },
                         title: chartTitle,
                         exporting: {

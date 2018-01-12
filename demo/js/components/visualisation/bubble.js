@@ -33,8 +33,8 @@ angular.module("yds").directive("ydsBubble", ["YDS_CONSTANTS", "Data", "$window"
             var bubbleContainer = _.first(angular.element(element[0].querySelector(".bubble-container")));
 
             // Create a random id for the element that will render the plot
-            var elementId = "bubble" + Data.createRandomId();
-            bubbleContainer.id = elementId;
+            scope.elementId = "bubble" + Data.createRandomId();
+            bubbleContainer.id = scope.elementId;
 
             var projectId = scope.projectId;
             var viewType = scope.viewType;
@@ -95,9 +95,6 @@ angular.module("yds").directive("ydsBubble", ["YDS_CONSTANTS", "Data", "$window"
 
                     var options = response.data;
 
-                    // Add element ID to render the chart to in the options
-                    options.chart.renderTo = elementId;
-
                     // Set title size in options
                     options.title.style = {
                         fontSize: titleSize + "px"
@@ -139,7 +136,7 @@ angular.module("yds").directive("ydsBubble", ["YDS_CONSTANTS", "Data", "$window"
                         }
                     };
 
-                    new Highcharts.Chart(options);
+                    new Highcharts.Chart(scope.elementId, options);
                 }, function (error) {
                     if (_.isNull(error) || _.isUndefined(error) || _.isUndefined(error.message))
                         scope.ydsAlert = "An error has occurred, please check the configuration of the component";

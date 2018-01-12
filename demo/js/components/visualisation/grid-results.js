@@ -52,8 +52,9 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
 
                 // Set the variables which will be used for the creation of the grid
                 scope.quickFilterValue = "";
+                scope.elementId = "grid" + Data.createRandomId();
+
                 var grid = {
-                    elementId: "grid" + Data.createRandomId(),
                     projectId: scope.projectId,
                     viewType: scope.viewType,
                     lang: scope.lang,
@@ -159,7 +160,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                     grid.elementH = 200;
 
                 // Set the id and the height of the grid
-                gridContainer.id = grid.elementId;
+                gridContainer.id = scope.elementId;
 
                 if (grid.quickFiltering === "true") {
                     gridWrapper.style.height = (grid.elementH) + "px";
@@ -189,7 +190,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                     if (grid.quickFiltering === "true")
                         gridFilters["_ydsQuickFilter_"] = scope.quickFilterValue;
 
-                    Filters.addGridFilter(grid.elementId, gridFilters);
+                    Filters.addGridFilter(scope.elementId, gridFilters);
                 };
 
                 /**
@@ -202,7 +203,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                             scope.gridOptions.api.removeEventListener("afterFilterChanged", filterModifiedListener);
                         }
 
-                        Filters.remove(grid.elementId);
+                        Filters.remove(scope.elementId);
                     }
                 });
 
@@ -715,7 +716,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                     }
 
                                     // Save parameters used to create the grid to the filters service
-                                    Filters.addGridResultsFilter(grid.elementId, {
+                                    Filters.addGridResultsFilter(scope.elementId, {
                                         q: query,
                                         fq: facets,
                                         rules: rules
@@ -751,7 +752,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                     },
                                     Data.formatAgGridSortParams(params.sortModel));
 
-                                Filters.addGridResultsFilter(grid.elementId, {
+                                Filters.addGridResultsFilter(scope.elementId, {
                                     projectId: grid.projectId,
                                     type: grid.viewType,
                                     lang: grid.lang,

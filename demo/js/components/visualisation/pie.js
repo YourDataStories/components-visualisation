@@ -31,8 +31,8 @@ angular.module("yds").directive("ydsPie", ["Data", "Filters", function (Data, Fi
             var pieContainer = _.first(angular.element(element[0].querySelector(".pie-container")));
 
             // Create a random id for the element that will render the chart
-            var elementId = "pie" + Data.createRandomId();
-            pieContainer.id = elementId;
+            scope.elementId = "pie" + Data.createRandomId();
+            pieContainer.id = scope.elementId;
 
             var projectId = scope.projectId;
             var viewType = scope.viewType;
@@ -44,7 +44,7 @@ angular.module("yds").directive("ydsPie", ["Data", "Filters", function (Data, Fi
 
             // If extra params exist, add them to Filters
             if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
-                Filters.addExtraParamsFilter(elementId, extraParams);
+                Filters.addExtraParamsFilter(scope.elementId, extraParams);
             }
 
             // Check if the projectId is defined, else stop the process
@@ -122,7 +122,7 @@ angular.module("yds").directive("ydsPie", ["Data", "Filters", function (Data, Fi
                     };
 
                     // Create the chart
-                    new Highcharts.Chart(elementId, options);
+                    new Highcharts.Chart(scope.elementId, options);
 
                     // Remove loading animation
                     scope.loading = false;

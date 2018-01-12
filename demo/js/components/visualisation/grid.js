@@ -54,9 +54,9 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 scope.filters = {
                     quickFilterValue: ""
                 };
+                scope.elementId = "grid" + Data.createRandomId();
 
                 var grid = {
-                    elementId: "grid" + Data.createRandomId(),
                     projectId: scope.projectId,
                     viewType: scope.viewType,
                     lang: scope.lang,
@@ -86,7 +86,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
 
                 // If extra params exist, add them to Filters
                 if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
-                    Filters.addExtraParamsFilter(grid.elementId, extraParams);
+                    Filters.addExtraParamsFilter(scope.elementId, extraParams);
                 }
 
                 // Check if project id is defined
@@ -161,7 +161,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 scope.loading = true;
 
                 // Set the id and the height of the grid component
-                gridContainer.id = grid.elementId;
+                gridContainer.id = scope.elementId;
 
                 if (grid.quickFiltering === "true") {
                     gridWrapper.style.height = (grid.elementH) + "px";
@@ -196,7 +196,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                     if (grid.quickFiltering === "true")
                         gridFilters["_ydsQuickFilter_"] = scope.filters.quickFilterValue;
 
-                    Filters.addGridFilter(grid.elementId, gridFilters);
+                    Filters.addGridFilter(scope.elementId, gridFilters);
                 };
 
                 /**
@@ -232,7 +232,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 scope.$on("$destroy", function () {
                     // If the grid filtering is enabled remove the filter event listener
                     if (grid.filtering === "true" || grid.quickFiltering === "true") {
-                        Filters.remove(grid.elementId);
+                        Filters.remove(scope.elementId);
 
                         if (_.has(scope.gridOptions, "api")) {
                             scope.gridOptions.api.removeEventListener("afterFilterChanged", filterModifiedListener);

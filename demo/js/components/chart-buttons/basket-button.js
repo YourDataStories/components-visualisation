@@ -88,7 +88,7 @@ angular.module("yds").directive("ydsBasketBtn", ["$compile", "Data", "Basket", "
                         component_type: visualisationType,
                         content_type: viewType,
                         component_parent_uuid: projectId,
-                        filters: Filters.get(element[0].id)
+                        filters: Filters.get(scope.elementId)
                     };
 
                     var modalRestrictions = {

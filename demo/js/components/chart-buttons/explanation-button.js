@@ -106,7 +106,7 @@ angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile
                             }
 
                             // Add query, rules & facets to the URL
-                            var gridId = _.first(element).id;
+                            var gridId = scope.elementId;
                             var filters = Filters.get(gridId);
 
                             // Keep only attributes from the filters

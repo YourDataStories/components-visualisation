@@ -86,7 +86,7 @@ angular.module("yds").directive("ydsEmbed", ["$compile", "Data", "Filters", func
             scope.requestEmbed = function () {
                 if (embedCode === "") {          // If the request code doesn't exist
                     var facets = [{
-                        facet_values: Filters.get(element[0].id).map(function (f) {
+                        facet_values: Filters.get(scope.elementId).map(function (f) {
                             return JSON.stringify(f.attrs);
                         })
                     }];
