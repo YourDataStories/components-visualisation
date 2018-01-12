@@ -425,7 +425,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 objectStore[key] = object;
 
                 // Save to cookie as well, in case it is needed
-                if (!_.isUndefined(noCookie) && !noCookie) {
+                if (_.isUndefined(noCookie) || !noCookie) {
                     dashboard.setCookieObject(key, object);
                 }
 
