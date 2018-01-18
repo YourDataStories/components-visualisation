@@ -101,6 +101,10 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
             url: "/dashboard-galway",
             templateUrl: "templates-demo/dashboards/galway-traffic.html"
         })
+        .state("dianeosis-students", {
+            url: "/dianeosis-students",
+            templateUrl: "templates-demo/dashboards/dianeosis-students.html"
+        })
         .state("dashboard", {
             url: "/dashboard",
             templateUrl: "templates-demo/dashboards/dashboard.html"
