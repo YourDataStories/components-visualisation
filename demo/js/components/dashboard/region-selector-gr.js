@@ -189,6 +189,24 @@ angular.module("yds").directive("ydsRegionSelectorGr", ["Data", "DashboardServic
                 };
 
                 /**
+                 * Display an error on the page
+                 * @param error
+                 */
+                var displayError = function (error) {
+                    if (_.isNull(error) || _.isUndefined(error) || _.isUndefined(error.message))
+                        scope.ydsAlert = "An error has occurred, please check the configuration of the component.";
+                    else
+                        scope.ydsAlert = error.message;
+                };
+
+                /**
+                 * Hide the displayed alert
+                 */
+                scope.hideAlert = function () {
+                    scope.ydsAlert = "";
+                };
+
+                /**
                  * Callback for when drillup happens. Clears the selected points from the chart,
                  * and sets the chart's subtitle to empty.
                  */
@@ -283,7 +301,7 @@ angular.module("yds").directive("ydsRegionSelectorGr", ["Data", "DashboardServic
 
                                 // Reselect previously selected points
                                 selectFromSelectivityToMap();
-                            });
+                            }, displayError);
                     } else {
                         createHeatmap();
                     }
@@ -293,7 +311,9 @@ angular.module("yds").directive("ydsRegionSelectorGr", ["Data", "DashboardServic
                     var extraParams = DashboardService.getApiOptions(dashboardId);
 
                     // Get number of items in each region
-                    Data.getProjectVis("heatmap", "none", regionType, "en", extraParams).then(visualizeHeatmap);
+                    Data.getProjectVis("heatmap", "none", regionType, "en", extraParams).then(
+                        visualizeHeatmap,
+                        displayError);
                 };
 
                 var visualizeHeatmap = function (results) {
