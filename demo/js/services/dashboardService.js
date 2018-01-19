@@ -225,6 +225,9 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 "trafficobservation_start_time",
                 "trafficobservation_start_year",
                 "trafficobservation_vehicle_type"
+            ],
+            dianeosis_students: [
+                "student_lessons"
             ]
         };
 
