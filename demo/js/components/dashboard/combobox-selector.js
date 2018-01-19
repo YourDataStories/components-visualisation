@@ -3,11 +3,12 @@ angular.module("yds").directive("ydsComboboxSelector", ["$timeout", "DashboardSe
         return {
             restrict: "E",
             scope: {
-                title: "@",         // Title
-                projectId: "@",     // Project ID (only for filter API)
-                type: "@",          // Field facet
-                useFilterApi: "@",  // Set to true to use filter API, false to use search API (facets)
-                selectionType: "@"  // Selection type for DashboardService
+                title: "@",             // Title
+                projectId: "@",         // Project ID (only for filter API)
+                type: "@",              // Field facet
+                useFilterApi: "@",      // Set to true to use filter API, false to use search API (facets)
+                disableCookies: "@",    // Set to true to NOT remember previous selection
+                selectionType: "@"      // Selection type for DashboardService
             },
             templateUrl: Data.templatePath + "templates/dashboard/combobox-selector.html",
             link: function (scope, element, attrs) {
@@ -16,6 +17,7 @@ angular.module("yds").directive("ydsComboboxSelector", ["$timeout", "DashboardSe
                 scope.ydsAlert = "";
                 var type = scope.type;
                 var selectionType = scope.selectionType;
+                var disableCookies = (scope.disableCookies === "true");
 
                 /**
                  * Hide alert
@@ -47,8 +49,7 @@ angular.module("yds").directive("ydsComboboxSelector", ["$timeout", "DashboardSe
                     var defaultSelection = null;
                     var cookieValue = DashboardService.getCookieObject(selectionType);
 
-                    //todo: Add attribute to disable remembering last selected values instead of using useFilterApi
-                    if (!_.isUndefined(cookieValue) && scope.useFilterApi !== "true") {
+                    if (!_.isUndefined(cookieValue) && !disableCookies) {
                         // Add IDs list for Selectivity default value, and save to DashboardService
                         defaultSelection = cookieValue.split(",");
                         DashboardService.saveObject(selectionType, cookieValue);
