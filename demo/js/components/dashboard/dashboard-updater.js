@@ -132,15 +132,16 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
 
                 // Create list of Dashboard IDs that contain object selection
                 var objDashboards = [
-                    "traffic_observation",
-                    "country_producing_heatmap",
-                    "traffic_observation_line1",
-                    "traffic_observation_line2",
                     "comparison",
                     "comparison1",
                     "comparison2",
                     "comparison_details_1",
-                    "comparison_details_2"
+                    "comparison_details_2",
+                    "country_producing_heatmap",
+                    "dianeosis_students",
+                    "traffic_observation",
+                    "traffic_observation_line1",
+                    "traffic_observation_line2"
                 ];
 
                 /**

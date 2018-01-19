@@ -846,6 +846,10 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     apiOptions["natural.resources"] = dashboard.getObject("country_natural_resources");
 
                     break;
+                case "dianeosis_students":
+                    apiOptions["lessons"] = dashboard.getObject("student_lessons");
+
+                    break;
             }
 
             // Remove string values that contain "null" from the parameters

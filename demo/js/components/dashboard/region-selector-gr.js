@@ -289,19 +289,6 @@ angular.module("yds").directive("ydsRegionSelectorGr", ["Data", "DashboardServic
                     }
                 };
 
-                // Get low resolution map of Greece to initialize map
-                Data.getGeoJSON("low", null).then(function (response) {
-                    // Give map to highcharts
-                    Highcharts.maps["countries/gr-low-res"] = response;
-
-                    // Subscribe to changes
-                    DashboardService.subscribeGridSelectionChanges(scope, updateHeatmap);
-                    DashboardService.subscribeYearChanges(scope, updateHeatmap);
-
-                    // Initialize heatmap
-                    createHeatmap();
-                });
-
                 var createHeatmap = function () {
                     var extraParams = DashboardService.getApiOptions(dashboardId);
 
@@ -709,6 +696,24 @@ angular.module("yds").directive("ydsRegionSelectorGr", ["Data", "DashboardServic
                         updateDashboardServiceValues($(selectivity).selectivity("data"));
                     });
                 };
+
+                // Get low resolution map of Greece to initialize map
+                Data.getGeoJSON("low", null).then(function (response) {
+                    // Give map to highcharts
+                    Highcharts.maps["countries/gr-low-res"] = response;
+
+                    // Subscribe to changes
+                    DashboardService.subscribeGridSelectionChanges(scope, updateHeatmap);
+                    DashboardService.subscribeYearChanges(scope, updateHeatmap);
+
+                    if (dashboardId === "dianeosis_students") {
+                        //todo: could use list from DashboardService to check what we should subscribe to
+                        DashboardService.subscribeObjectChanges(scope, updateHeatmap);
+                    }
+
+                    // Initialize heatmap
+                    createHeatmap();
+                });
             }
         };
     }
