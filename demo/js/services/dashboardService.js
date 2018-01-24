@@ -140,10 +140,12 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             },
             dianeosis_students: {
                 types: [
-                    "student.lessons.all"
+                    "student.lessons.all",
+                    "student.lessons.per.regional.unit"
                 ],
                 titles: [
-                    "Lessons"
+                    "Lessons",
+                    "Regional Units"
                 ]
             }
         };
