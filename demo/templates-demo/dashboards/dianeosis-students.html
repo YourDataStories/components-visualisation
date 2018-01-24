@@ -1,4 +1,4 @@
-<div class="container" ng-controller="TrafficObservationsController">
+<div class="container" ng-controller="DianeosisController">
     <div class="row">
         <!--Title-->
         <div class="col-md-8">
@@ -19,7 +19,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row margin-bottom-30">
         <!--Region selector column-->
         <div class="col-md-5">
             <yds-region-selector-gr
@@ -40,5 +40,27 @@
                     title="Student Lessons">
             </yds-combobox-selector>
         </div>
+    </div>
+
+    <!--Dashboard Visualisations-->
+    <div class="row">
+        <uib-tabset active="dashboardVisActiveTab">
+            <uib-tab index="$index" class="{{ 'tab-' + aggregateClasses[$index] }}" ng-repeat="type in aggregates track by $index" select="selectTab($index)">
+                <uib-tab-heading>
+                    {{ aggregateTitles[$index] }}
+                </uib-tab-heading>
+                <yds-dashboard-visualization
+                        ng-if="dashboardVisActiveTab == $index"
+                        class="{{ 'content-' + aggregateClasses[$index] }}"
+                        project-id="none"
+                        dashboard-id="dianeosis_students"
+                        type="{{ type }}"
+                        add-to-basket="true"
+                        enable-rating="true"
+                        base-url="http://platform.yourdatastories.eu/project-details"
+                        element-h="460">
+                </yds-dashboard-visualization>
+            </uib-tab>
+        </uib-tabset>
     </div>
 </div>

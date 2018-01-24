@@ -384,6 +384,7 @@ angular.module("yds").directive("ydsRegionSelectorGr", ["Data", "DashboardServic
 
                         firstLoad = false;
                     }
+
                     // Reselect previously selected points
                     selectFromSelectivityToMap();
                 };

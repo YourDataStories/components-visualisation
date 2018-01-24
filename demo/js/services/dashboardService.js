@@ -133,6 +133,14 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     "Sellers"
                 ],
                 width: 6
+            },
+            dianeosis_students: {
+                types: [
+                    "student.lessons.all"
+                ],
+                titles: [
+                    "Lessons"
+                ]
             }
         };
 
