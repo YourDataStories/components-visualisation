@@ -53,6 +53,10 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             },
             comparison_details_2: {
                 country2: "contract.comparison.countryB.countries.all"
+            },
+            dianeosis_students: {
+                regions: "student.regions.all",
+                regional_units: "student.regional_units.all"
             }
         };
 
