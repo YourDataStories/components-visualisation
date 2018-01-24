@@ -49,7 +49,7 @@ angular.module("yds").directive("ydsComboboxSelector", ["$timeout", "DashboardSe
                     var defaultSelection = null;
                     var cookieValue = DashboardService.getCookieObject(selectionType);
 
-                    if (!_.isUndefined(cookieValue) && !disableCookies) {
+                    if (!_.isUndefined(cookieValue) && !_.isNull(cookieValue) && !disableCookies) {
                         // Add IDs list for Selectivity default value, and save to DashboardService
                         defaultSelection = cookieValue.split(",");
                         DashboardService.saveObject(selectionType, cookieValue);
