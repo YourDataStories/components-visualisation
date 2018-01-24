@@ -227,7 +227,10 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 "trafficobservation_vehicle_type"
             ],
             dianeosis_students: [
-                "student_lessons"
+                "student_lessons",
+                "student_regions_all_student_regional_units_all",
+                "student_regions_all",
+                "student_regional_units_all"
             ]
         };
 
