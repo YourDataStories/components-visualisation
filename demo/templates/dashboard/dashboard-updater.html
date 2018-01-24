@@ -18,6 +18,15 @@
             lang="{{ lang }}">
     </yds-info>
 
+    <yds-combobox-selector
+            ng-switch-when="combobox-filter"
+            project-id="{{ projectId }}"
+            type="{{ viewType }}"
+            selection-type="{{ selectionId }}"
+            use-filter-api="true"
+            title="{{ comboboxTitle }}">
+    </yds-combobox-selector>
+
     <yds-heatmap
             ng-switch-when="heatmap-simple"
             project-id="{{ projectId }}"

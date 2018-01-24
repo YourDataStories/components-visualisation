@@ -30,6 +30,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 disableExplanation: "@",    // Set to true to disable the explanation button
                 exporting: "@",             // Set to true to enable exporting of charts
                 barVertical: "@",           // Set to true to enable vertical bar chart
+                comboboxTitle: "@",         // Title of combobox selector (only applies to combobox-filter type)
 
                 quickFiltering: "@",        // Enable or disable quick filtering in selection grid
                 enableGridViewBtn: "@",     // Enable or disable the view button in grid-paging

@@ -31,21 +31,24 @@
         </div>
 
         <div class="col-md-5">
-            <!--Class selector-->
-            <yds-combobox-selector
+            <!--Lesson selector-->
+            <yds-dashboard-updater
+                    type="combobox-filter"
+                    min-height="65"
                     project-id="none"
-                    type="combobox.student.lessons.all"
-                    use-filter-api="true"
-                    selection-type="student_lessons"
-                    title="Student Lessons">
-            </yds-combobox-selector>
+                    view-type="combobox.student.lessons.all"
+                    selection-id="student_lessons"
+                    dashboard-id="dianeosis_students"
+                    combobox-title="Student Lessons">
+            </yds-dashboard-updater>
         </div>
     </div>
 
     <!--Dashboard Visualisations-->
     <div class="row">
         <uib-tabset active="dashboardVisActiveTab">
-            <uib-tab index="$index" class="{{ 'tab-' + aggregateClasses[$index] }}" ng-repeat="type in aggregates track by $index" select="selectTab($index)">
+            <uib-tab index="$index" class="{{ 'tab-' + aggregateClasses[$index] }}"
+                     ng-repeat="type in aggregates track by $index" select="selectTab($index)">
                 <uib-tab-heading>
                     {{ aggregateTitles[$index] }}
                 </uib-tab-heading>
