@@ -32,15 +32,49 @@
 
         <div class="col-md-5">
             <!--Lesson selector-->
-            <yds-dashboard-updater
-                    type="combobox-filter"
-                    min-height="65"
-                    project-id="none"
-                    view-type="combobox.student.lessons.all"
-                    selection-id="student_lessons"
-                    dashboard-id="dianeosis_students"
-                    combobox-title="Student Lessons">
-            </yds-dashboard-updater>
+            <div class="row">
+                <div class="col-md-12">
+                    <yds-dashboard-updater
+                            type="combobox-filter"
+                            min-height="65"
+                            project-id="none"
+                            view-type="combobox.student.lessons.all"
+                            selection-id="student_lessons"
+                            dashboard-id="dianeosis_students"
+                            combobox-title="Student Lessons">
+                    </yds-dashboard-updater>
+                </div>
+            </div>
+
+            <!--School type selector-->
+            <div class="row">
+                <div class="col-md-12">
+                    <yds-dashboard-updater
+                            type="combobox-filter"
+                            min-height="65"
+                            project-id="none"
+                            view-type="combobox.school.type.all"
+                            selection-id="school_type"
+                            dashboard-id="dianeosis_students"
+                            combobox-title="School Type">
+                    </yds-dashboard-updater>
+                </div>
+            </div>
+
+            <!--School shift selector-->
+            <div class="row">
+                <div class="col-md-12">
+                    <yds-dashboard-updater
+                            type="combobox-filter"
+                            min-height="65"
+                            project-id="none"
+                            view-type="combobox.school.shift.all"
+                            selection-id="school_shift"
+                            dashboard-id="dianeosis_students"
+                            combobox-title="School Shift">
+                    </yds-dashboard-updater>
+                </div>
+            </div>
         </div>
     </div>
 

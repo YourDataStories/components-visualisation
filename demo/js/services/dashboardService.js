@@ -870,6 +870,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     break;
                 case "dianeosis_students":
                     apiOptions["lessons"] = dashboard.getObject("student_lessons");
+                    apiOptions["school.type"] = dashboard.getObject("school_type");
+                    apiOptions["school.shift"] = dashboard.getObject("school_shift");
 
                     break;
             }
