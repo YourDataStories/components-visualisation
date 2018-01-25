@@ -244,6 +244,9 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             ],
             dianeosis_students: [
                 "student_lessons",
+                "student_not_lessons",
+                "school_type",
+                "school_shift",
                 "student_regions_all_student_regional_units_all",
                 "student_regions_all",
                 "student_regional_units_all"
@@ -260,6 +263,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             contract: "dashboard-contract",
             comparison: "country-comparison",
             public_project: "public-works",
+            dianeosis_students: "dianeosis-students",
             traffic_observation: "traffic-observations"
         };
 
