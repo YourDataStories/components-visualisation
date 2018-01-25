@@ -212,6 +212,7 @@ angular.module("yds").directive("ydsRegionSelectorGr", ["Data", "DashboardServic
                  */
                 var drillup = function () {
                     drilledDown = false;
+                    drilldownRegion = "";
 
                     // After the drill up completes, refresh the map because the selection might have changed
                     setTimeout(updateHeatmap, 0);
@@ -389,6 +390,11 @@ angular.module("yds").directive("ydsRegionSelectorGr", ["Data", "DashboardServic
                     selectFromSelectivityToMap();
                 };
 
+                /**
+                 * Save the selected regions & prefectures as "countries" in the DashboardService, by first formatting
+                 * them like countries should be. Then create an object with both, and save it as a cookie.
+                 * @param newData
+                 */
                 var updateDashboardServiceValues = function (newData) {
                     // Filter selection into regions and prefectures
                     var regionsFilter = function (item) {
@@ -499,11 +505,16 @@ angular.module("yds").directive("ydsRegionSelectorGr", ["Data", "DashboardServic
                  * @param e
                  */
                 var regionUnselectionHandler = function (e) {
+                    // Cancel unselection event when we drill down (to keep region selected)
+                    if (drilldownRegion === e.target.code && drilledDown === false) {
+                        return false;
+                    }
+
                     unselectionHandler(e, function (selectedValues, clickedPoint) {
                         return _.reject(selectedValues, function (val) {
-                            return val.id == clickedPoint.code;
+                            return val.id === clickedPoint.code;
                         });
-                    })
+                    });
                 };
 
                 /**
@@ -526,7 +537,7 @@ angular.module("yds").directive("ydsRegionSelectorGr", ["Data", "DashboardServic
                 var prefectureUnselectionHandler = function (e) {
                     unselectionHandler(e, function (selectedValues, pointToUnselect) {
                         return _.reject(selectedValues, function (val) {
-                            return val.id == pointToUnselect.NAME_ENG;
+                            return val.id === pointToUnselect.NAME_ENG;
                         });
                     });
                 };
@@ -538,6 +549,7 @@ angular.module("yds").directive("ydsRegionSelectorGr", ["Data", "DashboardServic
                  * @returns {Array}
                  */
                 var unique = function (arr) {
+                    //todo: Can this be replaced with _.uniq?
                     var newArray = [];
 
                     _.each(arr, function (item) {
@@ -580,7 +592,7 @@ angular.module("yds").directive("ydsRegionSelectorGr", ["Data", "DashboardServic
                 };
 
                 /**
-                 * Create and return the options for the highmaps chart
+                 * Create and return the options for the Highmaps chart
                  * @param colorAxis
                  * @returns {*}
                  */
@@ -600,7 +612,7 @@ angular.module("yds").directive("ydsRegionSelectorGr", ["Data", "DashboardServic
                         tooltip: {
                             enabled: true,
                             pointFormatter: function () {
-                                if (_.has(this, "selected") && this.selected == true) {
+                                if (_.has(this, "selected") && this.selected === true) {
                                     return "<b>" + this.name + "</b>: " + this.value +
                                         '<br/><span style="font-weight: bold; color: red">(click again to drilldown)' +
                                         '</span>';
@@ -636,7 +648,7 @@ angular.module("yds").directive("ydsRegionSelectorGr", ["Data", "DashboardServic
                 /**
                  * Get a point ID and set its state to selected or unselected based on the
                  * (boolean) select parameter. Uses the correct property for finding the
-                 * point in the Highmap series based on if the chart is drilled-down or not
+                 * point in the Highmap series based on if the chart is drilled-down or not.
                  * @param select        Boolean, set to true if the point should be selected
                  * @param pointId       ID of point to select/unselect
                  */
