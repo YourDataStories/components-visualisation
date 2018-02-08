@@ -11,6 +11,7 @@ angular.module("yds").directive("ydsBubble", ["YDS_CONSTANTS", "Data", "$window"
             exporting: "@",         // Enable or disable the export of the plot
             elementH: "@",          // Set the height of the component
             titleSize: "@",         // The size of the chart's main title
+            subtitle: "@",          // Set a subtitle for the chart
             legend: "@",            // Enable or disable chart legend
 
             addToBasket: "@",       // Enable or disable "add to basket" functionality, values: true, false
@@ -42,6 +43,7 @@ angular.module("yds").directive("ydsBubble", ["YDS_CONSTANTS", "Data", "$window"
             var exporting = scope.exporting;
             var elementH = scope.elementH;
             var titleSize = scope.titleSize;
+            var subtitle = scope.subtitle;
             var legend = scope.legend;
             var extraParams = scope.extraParams;
             var baseUrl = scope.baseUrl;
@@ -77,6 +79,10 @@ angular.module("yds").directive("ydsBubble", ["YDS_CONSTANTS", "Data", "$window"
             if (_.isUndefined(titleSize) || titleSize.length === 0 || _.isNaN(titleSize))
                 titleSize = 18;
 
+            // Check if the component's subtitle attribute is defined, else assign default value
+            if (_.isUndefined(subtitle) || subtitle.trim().length === 0)
+                subtitle = null;
+
             // Set the height of the plot
             bubbleContainer.style.height = elementH + "px";
 
@@ -98,6 +104,11 @@ angular.module("yds").directive("ydsBubble", ["YDS_CONSTANTS", "Data", "$window"
                     // Set title size in options
                     options.title.style = {
                         fontSize: titleSize + "px"
+                    };
+
+                    // Set subtitle
+                    options.subtitle = {
+                        text: subtitle
                     };
 
                     // Set legend in options
