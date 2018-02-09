@@ -9,6 +9,7 @@ angular.module("yds").directive("ydsSunburst", ["Data", "DashboardService", func
             extraParams: "=",   // Extra attributes to pass to the API, if needed
             selectionId: "@",   // ID for saving the selection
 
+            subtitle: "@",      // Set a subtitle for the chart
             exporting: "@",     // Enable or disable the export of the chart
             elementH: "@"       // Set the height of the component
         },
@@ -27,11 +28,12 @@ angular.module("yds").directive("ydsSunburst", ["Data", "DashboardService", func
             var elementH = scope.elementH;
             var extraParams = scope.extraParams;
             var selectionId = scope.selectionId;
+            var subtitle = scope.subtitle;
 
             var chart = null;
             var lastSelection = null;
 
-            // Check if the projectId attr is defined, else stop the process
+            // Check if the projectId attribute is defined, else stop the process
             if (_.isUndefined(projectId) || projectId.trim() === "") {
                 scope.ydsAlert = "The YDS component is not properly configured. " +
                     "Please check the corresponding documentation section.";
@@ -53,6 +55,10 @@ angular.module("yds").directive("ydsSunburst", ["Data", "DashboardService", func
             // Check if the component's height attribute is defined, else assign default value
             if (_.isUndefined(elementH) || _.isNaN(elementH))
                 elementH = 200;
+
+            // Check if the component's subtitle attribute is defined, else assign default value
+            if (_.isUndefined(subtitle) || subtitle.trim().length === 0)
+                subtitle = null;
 
             // Show loading animation
             scope.loading = true;
@@ -80,6 +86,11 @@ angular.module("yds").directive("ydsSunburst", ["Data", "DashboardService", func
                         },
 
                         enabled: (exporting === "true")
+                    };
+
+                    // Set subtitle
+                    options.subtitle = {
+                        text: subtitle
                     };
 
                     // Add selection events to all series

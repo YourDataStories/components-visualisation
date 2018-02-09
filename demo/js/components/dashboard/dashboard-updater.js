@@ -28,6 +28,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
 
                 embeddable: "@",            // Set to true to enable the embed functionality
                 disableExplanation: "@",    // Set to true to disable the explanation button
+                subtitle: "@",              // Set a subtitle for the chart (only for Sunburst for now)
                 exporting: "@",             // Set to true to enable exporting of charts
                 barVertical: "@",           // Set to true to enable vertical bar chart
                 comboboxTitle: "@",         // Title of combobox selector (only applies to combobox-filter type)
