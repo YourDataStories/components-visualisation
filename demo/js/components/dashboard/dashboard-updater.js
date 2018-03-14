@@ -25,6 +25,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                 baseUrl: "@",               // Base URL to send to API
                 aggregateType: "@",         // Type of aggregation that the displayed chart should make (count/amount)
                 normaliseType: "@",         // Type of normalisation that the displayed chart should make (gdp/per capita)
+                timeseries: "@",            // Set to true to use timeseries API calls on components that support it
 
                 embeddable: "@",            // Set to true to enable the embed functionality
                 disableExplanation: "@",    // Set to true to disable the explanation button

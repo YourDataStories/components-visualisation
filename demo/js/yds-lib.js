@@ -9,9 +9,11 @@ app.constant("YDS_CONSTANTS", {
     "API_YDS_MODEL_HIERARCHY": "platform.yourdatastories.eu/api/json-ld/model/YDSModelHierarchy.json",
     "API_BAR": "platform.yourdatastories.eu/api/json-ld/component/barchart.tcl",
     "API_GRID": "platform.yourdatastories.eu/api/json-ld/component/grid.tcl",
+    "API_GRID_TIMESERIES": "platform.yourdatastories.eu/api/json-ld/component/timeseries_grid.tcl",
     "API_HEATMAP": "platform.yourdatastories.eu/api/json-ld/component/heatmap.tcl",
     "API_INFO": "platform.yourdatastories.eu/api/json-ld/component/info.tcl",
     "API_LINE": "platform.yourdatastories.eu/api/json-ld/component/linechart.tcl",
+    "API_LINE_TIMESERIES": "platform.yourdatastories.eu/api/json-ld/component/timeseries_linechart.tcl",
     "API_SCATTER": "platform.yourdatastories.eu/api/json-ld/component/scatterchart.tcl",
     "API_BUBBLE": "platform.yourdatastories.eu/api/json-ld/component/bubblechart.tcl",
     "API_TREEMAP": "platform.yourdatastories.eu/api/json-ld/component/treemap.tcl",
@@ -1240,6 +1242,9 @@ app.factory("Data", ["$http", "$q", "$window", "$sce", "DashboardService", "YDS_
                 break;
             case "line":
                 visualizationUrl = "http://" + YDS_CONSTANTS.API_LINE;
+                break;
+            case "line-timeseries":
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_LINE_TIMESERIES;
                 break;
             case "map":
                 visualizationUrl = "http://" + YDS_CONSTANTS.API_MAP;

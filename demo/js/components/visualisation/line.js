@@ -6,6 +6,7 @@ angular.module("yds").directive("ydsLine", ["Data", "Filters", function (Data, F
             viewType: "@",          // Name of the array that contains the visualised data
             lang: "@",              // Lang of the visualised data
             extraParams: "=",       // Optional object with extra parameters to send to the API
+            timeseries: "@",        // Set to true to make timeseries API call instead of regular line chart call
 
             exporting: "@",         // Enable or disable the export of the chart
             elementH: "@",          // Set the height of the component
@@ -37,6 +38,7 @@ angular.module("yds").directive("ydsLine", ["Data", "Filters", function (Data, F
             var projectId = scope.projectId;
             var viewType = scope.viewType;
             var lang = scope.lang;
+            var timeseries = scope.timeseries;
             var exporting = scope.exporting;
             var elementH = scope.elementH;
             var titleSize = parseInt(scope.titleSize);
@@ -61,6 +63,10 @@ angular.module("yds").directive("ydsLine", ["Data", "Filters", function (Data, F
             if (_.isUndefined(exporting) || (exporting !== "true" && exporting !== "false"))
                 exporting = "true";
 
+            // Check if the timeseries attribute is defined, else assign default value
+            if (_.isUndefined(timeseries) || (timeseries !== "true" && timeseries !== "false"))
+                timeseries = "false";
+
             // Check if the component's height attribute is defined, else assign default value
             if (_.isUndefined(elementH) || _.isNaN(elementH))
                 elementH = 200;
@@ -72,7 +78,14 @@ angular.module("yds").directive("ydsLine", ["Data", "Filters", function (Data, F
             // Set the height of the chart
             lineContainer.style.height = elementH + "px";
 
-            Data.getProjectVis("line", projectId, viewType, lang, extraParams)
+            var lineType = "line";
+
+            // Check if we should use time series API call
+            if (timeseries === "true") {
+                lineType = "line-timeseries";
+            }
+
+            Data.getProjectVis(lineType, projectId, viewType, lang, extraParams)
                 .then(function (response) {
                     // Check that the component has not been destroyed
                     if (scope.$$destroyed)

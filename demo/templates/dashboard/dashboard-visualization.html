@@ -179,6 +179,7 @@
                 <yds-dashboard-updater
                         ng-switch-when="line-time"
                         type="line"
+                        timeseries="true"
                         project-id="{{ selProjectId }}"
                         view-type="{{ selViewType }}"
                         dashboard-id="{{ dashboardId }}"
@@ -196,6 +197,7 @@
                 <yds-dashboard-updater
                         ng-switch-when="grid-time"
                         type="simple-grid"
+                        timeseries="true"
                         project-id="{{ selProjectId }}"
                         view-type="{{ selViewType }}"
                         dashboard-id="{{ dashboardId }}"
