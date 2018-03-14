@@ -174,6 +174,40 @@
                         enable-rating="{{ enableRating }}"
                         lang="{{ lang }}">
                 </yds-dashboard-updater>
+
+                <!--Line time series-->
+                <yds-dashboard-updater
+                        ng-switch-when="line-time"
+                        type="line"
+                        project-id="{{ selProjectId }}"
+                        view-type="{{ selViewType }}"
+                        dashboard-id="{{ dashboardId }}"
+                        min-height="{{ elementH }}"
+                        normalise-type="{{ normaliseRadio.value }}"
+                        aggregate-type="{{ aggregateRadio.value }}"
+                        base-url="{{ baseUrl }}"
+                        dynamic-dashboard="{{ dynamicDashboard }}"
+                        add-to-basket="{{ addToBasket }}"
+                        enable-rating="{{ enableRating }}"
+                        lang="{{ lang }}">
+                </yds-dashboard-updater>
+
+                <!--Grid time series-->
+                <yds-dashboard-updater
+                        ng-switch-when="grid-time"
+                        type="simple-grid"
+                        project-id="{{ selProjectId }}"
+                        view-type="{{ selViewType }}"
+                        dashboard-id="{{ dashboardId }}"
+                        min-height="{{ elementH }}"
+                        normalise-type="{{ normaliseRadio.value }}"
+                        aggregate-type="{{ aggregateRadio.value }}"
+                        base-url="{{ baseUrl }}"
+                        dynamic-dashboard="{{ dynamicDashboard }}"
+                        add-to-basket="{{ addToBasket }}"
+                        enable-rating="{{ enableRating }}"
+                        lang="{{ lang }}">
+                </yds-dashboard-updater>
             </div>
         </div>
     </div>
