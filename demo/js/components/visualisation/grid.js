@@ -23,6 +23,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 ignoreOwnSelection: "@",// Set to true to ignore the grid's own selections (to prevent refreshing)
 
                 groupedData: "@",       // Set to true if the response from the API for your view type is grouped data
+                timeseries: "@",        // Set to true to use timeseries API instead of the regular one
 
                 addToBasket: "@",       // Enable or disable "add to basket" functionality, values: true, false
                 basketBtnX: "@",        // X-axis position of the basket button
@@ -79,6 +80,7 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 var groupedData = scope.groupedData;
                 var ignoreOwnSelection = scope.ignoreOwnSelection;
                 var fitColumns = scope.fitColumns;
+                var timeseries = scope.timeseries;
 
                 // If selection is enabled, this will be used to reselect rows after refreshing the grid data
                 var selection = [];
@@ -152,6 +154,10 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 // Check if the fitColumns attribute is defined, else assign default value
                 if (_.isUndefined(fitColumns) || (fitColumns !== "true" && fitColumns !== "false"))
                     fitColumns = "false";
+
+                // Check if the timeseries attribute is defined, else assign default value
+                if (_.isUndefined(timeseries) || (timeseries !== "true" && timeseries !== "false"))
+                    timeseries = "false";
 
                 // Check if the selectionType attribute is defined, else assign default value
                 if (_.isUndefined(selectionType) || (selectionType !== "single" && selectionType !== "multiple"))
@@ -342,7 +348,13 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                     if (prevent)
                         return;
 
-                    Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang, extraParams)
+                    // Get grid type for API according to timeseries attribute
+                    var gridType = "grid";
+                    if (timeseries === "true") {
+                        gridType = "grid-timeseries";
+                    }
+
+                    Data.getProjectVis(gridType, grid.projectId, grid.viewType, grid.lang, extraParams)
                         .then(function (response) {
                             // Check for conditions in which the grid creation should be stopped
                             if (!_.isUndefined(scope.extraParams) && !_.isEqual(extraParams, scope.extraParams)) {

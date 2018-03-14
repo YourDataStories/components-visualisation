@@ -1228,6 +1228,10 @@ app.factory("Data", ["$http", "$q", "$window", "$sce", "DashboardService", "YDS_
                 visualizationUrl = "http://" + YDS_CONSTANTS.API_GRID;
                 params.context = 0;
                 break;
+            case "grid-timeseries":
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_GRID_TIMESERIES;
+                params.context = 0;
+                break;
             case "pie":
                 visualizationUrl = "http://" + YDS_CONSTANTS.API_PIE;
                 break;
