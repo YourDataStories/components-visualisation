@@ -29,13 +29,29 @@
                 <!--Line time series-->
                 <label ng-model="selectedVis" uib-btn-radio="'line-time'"
                        ng-click="selectVis('line-time')" class="btn btn-default" title="Line (Timeseries)">
-                    <i class="fa fa-line-chart" aria-hidden="true"></i> (T)
+                    <div class="timeseries-icon-container">
+                        <div class="timeseries-icon-overlay">
+                            <!--<i class="fa fa-clock-o" aria-hidden="true"></i>-->
+                            <i class="fa fa-calendar-o" aria-hidden="true"></i>
+                        </div>
+                        <div class="timeseries-icon-base">
+                            <i class="fa fa-line-chart" aria-hidden="true"></i>
+                        </div>
+                    </div>
                 </label>
 
                 <!--Grid time series-->
                 <label ng-model="selectedVis" uib-btn-radio="'grid-time'"
                        ng-click="selectVis('grid-time')" class="btn btn-default" title="Grid (Timeseries)">
-                    <i class="fa fa-list-alt" aria-hidden="true"></i> (T)
+                    <div class="timeseries-icon-container">
+                        <div class="timeseries-icon-overlay">
+                            <!--<i class="fa fa-clock-o" aria-hidden="true"></i>-->
+                            <i class="fa fa-calendar-o" aria-hidden="true"></i>
+                        </div>
+                        <div class="timeseries-icon-base">
+                            <i class="fa fa-list-alt" aria-hidden="true"></i>
+                        </div>
+                    </div>
                 </label>
             </div>
 

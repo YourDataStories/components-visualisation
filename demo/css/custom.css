@@ -1651,3 +1651,14 @@ div[data-toggle="buttons"] label.dashboard-filter-label:active, div[data-toggle=
     -webkit-box-shadow: none;
     box-shadow: none;
 }
+
+.timeseries-icon-base {
+    position: relative;
+}
+
+.timeseries-icon-overlay {
+    color: #8e8e8e;
+    position: absolute;
+    top: 0;
+    right: 5px;
+}
