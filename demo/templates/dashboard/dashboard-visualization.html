@@ -27,31 +27,15 @@
                     <img src="fonts/ic_view_quilt_black_18px.svg"/></label>
 
                 <!--Line time series-->
-                <label ng-model="selectedVis" uib-btn-radio="'line-time'"
+                <label ng-model="selectedVis" uib-btn-radio="'line-time'" style="padding-left: 8px; padding-right: 8px"
                        ng-click="selectVis('line-time')" class="btn btn-default" title="Line (Timeseries)">
-                    <div class="timeseries-icon-container">
-                        <div class="timeseries-icon-overlay">
-                            <!--<i class="fa fa-clock-o" aria-hidden="true"></i>-->
-                            <i class="fa fa-calendar-o" aria-hidden="true"></i>
-                        </div>
-                        <div class="timeseries-icon-base">
-                            <i class="fa fa-line-chart" aria-hidden="true"></i>
-                        </div>
-                    </div>
+                    <img src="img/chart-line-2d-dots-time_small@1x.png"/>
                 </label>
 
                 <!--Grid time series-->
-                <label ng-model="selectedVis" uib-btn-radio="'grid-time'"
+                <label ng-model="selectedVis" uib-btn-radio="'grid-time'" style="padding-left: 8px; padding-right: 8px"
                        ng-click="selectVis('grid-time')" class="btn btn-default" title="Grid (Timeseries)">
-                    <div class="timeseries-icon-container">
-                        <div class="timeseries-icon-overlay">
-                            <!--<i class="fa fa-clock-o" aria-hidden="true"></i>-->
-                            <i class="fa fa-calendar-o" aria-hidden="true"></i>
-                        </div>
-                        <div class="timeseries-icon-base">
-                            <i class="fa fa-list-alt" aria-hidden="true"></i>
-                        </div>
-                    </div>
+                    <img src="img/table-time_small@1x.png"/>
                 </label>
             </div>
 
