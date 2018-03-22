@@ -413,6 +413,11 @@ app.factory("Data", ["$http", "$q", "$window", "$sce", "DashboardService", "YDS_
             field: columnView.attribute
         };
 
+        // Add "columnGroupShow" attribute as is, if it exists
+        if (_.has(columnView, "columnGroupShow")) {
+            columnInfo.columnGroupShow = columnView.columnGroupShow;
+        }
+
         // Enable sorting only if sortable attribute is true
         if (_.has(columnView, "sortable")) {
             columnInfo.suppressSorting = !columnView.sortable;
