@@ -1651,3 +1651,8 @@ div[data-toggle="buttons"] label.dashboard-filter-label:active, div[data-toggle=
     -webkit-box-shadow: none;
     box-shadow: none;
 }
+
+/* Force ag-grid's header to have 0 left margin */
+.ag-header-viewport {
+    margin-left: 0!important;
+}
