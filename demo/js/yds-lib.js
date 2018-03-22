@@ -401,63 +401,93 @@ app.factory("Data", ["$http", "$q", "$window", "$sce", "DashboardService", "YDS_
         return "_" + Math.random().toString(36).substr(2, 9);
     };
 
+    /**
+     * Prepare a column for the grid. Transforms the API's view for a single column to a single column definition for
+     * ag-grid.
+     * @param columnView View for the column from the API
+     * @returns {{headerName: *|HTMLElement|header, field: *}}
+     */
+    var prepareColumn = function (columnView) {
+        var columnInfo = {
+            headerName: columnView.header,
+            field: columnView.attribute
+        };
+
+        // Enable sorting only if sortable attribute is true
+        if (_.has(columnView, "sortable")) {
+            columnInfo.suppressSorting = !columnView.sortable;
+        }
+
+        if (!_.isUndefined(columnView.style)) {
+            columnInfo.cellStyle = columnView.style;
+        }
+
+        if (!_.isUndefined(columnView["column-width"])) {
+            columnInfo.width = parseInt(columnView["column-width"]);
+        }
+
+        // If it is not string, url or date, add number filtering
+        if (columnView.type.indexOf("string") === -1 && columnView.type.indexOf("url") === -1 && columnView.type.indexOf("date") === -1) {
+            columnInfo.filter = "number";
+        }
+
+        // If it is "amount", apply custom filter to remove the currency and sort them
+        if (columnView.type === "amount") {
+            columnInfo.comparator = function (value1, value2) {
+                if (_.isUndefined(value1) || _.isNull(value1))
+                    value1 = "-1";
+
+                if (_.isUndefined(value2) || _.isNull(value2))
+                    value2 = "-1";
+
+                value1 = parseFloat(String(value1).split(" ")[0].replace(/,/g, ""));
+                value2 = parseFloat(String(value2).split(" ")[0].replace(/,/g, ""));
+
+                return value1 - value2;
+            }
+        } else if (columnView.type === "date") {
+            columnInfo.comparator = function (date1, date2) {
+                var date1Number = monthToComparableNumber(date1);
+                var date2Number = monthToComparableNumber(date2);
+
+                if (date1Number === null && date2Number === null)
+                    return 0;
+
+                if (date1Number === null)
+                    return -1;
+
+                if (date2Number === null)
+                    return 1;
+
+                return date1Number - date2Number;
+            }
+        }
+
+        return columnInfo;
+    };
+
     dataService.prepareGridColumns = function (gridView) {
         var gridColumns = [];
 
         for (var i = 0; i < gridView.length; i++) {
-            var columnInfo = {
-                headerName: gridView[i].header,
-                field: gridView[i].attribute
-            };
+            var columnInfo;
 
-            // Enable sorting only if sortable attribute is true
-            if (_.has(gridView[i], "sortable")) {
-                columnInfo.suppressSorting = !gridView[i].sortable;
-            }
+            if (gridView[i].type !== "parent") {
+                // Process column normally
+                columnInfo = prepareColumn(gridView[i]);
+            } else {
+                // Column has children, add each one as a child-column. Only 1 level of nested columns is supported.
+                columnInfo = {
+                    headerName: gridView[i].header,
+                    type: "parent",
+                    children: []
+                };
 
-            if (!_.isUndefined(gridView[i].style)) {
-                columnInfo.cellStyle = gridView[i].style;
-            }
-
-            if (!_.isUndefined(gridView[i]["column-width"])) {
-                columnInfo.width = parseInt(gridView[i]["column-width"]);
-            }
-
-            //if it is not string add number filtering
-            if (gridView[i].type.indexOf("string") === -1 && gridView[i].type.indexOf("url") === -1 && gridView[i].type.indexOf("date") === -1) {
-                columnInfo.filter = "number";
-            }
-
-            //if it is "amount", apply custom filter to remove the currency and sort them
-            if (gridView[i].type === "amount") {
-                columnInfo.comparator = function (value1, value2) {
-                    if (_.isUndefined(value1) || _.isNull(value1))
-                        value1 = "-1";
-
-                    if (_.isUndefined(value2) || _.isNull(value2))
-                        value2 = "-1";
-
-                    value1 = parseFloat(String(value1).split(" ")[0].replace(/,/g, ""));
-                    value2 = parseFloat(String(value2).split(" ")[0].replace(/,/g, ""));
-
-                    return value1 - value2;
-                }
-            } else if (gridView[i].type === "date") {
-                columnInfo.comparator = function (date1, date2) {
-                    var date1Number = monthToComparableNumber(date1);
-                    var date2Number = monthToComparableNumber(date2);
-
-                    if (date1Number === null && date2Number === null)
-                        return 0;
-
-                    if (date1Number === null)
-                        return -1;
-
-                    if (date2Number === null)
-                        return 1;
-
-                    return date1Number - date2Number;
-                }
+                _.each(gridView[i].children, function (childCol) {
+                    columnInfo.children.push(
+                        prepareColumn(childCol)
+                    );
+                });
             }
 
             gridColumns.push(columnInfo);
@@ -688,6 +718,10 @@ app.factory("Data", ["$http", "$q", "$window", "$sce", "DashboardService", "YDS_
             _.each(newView, function (viewVal) {
                 // Find value of attribute
                 var attrValue = newData[i][viewVal.attribute];
+                if (!_.has(viewVal, "attribute")) {
+                    //todo: handle parents
+                    return;
+                }
                 var attributeTokens = viewVal.attribute.split(".");
                 if (_.isUndefined(attrValue) || (_.isString(attrValue) && attrValue.trim().length === 0)) {
                     // If the attribute is empty, maybe it is a nested attribute, so try deep object search
