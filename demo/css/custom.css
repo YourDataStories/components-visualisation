@@ -1652,7 +1652,7 @@ div[data-toggle="buttons"] label.dashboard-filter-label:active, div[data-toggle=
     box-shadow: none;
 }
 
-/* Force ag-grid's header to have 0 left margin */
+/* Force ag-grid's header to have 0 left margin (prevents display bug when using column grouping & pinning) */
 .ag-header-viewport {
     margin-left: 0!important;
 }

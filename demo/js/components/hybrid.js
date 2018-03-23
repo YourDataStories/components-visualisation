@@ -158,6 +158,9 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
                                 if (params.gridtype === "grid-results" && params.gridapi === "true") {
                                     params.chart = "grid-paging";
                                 }
+                            } else if ((chart === "line" || chart === "grid") && _.has(params, "timeseries")) {
+                                // For grid and line, also add timeseries parameter to scope...
+                                scope.timeseries = params.timeseries;
                             }
 
                             visualiseProject(params.id, params.chart, filters, params.viewType, params.lang);

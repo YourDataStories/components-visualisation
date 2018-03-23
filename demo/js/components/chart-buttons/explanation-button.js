@@ -63,7 +63,8 @@ angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile
                         lang: scope.lang,
                         groupedData: scope.groupedData,     // For grids with grouped data
                         enablePaging: scope.enablePaging,   // For bar component
-                        numberOfItems: scope.numberOfItems  // For bar component
+                        numberOfItems: scope.numberOfItems, // For bar component
+                        timeseries: scope.timeseries        // For line and grid components
                     }, scope.extraParams);
 
                     // Set default language if it's not defined

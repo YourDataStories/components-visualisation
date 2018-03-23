@@ -88,7 +88,7 @@ app.factory("Data", ["$http", "$q", "$window", "$sce", "DashboardService", "YDS_
 
     // Values that should be excluded from extra chart parameters (used in Trustworthiness & chart embedding)
     dataService.omittedChartParams = ["chart", "id", "viewType", "lang", "gridapi", "gridtype", "enablePaging", "tab",
-        "numberOfItems", "pagingGrid", "gridDetailsType"];
+        "numberOfItems", "pagingGrid", "gridDetailsType", "timeseries"];
 
     // Info component view-types that contain code/value pairs with HTML code
     var infoHtmlLists = [
