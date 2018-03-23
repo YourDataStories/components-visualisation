@@ -91,12 +91,22 @@ angular.module("yds").directive("ydsExplanationQuery", ["$location", "Search", "
 
                 var useGridApi = params.gridapi;
                 var gridType = params.gridtype;
+                var timeseries = params.timeseries;
 
                 // All other parameters are put in the extra parameters object
                 var extraParams = _.omit(params, Data.omittedChartParams);
 
                 // Add explain_calls parameter so the server will explain the query
                 extraParams.explain_calls = 1;
+
+                // If component is line or grid, check for timeseries parameter
+                if (!_.isUndefined(timeseries) && timeseries === "true") {
+                    if (chartType === "line") {
+                        chartType = "line-timeseries";
+                    } else if (chartType === "grid") {
+                        chartType = "grid-timeseries";
+                    }
+                }
 
                 // Simulate the component's original request
                 if (chartType !== "grid" || gridType === "grid" || gridType === "grid-adv") {
