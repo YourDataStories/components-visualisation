@@ -10,6 +10,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 extraParams: "=",       // Extra attributes to pass to the API (optional)
 
                 useGridApi: "@",        // If true, grid will use the grid API for the request
+                timeseries: "@",        // WHen using grid API, set to true to use timeseries_grid.tcl
                 numberOfItems: "@",     // If grid processing is used, give the number of total items to the grid
 
                 urlParamPrefix: "@",    // Prefix to add before all url parameters (optional)
@@ -80,6 +81,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 var projectDetailsType = scope.projectDetailsType;
                 var extraParams = scope.extraParams;
                 var useGridApi = scope.useGridApi;
+                var timeseries = scope.timeseries;
                 var viewInDashboard = scope.viewInDashboard;
                 var enableViewButton = scope.enableViewButton;
 
@@ -118,6 +120,10 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 // Check if the useGridApi attribute is defined, else assign the default value
                 if (_.isUndefined(useGridApi) || (useGridApi !== "true" && useGridApi !== "false"))
                     useGridApi = "false";
+
+                // Check if the timeseries attribute is defined, else assign the default value
+                if (_.isUndefined(timeseries) || (timeseries !== "true" && timeseries !== "false"))
+                    timeseries = "false";
 
                 // Check if the enableViewButton attribute is defined, else assign the default value
                 if (_.isUndefined(enableViewButton) || (enableViewButton !== "true" && enableViewButton !== "false"))
@@ -761,7 +767,13 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                                     extraParams: extraParams
                                 });
 
-                                Data.getProjectVis("grid", grid.projectId, grid.viewType, grid.lang, paramsToSend)
+                                // Check if we should use timeseries service
+                                var visualizationType = "grid";
+                                if (timeseries === "true") {
+                                    visualizationType = "grid-timeseries";
+                                }
+
+                                Data.getProjectVis(visualizationType, grid.projectId, grid.viewType, grid.lang, paramsToSend)
                                     .then(gridResultDataSuccess, gridResultDataError);
                             }
                         }

@@ -193,10 +193,11 @@
                         lang="{{ lang }}">
                 </yds-dashboard-updater>
 
-                <!--Grid time series-->
+                <!--Grid time series (no paging)-->
                 <yds-dashboard-updater
                         ng-switch-when="grid-time"
                         type="simple-grid"
+                        ng-if="!usePaging"
                         timeseries="true"
                         project-id="{{ selProjectId }}"
                         view-type="{{ selViewType }}"
@@ -205,6 +206,26 @@
                         normalise-type="{{ normaliseRadio.value }}"
                         aggregate-type="{{ aggregateRadio.value }}"
                         base-url="{{ baseUrl }}"
+                        dynamic-dashboard="{{ dynamicDashboard }}"
+                        add-to-basket="{{ addToBasket }}"
+                        enable-rating="{{ enableRating }}"
+                        lang="{{ lang }}">
+                </yds-dashboard-updater>
+
+                <!--Grid time series (paging)-->
+                <yds-dashboard-updater
+                        ng-switch-when="grid-time"
+                        ng-if="usePaging"
+                        type="grid-paging"
+                        timeseries="true"
+                        project-id="{{ selProjectId }}"
+                        view-type="{{ selViewType }}"
+                        dashboard-id="{{ dashboardId }}"
+                        min-height="{{ elementH }}"
+                        normalise-type="{{ normaliseRadio.value }}"
+                        aggregate-type="{{ aggregateRadio.value }}"
+                        base-url="{{ baseUrl }}"
+                        number-of-items="{{ numberOfItems }}"
                         dynamic-dashboard="{{ dynamicDashboard }}"
                         add-to-basket="{{ addToBasket }}"
                         enable-rating="{{ enableRating }}"
