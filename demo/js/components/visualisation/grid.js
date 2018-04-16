@@ -26,16 +26,8 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 timeseries: "@",        // Set to true to use timeseries API instead of the regular one
 
                 addToBasket: "@",       // Enable or disable "add to basket" functionality, values: true, false
-                basketBtnX: "@",        // X-axis position of the basket button
-                basketBtnY: "@",        // Y-axis position of the basket button
-
                 exporting: "@",         // Enable or disable export to CSV
-                exportBtnX: "@",        // X-axis position of the exporting button
-                exportBtnY: "@",        // Y-axis position of the exporting button
-
                 embeddable: "@",        // Enable or disable the embedding of the component
-                embedBtnX: "@",         // X-axis position of the embed button
-                embedBtnY: "@",         // Y-axis position of the embed button
                 popoverPos: "@",        // The side of the embed button from which the embed window will appear
                 fitColumns: "@",        // Set to true to make the grid fit the columns to the grid width after loading
 

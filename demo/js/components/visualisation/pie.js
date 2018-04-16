@@ -12,12 +12,7 @@ angular.module("yds").directive("ydsPie", ["Data", "Filters", function (Data, Fi
             titleSize: "@",         // The size of the chart"s main title
 
             addToBasket: "@",       // Enable or disable "add to basket" functionality, values: true, false
-            basketBtnX: "@",        // X-axis position of the basket button
-            basketBtnY: "@",        // Y-axis position of the basket button
-
             embeddable: "@",        // Enable or disable the embedding of the component
-            embedBtnX: "@",         // X-axis position of the embed button
-            embedBtnY: "@",         // Y-axis position of the embed button
             popoverPos: "@",        // The side of the embed button from which the embed information window will appear
 
             enableRating: "@",      // Enable rating buttons for this component

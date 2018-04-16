@@ -16,12 +16,7 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
             mouseOverMarkers: "@",  // Set to true to make markers for points appear on mouse over instead of click.
 
             addToBasket: "@",       // Enable or disable "add to basket" functionality, values: true, false
-            basketBtnX: "@",        // X-axis position of the basket button
-            basketBtnY: "@",        // Y-axis position of the basket button
-
             embeddable: "@",        // Enable or disable the embedding of the component
-            embedBtnX: "@",         // X-axis position of the embed button
-            embedBtnY: "@",         // Y-axis position of the embed button
             popoverPos: "@",        // The side of the embed button from which the embed information window will appear
 
             extraParams: "=?",      // Optional object with extra parameters to send to the API

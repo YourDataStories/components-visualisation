@@ -14,12 +14,7 @@ angular.module("yds").directive("ydsGridAdvanced", ["Data", "Filters", "$timeout
                 comboboxAttrs: "@",     // Set the parameter each combobox will sent to the the server
 
                 addToBasket: "@",       // Enable or disable "add to basket" functionality, values: true, false
-                basketBtnX: "@",        // X-axis position of the basket button
-                basketBtnY: "@",        // Y-axis position of the basket button
-
                 embeddable: "@",        // Enable or disable the embedding of the component
-                embedBtnX: "@",         // X-axis position of the embed button
-                embedBtnY: "@",         // Y-axis position of the embed button
                 popoverPos: "@",        // The side of the embed button from which the embed window will appear
 
                 disableExplanation: "@" // Set to true to disable the explanation button

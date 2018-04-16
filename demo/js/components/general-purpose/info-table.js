@@ -9,9 +9,7 @@ angular.module("yds").directive("ydsInfoTable", ["Data", "Translations", "$sce",
             isEmptyObj: "=",    // Object that the component will set to true when there is no data to display
             extraParams: "=",   // Extra parameters to send with API call
 
-            addToBasket: "@",   // Enable or disable "add to basket" functionality, values: true, false
-            basketBtnX: "@",    // X-axis position of the basket button
-            basketBtnY: "@"     // Y-axis position of the basket button
+            addToBasket: "@"    // Enable or disable "add to basket" functionality, values: true, false
         },
         templateUrl: Data.templatePath + "templates/general-purpose/info-table.html",
         link: function (scope) {
