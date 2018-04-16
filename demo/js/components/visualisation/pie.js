@@ -21,9 +21,6 @@ angular.module("yds").directive("ydsPie", ["Data", "Filters", function (Data, Fi
             popoverPos: "@",        // The side of the embed button from which the embed information window will appear
 
             enableRating: "@",      // Enable rating buttons for this component
-
-            explanationBtnX: "@",   // Explanation button horizontal position
-            explanationBtnY: "@",   // Explanation button vertical position
             disableExplanation: "@" // Set to true to disable the explanation button
         },
         templateUrl: Data.templatePath + "templates/visualisation/pie.html",

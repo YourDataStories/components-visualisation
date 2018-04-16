@@ -27,10 +27,8 @@ angular.module("yds").directive("ydsMap", ["Data", "$timeout", "DashboardService
             extraParams: "=?",      // Optional object with extra parameters to send to the API
             zoomControl: "@",       // Enable or disable map's zoom control
             elementH: "@",          // Set the height of the component
-            enableRating: "@",      // Enable rating buttons for this component
 
-            explanationBtnX: "@",   // Explanation button horizontal position
-            explanationBtnY: "@",   // Explanation button vertical position
+            enableRating: "@",      // Enable rating buttons for this component
             disableExplanation: "@" // Set to true to disable the explanation button
         },
         templateUrl: Data.templatePath + "templates/visualisation/map.html",

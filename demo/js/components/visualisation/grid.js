@@ -40,9 +40,6 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                 fitColumns: "@",        // Set to true to make the grid fit the columns to the grid width after loading
 
                 enableRating: "@",      // Enable rating buttons for this component
-
-                explanationBtnX: "@",   // Explanation button horizontal position
-                explanationBtnY: "@",   // Explanation button vertical position
                 disableExplanation: "@" // Set to true to disable the explanation button
             },
             templateUrl: Data.templatePath + "templates/visualisation/grid.html",

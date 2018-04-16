@@ -10,7 +10,7 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 extraParams: "=",       // Extra attributes to pass to the API (optional)
 
                 useGridApi: "@",        // If true, grid will use the grid API for the request
-                timeseries: "@",        // WHen using grid API, set to true to use timeseries_grid.tcl
+                timeseries: "@",        // When using grid API, set to true to use timeseries_grid.tcl
                 numberOfItems: "@",     // If grid processing is used, give the number of total items to the grid
 
                 urlParamPrefix: "@",    // Prefix to add before all url parameters (optional)
@@ -38,9 +38,6 @@ angular.module("yds").directive("ydsGridResults", ["Data", "Filters", "Search", 
                 popoverPos: "@",        // The side of the embed button from which the embed window will appear
 
                 enableRating: "@",      // Enable rating buttons for this component
-
-                explanationBtnX: "@",   // Explanation button horizontal position
-                explanationBtnY: "@",   // Explanation button vertical position
                 disableExplanation: "@" // Set to true to disable the explanation button
             },
             templateUrl: Data.templatePath + "templates/visualisation/grid-results.html",
