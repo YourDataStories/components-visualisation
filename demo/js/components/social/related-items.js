@@ -11,7 +11,6 @@ angular.module("yds").directive("ydsRelatedItems", ["Data",
             templateUrl: Data.templatePath + "templates/social/related-items.html",
             link: function (scope, element) {
                 var elementH = parseInt(scope.elementH);
-                scope.totalItems = 0;
                 scope.loading = false;
                 var pageSize = 10;
 
@@ -29,6 +28,8 @@ angular.module("yds").directive("ydsRelatedItems", ["Data",
                 if (_.isUndefined(elementH) || _.isNaN(elementH)) {
                     elementH = 150;
                 }
+
+                scope.totalItems[scope.period] = 0;
 
                 var relatedItemsContainer = angular.element(element[0].querySelector(".related-items-container"));
                 relatedItemsContainer[0].style.height = elementH + "px";
@@ -83,7 +84,7 @@ angular.module("yds").directive("ydsRelatedItems", ["Data",
                 _.each(scope.tabs, function (tab) {
                     Data.getRelatedItems(scope.projectId, tab.apiType, scope.period, 0, pageSize)
                         .then(function (response) {
-                            scope.totalItems += response.total;
+                            scope.totalItems[scope.period] += response.total;
                             addData(tab, response);
                         });
                 });

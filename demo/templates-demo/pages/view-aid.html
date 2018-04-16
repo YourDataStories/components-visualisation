@@ -38,17 +38,17 @@
             <h3>Social</h3>
         </div>
     </div>
-    <div class="row" style="margin-bottom: 20px">
+    <div class="row" ng-init="itemsCount = {}" style="margin-bottom: 20px">
         <div class="col-md-12">
             <uib-tabset justified="true">
                 <!--Before-->
-                <uib-tab heading="Before ({{ beforeTotal }})">
+                <uib-tab heading="Before ({{ itemsCount['before'] }})">
                     <div class="row">
                         <div class="col-md-12">
                             <yds-related-items
                                     project-id="{{ projectId }}"
                                     period="before"
-                                    total-items="beforeTotal"
+                                    total-items="itemsCount"
                                     element-h="300">
                             </yds-related-items>
                         </div>
@@ -56,13 +56,13 @@
                 </uib-tab>
 
                 <!--During-->
-                <uib-tab heading="During ({{ duringTotal }})">
+                <uib-tab heading="During ({{ itemsCount['during'] }})">
                     <div class="row">
                         <div class="col-md-12">
                             <yds-related-items
                                     project-id="{{ projectId }}"
                                     period="during"
-                                    total-items="duringTotal"
+                                    total-items="itemsCount"
                                     element-h="300">
                             </yds-related-items>
                         </div>
@@ -70,13 +70,13 @@
                 </uib-tab>
 
                 <!--After-->
-                <uib-tab heading="After ({{ afterTotal }})">
+                <uib-tab heading="After ({{ itemsCount['after'] }})">
                     <div class="row">
                         <div class="col-md-12">
                             <yds-related-items
                                     project-id="{{ projectId }}"
                                     period="after"
-                                    total-items="afterTotal"
+                                    total-items="itemsCount"
                                     element-h="300">
                             </yds-related-items>
                         </div>

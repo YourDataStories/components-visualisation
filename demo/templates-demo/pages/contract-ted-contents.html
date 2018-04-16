@@ -95,6 +95,58 @@
         src="'templates-demo/pages/contract-ted-n6-extras.html'">
 </ng-include>
 
+<!--Related Items-->
+<div class="row" ng-init="itemsCount = {}" style="margin-bottom: 20px">
+    <div class="col-md-12" ng-show="itemsCount['before'] != 0 || itemsCount['during'] != 0 || itemsCount['after'] != 0">
+        <h3>Social</h3>
+    </div>
+    <div class="col-md-12" ng-show="itemsCount['before'] != 0 || itemsCount['during'] != 0 || itemsCount['after'] != 0">
+        <uib-tabset justified="true">
+            <!--Before-->
+            <uib-tab heading="Before ({{ itemsCount['before'] }})">
+                <div class="row">
+                    <div class="col-md-12">
+                        <yds-related-items
+                                project-id="{{ projectId }}"
+                                period="before"
+                                total-items="itemsCount"
+                                element-h="300">
+                        </yds-related-items>
+                    </div>
+                </div>
+            </uib-tab>
+
+            <!--During-->
+            <uib-tab heading="During ({{ itemsCount['during'] }})">
+                <div class="row">
+                    <div class="col-md-12">
+                        <yds-related-items
+                                project-id="{{ projectId }}"
+                                period="during"
+                                total-items="itemsCount"
+                                element-h="300">
+                        </yds-related-items>
+                    </div>
+                </div>
+            </uib-tab>
+
+            <!--After-->
+            <uib-tab heading="After ({{ itemsCount['after'] }})">
+                <div class="row">
+                    <div class="col-md-12">
+                        <yds-related-items
+                                project-id="{{ projectId }}"
+                                period="after"
+                                total-items="itemsCount"
+                                element-h="300">
+                        </yds-related-items>
+                    </div>
+                </div>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+</div>
+
 <!--Buyer/seller contracts list title aggregate-->
 <div class="row">
     <div class="col-md-12">
