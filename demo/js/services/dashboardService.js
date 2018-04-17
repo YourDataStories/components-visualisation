@@ -214,7 +214,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 "contract_amount",
                 "contract_CPVs_for_countries_and_period_filter_contract",
                 "contract_buyers_all_filter_contract",
-                "contract_sellers_all_filter_contract"
+                "contract_sellers_all_filter_contract",
+                "numberOfTenders"
             ],
             comparison: [
                 "contract_comparison_CPVs_for_countries_and_period_comparison1",
@@ -742,6 +743,18 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
                 if (!_.isUndefined(selection) && selection.trim().length > 0) {
                     apiOptions[apiParam] = selection;
+                }
+            });
+
+            // Gather data for number range filters
+            filters = _.where(enabledFilters, {type: "number-range"});
+
+            _.each(filters, function (filter) {
+                var selectionType = filter.params.selectionType;
+                var selection = dashboard.getObject(selectionType);
+
+                if (!_.isUndefined(selection)) {
+                    apiOptions[selectionType] = "[" + selection.minValue + " TO " + selection.maxValue + "]";
                 }
             });
 
