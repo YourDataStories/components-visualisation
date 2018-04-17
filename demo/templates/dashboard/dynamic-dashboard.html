@@ -119,8 +119,19 @@
                             title="{{ filter.params.label }}"
                             dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
                             lang="{{ filter.params.lang || lang }}"
-                            min-year="1997"
-                            max-year="2018">
+                            min-year="{{ filter.params.min || 1997}}"
+                            max-year="{{ filter.params.max || 2018}}">
+                    </yds-year-range>
+
+                    <!--Number Range filter-->
+                    <yds-year-range
+                            ng-switch-when="number-range"
+                            title="{{ filter.params.label }}"
+                            lang="{{ filter.params.lang || lang }}"
+                            dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
+                            selection-type="{{ filter.params.selectionType }}"
+                            min-year="{{ filter.params.min || 1997}}"
+                            max-year="{{ filter.params.max || 2018}}">
                     </yds-year-range>
 
                     <!--Grid filter-->

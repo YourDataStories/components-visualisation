@@ -318,6 +318,16 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                         label: "Time Period for Contracts"
                     }
                 }, {
+                    name: "Tenders Number",
+                    type: "number-range",
+                    checked: true,
+                    params: {
+                        label: "Number of tenders received",
+                        selectionType: "numberOfTenders",
+                        min: "0",
+                        max: "20"
+                    }
+                }, {
                     name: "Amount",
                     type: "amount",
                     params: {
@@ -1330,6 +1340,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                             dashboard.subscribeYearChanges(scope, changeHandler));
                         break;
                     case "amount":
+                    case "number-range":
                         subscriptions.push(
                             dashboard.subscribeObjectChanges(scope, changeHandler));
                         break;
