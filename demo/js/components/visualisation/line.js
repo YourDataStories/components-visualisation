@@ -70,6 +70,13 @@ angular.module("yds").directive("ydsLine", ["Data", "Filters", function (Data, F
             // Set the height of the chart
             lineContainer.style.height = elementH + "px";
 
+            // If extra params exist, add them to Filters
+            if (!_.isUndefined(extraParams) && !_.isEmpty(extraParams)) {
+                Filters.addExtraParamsFilter(scope.elementId, _.extend({}, extraParams, {
+                    timeseries: timeseries
+                }));
+            }
+
             var lineType = "line";
 
             // Check if we should use time series API call
@@ -101,19 +108,6 @@ angular.module("yds").directive("ydsLine", ["Data", "Filters", function (Data, F
                         },
                         filename: options.title.text || "chart",
                         enabled: (exporting === "true")
-                    };
-
-                    // Add events on load and after changing extremes, to add the line filter
-                    options.chart.events = {
-                        load: function (e) {
-                            Filters.addLineFilter(scope.elementId, e.target);
-                        }
-                    };
-
-                    options.xAxis.events = {
-                        afterSetExtremes: function (e) {
-                            Filters.addLineFilter(scope.elementId, e.target.chart);
-                        }
                     };
 
                     new Highcharts.StockChart(scope.elementId, options);

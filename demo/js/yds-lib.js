@@ -1618,28 +1618,6 @@ app.factory("Filters", [function () {
     };
 
     return {
-        addLineFilter: function (compId, lineChart) {
-            chartFilters = [];
-            var lineExtremes = lineChart.xAxis[0].getExtremes();
-
-            // Define which axis has range ? is needed ?
-            chartFilters.push({
-                applied_to: "x",
-                attrs: {
-                    min: lineExtremes.min,
-                    max: lineExtremes.max
-                }
-            });
-
-            chartFilters.push({
-                applied_to: "y",
-                attrs: {
-                    attrName: ""
-                }
-            });
-
-            updateFilters(chartFilters, compId, filters);
-        },
         addExtraParamsFilter: function (compId, params) {
             // Create array with params as filters
             var newFilters = [{

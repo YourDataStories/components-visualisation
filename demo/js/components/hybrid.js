@@ -40,6 +40,12 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
                                 scope.viewType = "default";
                             }
 
+                            // Check for timeseries parameter
+                            if (_.has(scope.extraParams, "timeseries")) {
+                                scope.timeseries = scope.extraParams.timeseries;
+                                scope.extraParams = _.omit(scope.extraParams, "timeseries");
+                            }
+
                             // Get title size from URL params and add it to scope
                             var urlParams = $location.search();
                             if (_.has(urlParams, "titlesize")) {
