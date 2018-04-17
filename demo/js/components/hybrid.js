@@ -1,5 +1,5 @@
-angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http", "$stateParams", "$location",
-    function (Data, DashboardService, $http, $stateParams, $location) {
+angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http", "$location",
+    function (Data, DashboardService, $http, $location) {
         return {
             restrict: "E",
             scope: {
@@ -81,8 +81,8 @@ angular.module("yds").directive("ydsHybrid", ["Data", "DashboardService", "$http
 
                         // Create the chart
                         if (scope.useUrlParams !== "true") {
-                            // Get embed code
-                            var embedCode = $stateParams.embedCode;
+                            // Get embed code (split the path at "/embed/" and get the last item)
+                            var embedCode = _.last($location.path().split("/embed/"));
 
                             // Recover saved object from embed code and visualise it
                             Data.recoverEmbedCode(embedCode)
