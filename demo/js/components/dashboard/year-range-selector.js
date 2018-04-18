@@ -18,6 +18,7 @@ angular.module("yds").directive("ydsYearRange", ["$timeout", "DashboardService",
             },
             templateUrl: Data.templatePath + "templates/dashboard/year-range-selector.html",
             link: function (scope, element, attrs) {
+                var maxValue = "Max";
                 scope.initialized = false;
 
                 var minYear = parseInt(scope.minYear);
@@ -28,12 +29,18 @@ angular.module("yds").directive("ydsYearRange", ["$timeout", "DashboardService",
                 var saveAsYear = (_.isUndefined(selectionType) || selectionType.length === 0);
 
                 // Check if minYear attribute is defined, else assign default value
-                if (_.isUndefined(minYear) || _.isNaN(minYear))
+                if (_.isNaN(minYear) && scope.minYear === maxValue) {
+                    minYear = maxValue;
+                } else if (_.isUndefined(minYear) || _.isNaN(minYear)) {
                     minYear = 1970;
+                }
 
                 // Check if maxYear attribute is defined, else assign default value
-                if (_.isUndefined(maxYear) || _.isNaN(maxYear))
+                if (_.isNaN(maxYear) && scope.maxYear === maxValue) {
+                    maxYear = maxValue;
+                } else if (_.isUndefined(maxYear) || _.isNaN(maxYear)) {
                     maxYear = 2050;
+                }
 
                 // Check if dashboardId attribute is defined, else assign default value
                 if (_.isUndefined(dashboardId) || dashboardId.length === 0)
@@ -93,6 +100,23 @@ angular.module("yds").directive("ydsYearRange", ["$timeout", "DashboardService",
                         }
                     }
                 };
+
+                // Special slider case: number of tenders (custom steps)
+                if (selectionType === "numberOfTenders") {
+                    var stepsArray = [];
+                    for (var i = 0; i <= 20; i++) {
+                        stepsArray.push(i);
+                    }
+                    stepsArray.push(100, 500, 1000, 5000, 10000, 50000, 100000, maxValue);
+
+                    scope.yearSlider.options = {
+                        stepsArray: stepsArray,
+                        vertical: (scope.vertical === "true"),
+                        onEnd: function () {
+                            saveRangeToService(scope.yearSlider.minValue, scope.yearSlider.maxValue);
+                        }
+                    }
+                }
 
                 // Show angular slider after options are set
                 scope.initialized = true;

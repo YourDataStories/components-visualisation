@@ -326,7 +326,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                         label: "Number of tenders received",
                         selectionType: "numberOfTenders",
                         min: "0",
-                        max: "90000"
+                        max: "Max"
                     }
                 }, {
                     name: "Amount",
