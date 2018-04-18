@@ -121,18 +121,14 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                             svg.append("circle")
                                 .attr("r", outerRadius);
 
-                            var items = [{
-                                name: "Test 1",
-                                color: "#FF00FF"
-                            }, {
-                                name: "Test 2",
-                                color: "#FFFF00"
-                            }];
-
-                            var matrix = [
-                                [0, 0.05],
-                                [0.2, 0]
-                            ];
+                            var matrix = options;
+                            var items = [];
+                            for (var i = 0; i < matrix.length; i++) {
+                                items.push({
+                                    name: "Item #" + (i + 1),
+                                    color: "#FFFF00"
+                                });
+                            }
 
                             // Compute the chord layout.
                             layout.matrix(matrix);
