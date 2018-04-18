@@ -51,7 +51,7 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                         "seller and buyer countries that span the selected time period."
                     }, {
                         label: "Sellers",
-                        type: "companies",
+                        type: "company",
                         icon: "fa-credit-card",
                         infoUrl: null,
                         detailsUrl: $sce.trustAsHtml(Data.templatePath + "templates-demo/pages/view-seller.html"),

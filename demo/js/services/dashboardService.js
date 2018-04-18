@@ -217,15 +217,15 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 "contract_sellers_all_filter_contract",
                 "numberOfTenders"
             ],
-            companies: [
-                "filter_companies",
-                "contract_buyer_countries_all",
-                "contract_seller_countries_all",
-                "year_contract",
-                "contract_amount",
-                "contract_CPVs_for_countries_and_period_filter_contract",
-                "contract_buyers_all_filter_contract",
-                "contract_sellers_all_filter_contract",
+            company: [
+                "filter_company",
+                "company_buyer_countries_all",
+                "company_seller_countries_all",
+                "year_company",
+                "company_amount",
+                "company_CPVs_for_countries_and_period_filter_company",
+                "company_buyers_all_filter_company",
+                "company_sellers_all_filter_company",
                 "numberOfTenders"
             ],
             comparison: [
@@ -279,7 +279,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             public_project: "public-works",
             dianeosis_students: "dianeosis-students",
             traffic_observation: "traffic-observations",
-            sellers: "dashboard-sellers"
+            company: "dashboard-sellers"
         };
 
         // Configuration for available filters for each Dashboard (test)
@@ -352,13 +352,13 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     }
                 }
             ],
-            "companies": [
+            "company": [
                 {
                     name: "Sellers",
                     type: "grid",
                     checked: true,
                     params: {
-                        viewType: "contract.sellers.all.filter",
+                        viewType: "company.sellers.all.filter",
                         selectionId: "seller_organizations",
                         minHeight: 430
                     }
@@ -368,14 +368,14 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     checked: true,
                     params: {
                         legendTitle: "Number of Contracts per Buyer Country",
-                        viewType: "contract.buyer.countries.all",
+                        viewType: "company.buyer.countries.all",
                         europeOnly: true
                     }
                 }, {
                     name: "Buyers",
                     type: "grid",
                     params: {
-                        viewType: "contract.buyers.all.filter",
+                        viewType: "company.buyers.all.filter",
                         selectionId: "buyer_organizations",
                         minHeight: 430
                     }
@@ -384,13 +384,13 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     type: "heatmap",
                     params: {
                         legendTitle: "Number of Contracts per Seller Country",
-                        viewType: "contract.seller.countries.all"
+                        viewType: "company.seller.countries.all"
                     }
                 }, {
                     name: "CPVs",
                     type: "grid-grouped",
                     params: {
-                        viewType: "contract.CPVs.for.countries.and.period.filter",
+                        viewType: "company.CPVs.for.countries.and.period.filter",
                         selectionId: "cpvs"
                     }
                 }, {
@@ -413,7 +413,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     name: "Amount",
                     type: "amount",
                     params: {
-                        selectionId: "contract_amount",
+                        selectionId: "company_amount",
                         apiParam: "amount",
                         label: "Amount",
                         min: 0,
