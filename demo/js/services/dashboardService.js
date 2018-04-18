@@ -359,6 +359,53 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                         viewType: "contract.buyer.countries.all",
                         europeOnly: true
                     }
+                }, {
+                    name: "Year Range",
+                    type: "year",
+                    checked: true,
+                    params: {
+                        label: "Time Period for Sellers"
+                    }
+                }, {
+                    name: "Seller Countries",
+                    type: "heatmap",
+                    params: {
+                        legendTitle: "Number of Contracts per Seller Country",
+                        viewType: "contract.seller.countries.all"
+                    }
+                }, {
+                    name: "Buyers",
+                    type: "grid",
+                    params: {
+                        viewType: "contract.buyers.all.filter",
+                        selectionId: "buyer_organizations"
+                    }
+                }, {
+                    name: "CPVs",
+                    type: "grid-grouped",
+                    params: {
+                        viewType: "contract.CPVs.for.countries.and.period.filter",
+                        selectionId: "cpvs"
+                    }
+                }, {
+                    name: "Tenders Number",
+                    type: "number-range",
+                    params: {
+                        label: "Number of tenders received",
+                        selectionType: "numberOfTenders",
+                        min: "0",
+                        max: "Max"
+                    }
+                }, {
+                    name: "Amount",
+                    type: "amount",
+                    params: {
+                        selectionId: "contract_amount",
+                        apiParam: "amount",
+                        label: "Amount",
+                        min: 0,
+                        max: 1000000000
+                    }
                 }
             ],
             "aidactivity": [
