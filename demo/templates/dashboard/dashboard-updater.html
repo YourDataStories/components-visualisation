@@ -169,6 +169,19 @@
             element-h="{{ minHeight }}">
     </yds-pie>
 
+    <yds-chord
+            ng-switch-when="chord"
+            project-id="{{ projectId }}"
+            view-type="{{ viewType }}"
+            extra-params="extraParams"
+            add-to-basket="{{ addToBasket }}"
+            embeddable="{{ embeddable }}"
+            disable-explanation="{{ disableExplanation }}"
+            enable-rating="{{ enableRating }}"
+            lang="{{ lang }}"
+            element-h="{{ minHeight }}">
+    </yds-chord>
+
     <yds-bar
             ng-switch-when="bar"
             project-id="{{ projectId }}"

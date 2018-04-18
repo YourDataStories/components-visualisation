@@ -8,6 +8,7 @@ app.constant("YDS_CONSTANTS", {
     "PROXY": "/",
     "API_YDS_MODEL_HIERARCHY": "platform.yourdatastories.eu/api/json-ld/model/YDSModelHierarchy.json",
     "API_BAR": "platform.yourdatastories.eu/api/json-ld/component/barchart.tcl",
+    "API_CHORD": "platform.yourdatastories.eu/api/json-ld/component/chord.tcl",
     "API_GRID": "platform.yourdatastories.eu/api/json-ld/component/grid.tcl",
     "API_GRID_TIMESERIES": "platform.yourdatastories.eu/api/json-ld/component/timeseries_grid.tcl",
     "API_HEATMAP": "platform.yourdatastories.eu/api/json-ld/component/heatmap.tcl",
@@ -1263,6 +1264,9 @@ app.factory("Data", ["$http", "$q", "$window", "$sce", "DashboardService", "YDS_
         switch (type) {
             case "bar":
                 visualizationUrl = "http://" + YDS_CONSTANTS.API_BAR;
+                break;
+            case "chord":
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_CHORD;
                 break;
             case "info":
                 visualizationUrl = "http://" + YDS_CONSTANTS.API_INFO;

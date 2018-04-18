@@ -186,6 +186,24 @@
         </div>
     </div>
 
+    <!--Chord test-->
+    <div class="row" ng-if="dashboardsConfig.selectedDashboard === 'company'">
+        <div class="col-md-12">
+            <yds-dashboard-updater
+                    type="chord"
+                    project-id="none"
+                    view-type="company.sellers.related.sellers.through.contracts"
+                    dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
+                    min-height="400"
+                    base-url="http://platform.yourdatastories.eu/project-details"
+                    dynamic-dashboard="true"
+                    add-to-basket="false"
+                    enable-rating="true"
+                    lang="en">
+            </yds-dashboard-updater>
+        </div>
+    </div>
+
     <!--Dashboard Visualization-->
     <div class="row">
         <div class="col-md-10" style="min-height: 600px">
