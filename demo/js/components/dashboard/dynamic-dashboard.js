@@ -49,6 +49,14 @@ angular.module("yds").directive("ydsDynamicDashboard", ["$timeout", "$location",
                         detailsUrl: $sce.trustAsHtml(Data.templatePath + "templates-demo/pages/view-contract.html"),
                         viewDataDescription: "The following table shows all Contracts for the selected " +
                         "seller and buyer countries that span the selected time period."
+                    }, {
+                        label: "Sellers",
+                        type: "sellers",
+                        icon: "fa-credit-card",
+                        infoUrl: null,
+                        detailsUrl: $sce.trustAsHtml(Data.templatePath + "templates-demo/pages/view-seller.html"),
+                        viewDataDescription: "The following table shows all Sellers for the selected " +
+                        "contracts that span the selected time period."
                     }],
                     selectedDashboard: defaultDashboard,
                     viewDataDescription: "",

@@ -141,6 +141,10 @@ ydsDemo.config(function ($stateProvider, $urlRouterProvider, $locationProvider) 
             url: "/dashboard-trade",
             templateUrl: "templates-demo/dashboards/dashboard-trade.html"
         })
+        .state("dashboard-sellers", {
+            url: "/dashboard-sellers",
+            templateUrl: "templates-demo/dashboards/dashboard-sellers.html"
+        })
         .state("redirect", {
             url: "/redirect",
             template: "<div class='container'><h2>Redirecting...</h2></div>",

@@ -267,7 +267,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             comparison: "country-comparison",
             public_project: "public-works",
             dianeosis_students: "dianeosis-students",
-            traffic_observation: "traffic-observations"
+            traffic_observation: "traffic-observations",
+            sellers: "dashboard-sellers"
         };
 
         // Configuration for available filters for each Dashboard (test)
