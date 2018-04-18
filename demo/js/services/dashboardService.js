@@ -360,7 +360,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     params: {
                         viewType: "contract.sellers.all.filter",
                         selectionId: "seller_organizations",
-                        minHeight: 450
+                        minHeight: 430
                     }
                 }, {
                     name: "Buyer Countries",
@@ -372,11 +372,12 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                         europeOnly: true
                     }
                 }, {
-                    name: "Year Range",
-                    type: "year",
-                    checked: true,
+                    name: "Buyers",
+                    type: "grid",
                     params: {
-                        label: "Time Period for Sellers"
+                        viewType: "contract.buyers.all.filter",
+                        selectionId: "buyer_organizations",
+                        minHeight: 430
                     }
                 }, {
                     name: "Seller Countries",
@@ -386,18 +387,18 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                         viewType: "contract.seller.countries.all"
                     }
                 }, {
-                    name: "Buyers",
-                    type: "grid",
-                    params: {
-                        viewType: "contract.buyers.all.filter",
-                        selectionId: "buyer_organizations"
-                    }
-                }, {
                     name: "CPVs",
                     type: "grid-grouped",
                     params: {
                         viewType: "contract.CPVs.for.countries.and.period.filter",
                         selectionId: "cpvs"
+                    }
+                }, {
+                    name: "Year Range",
+                    type: "year",
+                    checked: true,
+                    params: {
+                        label: "Time Period for Sellers"
                     }
                 }, {
                     name: "Tenders Number",
