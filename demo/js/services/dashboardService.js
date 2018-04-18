@@ -66,6 +66,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             aidactivity: "year",
             tradeactivity: "financialyear",
             contract: "year",
+            company: "year",
             public_project: "year",
             comparison: "year",
             comparison1: "year",
