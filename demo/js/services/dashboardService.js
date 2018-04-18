@@ -341,6 +341,26 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     }
                 }
             ],
+            "sellers": [
+                {
+                    name: "Sellers",
+                    type: "grid",
+                    checked: true,
+                    params: {
+                        viewType: "contract.sellers.all.filter",
+                        selectionId: "seller_organizations"
+                    }
+                }, {
+                    name: "Buyer Countries",
+                    type: "heatmap",
+                    checked: true,
+                    params: {
+                        legendTitle: "Number of Contracts per Buyer Country",
+                        viewType: "contract.buyer.countries.all",
+                        europeOnly: true
+                    }
+                }
+            ],
             "aidactivity": [
                 {
                     name: "Benefactor Countries",
