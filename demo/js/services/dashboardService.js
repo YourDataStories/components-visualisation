@@ -359,7 +359,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     checked: true,
                     params: {
                         viewType: "contract.sellers.all.filter",
-                        selectionId: "seller_organizations"
+                        selectionId: "seller_organizations",
+                        minHeight: 450
                     }
                 }, {
                     name: "Buyer Countries",

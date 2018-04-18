@@ -147,7 +147,7 @@
                             ignore-own-selection="true"
                             number-of-items="{{ aggregateValues[filter.params.viewType] }}"
                             base-url="http://platform.yourdatastories.eu/project-details"
-                            min-height="225"
+                            min-height="{{ filter.params.minHeight || 225 }}"
                             lang="{{ filter.params.lang || lang }}">
                     </yds-dashboard-updater>
 
