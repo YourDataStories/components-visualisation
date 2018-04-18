@@ -217,8 +217,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 "contract_sellers_all_filter_contract",
                 "numberOfTenders"
             ],
-            sellers: [
-                "filter_sellers",
+            companies: [
+                "filter_companies",
                 "contract_buyer_countries_all",
                 "contract_seller_countries_all",
                 "year_contract",
@@ -352,7 +352,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     }
                 }
             ],
-            "sellers": [
+            "companies": [
                 {
                     name: "Sellers",
                     type: "grid",
