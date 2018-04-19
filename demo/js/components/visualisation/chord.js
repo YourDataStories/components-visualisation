@@ -65,7 +65,7 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
             if (_.isUndefined(titleSize) || titleSize.length === 0 || _.isNaN(titleSize))
                 titleSize = 18;
 
-            var chart = null;
+            var chord = null;
 
             // Show loading animation
             scope.loading = true;
@@ -94,7 +94,7 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                 // Get data and visualize bar
                 Data.getProjectVis("chord", projectId, viewType, lang, params)
                     .then(function (response) {
-                        if (_.isNull(chart)) {
+                        if (_.isNull(chord)) {
                             // Check that the component has not been destroyed
                             if (scope.$$destroyed)
                                 return;
@@ -180,7 +180,7 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                                 .remove();
 
                             // Add the chords.
-                            var chord = svg.selectAll(".chord")
+                            chord = svg.selectAll(".chord")
                                 .data(layout.chords)
                                 .enter().append("path")
                                 .attr("class", "chord")
