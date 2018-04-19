@@ -116,7 +116,7 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
 
                         var layout = d3.layout.chord()
                             .padding(.01)
-                            .sortSubgroups(d3.descending)
+                            .sortSubgroups(d3.ascending)
                             .sortChords(d3.ascending);
 
                         var path = d3.svg.chord()
