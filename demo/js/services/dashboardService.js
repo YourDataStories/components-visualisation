@@ -406,15 +406,6 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                         label: "Time Period for Sellers"
                     }
                 }, {
-                    name: "Tenders Number",
-                    type: "number-range",
-                    params: {
-                        label: "Number of tenders received",
-                        selectionType: "numberOfTenders",
-                        min: "0",
-                        max: "Max"
-                    }
-                }, {
                     name: "Amount",
                     type: "amount",
                     params: {
