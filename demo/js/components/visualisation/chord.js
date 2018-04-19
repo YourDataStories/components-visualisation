@@ -87,120 +87,109 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                 // Get data and visualize bar
                 Data.getProjectVis("chord", projectId, viewType, lang, extraParams)
                     .then(function (response) {
-                        if (_.isNull(chord)) {
-                            // Check that the component has not been destroyed
-                            if (scope.$$destroyed)
-                                return;
+                        // Check that the component has not been destroyed
+                        if (scope.$$destroyed)
+                            return;
 
-                            var options = response.data;
+                        var width = elementH,
+                            height = elementH,
+                            outerRadius = Math.min(width, height) / 2 - 10,
+                            innerRadius = outerRadius - 24;
 
-                            //////////////////////// CHORD ////////////////////////
-                            var width = elementH,
-                                height = elementH,
-                                outerRadius = Math.min(width, height) / 2 - 10,
-                                innerRadius = outerRadius - 24;
+                        var formatPercent = d3.format(".1%");
 
-                            var formatPercent = d3.format(".1%");
+                        var arc = d3.svg.arc()
+                            .innerRadius(innerRadius)
+                            .outerRadius(outerRadius);
 
-                            var arc = d3.svg.arc()
-                                .innerRadius(innerRadius)
-                                .outerRadius(outerRadius);
+                        var layout = d3.layout.chord()
+                            .padding(.04)
+                            .sortSubgroups(d3.descending)
+                            .sortChords(d3.ascending);
 
-                            var layout = d3.layout.chord()
-                                .padding(.04)
-                                .sortSubgroups(d3.descending)
-                                .sortChords(d3.ascending);
+                        var path = d3.svg.chord()
+                            .radius(innerRadius);
 
-                            var path = d3.svg.chord()
-                                .radius(innerRadius);
+                        var svg = d3.select(".chord-container").append("svg")
+                            .attr("width", width)
+                            .attr("height", height)
+                            .append("g")
+                            .attr("id", "circle")
+                            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-                            var svg = d3.select(".chord-container").append("svg")
-                                .attr("width", width)
-                                .attr("height", height)
-                                .append("g")
-                                .attr("id", "circle")
-                                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+                        svg.append("circle")
+                            .attr("r", outerRadius);
 
-                            svg.append("circle")
-                                .attr("r", outerRadius);
+                        // Get data from API response
+                        var matrix = response.data.matrix;
+                        var items = response.data.nodes;
 
-                            // Get data from API response
-                            var matrix = response.data.matrix;
-                            var items = response.data.nodes;
+                        // Compute the chord layout.
+                        layout.matrix(matrix);
 
-                            // Compute the chord layout.
-                            layout.matrix(matrix);
+                        // Add a group per neighborhood.
+                        var group = svg.selectAll(".group")
+                            .data(layout.groups)
+                            .enter().append("g")
+                            .attr("class", "group")
+                            .on("mouseover", mouseover);
 
-                            // Add a group per neighborhood.
-                            var group = svg.selectAll(".group")
-                                .data(layout.groups)
-                                .enter().append("g")
-                                .attr("class", "group")
-                                .on("mouseover", mouseover);
+                        // Add a mouseover title.
+                        group.append("title").text(function (d, i) {
+                            return items[i].name + ": " + formatPercent(d.value) + " of origins";
+                        });
 
-                            // Add a mouseover title.
-                            group.append("title").text(function (d, i) {
-                                return items[i].name + ": " + formatPercent(d.value) + " of origins";
+                        // Add the group arc.
+                        var groupPath = group.append("path")
+                            .attr("id", function (d, i) {
+                                return "group" + i;
+                            })
+                            .attr("d", arc)
+                            .style("fill", function (d, i) {
+                                return items[i].colour;
                             });
 
-                            // Add the group arc.
-                            var groupPath = group.append("path")
-                                .attr("id", function (d, i) {
-                                    return "group" + i;
-                                })
-                                .attr("d", arc)
-                                .style("fill", function (d, i) {
-                                    return items[i].colour;
-                                });
+                        // Add a text label.
+                        var groupText = group.append("text")
+                            .attr("x", 6)
+                            .attr("dy", 15);
 
-                            // Add a text label.
-                            var groupText = group.append("text")
-                                .attr("x", 6)
-                                .attr("dy", 15);
-
-                            groupText.append("textPath")
-                                .attr("xlink:href", function (d, i) {
-                                    return "#group" + i;
-                                })
-                                .text(function (d, i) {
-                                    return items[i].name;
-                                });
-
-                            // Remove the labels that don't fit. :(
-                            groupText.filter(function (d, i) {
-                                return groupPath[0][i].getTotalLength() / 2 - 16 < this.getComputedTextLength();
-                            }).remove();
-
-                            // Add the chords.
-                            chord = svg.selectAll(".chord")
-                                .data(layout.chords)
-                                .enter().append("path")
-                                .attr("class", "chord")
-                                .style("fill", function (d) {
-                                    return items[d.source.index].colour;
-                                })
-                                .attr("d", path);
-
-                            // Add an elaborate mouseover title for each chord.
-                            chord.append("title").text(function (d) {
-                                return items[d.source.index].name
-                                    + " → " + items[d.target.index].name
-                                    + ": " + formatPercent(d.source.value)
-                                    + "\n" + items[d.target.index].name
-                                    + " → " + items[d.source.index].name
-                                    + ": " + formatPercent(d.target.value);
+                        groupText.append("textPath")
+                            .attr("xlink:href", function (d, i) {
+                                return "#group" + i;
+                            })
+                            .text(function (d, i) {
+                                return items[i].name;
                             });
-                            //////////////////////// CHORD ////////////////////////
 
-                            console.log("Chord", options);
-                            scope.chordData = options;
-                        } else {
-                            // Update the chart's options
-                            console.log("Chord update");
-                        }
+                        // Remove the labels that don't fit. :(
+                        groupText.filter(function (d, i) {
+                            return groupPath[0][i].getTotalLength() / 2 - 16 < this.getComputedTextLength();
+                        }).remove();
+
+                        // Add the chords.
+                        chord = svg.selectAll(".chord")
+                            .data(layout.chords)
+                            .enter().append("path")
+                            .attr("class", "chord")
+                            .style("fill", function (d) {
+                                return items[d.source.index].colour;
+                            })
+                            .attr("d", path);
+
+                        // Add an elaborate mouseover title for each chord.
+                        chord.append("title").text(function (d) {
+                            return items[d.source.index].name
+                                + " → " + items[d.target.index].name
+                                + ": " + formatPercent(d.source.value)
+                                + "\n" + items[d.target.index].name
+                                + " → " + items[d.source.index].name
+                                + ": " + formatPercent(d.target.value);
+                        });
 
                         // Remove loading animation
                         scope.loading = false;
+                        //todo: Add loading animation to template
                     }, function (error) {
                         if (_.isNull(error) || _.isUndefined(error) || _.isUndefined(error.message))
                             scope.ydsAlert = "An error has occurred, please check the configuration of the component";
