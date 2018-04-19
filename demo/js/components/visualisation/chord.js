@@ -121,14 +121,9 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                             svg.append("circle")
                                 .attr("r", outerRadius);
 
-                            var matrix = options;
-                            var items = [];
-                            for (var i = 0; i < matrix.length; i++) {
-                                items.push({
-                                    name: "Item #" + (i + 1),
-                                    color: "#FFFF00"
-                                });
-                            }
+                            // Get data from API response
+                            var matrix = response.data.matrix;
+                            var items = response.data.nodes;
 
                             // Compute the chord layout.
                             layout.matrix(matrix);
@@ -153,7 +148,7 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                                 })
                                 .attr("d", arc)
                                 .style("fill", function (d, i) {
-                                    return items[i].color;
+                                    return items[i].colour;
                                 });
 
                             // Add a text label.
@@ -181,7 +176,7 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                                 .enter().append("path")
                                 .attr("class", "chord")
                                 .style("fill", function (d) {
-                                    return items[d.source.index].color;
+                                    return items[d.source.index].colour;
                                 })
                                 .attr("d", path);
 
