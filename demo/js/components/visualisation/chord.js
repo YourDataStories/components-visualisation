@@ -140,7 +140,10 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                             .data(layout.groups)
                             .enter().append("g")
                             .attr("class", "group")
-                            .on("mouseover", mouseover);
+                            .on("mouseover", mouseover)
+                            .on("click", function (e) {
+                                console.log("Clicked:", items[e.index]);
+                            });
 
                         // Add a mouseover title.
                         group.append("title").text(function (d, i) {
