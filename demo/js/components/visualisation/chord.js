@@ -108,8 +108,6 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                         var matrix = response.data.matrix;
                         var items = response.data.nodes;
 
-                        var formatPercent = d3.format(".1%");
-
                         var arc = d3.svg.arc()
                             .innerRadius(innerRadius)
                             .outerRadius(outerRadius);
@@ -144,7 +142,7 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
 
                         // Add a mouseover title.
                         group.append("title").text(function (d, i) {
-                            return items[i].name + ": " + formatPercent(d.value) + " of origins";
+                            return items[i].name + ": " + d.value + " connections";
                         });
 
                         // Add the group arc.
@@ -188,11 +186,8 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                         // Add an elaborate mouseover title for each chord.
                         chord.append("title").text(function (d) {
                             return items[d.source.index].name
-                                + " → " + items[d.target.index].name
-                                + ": " + formatPercent(d.source.value)
-                                + "\n" + items[d.target.index].name
-                                + " → " + items[d.source.index].name
-                                + ": " + formatPercent(d.target.value);
+                                + " ↔ " + items[d.target.index].name
+                                + ": " + d.source.value;
                         });
 
                         // Remove loading animation
