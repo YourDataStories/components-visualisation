@@ -1675,3 +1675,23 @@ path.chord {
 #circle:hover path.fade {
     display: none;
 }
+
+/* Chord no data style */
+.chord-no-data-container {
+    /*position: absolute;*/
+    width: 100%;
+    height: 100%;
+    display: table;
+    font-size: x-large;
+    /*top: 0;*/
+    /*left: 0;*/
+    /*vertical-align: middle;*/
+}
+
+.chord-no-data-inside {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    /*opacity: 0.5;*/
+    max-height: 720px;
+}

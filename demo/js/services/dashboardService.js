@@ -761,16 +761,13 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
             // Gather data for any map filters
             var filters = _.where(enabledFilters, {type: "heatmap"});
-            console.log("heatmap filters?", filters);
 
             if (!_.isEmpty(filters)) {
                 // Keep only the filter view types
                 filters = _.pluck(_.pluck(filters, "params"), "viewType");
-                console.log("keeping vie tyeps:", filters);
 
                 _.each(apiOptionsMap, function (viewType, key) {
                     if (_.contains(filters, viewType)) {
-                        console.log("yes");
                         // The filter for this key is enabled, add its value to the parameters
                         var countries = dashboard.getCountries(viewType);
                         countries = _.pluck(countries, "code").join(",");

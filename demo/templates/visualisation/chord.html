@@ -3,6 +3,13 @@
         <div ng-if="loading" class="loading-container">
             <div class="loading-container-inside"><i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i> Loading...</div>
         </div>
+        <div ng-if="noData" class="chord-no-data-container">
+            <!--<img src="img/chord-empty.png"/>-->
+            <div class="chord-no-data-inside">
+                Please select one or more sellers from the list
+                <br/>to show connections.
+            </div>
+        </div>
         <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length > 0">
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span class="sr-only">Error:</span>

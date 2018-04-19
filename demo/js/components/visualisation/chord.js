@@ -76,6 +76,7 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
 
             // Show loading animation
             scope.loading = true;
+            scope.noData = false;
 
             // Set the height of the chart
             chordContainer.style.height = elementH + "px";
@@ -101,6 +102,7 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                         if (!_.has(response.data, "matrix") || !_.has(response.data, "nodes")) {
                             // No data returned from API
                             scope.loading = false;
+                            scope.noData = true;
                             return;
                         }
 
