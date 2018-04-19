@@ -1656,3 +1656,22 @@ div[data-toggle="buttons"] label.dashboard-filter-label:active, div[data-toggle=
 .ag-header-viewport {
     margin-left: 0!important;
 }
+
+/* Chord chart CSS */
+#circle circle {
+    fill: none;
+    pointer-events: all;
+}
+
+.group path {
+    fill-opacity: .5;
+}
+
+path.chord {
+    stroke: #000;
+    stroke-width: .25px;
+}
+
+#circle:hover path.fade {
+    display: none;
+}

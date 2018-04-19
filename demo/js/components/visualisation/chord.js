@@ -84,15 +84,8 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
             };
 
             var createChord = function () {
-                var params = _.clone(extraParams);
-
-                if (_.isUndefined(params)) {
-                    //todo: can remove if no extra things are added to it
-                    params = {};
-                }
-
                 // Get data and visualize bar
-                Data.getProjectVis("chord", projectId, viewType, lang, params)
+                Data.getProjectVis("chord", projectId, viewType, lang, extraParams)
                     .then(function (response) {
                         if (_.isNull(chord)) {
                             // Check that the component has not been destroyed
@@ -176,8 +169,7 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                             // Remove the labels that don't fit. :(
                             groupText.filter(function (d, i) {
                                 return groupPath[0][i].getTotalLength() / 2 - 16 < this.getComputedTextLength();
-                            })
-                                .remove();
+                            }).remove();
 
                             // Add the chords.
                             chord = svg.selectAll(".chord")
