@@ -98,6 +98,12 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                         if (scope.$$destroyed)
                             return;
 
+                        if (!_.has(response.data, "matrix") || !_.has(response.data, "nodes")) {
+                            // No data returned from API
+                            scope.loading = false;
+                            return;
+                        }
+
                         // Get data from API response
                         var matrix = response.data.matrix;
                         var items = response.data.nodes;
