@@ -92,8 +92,8 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                             var options = response.data;
 
                             //////////////////////// CHORD ////////////////////////
-                            var width = 300,
-                                height = 300,
+                            var width = elementH,
+                                height = elementH,
                                 outerRadius = Math.min(width, height) / 2 - 10,
                                 innerRadius = outerRadius - 24;
 
