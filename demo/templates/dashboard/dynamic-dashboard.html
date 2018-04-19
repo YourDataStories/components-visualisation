@@ -205,7 +205,7 @@
     </div>
 
     <!--Dashboard Visualization-->
-    <div class="row">
+    <div class="row" ng-if="dashboardsConfig.selectedDashboard !== 'company'">
         <div class="col-md-10" style="min-height: 600px">
             <uib-tabset active="dashboardVisActiveTab">
                 <uib-tab index="$index" class="{{ 'tab-' + aggregateClasses[$index] }}"
@@ -266,7 +266,7 @@
     </div>
 
     <!--What else can I do panel-->
-    <div class="row">
+    <div class="row" ng-if="dashboardsConfig.selectedDashboard !== 'company'">
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading clearfix">
