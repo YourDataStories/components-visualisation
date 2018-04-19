@@ -115,7 +115,7 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                             .outerRadius(outerRadius);
 
                         var layout = d3.layout.chord()
-                            .padding(.04)
+                            .padding(.01)
                             .sortSubgroups(d3.descending)
                             .sortChords(d3.ascending);
 
@@ -197,7 +197,6 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
 
                         // Remove loading animation
                         scope.loading = false;
-                        //todo: Add loading animation to template
                     }, function (error) {
                         if (_.isNull(error) || _.isUndefined(error) || _.isUndefined(error.message))
                             scope.ydsAlert = "An error has occurred, please check the configuration of the component";
