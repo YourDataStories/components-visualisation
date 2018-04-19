@@ -65,6 +65,13 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
             if (_.isUndefined(titleSize) || titleSize.length === 0 || _.isNaN(titleSize))
                 titleSize = 18;
 
+            // Set some Chord parameters for D3
+            var width = elementH,
+                height = elementH,
+                outerRadius = Math.min(width, height) / 2 - 10,
+                innerRadius = outerRadius - 24;
+
+            // Variable to hold Chord instance
             var chord = null;
 
             // Show loading animation
@@ -91,10 +98,9 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                         if (scope.$$destroyed)
                             return;
 
-                        var width = elementH,
-                            height = elementH,
-                            outerRadius = Math.min(width, height) / 2 - 10,
-                            innerRadius = outerRadius - 24;
+                        // Get data from API response
+                        var matrix = response.data.matrix;
+                        var items = response.data.nodes;
 
                         var formatPercent = d3.format(".1%");
 
@@ -119,10 +125,6 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
 
                         svg.append("circle")
                             .attr("r", outerRadius);
-
-                        // Get data from API response
-                        var matrix = response.data.matrix;
-                        var items = response.data.nodes;
 
                         // Compute the chord layout.
                         layout.matrix(matrix);
