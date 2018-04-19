@@ -73,6 +73,16 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
             // Set the height of the chart
             chordContainer.style.height = elementH + "px";
 
+            /**
+             * Chord mouseover function
+             */
+            var mouseover = function (d, i) {
+                chord.classed("fade", function (p) {
+                    return p.source.index != i
+                        && p.target.index != i;
+                });
+            };
+
             var createChord = function () {
                 var params = _.clone(extraParams);
 
@@ -133,8 +143,7 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                                 .data(layout.groups)
                                 .enter().append("g")
                                 .attr("class", "group")
-                            ;
-                            // .on("mouseover", mouseover);
+                                .on("mouseover", mouseover);
 
                             // Add a mouseover title.
                             group.append("title").text(function (d, i) {
@@ -181,22 +190,14 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                                 .attr("d", path);
 
                             // Add an elaborate mouseover title for each chord.
-                            // chord.append("title").text(function (d) {
-                            //     return cities[d.source.index].name
-                            //         + " → " + cities[d.target.index].name
-                            //         + ": " + formatPercent(d.source.value)
-                            //         + "\n" + cities[d.target.index].name
-                            //         + " → " + cities[d.source.index].name
-                            //         + ": " + formatPercent(d.target.value);
-                            // });
-                            //
-                            // function mouseover(d, i) {
-                            //     chord.classed("fade", function (p) {
-                            //         return p.source.index != i
-                            //             && p.target.index != i;
-                            //     });
-                            // }
-
+                            chord.append("title").text(function (d) {
+                                return items[d.source.index].name
+                                    + " → " + items[d.target.index].name
+                                    + ": " + formatPercent(d.source.value)
+                                    + "\n" + items[d.target.index].name
+                                    + " → " + items[d.source.index].name
+                                    + ": " + formatPercent(d.target.value);
+                            });
                             //////////////////////// CHORD ////////////////////////
 
                             console.log("Chord", options);
