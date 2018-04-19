@@ -111,8 +111,7 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                 // Set cookie variables
                 var cookieKey = grid.viewType + "_" + dashboardId;
                 var firstLoad = true;
-
-                var preventSelectionEvent = false;
+                // var preventSelectionEvent = false;
 
                 /**
                  * Select the ones that are indicated in the selection parameter (matches them by their "id" attribute)
@@ -122,8 +121,7 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                     // Deselect previously selected rows
                     if (!preventUpdate) {
                         // Prevent the next selection event from doing anything (because deselectAll() will fire it)
-                        preventSelectionEvent = true;
-
+                        // preventSelectionEvent = true;
                         scope.gridOptions.api.deselectAll();
                     }
 
@@ -300,8 +298,9 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                             datasource: dataSource,
                             onSelectionChanged: function (e) {
                                 // Ignore event if grid is loading, or it's marked to be skipped
-                                if (scope.loading || preventSelectionEvent) {
-                                    preventSelectionEvent = false;
+                                // if (scope.loading || preventSelectionEvent) {
+                                if (scope.loading) {
+                                    // preventSelectionEvent = false;
                                     return;
                                 }
 
