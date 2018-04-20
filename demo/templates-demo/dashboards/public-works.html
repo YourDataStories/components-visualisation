@@ -21,7 +21,7 @@
     </div>
 
     <!--Selectors-->
-    <div class="row">
+    <div class="row margin-bottom-30">
         <!--Region selector column-->
         <div class="col-md-5">
             <yds-region-selector-gr
@@ -79,6 +79,24 @@
                     vertical="true"
                     height="350">
             </yds-year-range>
+        </div>
+    </div>
+
+    <!--Budget/spending filters-->
+    <div class="row">
+        <div class="col-md-offset-2 col-md-4">
+            <yds-large-number-range
+                    title="Budget Amount"
+                    max-value="1000000000"
+                    selection-type="publicproject_budget">
+            </yds-large-number-range>
+        </div>
+        <div class="col-md-4">
+            <yds-large-number-range
+                    title="Spending Amount"
+                    max-value="1000000000"
+                    selection-type="publicproject_spending">
+            </yds-large-number-range>
         </div>
     </div>
 

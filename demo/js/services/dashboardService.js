@@ -256,7 +256,9 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 "publicproject_filter_buyers_all_public_project",
                 "publicproject_filter_sellers_all_public_project",
                 "publicproject_regions_all_publicproject_regional_units_all",
-                "year_public_project"
+                "year_public_project",
+                "publicproject_budget",
+                "publicproject_spending"
             ],
             traffic_observation: [
                 "trafficobservation_direction",
@@ -905,6 +907,13 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
 
                     if (!_.isEmpty(dashboard.getGridSelection("buyers")))
                         apiOptions.buyers = dashboard.getGridSelection("buyers").join(",");
+
+
+                    if (!_.isEmpty(dashboard.getObject("publicproject_budget")))
+                        apiOptions.budget = dashboard.getObject("publicproject_budget");
+
+                    if (!_.isEmpty(dashboard.getObject("publicproject_spending")))
+                        apiOptions.spending = dashboard.getObject("publicproject_spending");
 
                     break;
                 case "comparison":

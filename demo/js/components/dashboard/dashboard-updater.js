@@ -139,6 +139,7 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
                     "comparison_details_2",
                     "country_producing_heatmap",
                     "dianeosis_students",
+                    "public_project",
                     "traffic_observation",
                     "traffic_observation_line1",
                     "traffic_observation_line2"
