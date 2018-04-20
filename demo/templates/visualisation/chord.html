@@ -57,7 +57,7 @@
         <span class="chord-rating-btns" yds-rating></span>
 
         <!--Export Matrix button-->
-        <span class="grid-export-btn" uib-tooltip="Download matrix used for the Chord diagram generation."
+        <span ng-if="exporting === 'true'" class="grid-export-btn" uib-tooltip="Download matrix used for the Chord diagram generation."
               tooltip-placement="right">
             <button type="button" class="btn btn-default btn-xs" style="font-size: 12px;"
                     ng-click="exportMatrix()" ng-disabled="noData || loading">
@@ -67,7 +67,7 @@
         </span>
 
         <!--Export grid rows button-->
-        <span class="grid-export-btn"
+        <span ng-if="exporting === 'true'" class="grid-export-btn"
               uib-tooltip="Download the list of companies that have common contracts with the selected one."
               tooltip-placement="right">
             <button type="button" class="btn btn-default btn-xs" style="font-size: 12px;"

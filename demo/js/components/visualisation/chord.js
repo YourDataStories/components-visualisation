@@ -16,6 +16,7 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "$timeout", "$sce", 
                 embeddable: "@",        // Enable or disabled the embedding of the component
                 popoverPos: "@",        // The side from which the embed information window will appear
 
+                exporting: "@",         // Enable or disable exporting of chart items as CSV
                 enableRating: "@",      // Enable rating buttons for this component
                 disableExplanation: "@" // Set to true to disable the explanation button
             },
@@ -59,6 +60,10 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "$timeout", "$sce", 
                 if (_.isUndefined(scope.enablePaging) || (scope.enablePaging !== "true"
                     && scope.enablePaging !== "false"))
                     scope.enablePaging = "false";
+
+                // Check if the exporting attribute is defined, else assign default value
+                if (_.isUndefined(scope.exporting) || (scope.exporting !== "true" && scope.exporting !== "false"))
+                    scope.exporting = "true";
 
                 // Check if the component's height attribute is defined, else assign default value
                 if (_.isUndefined(elementH) || _.isNaN(elementH))

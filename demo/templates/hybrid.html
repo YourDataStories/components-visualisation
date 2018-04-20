@@ -69,6 +69,18 @@
                 element-h="{{ elementH }}">
         </yds-bubble>
 
+        <yds-chord
+                ng-switch-when="chord"
+                project-id="{{ projectId }}"
+                view-type="{{ viewType }}"
+                title-size="{{ titleSize }}"
+                lang="{{ lang }}"
+                exporting="false"
+                extra-params="extraParams"
+                disable-explanation="true"
+                element-h="{{ elementH }}">
+        </yds-chord>
+
         <yds-tree-map
                 ng-switch-when="tree"
                 project-id="{{ projectId }}"
