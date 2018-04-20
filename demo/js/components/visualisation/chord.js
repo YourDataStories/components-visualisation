@@ -96,7 +96,22 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "$timeout", "$sce", 
                  * Download a CSV with the matrix used to create the chord diagram
                  */
                 scope.exportMatrix = function () {
-                    //todo: implementation
+                    var filename = "YDS_chord_matrix.csv";
+                    var header =
+                        _.map(items, function (item) {
+                            return "\"" + item.name + "\"";
+                        });
+                    var rows = [
+                        header
+                    ];
+
+                    // Add matrix rows to the CSV rows
+                    _.each(matrix, function (row) {
+                        // Can't do rows.push(matrix) because it adds all elements without keeping row structure
+                        rows.push(row);
+                    });
+
+                    Data.downloadArrayAsCSV(filename, rows);
                 };
 
                 /**
