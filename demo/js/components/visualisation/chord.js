@@ -1,5 +1,5 @@
-angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "$timeout", "Data", "Filters",
-    function ($ocLazyLoad, $timeout, Data, Filters) {
+angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "$timeout", "$sce", "Data", "Filters",
+    function ($ocLazyLoad, $timeout, $sce, Data, Filters) {
         return {
             restrict: "E",
             scope: {
@@ -124,6 +124,17 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "$timeout", "Data", 
 
                     // Sort companies by their values (descending)
                     companies = _.sortBy(companies, "value").reverse();
+
+                    // Make links of the companies trustable as HTML if they are not trusted already
+                    _.each(companies, function (company) {
+                        if (_.isString(company.link)) {
+                            company.link = $sce.trustAsHtml(company.link);
+                        }
+                    });
+
+                    if (_.isString(item.link)) {
+                        item.link = $sce.trustAsHtml(item.link);
+                    }
 
                     // Add the variables to the scope
                     $timeout(function () {
