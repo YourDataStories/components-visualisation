@@ -134,6 +134,11 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 ],
                 width: 6
             },
+            company: {
+                types: [],
+                titles: [],
+                width: 1
+            },
             public_work: {
                 types: [
                     "publicproject.buyers.all",
