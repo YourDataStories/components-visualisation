@@ -135,8 +135,9 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 width: 6
             },
             company: {
-                types: [],
-                titles: [],
+                // "company" type is not used, just here for "View data" etc. grids to load
+                types: ["company"],
+                titles: ["company"],
                 width: 1
             },
             public_work: {
@@ -181,6 +182,11 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 concept: "Contract",
                 urlParamPrefix: "ct-",
                 requestType: "contract.listitems.for.countries.and.period"
+            },
+            company: {
+                concept: "Contract",
+                urlParamPrefix: "ot-",
+                requestType: "company.listitems.for.countries.and.period"
             },
             public_project: {
                 concept: "PublicProject",
