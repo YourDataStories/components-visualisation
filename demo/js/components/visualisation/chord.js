@@ -93,6 +93,32 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "$timeout", "$sce", 
                 chordContainer.style.height = elementH + "px";
 
                 /**
+                 * Download a CSV with the matrix used to create the chord diagram
+                 */
+                scope.exportMatrix = function () {
+                    //todo: implementation
+                };
+
+                /**
+                 * Download a CSV with the items in the "items" array
+                 */
+                scope.exportRows = function () {
+                    var filename = "YDS_" + scope.selectedItem.name.replace(/[^a-z0-9]/gi, '')
+                        + "_common_contracts.csv";
+
+                    var rows = [
+                        ["Company Name", "# of common contracts"]
+                    ];
+                    var relatedList = getRelatedCompanies(scope.selectedItem.index);
+
+                    _.each(relatedList, function (item) {
+                        rows.push(["\"" + item.name + "\"", item.value]);
+                    });
+
+                    Data.downloadArrayAsCSV(filename, rows);
+                };
+
+                /**
                  * Chord mouseover function
                  */
                 var mouseover = function (d, i) {
@@ -103,14 +129,11 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "$timeout", "$sce", 
                 };
 
                 /**
-                 * Show grid with information about the clicked group.
-                 * @param target    Clicked group
+                 * Find the related companies for an item
+                 * @param index Index of item (in the matrix and items array)
+                 * @returns {*|Array}
                  */
-                var groupClickHandler = function (target) {
-                    // Get index and data of item
-                    var index = target.index;
-                    var item = items[index];
-
+                var getRelatedCompanies = function (index) {
                     // Find the matrix row for this item and find the linked companies
                     var matrixRow = matrix[index];
                     var companies = [];
@@ -124,6 +147,21 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "$timeout", "$sce", 
 
                     // Sort companies by their values (descending)
                     companies = _.sortBy(companies, "value").reverse();
+
+                    return companies;
+                };
+
+                /**
+                 * Show grid with information about the clicked group.
+                 * @param target    Clicked group
+                 */
+                var groupClickHandler = function (target) {
+                    // Get index and data of item
+                    var index = target.index;
+                    var item = items[index];
+
+                    // Get the linked companies for this item
+                    var companies = getRelatedCompanies(index);
 
                     // Make links of the companies trustable as HTML if they are not trusted already
                     _.each(companies, function (company) {

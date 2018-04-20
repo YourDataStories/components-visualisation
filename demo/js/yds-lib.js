@@ -1118,6 +1118,30 @@ app.factory("Data", ["$http", "$q", "$window", "$sce", "DashboardService", "YDS_
     };
 
     /**
+     * Download the given array as a CSV with the specified filename.
+     * Source: https://stackoverflow.com/a/14966131
+     * @param filename  Filename to use
+     * @param data  Data to write to CSV (2D array)
+     */
+    dataService.downloadArrayAsCSV = function (filename, data) {
+        var csvContent = "data:text/csv;charset=utf-8,";
+        data.forEach(function (rowArray) {
+            var row = rowArray.join(",");
+            csvContent += row + "\r\n";
+        });
+
+        // Download the CSV.
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", filename);
+        link.innerHTML = "Click Here to download";
+        document.body.appendChild(link); // Required for FF
+
+        link.click();
+    };
+
+    /**
      * Download grid results as a CSV file
      * @param query         Search query
      * @param facets        Facets of data to export
