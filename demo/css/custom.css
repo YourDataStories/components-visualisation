@@ -1672,7 +1672,7 @@ path.chord {
     stroke-width: .25px;
 }
 
-#circle:hover path.fade {
+#circle:hover path.chord-fade {
     display: none;
 }
 

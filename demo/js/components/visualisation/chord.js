@@ -96,7 +96,7 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "$timeout", "$sce", 
                  * Chord mouseover function
                  */
                 var mouseover = function (d, i) {
-                    chord.classed("fade", function (p) {
+                    chord.classed("chord-fade", function (p) {
                         return p.source.index != i
                             && p.target.index != i;
                     });
