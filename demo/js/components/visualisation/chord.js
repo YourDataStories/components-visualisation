@@ -73,6 +73,12 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
 
             // Variable to hold Chord instance
             var chord = null;
+            var matrix = null;
+            var items = null;
+
+            // Initialize variables for the table
+            scope.selectedItem = null;
+            scope.relatedItems = null;
 
             // Show loading animation
             scope.loading = true;
@@ -91,6 +97,34 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                 });
             };
 
+            /**
+             * Show grid with information about the clicked group.
+             * @param target    Clicked group
+             */
+            var groupClickHandler = function (target) {
+                // Get index and data of item
+                var index = target.index;
+                var item = items[index];
+
+                // Find the matrix row for this item and find the linked companies
+                var matrixRow = matrix[index];
+                var companies = [];
+                _.each(matrixRow, function (value, i) {
+                    if (value > 0) {
+                        companies.push(_.extend({}, items[i], {
+                            value: value
+                        }));
+                    }
+                });
+
+                // Sort companies by their values (descending)
+                companies = _.sortBy(companies, "value").reverse();
+
+                // Add the variables to the scope
+                scope.selectedItem = item;
+                scope.relatedItems = companies;
+            };
+
             var createChord = function () {
                 // Get data and visualize bar
                 Data.getProjectVis("chord", projectId, viewType, lang, extraParams)
@@ -107,8 +141,8 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                         }
 
                         // Get data from API response
-                        var matrix = response.data.matrix;
-                        var items = response.data.nodes;
+                        matrix = response.data.matrix;
+                        items = response.data.nodes;
 
                         var arc = d3.svg.arc()
                             .innerRadius(innerRadius)
@@ -141,9 +175,7 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "Data", "Filters", f
                             .enter().append("g")
                             .attr("class", "group")
                             .on("mouseover", mouseover)
-                            .on("click", function (e) {
-                                console.log("Clicked:", items[e.index]);
-                            });
+                            .on("click", groupClickHandler);
 
                         // Add a mouseover title.
                         group.append("title").text(function (d, i) {
