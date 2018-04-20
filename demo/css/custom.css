@@ -1707,3 +1707,7 @@ path.chord {
     max-height: 720px;
     opacity: 0.4;
 }
+
+.chord-panel-body {
+    overflow-y: auto;
+}
