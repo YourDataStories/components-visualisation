@@ -31,7 +31,22 @@
                     <b>Selected seller:</b> <span ng-bind-html="selectedItem.link"></span>
                 </div>
                 <div class="panel-body chord-panel-body">
-                    {{ relatedItems }}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th># of common contracts</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="item in relatedItems">
+                                <td ng-bind-html="item.link"></td>
+                                <td>{{ item.value }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

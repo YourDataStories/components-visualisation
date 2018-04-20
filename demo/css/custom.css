@@ -1710,4 +1710,6 @@ path.chord {
 
 .chord-panel-body {
     overflow-y: auto;
+    padding-right: 1px;
+    padding-left: 1px;
 }
