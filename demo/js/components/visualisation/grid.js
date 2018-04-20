@@ -55,8 +55,6 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                     quickFiltering: scope.quickFiltering,
                     colResize: scope.colResize,
                     exporting: scope.exporting,
-                    exportBtnX: parseInt(scope.exportBtnX),
-                    exportBtnY: parseInt(scope.exportBtnY),
                     elementH: scope.elementH
                 };
 
@@ -163,14 +161,6 @@ angular.module("yds").directive("ydsGrid", ["Data", "Filters", "DashboardService
                     gridContainer.style.height = (grid.elementH - 55) + "px";
                 } else {
                     gridWrapper.style.height = grid.elementH + "px";
-                }
-
-                // If exporting is enabled, set position of export button
-                if (grid.exporting === "true") {
-                    scope.exportBtnPos = {
-                        left: grid.exportBtnX + "px",
-                        top: grid.exportBtnY + "px"
-                    }
                 }
 
                 // Set cookie variables
