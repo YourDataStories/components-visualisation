@@ -14,6 +14,7 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                 baseUrl: "@",           // Base URL to send to API (optional)
 
                 sorting: "@",           // Enable or disable array sorting, values: true, false
+                quickFiltering: "@",    // Enable or disable array quick filtering, values: true, false
                 colResize: "@",         // Enable or disable column resize, values: true, false
                 numberOfItems: "@",     // This should be set to the number of total items that the grid will show
                 pageSize: "@",          // Set the number of rows of each page
@@ -40,6 +41,7 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                     viewType: scope.viewType,
                     lang: scope.lang,
                     sorting: scope.sorting,
+                    quickFiltering: scope.quickFiltering,
                     colResize: scope.colResize,
                     pageSize: parseInt(scope.pageSize),
                     elementH: scope.elementH
@@ -50,6 +52,12 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                 var dashboardId = scope.dashboardId;
                 var selectionId = scope.selectionId;
                 var ignoreOwnSelection = scope.ignoreOwnSelection;
+
+                // Quick filter scope variables
+                scope.filters = {
+                    quickFilterValue: ""
+                };
+                scope.showApplyBtn = true;  // Show apply button (when quick filtering is enabled)
 
                 // If selection is enabled, this will be used to reselect rows after refreshing the grid data
                 var selection = [];
@@ -76,6 +84,10 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                 // Check if the sorting attribute is defined, else assign the default value
                 if (_.isUndefined(grid.sorting) || (grid.sorting !== "true" && grid.sorting !== "false"))
                     grid.sorting = "true";
+
+                // Check if the quick filtering attribute is defined, else assign the default value
+                if (_.isUndefined(grid.quickFiltering) || (grid.quickFiltering !== "true" && grid.quickFiltering !== "false"))
+                    grid.quickFiltering = "false";
 
                 // Check if the colResize attribute is defined, else assign default value
                 if (_.isUndefined(grid.colResize) || (grid.colResize !== "true" && grid.colResize !== "false"))
@@ -104,14 +116,41 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                 // Show loading animation
                 scope.loading = true;
 
-                // Set the id and the height of the grid
+                // Set the ID and height of the grid
                 gridContainer.id = grid.elementId;
-                gridWrapper.style.height = grid.elementH + "px";
+                if (grid.quickFiltering === "true") {
+                    gridWrapper.style.height = (grid.elementH) + "px";
+                    gridContainer.style.height = (grid.elementH - 55) + "px";
+                } else {
+                    gridWrapper.style.height = grid.elementH + "px";
+                }
 
                 // Set cookie variables
                 var cookieKey = grid.viewType + "_" + dashboardId;
                 var firstLoad = true;
-                // var preventSelectionEvent = false;
+
+                /**
+                 * Apply the quick filter
+                 */
+                scope.applyComboFilters = function () {
+                    if (scope.filters.quickFilterValue.trim().length > 0) {
+                        // Re-create the grid
+                        createGrid();
+                    } else {
+                        // Refresh the grid (removing spaces from the text field)
+                        scope.clearComboFilters();
+                    }
+                };
+
+                /**
+                 * Clear the grid's filters
+                 */
+                scope.clearComboFilters = function () {
+                    // Clear quick filter (& number of loaded rows, because the grid will refresh data)
+                    scope.filters.quickFilterValue = "";
+
+                    createGrid();
+                };
 
                 /**
                  * Select the ones that are indicated in the selection parameter (matches them by their "id" attribute)
@@ -121,7 +160,6 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                     // Deselect previously selected rows
                     if (!preventUpdate) {
                         // Prevent the next selection event from doing anything (because deselectAll() will fire it)
-                        // preventSelectionEvent = true;
                         scope.gridOptions.api.deselectAll();
                     }
 
@@ -272,6 +310,11 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                                 },
                                 Data.formatAgGridSortParams(params.sortModel));
 
+                            // Add quick filter to the extra parameters, if there's any
+                            if (scope.filters.quickFilterValue.length > 0) {
+                                paramsToSend["search_pattern"] = scope.filters.quickFilterValue;
+                            }
+
                             // If extra params contains null value, prevent grid creation
                             var prevent = false;
                             _.each(paramsToSend, function (param) {
@@ -298,9 +341,7 @@ angular.module("yds").directive("ydsGridSelectionPaging", ["Data", "Filters", "D
                             datasource: dataSource,
                             onSelectionChanged: function (e) {
                                 // Ignore event if grid is loading, or it's marked to be skipped
-                                // if (scope.loading || preventSelectionEvent) {
                                 if (scope.loading) {
-                                    // preventSelectionEvent = false;
                                     return;
                                 }
 

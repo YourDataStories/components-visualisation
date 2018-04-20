@@ -322,6 +322,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     name: "Buyers",
                     type: "grid",
                     params: {
+                        minHeight: 270,
                         viewType: "contract.buyers.all.filter",
                         selectionId: "buyer_organizations"
                     }
@@ -329,6 +330,7 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     name: "Sellers",
                     type: "grid",
                     params: {
+                        minHeight: 270,
                         viewType: "contract.sellers.all.filter",
                         selectionId: "seller_organizations"
                     }

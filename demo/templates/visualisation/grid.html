@@ -5,16 +5,26 @@
         {{ ydsAlert }}
     </div>
     <div ng-if="quickFiltering=='true'">
+        <!--Quick filter text field-->
         <div class="component-adv-quick-filter-label"><i class="glyphicon glyphicon-filter"></i>Quick Filter:</div>
         <input type="text"
                class="form-control component-adv-quick-filter"
                ng-model="filters.quickFilterValue"
                ng-change="applyQuickFilter(filters.quickFilterValue)"/>
 
+        <!--Clear filters button-->
         <button type="button"
                 ng-click="clearComboFilters()"
                 class="btn btn-default component-adv-filter-btn">
             Clear
+        </button>
+
+        <!--Apply filters button-->
+        <button type="button"
+                ng-if="showApplyBtn"
+                ng-click="applyComboFilters()"
+                class="btn btn-primary component-adv-filter-btn">
+            Apply Filters
         </button>
         <div style="clear: both"></div>
     </div>
