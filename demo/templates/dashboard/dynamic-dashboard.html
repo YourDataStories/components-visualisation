@@ -205,10 +205,11 @@
     </div>
 
     <!--Dashboard Visualization-->
-    <div class="row" ng-if="dashboardsConfig.selectedDashboard !== 'company'">
+    <div class="row" ng-show="dashboardsConfig.selectedDashboard !== 'company'">
         <div class="col-md-10" style="min-height: 600px">
             <uib-tabset active="dashboardVisActiveTab">
-                <uib-tab index="$index" class="{{ 'tab-' + aggregateClasses[$index] }}"
+                <uib-tab ng-if="dashboardsConfig.selectedDashboard !== 'company'"
+                         index="$index" class="{{ 'tab-' + aggregateClasses[$index] }}"
                          ng-repeat="type in aggregates track by $index" select="selectTab($index)">
                     <uib-tab-heading>
                         {{ aggregateTitles[$index] }}
@@ -230,10 +231,11 @@
                 </uib-tab>
             </uib-tabset>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-2" ng-if="dashboardsConfig.selectedDashboard !== 'company'">
             <yds-dashboard-updater
                     ng-repeat="type in aggregates track by $index"
                     ng-show="aggregateToShow == $index"
+                    ng-if="type !== 'company'"
                     type="aggregate"
                     project-id="{{ projectId }}"
                     dashboard-id="{{ dashboardsConfig.selectedDashboard }}"
