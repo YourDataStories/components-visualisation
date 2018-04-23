@@ -10,7 +10,7 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "$timeout", "$sce", 
                 extraParams: "=",       // Extra attributes to pass to the API, if needed
 
                 elementH: "@",          // Set the height of the component
-                titleSize: "@",         // The size of the chart's main title
+                noDataMsg: "@",         // Text message to show when there is no data.
 
                 addToBasket: "@",       // Enable or disable "add to basket" functionality, values: true, false
                 embeddable: "@",        // Enable or disabled the embedding of the component
@@ -33,7 +33,6 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "$timeout", "$sce", 
                 var viewType = scope.viewType;
                 var lang = scope.lang;
                 var elementH = scope.elementH;
-                var titleSize = scope.titleSize;
                 var extraParams = scope.extraParams;
 
                 // If extra params exist, add them to Filters
@@ -69,9 +68,9 @@ angular.module("yds").directive("ydsChord", ["$ocLazyLoad", "$timeout", "$sce", 
                 if (_.isUndefined(elementH) || _.isNaN(elementH))
                     elementH = 200;
 
-                // Check if the component's title size attribute is defined, else assign default value
-                if (_.isUndefined(titleSize) || titleSize.length === 0 || _.isNaN(titleSize))
-                    titleSize = 18;
+                // Check if the component's no data message attribute is defined, else assign default value
+                if (_.isUndefined(scope.noDataMsg) || scope.noDataMsg.trim() === "")
+                    scope.noDataMsg = "Please select one or more sellers from the list to show connections.";
 
                 // Set some Chord parameters for D3
                 var width = elementH,

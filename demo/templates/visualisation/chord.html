@@ -12,8 +12,7 @@
                         <img src="img/chord-empty.png"/>
                     </div>
                     <div class="chord-no-data-inside">
-                        Please select one or more sellers from the list
-                        <br/>to show connections.
+                        <span class="chord-no-data-msg">{{ noDataMsg }}</span>
                     </div>
                 </div>
                 <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length > 0">
@@ -57,8 +56,8 @@
         <span class="chord-rating-btns" yds-rating></span>
 
         <!--Export Matrix button-->
-        <span ng-if="exporting === 'true'" class="grid-export-btn" uib-tooltip="Download matrix used for the Chord diagram generation."
-              tooltip-placement="right">
+        <span ng-if="exporting === 'true'" class="grid-export-btn"
+              uib-tooltip="Download matrix used for the Chord diagram generation." tooltip-placement="right">
             <button type="button" class="btn btn-default btn-xs" style="font-size: 12px;"
                     ng-click="exportMatrix()" ng-disabled="noData || loading">
                 <span class="glyphicon glyphicon-save-file"></span>
