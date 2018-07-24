@@ -76,7 +76,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             comparison1: "year",
             comparison2: "year",
             comparison_details_1: "year",
-            comparison_details_2: "year"
+            comparison_details_2: "year",
+            dianeosis_students: "year"
         };
 
         // View types of aggregates to show for each Dashboard section
@@ -281,7 +282,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 "school_shift",
                 "student_regions_all_student_regional_units_all",
                 "student_regions_all",
-                "student_regional_units_all"
+                "student_regional_units_all",
+                "year_dianeosis_students"
             ]
         };
 
