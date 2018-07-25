@@ -95,13 +95,27 @@
             <div class="row">
                 <div class="col-md-12">
                     <yds-year-range
+                            title="Year"
                             enable-bar="false"
                             bar-type="student.resource.count.per.year"
-                            title="Year"
-                            dashboard-id="dianeosis_students"
                             lang="en"
+                            dashboard-id="dianeosis_students"
                             min-year="2013"
                             max-year="2016">
+                    </yds-year-range>
+                </div>
+            </div>
+
+            <!--Grade Range filter-->
+            <div class="row">
+                <div class="col-md-12">
+                    <yds-year-range
+                            title="Grade"
+                            selection-type="students_grade_range"
+                            enable-bar="false"
+                            dashboard-id="dianeosis_students"
+                            min-year="0"
+                            max-year="200">
                     </yds-year-range>
                 </div>
             </div>

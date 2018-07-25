@@ -1013,6 +1013,10 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     apiOptions["school.type"] = dashboard.getObject("school_type");
                     apiOptions["school.shift"] = dashboard.getObject("school_shift");
 
+                    var gradeRange = dashboard.getObject("students_grade_range");
+                    if (!_.isUndefined(gradeRange))
+                        apiOptions["grade"] = "[" + gradeRange.minValue + " TO " + gradeRange.maxValue + "]";
+
                     break;
             }
 
@@ -1101,8 +1105,8 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
          * @param timeStr
          */
         dashboard.timeToNum = function (timeStr) {
-            var timePiecies = timeStr.split(":");
-            return (parseInt(timePiecies[0]) * 60) + parseInt(timePiecies[1]);
+            var timePieces = timeStr.split(":");
+            return (parseInt(timePieces[0]) * 60) + parseInt(timePieces[1]);
         };
 
         dashboard.subscribeSelectionChanges = function (scope, callback) {
