@@ -119,6 +119,35 @@
                     </yds-year-range>
                 </div>
             </div>
+
+            <!--Number of students filter-->
+            <div class="row">
+                <div class="col-md-12">
+                    <yds-year-range
+                            title="Number of students"
+                            selection-type="students_amount_range"
+                            enable-bar="false"
+                            dashboard-id="dianeosis_students"
+                            min-year="0"
+                            max-year="150000">
+                    </yds-year-range>
+                </div>
+            </div>
+
+            <!--Top percentage filter-->
+            <div class="row">
+                <div class="col-md-12">
+                    <yds-time-slider
+                            type="year"
+                            title="Top percent (per grade)"
+                            min-year="0"
+                            max-year="100"
+                            dashboard-id="dianeosis_students"
+                            selection-type="students_top_percent"
+                            lang="en">
+                    </yds-time-slider>
+                </div>
+            </div>
         </div>
     </div>
 

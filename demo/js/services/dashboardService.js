@@ -1017,6 +1017,15 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                     if (!_.isUndefined(gradeRange))
                         apiOptions["grade"] = "[" + gradeRange.minValue + " TO " + gradeRange.maxValue + "]";
 
+                    var studentsAmountRange = dashboard.getObject("students_amount_range");
+                    if (!_.isUndefined(studentsAmountRange))
+                        apiOptions["amount"] =
+                            "[" + studentsAmountRange.minValue + " TO " + studentsAmountRange.maxValue + "]";
+
+                    var topPercentRange = dashboard.getObject("students_top_percent");
+                    if (!_.isUndefined(topPercentRange))
+                        apiOptions["top_percent"] = topPercentRange;
+
                     break;
             }
 
