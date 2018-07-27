@@ -283,7 +283,10 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
                 "student_regions_all_student_regional_units_all",
                 "student_regions_all",
                 "student_regional_units_all",
-                "year_dianeosis_students"
+                "year_dianeosis_students",
+                "students_amount_range",
+                "students_grade_range",
+                "students_top_percent"
             ]
         };
 
