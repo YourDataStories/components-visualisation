@@ -91,21 +91,6 @@
                 </div>
             </div>
 
-            <!--Year Range filter-->
-            <div class="row">
-                <div class="col-md-12">
-                    <yds-year-range
-                            title="Year"
-                            enable-bar="false"
-                            bar-type="student.resource.count.per.year"
-                            lang="en"
-                            dashboard-id="dianeosis_students"
-                            min-year="2013"
-                            max-year="2016">
-                    </yds-year-range>
-                </div>
-            </div>
-
             <!--Grade Range filter-->
             <div class="row">
                 <div class="col-md-12">
@@ -149,6 +134,20 @@
                     </yds-time-slider>
                 </div>
             </div>
+        </div>
+        <div class="col-md-2">
+            <!--Year Range filter-->
+            <yds-year-range
+                    title="Year"
+                    vertical="true"
+                    height="350"
+                    enable-bar="true"
+                    bar-type="student.resource.count.per.year"
+                    lang="en"
+                    dashboard-id="dianeosis_students"
+                    min-year="2013"
+                    max-year="2016">
+            </yds-year-range>
         </div>
     </div>
 
