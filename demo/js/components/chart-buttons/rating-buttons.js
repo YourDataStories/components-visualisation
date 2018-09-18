@@ -17,7 +17,8 @@ angular.module('yds').directive('ydsRating', ['$templateRequest', '$compile', '$
 
                 var elementClass = attrs.class;
                 var visualisationType = "";
-                var defaultVisTypes = ["pie", "line", "scatter", "bubble", "bar", "tree", "map", "grid", "chord"];
+                var defaultVisTypes = ["pie", "line", "scatter", "bubble", "bar", "tree", "map", "grid", "chord",
+                    "box"];
 
                 // Set default language if it's not defined
                 if (_.isUndefined(lang) || lang.trim().length === 0) {
