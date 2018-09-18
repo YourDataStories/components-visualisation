@@ -9,8 +9,8 @@ import java.util.Set;
  * @author George K. <gkiom@iit.demokritos.gr>
  */
 public enum ComponentType {
-
-    LINE("line"), SCATTER("scatter"), BUBBLE("bubble"), PIE("pie"), BAR("bar"), TREE("tree"), MAP("map"), GRID("grid"), INFO("info"), RESULT("result"), RESULTSET("resultset");
+    LINE("line"), SCATTER("scatter"), BUBBLE("bubble"), PIE("pie"), BAR("bar"), TREE("tree"), MAP("map"), GRID("grid"),
+    INFO("info"), BOX("box"), RESULT("result"), RESULTSET("resultset");
     private final String type;
 
     private ComponentType(String type) {
@@ -20,6 +20,7 @@ public enum ComponentType {
     public String getDecl() {
         return type;
     }
+
     public static final Set<String> ACCEPTED = new HashSet();
 
     static {
@@ -32,6 +33,7 @@ public enum ComponentType {
         ACCEPTED.add(MAP.getDecl());
         ACCEPTED.add(GRID.getDecl());
         ACCEPTED.add(INFO.getDecl());
+        ACCEPTED.add(BOX.getDecl());
         ACCEPTED.add(RESULT.getDecl());
         ACCEPTED.add(RESULTSET.getDecl());
     }
