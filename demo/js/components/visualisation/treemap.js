@@ -9,7 +9,7 @@ angular.module("yds").directive("ydsTreeMap", ["Data", "Filters", function (Data
 
             exporting: "@",         // Enable or disable the export of the plot
             elementH: "@",          // Set the height of the component
-            titleSize: "@",         // The size of the chart"s main title
+            titleSize: "@",         // The size of the chart's main title
 
             addToBasket: "@",       // Enable or disable "add to basket" functionality, values: true, false
             embeddable: "@",        // Enable or disable the embedding of the component
