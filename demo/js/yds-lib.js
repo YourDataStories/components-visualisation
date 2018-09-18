@@ -17,6 +17,7 @@ app.constant("YDS_CONSTANTS", {
     "API_LINE_TIMESERIES": "platform.yourdatastories.eu/api/json-ld/component/timeseries_linechart.tcl",
     "API_SCATTER": "platform.yourdatastories.eu/api/json-ld/component/scatterchart.tcl",
     "API_BUBBLE": "platform.yourdatastories.eu/api/json-ld/component/bubblechart.tcl",
+    "API_BOXPLOT": "localhost/boxplot.py",  //todo: add real API path
     "API_TREEMAP": "platform.yourdatastories.eu/api/json-ld/component/treemap.tcl",
     "API_SUNBURST": "platform.yourdatastories.eu/api/json-ld/component/sunburst.tcl",
     "API_MAP": "platform.yourdatastories.eu/api/json-ld/component/map.tcl",
@@ -1284,10 +1285,19 @@ app.factory("Data", ["$http", "$q", "$window", "$sce", "DashboardService", "YDS_
             _.extend(params, extraParams);
         }
 
+        // Omit undefined parameters because it causes a bug with Angular (e.g. when lesson.shift is undefined but
+        // lesson.type is not, lesson.type is not sent to the boxplot)
+        params = _.omit(params, function (value, key, object) {
+            return _.isUndefined(value);
+        });
+
         var visualizationUrl = "";
         switch (type) {
             case "bar":
                 visualizationUrl = "http://" + YDS_CONSTANTS.API_BAR;
+                break;
+            case "box":
+                visualizationUrl = "http://" + YDS_CONSTANTS.API_BOXPLOT;
                 break;
             case "chord":
                 visualizationUrl = "http://" + YDS_CONSTANTS.API_CHORD;

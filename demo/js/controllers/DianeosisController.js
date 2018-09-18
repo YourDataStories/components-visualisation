@@ -28,23 +28,5 @@ angular.module("yds").controller("DianeosisController", ["$scope", "$timeout", "
         scope.aggregateTitles = aggregates.titles;
 
         scope.infoPopoverUrl = Data.templatePath + "templates-demo/dianeosis-info.html";
-
-        // // Subscribe to be notified of selected project changes
-        // DashboardService.subscribeProjectChanges(scope, function() {
-        //     if ($window.pageYOffset < 1000) {
-        //         // Scroll a bit to make details visible
-        //         $location.hash("dashboard-dianeosis-data-grid");
-        //         $anchorScroll();
-        //     }
-        //
-        //     // Select new project
-        //     scope.showProjectInfo = false;
-        //     scope.selectedProject = {};
-        //
-        //     $timeout(function() {
-        //         scope.selectedProject = DashboardService.getSelectedProjectInfo();
-        //         scope.showProjectInfo = true;
-        //     });
-        // });
     }
 ]);

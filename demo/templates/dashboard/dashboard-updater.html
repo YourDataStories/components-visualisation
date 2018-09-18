@@ -170,6 +170,18 @@
             element-h="{{ minHeight }}">
     </yds-pie>
 
+    <yds-box
+            ng-switch-when="box"
+            project-id="{{ projectId }}"
+            view-type="{{ viewType }}"
+            extra-params="extraParams"
+            add-to-basket="{{ addToBasket }}"
+            embeddable="true"
+            enable-rating="{{ enableRating }}"
+            lang="{{ lang }}"
+            element-h="{{ minHeight }}">
+    </yds-box>
+
     <yds-chord
             ng-switch-when="chord"
             project-id="{{ projectId }}"

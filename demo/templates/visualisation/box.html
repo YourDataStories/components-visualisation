@@ -1,0 +1,19 @@
+<div class="component-wrapper">
+    <div class="box-container" style="width:100%;">
+        <div ng-if="loading" class="loading-container">
+            <div class="loading-container-inside"><i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i> Loading...</div>
+        </div>
+        <div class="alert alert-danger" role="alert" ng-if="ydsAlert.length > 0">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            {{ ydsAlert }}
+        </div>
+    </div>
+
+    <div class="extra-buttons-row">
+        <span class="box-embed-btn" yds-embed></span>
+        <span class="box-basket-btn" yds-basket-btn></span>
+        <span class="box-explanation-btn" yds-explanation></span>
+        <span class="box-rating-btns" yds-rating></span>
+    </div>
+</div>

@@ -251,8 +251,8 @@ angular.module("yds").directive("ydsDashboardUpdater", ["Data", "DashboardServic
 
                                     initialized = true;
                                 }
-                            // Continue to re-render grid
-                            // noinspection FallThroughInSwitchStatementJS
+                                rerenderComponent();
+                                break;
                             default:
                                 // Re-render component
                                 rerenderComponent();
