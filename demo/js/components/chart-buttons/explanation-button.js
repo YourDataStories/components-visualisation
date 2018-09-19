@@ -6,7 +6,7 @@ angular.module("yds").directive("ydsExplanation", ["$templateRequest", "$compile
                 var elementClass = attrs.class;
                 var disableExplanation = scope.disableExplanation;
                 var visualisationType = "";
-                var defaultVisTypes = ["pie", "line", "scatter", "bubble", "bar", "tree", "map", "grid", "chord"];
+                var defaultVisTypes = ["pie", "line", "scatter", "bubble", "bar", "tree", "map", "grid", "chord", "box"];
 
                 // If the disableExplanation scope variable is set to true, stop here
                 if (!_.isUndefined(disableExplanation) && disableExplanation === "true") {
