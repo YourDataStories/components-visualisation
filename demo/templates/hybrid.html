@@ -28,6 +28,17 @@
                 element-h="{{ elementH }}">
         </yds-pie>
 
+        <yds-box
+                ng-switch-when="box"
+                project-id="{{ projectId }}"
+                view-type="{{ viewType }}"
+                extra-params="extraParams"
+                title-size="{{ titleSize }}"
+                lang="{{ lang }}"
+                disable-explanation="true"
+                element-h="{{ elementH }}">
+        </yds-box>
+
         <yds-line
                 ng-switch-when="line"
                 project-id="{{ projectId }}"
@@ -73,7 +84,6 @@
                 ng-switch-when="chord"
                 project-id="{{ projectId }}"
                 view-type="{{ viewType }}"
-                title-size="{{ titleSize }}"
                 lang="{{ lang }}"
                 exporting="false"
                 extra-params="extraParams"
