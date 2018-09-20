@@ -17,7 +17,7 @@ app.constant("YDS_CONSTANTS", {
     "API_LINE_TIMESERIES": "platform.yourdatastories.eu/api/json-ld/component/timeseries_linechart.tcl",
     "API_SCATTER": "platform.yourdatastories.eu/api/json-ld/component/scatterchart.tcl",
     "API_BUBBLE": "platform.yourdatastories.eu/api/json-ld/component/bubblechart.tcl",
-    "API_BOXPLOT": "localhost/boxplot.py",  //todo: add real API path
+    "API_BOXPLOT": "platform.yourdatastories.eu/api/json-ld/component/boxplot/index.py",
     "API_TREEMAP": "platform.yourdatastories.eu/api/json-ld/component/treemap.tcl",
     "API_SUNBURST": "platform.yourdatastories.eu/api/json-ld/component/sunburst.tcl",
     "API_MAP": "platform.yourdatastories.eu/api/json-ld/component/map.tcl",
