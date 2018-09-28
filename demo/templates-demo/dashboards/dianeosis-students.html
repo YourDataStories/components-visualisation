@@ -186,6 +186,8 @@
                             add-to-basket="true"
                             enable-rating="true"
                             lang="en"
+                            paging-threshold="10000"
+                            number-of-items="{{ aggregateValues[type] }}"
                             base-url="http://platform.yourdatastories.eu/project-details"
                             element-h="460">
                     </yds-dashboard-visualization>
@@ -202,6 +204,7 @@
                     dashboard-id="dianeosis_students"
                     view-type="{{ type }}"
                     min-height="150"
+                    aggregate-value-obj="aggregateValues"
                     aggregate-show-button="false"
                     aggregate-icon-size="3"
                     base-url="http://platform.yourdatastories.eu/project-details"

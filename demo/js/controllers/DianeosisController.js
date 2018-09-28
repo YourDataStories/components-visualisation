@@ -5,6 +5,7 @@ angular.module("yds").controller("DianeosisController", ["$scope", "$timeout", "
         scope.showProjectInfo = false;
         scope.aggregateToShow = 0;
         scope.aggregateClasses = [];
+        scope.aggregateValues = {};
 
         scope.selectTab = function(tabIndex) {
             scope.aggregateToShow = tabIndex;
