@@ -201,6 +201,9 @@ angular.module("yds").service("DashboardService", ["$rootScope", "$timeout", "$c
             },
             traffic_observation_contracts: {
                 concept: "Contract"
+            },
+            dianeosis_students: {
+                concept: "Student"
             }
         };
 
