@@ -14,13 +14,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <dependencies>        
-
+    <dependencies>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.2.5</version>
-            <type>jar</type>
+            <version>4.3.6</version>
         </dependency>
         <dependency>
             <groupId>commons-httpclient</groupId>
@@ -39,7 +37,7 @@
             <artifactId>javaee-web-api</artifactId>
             <version>6.0</version>
             <scope>provided</scope>
-        </dependency> 
+        </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jaxrs</artifactId>
@@ -69,7 +67,7 @@
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
             <version>2.13.3</version>
-        </dependency>        
+        </dependency>
         <dependency>
             <groupId>com.github.drapostolos</groupId>
             <artifactId>type-parser</artifactId>
@@ -127,5 +125,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
