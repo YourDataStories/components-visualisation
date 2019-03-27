@@ -20,11 +20,13 @@ angular.module("yds").directive("ydsDashboardVisualization", ["DashboardService"
 
                 disableAggregates: "@",     // If true, will disable the extra filters for amount/count
                 disableNormalisation: "@",  // If true, will disable the extra filters for GDP/per capita
+                disableTimeseries: "@",     // If true, will disable the time series grid/line visualizations
 
                 enableRating: "@"           // Enable rating buttons for this component
             },
             templateUrl: Data.templatePath + "templates/dashboard/dashboard-visualization.html",
             link: function (scope) {
+                var defaultChartType = "bar";
                 var dashboardId = scope.dashboardId;
                 var disableColor = scope.disableColor;
                 var defaultChart = scope.defaultChart;
@@ -101,12 +103,18 @@ angular.module("yds").directive("ydsDashboardVisualization", ["DashboardService"
                     disableColor = "false";
 
                 // If disableAggregates is undefined, set it to false
-                if (_.isUndefined(scope.disableAggregates) || (scope.disableAggregates !== "true" && scope.disableAggregates !== "false"))
+                if (_.isUndefined(scope.disableAggregates) ||
+                    (scope.disableAggregates !== "true" && scope.disableAggregates !== "false"))
                     scope.disableAggregates = "false";
+
+                // If disableTimeseries is undefined, set it to false
+                if (_.isUndefined(scope.disableTimeseries) ||
+                    (scope.disableTimeseries !== "true" && scope.disableTimeseries !== "false"))
+                    scope.disableTimeseries = "false";
 
                 // If defaultChart is undefined, show bar chart
                 if (_.isUndefined(defaultChart)) {
-                    defaultChart = "bar";
+                    defaultChart = defaultChartType;
                 }
 
                 // Set minimum height of details panel body
@@ -177,6 +185,12 @@ angular.module("yds").directive("ydsDashboardVisualization", ["DashboardService"
                  * Handle view type selection changes
                  */
                 var viewTypeChangeHandler = function () {
+                    // If timeseries is selected but disabled, select the default visualization type
+                    if (scope.disableTimeseries === 'true' &&
+                        (scope.selectedVis === 'grid-time' || scope.selectedVis === 'line-time')) {
+                        scope.selectedVis = defaultChartType;
+                    }
+
                     updateViewType();
                     updateVisualization();
                 };

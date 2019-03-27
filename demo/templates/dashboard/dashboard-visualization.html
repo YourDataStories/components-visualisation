@@ -28,13 +28,15 @@
 
                 <!--Line time series-->
                 <label ng-model="selectedVis" uib-btn-radio="'line-time'" style="padding-left: 8px; padding-right: 8px"
-                       ng-click="selectVis('line-time')" class="btn btn-default" title="Line (Timeseries)">
+                       ng-if="disableTimeseries !== 'true'" ng-click="selectVis('line-time')" class="btn btn-default"
+                       title="Line (Timeseries)">
                     <img src="img/chart-line-2d-dots-time_small@1x.png"/>
                 </label>
 
                 <!--Grid time series-->
                 <label ng-model="selectedVis" uib-btn-radio="'grid-time'" style="padding-left: 8px; padding-right: 8px"
-                       ng-click="selectVis('grid-time')" class="btn btn-default" title="Grid (Timeseries)">
+                       ng-if="disableTimeseries !== 'true'" ng-click="selectVis('grid-time')" class="btn btn-default"
+                       title="Grid (Timeseries)">
                     <img src="img/table-time_small@1x.png"/>
                 </label>
             </div>
