@@ -182,6 +182,7 @@
                             class="{{ 'content-' + aggregateClasses[$index] }}"
                             project-id="none"
                             dashboard-id="dianeosis_students"
+                            disable-timeseries="{{ ($index === 0) ? 'true' : 'false'}}"
                             type="{{ type }}"
                             add-to-basket="true"
                             enable-rating="true"
